@@ -29,6 +29,9 @@
         .btn-red { background: #300; color: #f44; border: 1px solid #500; width: 100%; padding: 10px; cursor: pointer; font-family: 'Lexend Deca'; }
         .auth-zone { margin-top: 60px; opacity: 0.05; transition: 0.5s; }
         .auth-zone:hover { opacity: 1; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(8px); }
+        .modal-content { background: #080808; margin: 10% auto; padding: 30px; width: 90%; max-width: 450px; border: 1px solid var(--accent); border-radius: 15px; position: relative; }
+        .close { position: absolute; right: 20px; top: 15px; color: var(--accent); font-size: 2rem; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -63,7 +66,7 @@
                     <h4>JUGADORES</h4>
                     <input type="text" id="targetUser" placeholder="Nombre">
                     <select id="targetCountry"><option value="cl">Chile</option><option value="ar">Argentina</option><option value="mx">México</option><option value="br">Brasil</option></select>
-                    <textarea id="targetList" placeholder="Acu, Bloodbath..."></textarea>
+                    <textarea id="targetList" placeholder="Niveles (Separados por coma)"></textarea>
                     <button class="btn-scully" style="width:100%;" onclick="saveUser()">GUARDAR</button>
                 </div>
                 <div>
@@ -77,55 +80,30 @@
                 </div>
                 <div style="grid-column: 1 / -1; border-top: 1px solid var(--accent); padding-top: 20px; text-align: center;">
                     <button class="btn-scully" onclick="generarScriptJS()" style="background:var(--accent); color:#000; font-weight:bold; padding:15px 30px;">
-                        DESCARGAR SCRIPT.JS ACTUALIZADO
+                        DESCARGAR SCRIPT.JS PARA CLOUDFLARE
                     </button>
-                    <button onclick="logout()" style="display:block; margin: 10px auto; background:none; border:none; color:#333; cursor:pointer; font-size:0.6rem;">CERRAR SESIÓN</button>
                 </div>
             </div>
         </div>
     </main>
 
+    <div id="uModal" class="modal"><div class="modal-content"><span class="close" onclick="closeM()">&times;</span><img id="uFlag" src="" style="width:60px;"><h2 id="uName"></h2><div id="uList" style="text-align:left; max-height:200px; overflow-y:auto; margin-top:15px;"></div></div></div>
+
     <script src="script.js"></script>
     <script>
         const TOKEN = "GdfuFCRy";
-
-        // Función para entrar
-        function checkAuth() {
-            if(document.getElementById('tokenInput').value === TOKEN) {
-                sessionStorage.setItem('scully_session', 'active');
-                showPanel();
-            }
-        }
-
-        // Función para mostrar el panel
-        function showPanel() {
-            document.getElementById('adminPanel').style.display = "block";
-            document.getElementById('authBox').style.display = "none";
-        }
-
-        // Función para salir
-        function logout() {
-            sessionStorage.removeItem('scully_session');
-            location.reload();
-        }
-
-        // AL CARGAR: Verificar si hay sesión activa
-        window.onload = function() {
-            if(sessionStorage.getItem('scully_session') === 'active') {
-                showPanel();
-            }
-            if(typeof renderLeaderboard === 'function') renderLeaderboard();
-        };
+        function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); showPanel(); } }
+        function showPanel() { document.getElementById('adminPanel').style.display = "block"; document.getElementById('authBox').style.display = "none"; }
+        window.onload = function() { if(sessionStorage.getItem('scully_session') === 'active') showPanel(); renderLeaderboard(); };
 
         function generarScriptJS() {
             const n = localStorage.getItem('scully_db_levels') || "[]";
             const r = localStorage.getItem('scully_ranks') || "[]";
             const script = `
-// REINICIO FORZADO
 localStorage.setItem('scully_db_levels', JSON.stringify(${n}));
 localStorage.setItem('scully_ranks', JSON.stringify(${r}));
 
-function getDBLevels() { return JSON.parse(localStorage.getItem('scully_db_levels')); }
+function getDBLevels() { return JSON.parse(localStorage.getItem('scully_db_levels')) || []; }
 function calculatePoints(i) { return Math.max(100 - (i * 0.6), 5).toFixed(1); }
 
 function renderLevels(f = "") {
@@ -140,13 +118,6 @@ function renderLevels(f = "") {
     });
 }
 
-function openDetails(i) {
-    const l = getDBLevels()[i];
-    const b = document.getElementById('modal-body');
-    b.innerHTML = '<h1 style="color:#ff6600;">' + l.name + '</h1><iframe width="100%" height="250" src="https://www.youtube.com/embed/' + l.id + '" frameborder="0" allowfullscreen></iframe><p><b>FIRST:</b> ' + (l.first || "Nadie") + '</p><p><b>VICTORS:</b> ' + (l.victors ? l.victors.join(", ") : "Sin victors") + '</p>';
-    document.getElementById('levelModal').style.display = "block";
-}
-
 function renderLeaderboard() {
     const b = document.getElementById('leaderboardBody');
     if (!b) return;
@@ -156,16 +127,42 @@ function renderLeaderboard() {
         let t = 0;
         let l = user.levelList ? user.levelList.split(",") : [];
         l.forEach(lvl => {
-            const idx = db.findIndex(item => item.name.trim().toLowerCase() === lvl.trim().toLowerCase());
+            const nameClean = lvl.trim().toLowerCase();
+            const idx = db.findIndex(item => item.name.trim().toLowerCase() === nameClean);
             if (idx > -1) t += parseFloat(calculatePoints(idx));
         });
-        user.points = t.toFixed(1); user.count = l.length;
+        user.points = t.toFixed(1); user.count = l.filter(x => x.trim() !== "").length;
     });
     u.sort((a, b) => b.points - a.points);
-    b.innerHTML = u.map((user, i) => '<tr class="rank-row"><td>#' + (i + 1) + '</td><td style="text-align:left;"><img src="https://flagcdn.com/w20/' + user.country + '.png" style="margin-right:10px;">' + user.name + '</td><td style="color:#ff6600; font-weight:bold;">' + user.points + '</td><td>' + user.count + '</td></tr>').join("");
+    b.innerHTML = u.map((user, i) => '<tr class="rank-row" onclick="openUserProfile(\\'' + user.name + '\\')"><td>#' + (i + 1) + '</td><td style="text-align:left;"><img src="https://flagcdn.com/w20/' + user.country + '.png" style="margin-right:10px;">' + user.name + '</td><td style="color:#ff6600; font-weight:bold;">' + user.points + '</td><td>' + user.count + '</td></tr>').join("");
 }
 
+function openUserProfile(n) {
+    const users = JSON.parse(localStorage.getItem('scully_ranks'));
+    const db = getDBLevels();
+    const u = users.find(x => x.name === n);
+    document.getElementById('uName').innerText = u.name;
+    document.getElementById('uFlag').src = 'https://flagcdn.com/w80/' + u.country + '.png';
+    const list = u.levelList.split(",").map(lvl => {
+        const nameClean = lvl.trim();
+        const idx = db.findIndex(l => l.name.toLowerCase() === nameClean.toLowerCase());
+        const pts = idx > -1 ? calculatePoints(idx) : "0.0";
+        return '<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #111;"><span>' + nameClean + '</span><b style="color:#ff6600">+' + pts + '</b></div>';
+    }).join("");
+    document.getElementById('uList').innerHTML = list || 'Sin registros.';
+    document.getElementById('uModal').style.display = "block";
+}
+
+function openDetails(i) {
+    const l = getDBLevels()[i];
+    document.getElementById('modal-body').innerHTML = '<h1 style="color:#ff6600;">' + l.name + '</h1><iframe width="100%" height="250" src="https://www.youtube.com/embed/' + l.id + '" frameborder="0" allowfullscreen></iframe><p><b>FIRST:</b> ' + (l.first || "Nadie") + '</p>';
+    document.getElementById('levelModal').style.display = "block";
+}
+
+function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = "none"); }
+function closeM() { closeModal(); }
 document.addEventListener("DOMContentLoaded", () => { renderLevels(); renderLeaderboard(); });
+window.onclick = function(e) { if(e.target.className === 'modal') closeModal(); }
             `;
             const blob = new Blob([script], { type: 'text/javascript' });
             const url = URL.createObjectURL(blob);
@@ -197,6 +194,7 @@ document.addEventListener("DOMContentLoaded", () => { renderLevels(); renderLead
             localStorage.setItem('scully_ranks', JSON.stringify(users));
             location.reload();
         }
+        function closeM() { document.getElementById('uModal').style.display = "none"; }
     </script>
 </body>
 </html>
