@@ -8,32 +8,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root { --accent: #ff6600; --bg: #050505; --card: #0a0a0a; --glow: 0 0 15px rgba(255, 102, 0, 0.3); }
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
-        
-        .top-credits { display: flex; justify-content: center; gap: 25px; padding: 12px 0; background: rgba(0, 0, 0, 0.8); border-bottom: 1px solid #111; font-size: 0.7rem; position: sticky; top: 0; z-index: 1000; }
-        .credit-box { display: flex; align-items: center; gap: 6px; }
-        .credit-box i { color: var(--accent); }
-        .discord-link { color: #5865F2 !important; text-decoration: none; font-weight: bold; }
-
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; }
+        .top-credits { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.8); border-bottom: 1px solid #111; font-size: 0.7rem; position: sticky; top: 0; z-index: 1000; }
+        .credit-box i { color: var(--accent); margin-right: 5px; }
         header { padding: 60px 20px; text-align: center; }
         h1 { font-size: 2.5rem; letter-spacing: 5px; margin: 0; text-transform: uppercase; }
         h1 span { color: var(--accent); text-shadow: var(--glow); }
-        
         #searchBar { width: 90%; max-width: 400px; background: #000; border: 1px solid #222; color: #fff; padding: 12px; border-radius: 5px; margin-top: 20px; font-family: 'Lexend Deca'; }
-        
         .header-buttons { margin-top: 25px; display: flex; justify-content: center; gap: 15px; }
         .btn-scully { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 10px 20px; text-decoration: none; font-size: 0.8rem; transition: 0.3s; cursor: pointer; }
         .btn-scully:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
 
-        /* LISTA DE NIVELES */
-        #list-container { width: 95%; max-width: 900px; margin: 40px auto; display: grid; gap: 15px; }
+        /* CONTENEDOR MAESTRO */
+        #list-container { width: 95%; max-width: 900px; margin: 40px auto; display: grid; gap: 15px; min-height: 200px; }
         .level-card { background: var(--card); border: 1px solid #111; display: flex; align-items: center; padding: 15px; position: relative; transition: 0.3s; cursor: pointer; }
         .level-card:hover { transform: scale(1.02); border-color: var(--accent); }
-        .level-thumb img { width: 120px; border-radius: 4px; margin-right: 20px; }
+        .level-thumb img { width: 120px; border-radius: 4px; margin-right: 20px; display: block; }
         .level-info h2 { margin: 0; font-size: 1.2rem; text-transform: uppercase; }
         .rank-number { position: absolute; right: 20px; font-size: 2rem; font-weight: 700; color: rgba(255,255,255,0.05); }
 
-        /* MODAL */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(8px); }
         .modal-content { background: #080808; margin: 5% auto; padding: 30px; width: 90%; max-width: 500px; border: 1px solid var(--accent); border-radius: 15px; position: relative; text-align: center; }
         .close-btn { position: absolute; right: 20px; top: 15px; color: var(--accent); font-size: 2rem; cursor: pointer; }
@@ -41,16 +34,12 @@
 </head>
 <body>
     <nav class="top-credits">
-        <div class="credit-box"><i class="fab fa-discord"></i> <b>Discord</b> <span><a href="https://discord.gg/HDGzCVazwT" target="_blank" class="discord-link">Unirse</a></span></div>
-        <div class="credit-box"><i class="fas fa-crown"></i> <b>Owner</b> <span>score</span></div>
-        <div class="credit-box"><i class="fas fa-user-shield"></i> <b>Admin</b> <span>Vegardo</span></div>
-        <div class="credit-box"><i class="fas fa-hands-helping"></i> <b>Helper</b> <span>Blitz</span></div>
-        <div class="credit-box"><i class="fas fa-code"></i> <b>Codificador</b> <span>score</span></div>
+        <div class="credit-box"><i class="fas fa-crown"></i> OWNER <span>score</span></div>
+        <div class="credit-box"><i class="fas fa-code"></i> CODIFICADOR <span>score</span></div>
     </nav>
 
     <header>
         <h1>THE <span>SCULLY</span> LIST</h1>
-        <p style="color:#444; letter-spacing: 2px;">DIRECTORIO DE RECLUSIÓN</p>
         <input type="text" id="searchBar" placeholder="Filtrar niveles..." onkeyup="renderLevels(this.value)">
         <div class="header-buttons">
             <a href="leaderboards.html" class="btn-scully">LEADERBOARDS</a>
@@ -59,7 +48,8 @@
     </header>
 
     <main id="list-container">
-        </main>
+        <p style="text-align:center; color:#222;">Cargando Protocolo...</p>
+    </main>
 
     <div id="levelModal" class="modal">
         <div class="modal-content">
@@ -70,9 +60,9 @@
 
     <script src="script.js"></script>
     <script>
-        // Función extra de seguridad para cerrar modales
         function closeModal() { document.getElementById('levelModal').style.display = "none"; }
-        window.onclick = function(e) { if(e.target.className === 'modal') closeModal(); }
+        // Forzar renderizado si el script.js ya cargó
+        window.onload = function() { if(typeof renderLevels === 'function') renderLevels(); };
     </script>
 </body>
 </html>
