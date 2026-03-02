@@ -10,7 +10,7 @@
         :root { --accent: #ff6600; --bg: #050505; --card: #0a0a0a; --glow: 0 0 15px rgba(255, 102, 0, 0.3); }
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; }
         
-        /* Créditos Visibles */
+        /* Créditos Superiores */
         .top-credits { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.8); border-bottom: 1px solid #111; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; }
         .credit-box i { color: var(--accent); margin-right: 5px; }
         .credit-box span { color: #888; }
@@ -25,17 +25,20 @@
         .btn-scully { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 10px 20px; text-decoration: none; font-size: 0.8rem; transition: 0.3s; cursor: pointer; font-family: 'Lexend Deca'; }
         .btn-scully:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
 
-        #list-container { width: 95%; max-width: 900px; margin: 40px auto; display: grid; gap: 15px; }
+        /* EL CONTENEDOR DE LA LISTA */
+        #list-container { width: 95%; max-width: 900px; margin: 40px auto; display: grid; gap: 15px; min-height: 100px; }
+        
         .level-card { background: var(--card); border: 1px solid #111; display: flex; align-items: center; padding: 15px; position: relative; transition: 0.3s; cursor: pointer; }
-        .level-thumb img { width: 120px; border-radius: 4px; margin-right: 20px; }
-        .level-info h2 { margin: 0; font-size: 1.1rem; text-transform: uppercase; }
+        .level-card:hover { transform: scale(1.02); border-color: var(--accent); }
+        .level-thumb img { width: 120px; border-radius: 4px; margin-right: 20px; display: block; }
+        .level-info h2 { margin: 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
         .rank-number { position: absolute; right: 20px; font-size: 2rem; font-weight: 700; color: rgba(255,255,255,0.05); }
 
         /* Panel Admin */
         #adminPanel { display: none; background: #000; border: 1px solid var(--accent); padding: 25px; width: 95%; max-width: 800px; margin: 50px auto; border-radius: 10px; }
         .admin-flex { display: flex; flex-wrap: wrap; gap: 20px; }
-        .form-side { flex: 1; min-width: 300px; }
-        .list-side { flex: 1; min-width: 300px; background: #080808; padding: 15px; border-radius: 5px; max-height: 400px; overflow-y: auto; }
+        .form-side { flex: 1; min-width: 300px; text-align: left; }
+        .list-side { flex: 1; min-width: 300px; background: #080808; padding: 15px; border-radius: 5px; max-height: 400px; overflow-y: auto; text-align: left; }
         
         input, textarea { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #fff; padding: 10px; margin-bottom: 8px; font-family: 'Lexend Deca'; box-sizing: border-box; }
         .lvl-item-edit { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #111; font-size: 0.8rem; }
@@ -59,48 +62,65 @@
         <input type="text" id="searchBar" placeholder="Filtrar niveles..." onkeyup="renderLevels(this.value)">
         <div class="header-buttons">
             <a href="leaderboards.html" class="btn-scully">LEADERBOARDS</a>
-            <a href="https://docs.google.com/forms/..." target="_blank" class="btn-scully">SUBIR RECORD</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScG_9uY4H8ZbpQlakBn7NSyl_iRRezmCEqNYpTl1OYovKJsXw/viewform?usp=sf_link" target="_blank" class="btn-scully">SUBIR RECORD</a>
         </div>
     </header>
 
-    <main id="list-container"></main>
+    <main id="list-container">
+        </main>
 
-    <div style="margin-top: 100px; opacity: 0.05;" id="authBox">
-        <input type="password" id="tokenInput" placeholder="..." style="width:100px; text-align:center;">
-        <button class="btn-scully" onclick="checkAuth()">ADMIN</button>
+    <div style="margin-top: 100px; opacity: 0.05; text-align: center;" id="authBox">
+        <input type="password" id="tokenInput" placeholder="..." style="width:100px; text-align:center; background:none; border:none; color:#111;">
+        <button onclick="checkAuth()" style="background:none; border:none; color:#111; cursor:pointer;">.</button>
     </div>
 
     <div id="adminPanel">
-        <h4 style="color:var(--accent); margin-bottom: 20px;">EDITOR DE DIRECTORIO MAESTRO</h4>
+        <h4 style="color:var(--accent); margin-bottom: 20px; text-align: center;">EDITOR DE DIRECTORIO MAESTRO</h4>
         <div class="admin-flex">
             <div class="form-side">
                 <input type="text" id="lvlName" placeholder="Nombre Nivel">
-                <input type="text" id="lvlYT" placeholder="ID YouTube">
+                <input type="text" id="lvlYT" placeholder="ID YouTube (Ej: d9mbeV4f64c)">
                 <input type="text" id="lvlFirst" placeholder="Primer Victor">
                 <input type="number" id="lvlPos" placeholder="Posición (1 = Top 1)">
-                <textarea id="lvlVictors" placeholder="Victors..."></textarea>
+                <textarea id="lvlVictors" placeholder="Otros Victors (coma)"></textarea>
                 <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; font-weight:bold;" onclick="saveLevel()">AÑADIR / ACTUALIZAR</button>
                 <button class="btn-scully" style="width:100%; margin-top:10px; border-color:#fff; color:#fff;" onclick="descargarScript()">DESCARGAR SCRIPT.JS FINAL</button>
             </div>
-            <div class="list-side" id="adminListView">
-                </div>
+            <div class="list-side" id="adminListView"></div>
         </div>
     </div>
 
     <div id="levelModal" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeModal()">&times;</span><div id="modal-body"></div></div></div>
 
     <script src="script.js"></script>
+
     <script>
+        // TOKEN DE ACCESO
         const TOKEN = "GdfuFCRy";
-        function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
-        window.onload = function() { 
+
+        function checkAuth() {
+            if(document.getElementById('tokenInput').value === TOKEN) {
+                sessionStorage.setItem('scully_session', 'active');
+                location.reload();
+            }
+        }
+
+        window.onload = function() {
+            // Verificar sesión
             if(sessionStorage.getItem('scully_session') === 'active') {
                 document.getElementById('adminPanel').style.display = "block";
                 document.getElementById('authBox').style.display = "none";
                 updateAdminList();
             }
-            if(typeof renderLevels === 'function') renderLevels(); 
+            
+            // FORZAR EL DIBUJO DE LOS NIVELES
+            if(typeof renderLevels === 'function') {
+                renderLevels();
+            } else {
+                console.error("Error: script.js no cargó las funciones correctamente.");
+            }
         };
+
         function closeModal() { document.getElementById('levelModal').style.display = "none"; }
 
         function saveLevel() {
@@ -109,19 +129,24 @@
             const first = document.getElementById('lvlFirst').value.trim();
             const pos = parseInt(document.getElementById('lvlPos').value) - 1;
             const victors = document.getElementById('lvlVictors').value.split(',').filter(v => v.trim() !== "");
-            if(!name || !id) return alert("Nombre e ID de YouTube obligatorios.");
+            
+            if(!name || !id) return alert("Faltan datos.");
+
             let db = JSON.parse(localStorage.getItem('scully_db_levels')) || [];
             db = db.filter(l => l.name.toLowerCase() !== name.toLowerCase());
             db.splice(pos >= 0 ? pos : db.length, 0, { name, id, first, victors });
+            
             localStorage.setItem('scully_db_levels', JSON.stringify(db));
-            renderLevels(); updateAdminList();
+            renderLevels(); 
+            updateAdminList();
         }
 
         function deleteLevel(index) {
             let db = JSON.parse(localStorage.getItem('scully_db_levels')) || [];
             db.splice(index, 1);
             localStorage.setItem('scully_db_levels', JSON.stringify(db));
-            renderLevels(); updateAdminList();
+            renderLevels(); 
+            updateAdminList();
         }
 
         function updateAdminList() {
@@ -133,41 +158,65 @@
         function descargarScript() {
             const n = localStorage.getItem('scully_db_levels') || "[]";
             const r = localStorage.getItem('scully_ranks') || "[]";
-            const script = `
-// PROTOCOLO SCULLY: SOBRESCRITURA TOTAL
+            
+            const scriptContenido = `
+// --- PROTOCOLO SCULLY: MOTOR CENTRAL ---
 const NIVELES = ${n};
 const RANKING = ${r};
+
 localStorage.setItem('scully_db_levels', JSON.stringify(NIVELES));
 localStorage.setItem('scully_ranks', JSON.stringify(RANKING));
 
 function calculatePoints(i) { return Math.max(100 - (i * 0.6), 5).toFixed(1); }
+
 function renderLevels(f = "") {
-    const c = document.getElementById('list-container'); if(!c) return;
+    const c = document.getElementById('list-container');
+    if(!c) return;
     c.innerHTML = "";
-    NIVELES.forEach((l, i) => { if(l.name.toLowerCase().includes(f.toLowerCase())) {
-        c.innerHTML += '<div class="level-card" onclick="openDetails(' + i + ')"><div class="level-thumb"><img src="https://img.youtube.com/vi/' + l.id + '/mqdefault.jpg"></div><div class="level-info"><h2>' + l.name + '</h2><p style="color:#ff6600; font-weight:bold;">+' + calculatePoints(i) + ' PTS</p></div><div class="rank-number">#' + (i + 1) + '</div></div>';
-    }});
+    if(NIVELES.length === 0) { c.innerHTML = "<p style='color:#333; text-align:center;'>Directorio vacío.</p>"; return; }
+    
+    NIVELES.forEach((l, i) => {
+        if(l.name.toLowerCase().includes(f.toLowerCase())) {
+            c.innerHTML += '<div class="level-card" onclick="openDetails(' + i + ')"><div class="level-thumb"><img src="https://img.youtube.com/vi/' + l.id + '/mqdefault.jpg"></div><div class="level-info"><h2>' + l.name + '</h2><p style="color:#ff6600; font-weight:bold; font-size:0.75rem;">+' + calculatePoints(i) + ' PTS</p></div><div class="rank-number">#' + (i + 1) + '</div></div>';
+        }
+    });
 }
+
+function openDetails(i) {
+    const l = NIVELES[i];
+    const victors = l.victors && l.victors.length > 0 ? l.victors.join(", ") : "Sin victors registrados";
+    document.getElementById('modal-body').innerHTML = '<h1 style="color:#ff6600; margin-bottom:5px;">' + l.name + '</h1><p style="font-size:0.7rem; color:#444; margin-bottom:15px;">TOP #' + (i + 1) + ' • ' + calculatePoints(i) + ' PTS</p><div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;"><iframe style="position:absolute; top:0; left:0; width:100%; height:100%;" src="https://www.youtube.com/embed/' + l.id + '" frameborder="0" allowfullscreen></iframe></div><div style="text-align:left; margin-top:15px;"><p style="margin:0;"><b style="color:#ff6600">FIRST VICTOR:</b> ' + (l.first || 'Nadie') + '</p><p style="font-size:0.8rem; color:#888; margin-top:5px;"><b>OTROS:</b> ' + victors + '</p></div>';
+    document.getElementById('levelModal').style.display = "block";
+}
+
 function renderLeaderboard() {
-    const b = document.getElementById('leaderboardBody'); if(!b) return;
+    const b = document.getElementById('leaderboardBody');
+    if(!b) return;
     RANKING.forEach(u => {
         let t = 0; let list = u.levelList ? u.levelList.split(",") : [];
-        list.forEach(lvl => { const idx = NIVELES.findIndex(item => item.name.trim().toLowerCase() === lvl.trim().toLowerCase()); if(idx > -1) t += parseFloat(calculatePoints(idx)); });
+        list.forEach(lvl => {
+            const idx = NIVELES.findIndex(item => item.name.trim().toLowerCase() === lvl.trim().toLowerCase());
+            if(idx > -1) t += parseFloat(calculatePoints(idx));
+        });
         u.pts = t.toFixed(1); u.cnt = list.filter(x => x.trim() !== "").length;
     });
     RANKING.sort((a,b) => b.pts - a.pts);
     b.innerHTML = RANKING.map((u, i) => '<tr class="rank-row" onclick="openUserProfile(\\'' + u.name + '\\')"><td>#' + (i + 1) + '</td><td style="text-align:left;"><img src="https://flagcdn.com/w20/' + u.country + '.png" style="margin-right:10px;">' + u.name + '</td><td style="color:#ff6600; font-weight:bold;">' + u.pts + '</td><td>' + u.cnt + '</td></tr>').join("");
 }
-function openDetails(i) {
-    const l = NIVELES[i];
-    document.getElementById('modal-body').innerHTML = '<h1 style="color:#ff6600;">' + l.name + '</h1><iframe width="100%" height="250" src="https://www.youtube.com/embed/' + l.id + '" frameborder="0" allowfullscreen></iframe><p><b>FIRST:</b> ' + (l.first || "Nadie") + '</p>';
-    document.getElementById('levelModal').style.display = "block";
+
+function openUserProfile(n) {
+    const u = RANKING.find(x => x.name === n);
+    document.getElementById('uModalContent').innerHTML = '<span onclick="closeM()" style="cursor:pointer; color:#ff6600; position:absolute; right:20px; top:10px; font-size:2rem;">&times;</span><img src="https://flagcdn.com/w80/' + u.country + '.png" style="width:60px; border-radius:4px;"><h2 style="color:#ff6600">' + u.name + '</h2><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;"><div style="background:#000; padding:10px;"><b style="color:#ff6600; font-size:1.2rem;">' + u.pts + '</b><br><small>PTS</small></div><div style="background:#000; padding:10px;"><b style="font-size:1.2rem;">' + u.cnt + '</b><br><small>LVLS</small></div></div><div style="text-align:left; font-size:0.8rem; margin-top:15px; max-height:150px; overflow-y:auto; border-top:1px solid #111; padding-top:10px;">' + u.levelList + '</div>';
+    document.getElementById('uModal').style.display = "block";
 }
+
 document.addEventListener("DOMContentLoaded", () => { renderLevels(); renderLeaderboard(); });
 `;
-            const blob = new Blob([script], { type: 'text/javascript' });
+            const blob = new Blob([scriptContenido], { type: 'text/javascript' });
             const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob); a.download = 'script.js'; a.click();
+            a.href = URL.createObjectURL(blob);
+            a.download = 'script.js';
+            a.click();
         }
     </script>
 </body>
