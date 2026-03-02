@@ -1,70 +1,71 @@
-// SCRIPT MAESTRO GENERADO POR ADMIN
-const NIVELES_GLOBALES = [{"name":"Renevant","id":"lb2f1NkSJrU","first":"BillowV","victors":["score"]}];
-const RANKING_GLOBAL = [{"name":"BillowV","levelList":"Renevant","country":"mx"},{"name":"score","levelList":"Renevant","country":"cl"}];
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Scully List | Directorio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root { --accent: #ff6600; --bg: #050505; --card: #0a0a0a; --glow: 0 0 15px rgba(255, 102, 0, 0.3); }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
+        
+        .top-credits { display: flex; justify-content: center; gap: 25px; padding: 12px 0; background: rgba(0, 0, 0, 0.8); border-bottom: 1px solid #111; font-size: 0.7rem; letter-spacing: 1px; position: sticky; top: 0; z-index: 1000; }
+        .credit-box { display: flex; align-items: center; gap: 6px; }
+        .credit-box i { color: var(--accent); font-size: 0.75rem; }
+        .credit-box b { color: #555; text-transform: uppercase; }
+        .discord-link { color: #5865F2 !important; text-decoration: none; font-weight: bold; }
 
-// INYECCIÓN FORZADA: Sobrescribe LocalStorage con datos globales
-if (NIVELES_GLOBALES.length > 0) localStorage.setItem('scully_db_levels', JSON.stringify(NIVELES_GLOBALES));
-if (RANKING_GLOBAL.length > 0) localStorage.setItem('scully_ranks', JSON.stringify(RANKING_GLOBAL));
+        header { padding: 60px 20px; text-align: center; }
+        h1 { font-size: 2.5rem; letter-spacing: 5px; margin: 0; text-transform: uppercase; }
+        h1 span { color: var(--accent); text-shadow: var(--glow); }
+        
+        #searchBar { width: 90%; max-width: 400px; background: #000; border: 1px solid #222; color: #fff; padding: 12px; border-radius: 5px; margin-top: 20px; font-family: 'Lexend Deca'; }
+        
+        .header-buttons { margin-top: 25px; display: flex; justify-content: center; gap: 15px; }
+        .btn-scully { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 10px 20px; text-decoration: none; font-size: 0.8rem; transition: 0.3s; cursor: pointer; }
+        .btn-scully:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
 
-function getDBLevels() { return JSON.parse(localStorage.getItem('scully_db_levels')) || []; }
-function calculatePoints(index) { return Math.max(100 - (index * 0.6), 5).toFixed(1); }
+        #list-container { width: 95%; max-width: 900px; margin: 40px auto; display: grid; gap: 15px; }
+        .level-card { background: var(--card); border: 1px solid #111; display: flex; align-items: center; padding: 15px; position: relative; transition: 0.3s; }
+        .level-card:hover { transform: scale(1.02); border-color: var(--accent); }
+        .level-thumb img { width: 120px; border-radius: 4px; margin-right: 20px; }
+        .level-info h2 { margin: 0; font-size: 1.2rem; }
+        .rank-number { position: absolute; right: 20px; font-size: 2rem; font-weight: 700; color: rgba(255,255,255,0.05); }
 
-function renderLevels(filter = "") {
-    const container = document.getElementById('list-container');
-    if (!container) return;
-    const db = getDBLevels();
-    container.innerHTML = "";
-    db.forEach((lvl, i) => {
-        if (lvl.name.toLowerCase().includes(filter.toLowerCase())) {
-            container.innerHTML += '<div class="level-card" onclick="openDetails(' + i + ')"><div class="level-thumb"><img src="https://img.youtube.com/vi/' + lvl.id + '/mqdefault.jpg"></div><div class="level-info"><h2>' + lvl.name + '</h2><p style="color:#ff6600; font-weight:bold; font-size:0.7rem;">+' + calculatePoints(i) + ' PTS</p></div><div class="rank-number">#' + (i + 1) + '</div></div>';
-        }
-    });
-}
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(8px); }
+        .modal-content { background: #080808; margin: 5% auto; padding: 30px; width: 90%; max-width: 500px; border: 1px solid var(--accent); border-radius: 15px; position: relative; text-align: center; }
+        .close-btn { position: absolute; right: 20px; top: 15px; color: var(--accent); font-size: 2rem; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <nav class="top-credits">
+        <div class="credit-box"><i class="fab fa-discord"></i> <b>Discord</b> <span><a href="https://discord.gg/HDGzCVazwT" target="_blank" class="discord-link">Unirse</a></span></div>
+        <div class="credit-box"><i class="fas fa-crown"></i> <b>Owner</b> <span>score</span></div>
+        <div class="credit-box"><i class="fas fa-user-shield"></i> <b>Admin</b> <span>Vegardo</span></div>
+        <div class="credit-box"><i class="fas fa-hands-helping"></i> <b>Helper</b> <span>Blitz</span></div>
+        <div class="credit-box"><i class="fas fa-code"></i> <b>Codificador</b> <span>score</span></div>
+    </nav>
 
-function openDetails(index) {
-    const db = getDBLevels();
-    const lvl = db[index];
-    const body = document.getElementById('modal-body');
-    const victors = lvl.victors && lvl.victors.length > 0 ? lvl.victors.join(', ') : 'Sin victors.';
-    body.innerHTML = '<h1 style="color:#ff6600; margin-bottom:0;">' + lvl.name + '</h1><p style="font-size:0.7rem; color:#444; margin-bottom:15px;">TOP #' + (index + 1) + ' • ' + calculatePoints(index) + ' PTS</p><iframe width="100%" height="250" src="https://www.youtube.com/embed/' + lvl.id + '" frameborder="0" allowfullscreen></iframe><div style="text-align:left; margin-top:15px;"><p style="margin:0;"><b style="color:#ff6600">FIRST VICTOR:</b> ' + (lvl.first || 'Nadie') + '</p><p style="font-size:0.8rem; color:#888; margin-top:5px;"><b>OTROS:</b> ' + victors + '</p></div>';
-    document.getElementById('levelModal').style.display = "block";
-}
+    <header>
+        <h1>THE <span>SCULLY</span> LIST</h1>
+        <p style="color:#555; letter-spacing: 2px;">PROTOCOLO DE RECLUSIÓN HARDCORE</p>
+        <input type="text" id="searchBar" placeholder="Filtrar niveles..." onkeyup="renderLevels(this.value)">
+        <div class="header-buttons">
+            <a href="leaderboards.html" class="btn-scully">LEADERBOARDS</a>
+            <a href="subir-record.html" class="btn-scully">SUBIR RECORD</a>
+        </div>
+    </header>
 
-function renderLeaderboard() {
-    const body = document.getElementById('leaderboardBody');
-    if (!body) return;
-    const dbLevels = getDBLevels();
-    let users = JSON.parse(localStorage.getItem('scully_ranks')) || [];
-    users.forEach(u => {
-        let total = 0;
-        let comp = u.levelList ? u.levelList.split(",") : [];
-        comp.forEach(c => {
-            const idx = dbLevels.findIndex(l => l.name.trim().toLowerCase() === c.trim().toLowerCase());
-            if (idx > -1) total += parseFloat(calculatePoints(idx));
-        });
-        u.points = total.toFixed(1); u.count = comp.length;
-    });
-    users.sort((a, b) => b.points - a.points);
-    body.innerHTML = users.map((u, i) => '<tr class="rank-row" onclick="openUserProfile(\'' + u.name + '\')"><td>#' + (i + 1) + '</td><td style="text-align:left;"><img src="https://flagcdn.com/w20/' + u.country + '.png" style="margin-right:10px;">' + u.name + '</td><td style="color:#ff6600; font-weight:bold;">' + u.points + '</td><td style="color:#444;">' + u.count + '</td></tr>').join('');
-}
+    <main id="list-container"></main>
 
-function openUserProfile(name) {
-    const users = JSON.parse(localStorage.getItem('scully_ranks')) || [];
-    const db = getDBLevels();
-    const u = users.find(x => x.name === name);
-    if (!u) return;
-    document.getElementById('uName').innerText = u.name;
-    document.getElementById('uFlag').src = 'https://flagcdn.com/w80/' + u.country + '.png';
-    document.getElementById('uPoints').innerText = u.points;
-    document.getElementById('uCount').innerText = u.count;
-    const list = u.levelList.split(',').map(lvl => {
-        const idx = db.findIndex(l => l.name.toLowerCase() === lvl.trim().toLowerCase());
-        return '<div style="display:flex; justify-content:space-between; padding:5px; border-bottom:1px solid #111;"><span>' + lvl.trim() + '</span><b style="color:#ff6600">+' + (idx > -1 ? calculatePoints(idx) : '0.0') + '</b></div>';
-    }).join('');
-    document.getElementById('uList').innerHTML = list || 'Vacío.';
-    document.getElementById('uModal').style.display = "block";
-}
+    <div id="levelModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
 
-function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = "none"); }
-function closeM() { closeModal(); }
-document.addEventListener("DOMContentLoaded", () => { renderLevels(); renderLeaderboard(); });
+    <script src="script.js"></script>
+</body>
+</html>
