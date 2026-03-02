@@ -62,7 +62,7 @@
     </header>
 
     <main class="wrapper">
-        <table id="rankTable">
+        <table>
             <thead>
                 <tr><th>#</th><th style="text-align:left">Identidad</th><th>Puntos</th><th>Lvls</th></tr>
             </thead>
@@ -76,17 +76,11 @@
 
         <div id="adminPanel">
             <div class="admin-grid">
-                <div style="grid-column: 1 / -1; background: #0a0a0a; padding: 15px; border-radius: 5px; margin-bottom: 10px;">
-                    <h4><i class="fas fa-inbox"></i> BANDEJA DE RÉCORDS</h4>
-                    <div id="inboxContent" style="max-height: 150px; overflow-y: auto; margin-bottom: 10px; font-size: 0.8rem;"></div>
-                    <button class="btn-red" style="width:auto;" onclick="localStorage.removeItem('scully_pendientes'); renderInbox();">LIMPIAR BANDEJA</button>
-                </div>
-                
                 <div>
                     <h4>JUGADORES</h4>
                     <input type="text" id="targetUser" placeholder="Nombre">
                     <select id="targetCountry"><option value="cl">Chile</option><option value="ar">Argentina</option><option value="mx">México</option><option value="br">Brasil</option></select>
-                    <textarea id="targetList" placeholder="Acu, Bloodbath, etc..."></textarea>
+                    <textarea id="targetList" placeholder="Niveles (Acu, Cataclysm...)"></textarea>
                     <button class="btn-scully" style="width:100%; margin:0;" onclick="saveUser()">GUARDAR PERFIL</button>
                     <button class="btn-red" style="margin-top:5px" onclick="deleteUser()">ELIMINAR PERFIL</button>
                 </div>
@@ -103,10 +97,10 @@
                 </div>
 
                 <div style="grid-column: 1 / -1; border-top: 1px solid var(--accent); padding-top: 20px; text-align: center; margin-top: 20px;">
-                    <h4 style="border:none; font-size: 1rem;"><i class="fas fa-upload"></i> PUBLICAR CAMBIOS GLOBALES</h4>
+                    <h4 style="border:none; font-size: 1rem;"><i class="fas fa-file-upload"></i> PUBLICACIÓN FORZADA GLOBAL</h4>
                     <p style="font-size:0.65rem; color:#444; margin-bottom:15px;">
-                        Al pulsar este botón, se descargará un nuevo archivo <b>script.js</b> con tus datos.<br>
-                        Súbelo a Cloudflare para actualizar la lista de todos los usuarios.
+                        Al descargar este <b>script.js</b>, los datos nuevos sobrescribirán los viejos en el navegador de todos los usuarios.<br>
+                        Ideal para actualizar niveles y rankings masivamente.
                     </p>
                     <button class="btn-scully" onclick="generarScriptJS()" style="background:var(--accent); color:#000; font-weight:bold; padding:15px 30px;">
                         <i class="fas fa-file-download"></i> DESCARGAR SCRIPT.JS PARA CLOUDFLARE
@@ -135,25 +129,22 @@
         function checkAuth() {
             if(document.getElementById('tokenInput').value === TOKEN) {
                 document.getElementById('adminPanel').style.display = "block";
-                renderInbox();
                 alert("Terminal Scully: Acceso Maestro.");
             }
         }
 
-        // GENERADOR DE SCRIPT.JS PARA PUBLICAR
         function generarScriptJS() {
             const niveles = localStorage.getItem('scully_db_levels') || "[]";
             const ranking = localStorage.getItem('scully_ranks') || "[]";
-            const scriptContenido = `// SCRIPT MAESTRO GENERADO POR ADMIN\nconst NIVELES_GLOBALES = ${niveles};\nconst RANKING_GLOBAL = ${ranking};\n\nif (!localStorage.getItem('scully_db_levels') || NIVELES_GLOBALES.length > 0) localStorage.setItem('scully_db_levels', JSON.stringify(NIVELES_GLOBALES));\nif (!localStorage.getItem('scully_ranks') || RANKING_GLOBAL.length > 0) localStorage.setItem('scully_ranks', JSON.stringify(RANKING_GLOBAL));\n\nfunction getDBLevels() { return JSON.parse(localStorage.getItem('scully_db_levels')) || []; }\nfunction calculatePoints(index) { return Math.max(100 - (index * 0.6), 5).toFixed(1); }\n\nfunction renderLevels(filter = "") {\n    const container = document.getElementById('list-container');\n    if (!container) return;\n    const db = getDBLevels();\n    container.innerHTML = "";\n    db.forEach((lvl, i) => {\n        if (lvl.name.toLowerCase().includes(filter.toLowerCase())) {\n            container.innerHTML += '<div class="level-card" onclick="openDetails(' + i + ')"><div class="level-thumb"><img src="https://img.youtube.com/vi/' + lvl.id + '/mqdefault.jpg"></div><div class="level-info"><h2>' + lvl.name + '</h2><p style="color:#ff6600; font-weight:bold; font-size:0.7rem;">+' + calculatePoints(i) + ' PTS</p></div><div class="rank-number">#' + (i + 1) + '</div></div>';\n        }\n    });\n}\n\nfunction openDetails(index) {\n    const db = getDBLevels();\n    const lvl = db[index];\n    const body = document.getElementById('modal-body');\n    const victors = lvl.victors && lvl.victors.length > 0 ? lvl.victors.join(', ') : 'Sin victors.';\n    body.innerHTML = '<h1 style="color:#ff6600; margin-bottom:0;">' + lvl.name + '</h1><p style="font-size:0.7rem; color:#444; margin-bottom:15px;">TOP #' + (index + 1) + ' • ' + calculatePoints(index) + ' PTS</p><iframe width="100%" height="250" src="https://www.youtube.com/embed/' + lvl.id + '" frameborder="0" allowfullscreen></iframe><div style="text-align:left; margin-top:15px;"><p style="margin:0;"><b style="color:#ff6600">FIRST VICTOR:</b> ' + (lvl.first || 'Nadie') + '</p><p style="font-size:0.8rem; color:#888; margin-top:5px;"><b>OTROS:</b> ' + victors + '</p></div>';\n    document.getElementById('levelModal').style.display = "block";\n}\n\nfunction renderLeaderboard() {\n    const body = document.getElementById('leaderboardBody');\n    if (!body) return;\n    const dbLevels = getDBLevels();\n    let users = JSON.parse(localStorage.getItem('scully_ranks')) || [];\n    users.forEach(u => {\n        let total = 0;\n        let comp = u.levelList ? u.levelList.split(",") : [];\n        comp.forEach(c => {\n            const idx = dbLevels.findIndex(l => l.name.trim().toLowerCase() === c.trim().toLowerCase());\n            if (idx > -1) total += parseFloat(calculatePoints(idx));\n        });\n        u.points = total.toFixed(1); u.count = comp.length;\n    });\n    users.sort((a, b) => b.points - a.points);\n    body.innerHTML = users.map((u, i) => '<tr class="rank-row" onclick="openUserProfile(\\'' + u.name + '\\')"><td>#' + (i + 1) + '</td><td style="text-align:left;"><img src="https://flagcdn.com/w20/' + u.country + '.png" style="margin-right:10px;">' + u.name + '</td><td style="color:#ff6600; font-weight:bold;">' + u.points + '</td><td style="color:#444;">' + u.count + '</td></tr>').join('');\n}\n\nfunction openUserProfile(name) {\n    const users = JSON.parse(localStorage.getItem('scully_ranks')) || [];\n    const db = getDBLevels();\n    const u = users.find(x => x.name === name);\n    if (!u) return;\n    document.getElementById('uName').innerText = u.name;\n    document.getElementById('uFlag').src = 'https://flagcdn.com/w80/' + u.country + '.png';\n    document.getElementById('uPoints').innerText = u.points;\n    document.getElementById('uCount').innerText = u.count;\n    const list = u.levelList.split(',').map(lvl => {\n        const idx = db.findIndex(l => l.name.toLowerCase() === lvl.trim().toLowerCase());\n        return '<div style="display:flex; justify-content:space-between; padding:5px; border-bottom:1px solid #111;"><span>' + lvl.trim() + '</span><b style="color:#ff6600">+' + (idx > -1 ? calculatePoints(idx) : '0.0') + '</b></div>';\n    }).join('');\n    document.getElementById('uList').innerHTML = list || 'Vacío.';\n    document.getElementById('uModal').style.display = "block";\n}\n\nfunction closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = "none"); }\nfunction closeM() { closeModal(); }\ndocument.addEventListener("DOMContentLoaded", () => { renderLevels(); renderLeaderboard(); });`;
+            const scriptContenido = `// SCRIPT MAESTRO GENERADO POR ADMIN\nconst NIVELES_GLOBALES = ${niveles};\nconst RANKING_GLOBAL = ${ranking};\n\n// INYECCIÓN FORZADA: Sobrescribe LocalStorage con datos globales\nif (NIVELES_GLOBALES.length > 0) localStorage.setItem('scully_db_levels', JSON.stringify(NIVELES_GLOBALES));\nif (RANKING_GLOBAL.length > 0) localStorage.setItem('scully_ranks', JSON.stringify(RANKING_GLOBAL));\n\nfunction getDBLevels() { return JSON.parse(localStorage.getItem('scully_db_levels')) || []; }\nfunction calculatePoints(index) { return Math.max(100 - (index * 0.6), 5).toFixed(1); }\n\nfunction renderLevels(filter = "") {\n    const container = document.getElementById('list-container');\n    if (!container) return;\n    const db = getDBLevels();\n    container.innerHTML = "";\n    db.forEach((lvl, i) => {\n        if (lvl.name.toLowerCase().includes(filter.toLowerCase())) {\n            container.innerHTML += '<div class="level-card" onclick="openDetails(' + i + ')"><div class="level-thumb"><img src="https://img.youtube.com/vi/' + lvl.id + '/mqdefault.jpg"></div><div class="level-info"><h2>' + lvl.name + '</h2><p style="color:#ff6600; font-weight:bold; font-size:0.7rem;">+' + calculatePoints(i) + ' PTS</p></div><div class="rank-number">#' + (i + 1) + '</div></div>';\n        }\n    });\n}\n\nfunction openDetails(index) {\n    const db = getDBLevels();\n    const lvl = db[index];\n    const body = document.getElementById('modal-body');\n    const victors = lvl.victors && lvl.victors.length > 0 ? lvl.victors.join(', ') : 'Sin victors.';\n    body.innerHTML = '<h1 style="color:#ff6600; margin-bottom:0;">' + lvl.name + '</h1><p style="font-size:0.7rem; color:#444; margin-bottom:15px;">TOP #' + (index + 1) + ' • ' + calculatePoints(index) + ' PTS</p><iframe width="100%" height="250" src="https://www.youtube.com/embed/' + lvl.id + '" frameborder="0" allowfullscreen></iframe><div style="text-align:left; margin-top:15px;"><p style="margin:0;"><b style="color:#ff6600">FIRST VICTOR:</b> ' + (lvl.first || 'Nadie') + '</p><p style="font-size:0.8rem; color:#888; margin-top:5px;"><b>OTROS:</b> ' + victors + '</p></div>';\n    document.getElementById('levelModal').style.display = "block";\n}\n\nfunction renderLeaderboard() {\n    const body = document.getElementById('leaderboardBody');\n    if (!body) return;\n    const dbLevels = getDBLevels();\n    let users = JSON.parse(localStorage.getItem('scully_ranks')) || [];\n    users.forEach(u => {\n        let total = 0;\n        let comp = u.levelList ? u.levelList.split(",") : [];\n        comp.forEach(c => {\n            const idx = dbLevels.findIndex(l => l.name.trim().toLowerCase() === c.trim().toLowerCase());\n            if (idx > -1) total += parseFloat(calculatePoints(idx));\n        });\n        u.points = total.toFixed(1); u.count = comp.length;\n    });\n    users.sort((a, b) => b.points - a.points);\n    body.innerHTML = users.map((u, i) => '<tr class="rank-row" onclick="openUserProfile(\\'' + u.name + '\\')"><td>#' + (i + 1) + '</td><td style="text-align:left;"><img src="https://flagcdn.com/w20/' + u.country + '.png" style="margin-right:10px;">' + u.name + '</td><td style="color:#ff6600; font-weight:bold;">' + u.points + '</td><td style="color:#444;">' + u.count + '</td></tr>').join('');\n}\n\nfunction openUserProfile(name) {\n    const users = JSON.parse(localStorage.getItem('scully_ranks')) || [];\n    const db = getDBLevels();\n    const u = users.find(x => x.name === name);\n    if (!u) return;\n    document.getElementById('uName').innerText = u.name;\n    document.getElementById('uFlag').src = 'https://flagcdn.com/w80/' + u.country + '.png';\n    document.getElementById('uPoints').innerText = u.points;\n    document.getElementById('uCount').innerText = u.count;\n    const list = u.levelList.split(',').map(lvl => {\n        const idx = db.findIndex(l => l.name.toLowerCase() === lvl.trim().toLowerCase());\n        return '<div style="display:flex; justify-content:space-between; padding:5px; border-bottom:1px solid #111;"><span>' + lvl.trim() + '</span><b style="color:#ff6600">+' + (idx > -1 ? calculatePoints(idx) : '0.0') + '</b></div>';\n    }).join('');\n    document.getElementById('uList').innerHTML = list || 'Vacío.';\n    document.getElementById('uModal').style.display = "block";\n}\n\nfunction closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = "none"); }\nfunction closeM() { closeModal(); }\ndocument.addEventListener("DOMContentLoaded", () => { renderLevels(); renderLeaderboard(); });`;
             const blob = new Blob([scriptContenido], { type: 'text/javascript' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url; a.download = 'script.js'; a.click();
             URL.revokeObjectURL(url);
-            alert("Archivo script.js descargado. ¡Súbelo a Cloudflare!");
+            alert("script.js descargado con inyección forzada.");
         }
 
-        // FUNCIONES DE CONTROL
         function saveLevel() {
             const name = document.getElementById('lvlName').value.trim();
             const id = document.getElementById('lvlYT').value.trim();
@@ -184,7 +175,7 @@
             if(idx > -1) users[idx] = { name, levelList: list, country };
             else users.push({ name, levelList: list, country });
             localStorage.setItem('scully_ranks', JSON.stringify(users));
-            renderLeaderboard(); alert("Expediente Sincronizado.");
+            renderLeaderboard(); alert("Sincronizado.");
         }
 
         function deleteUser() {
@@ -195,27 +186,8 @@
             renderLeaderboard();
         }
 
-        function renderInbox() {
-            const cont = document.getElementById('inboxContent');
-            const data = JSON.parse(localStorage.getItem('scully_pendientes')) || [];
-            cont.innerHTML = data.map((r, i) => `
-                <div style="background:#111; padding:10px; border-left:2px solid var(--accent); margin-bottom:5px; display:flex; justify-content:space-between; align-items:center;">
-                    <span><b>${r.user}</b> -> ${r.level} | <a href="${r.video}" target="_blank" style="color:var(--accent)">Vid</a> | <a href="${r.drive}" target="_blank" style="color:#0088ff">RAW</a></span>
-                    <button onclick="delMsg(${i})" style="background:none; border:none; color:#500; cursor:pointer; font-size:1.2rem;">&times;</button>
-                </div>
-            `).join('') || "Bandeja vacía.";
-        }
-
-        function delMsg(i) {
-            let d = JSON.parse(localStorage.getItem('scully_pendientes'));
-            d.splice(i, 1);
-            localStorage.setItem('scully_pendientes', JSON.stringify(d));
-            renderInbox();
-        }
-
         function closeM() { document.getElementById('uModal').style.display = "none"; }
         window.onload = renderLeaderboard;
     </script>
 </body>
 </html>
-
