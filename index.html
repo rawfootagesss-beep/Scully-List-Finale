@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Scully List | Directorio</title>
+    <title>The Scully List | Central</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root { --accent: #ff6600; --bg: #050505; --card: #0a0a0a; --glow: 0 0 15px rgba(255, 102, 0, 0.3); }
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; }
         
-        /* Créditos Restaurados */
         .top-credits { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.8); border-bottom: 1px solid #111; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; }
         .credit-box i { color: var(--accent); margin-right: 5px; }
         .credit-box span { color: #888; }
@@ -25,14 +24,13 @@
         .btn-scully { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 10px 20px; text-decoration: none; font-size: 0.8rem; transition: 0.3s; cursor: pointer; font-family: 'Lexend Deca'; }
         .btn-scully:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
 
-        #list-container { width: 95%; max-width: 900px; margin: 40px auto; display: grid; gap: 15px; }
+        #list-container { width: 95%; max-width: 900px; margin: 40px auto; display: grid; gap: 15px; min-height: 100px; }
         .level-card { background: var(--card); border: 1px solid #111; display: flex; align-items: center; padding: 15px; position: relative; transition: 0.3s; cursor: pointer; }
         .level-card:hover { transform: scale(1.02); border-color: var(--accent); }
         .level-thumb img { width: 120px; border-radius: 4px; margin-right: 20px; }
         .level-info h2 { margin: 0; font-size: 1.2rem; text-transform: uppercase; }
         .rank-number { position: absolute; right: 20px; font-size: 2rem; font-weight: 700; color: rgba(255,255,255,0.05); }
 
-        /* Panel Admin Espejo */
         #adminPanel { display: none; background: #000; border: 1px solid var(--accent); padding: 25px; width: 90%; max-width: 500px; margin: 50px auto; border-radius: 10px; text-align: left; }
         input, textarea { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #fff; padding: 10px; margin-bottom: 10px; font-family: 'Lexend Deca'; box-sizing: border-box; }
         
@@ -54,7 +52,7 @@
         <input type="text" id="searchBar" placeholder="Filtrar niveles..." onkeyup="renderLevels(this.value)">
         <div class="header-buttons">
             <a href="leaderboards.html" class="btn-scully">LEADERBOARDS</a>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLScG_9uY4H8ZbpQlakBn7NSyl_iRRezmCEqNYpTl1OYovKJsXw/viewform?usp=sf_link" target="_blank" class="btn-scully">SUBIR RECORD</a>
+            <a href="https://docs.google.com/forms/d/..." target="_blank" class="btn-scully">SUBIR RECORD</a>
         </div>
     </header>
 
@@ -68,12 +66,12 @@
     <div id="adminPanel">
         <h4 style="color:var(--accent); margin:0 0 15px 0;">GESTIÓN DE DIRECTORIO</h4>
         <input type="text" id="lvlName" placeholder="Nombre Nivel">
-        <input type="text" id="lvlYT" placeholder="ID YouTube">
+        <input type="text" id="lvlYT" placeholder="ID YouTube (ej: d9mbeV4f64c)">
         <input type="text" id="lvlFirst" placeholder="Primer Victor">
-        <input type="number" id="lvlPos" placeholder="Puesto">
-        <textarea id="lvlVictors" placeholder="Otros Victors..."></textarea>
+        <input type="number" id="lvlPos" placeholder="Puesto (1 para Top 1)">
+        <textarea id="lvlVictors" placeholder="Otros Victors (separados por coma)"></textarea>
         <button class="btn-scully" style="width:100%; background:var(--accent); color:#000;" onclick="saveLevel()">PUBLICAR CAMBIO</button>
-        <button class="btn-scully" style="width:100%; margin-top:10px;" onclick="generarScriptJS()">DESCARGAR SCRIPT.JS</button>
+        <button class="btn-scully" style="width:100%; margin-top:10px;" onclick="generarScriptJS()">DESCARGAR SCRIPT.JS PARA CLOUDFLARE</button>
     </div>
 
     <div id="levelModal" class="modal">
@@ -86,27 +84,44 @@
     <script src="script.js"></script>
     <script>
         const TOKEN = "GdfuFCRy";
-        function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
+        
+        function checkAuth() { 
+            if(document.getElementById('tokenInput').value === TOKEN) { 
+                sessionStorage.setItem('scully_session', 'active'); 
+                document.getElementById('adminPanel').style.display = "block";
+                document.getElementById('authBox').style.display = "none";
+            } 
+        }
+
         window.onload = function() { 
             if(sessionStorage.getItem('scully_session') === 'active') {
                 document.getElementById('adminPanel').style.display = "block";
                 document.getElementById('authBox').style.display = "none";
             }
-            if(typeof renderLevels === 'function') renderLevels(); 
+            renderLevels(); 
         };
+
         function closeModal() { document.getElementById('levelModal').style.display = "none"; }
 
+        // ESTA FUNCIÓN AHORA ACTUALIZA LA LISTA AL INSTANTE
         function saveLevel() {
             const name = document.getElementById('lvlName').value.trim();
             const id = document.getElementById('lvlYT').value.trim();
             const first = document.getElementById('lvlFirst').value.trim();
             const pos = parseInt(document.getElementById('lvlPos').value) - 1;
             const victors = document.getElementById('lvlVictors').value.split(',').filter(v => v.trim() !== "");
+            
+            if(!name || !id) return alert("Nombre e ID de YouTube son obligatorios");
+
             let db = JSON.parse(localStorage.getItem('scully_db_levels')) || [];
             db = db.filter(l => l.name.toLowerCase() !== name.toLowerCase());
             db.splice(pos >= 0 ? pos : db.length, 0, { name, id, first, victors });
+            
             localStorage.setItem('scully_db_levels', JSON.stringify(db));
-            location.reload();
+            
+            // Actualizamos la lista visual sin recargar para que el usuario vea el cambio
+            renderLevels();
+            alert("Nivel añadido localmente. Ahora descarga el script.js");
         }
 
         function generarScriptJS() {
@@ -115,7 +130,7 @@
             const script = `
 localStorage.setItem('scully_db_levels', JSON.stringify(${n}));
 localStorage.setItem('scully_ranks', JSON.stringify(${r}));
-function getDBLevels() { return JSON.parse(localStorage.getItem('scully_db_levels')); }
+function getDBLevels() { return JSON.parse(localStorage.getItem('scully_db_levels')) || []; }
 function calculatePoints(i) { return Math.max(100 - (i * 0.6), 5).toFixed(1); }
 function renderLevels(f = "") {
     const c = document.getElementById('list-container'); if (!c) return;
@@ -129,25 +144,8 @@ function openDetails(i) {
     document.getElementById('modal-body').innerHTML = '<h1 style="color:#ff6600;">' + l.name + '</h1><iframe width="100%" height="250" src="https://www.youtube.com/embed/' + l.id + '" frameborder="0" allowfullscreen></iframe><p><b>FIRST:</b> ' + (l.first || "Nadie") + '</p>';
     document.getElementById('levelModal').style.display = "block";
 }
-function renderLeaderboard() {
-    const b = document.getElementById('leaderboardBody'); if (!b) return;
-    const db = getDBLevels(); let u = JSON.parse(localStorage.getItem('scully_ranks')) || [];
-    u.forEach(user => {
-        let t = 0; let l = user.levelList ? user.levelList.split(",") : [];
-        l.forEach(lvl => { const idx = db.findIndex(item => item.name.trim().toLowerCase() === lvl.trim().toLowerCase()); if (idx > -1) t += parseFloat(calculatePoints(idx)); });
-        user.points = t.toFixed(1); user.count = l.filter(x => x.trim() !== "").length;
-    });
-    u.sort((a, b) => b.points - a.points);
-    b.innerHTML = u.map((user, i) => '<tr class="rank-row" onclick="openUserProfile(\\'' + user.name + '\\')"><td>#' + (i + 1) + '</td><td style="text-align:left;"><img src="https://flagcdn.com/w20/' + user.country + '.png" style="margin-right:10px;">' + user.name + '</td><td style="color:#ff6600; font-weight:bold;">' + user.points + '</td><td>' + user.count + '</td></tr>').join("");
-}
-function openUserProfile(n) {
-    const u = (JSON.parse(localStorage.getItem('scully_ranks'))).find(x => x.name === n);
-    document.getElementById('uModalContent').innerHTML = '<span onclick="closeM()" style="cursor:pointer; color:#ff6600; position:absolute; right:20px; top:10px; font-size:2rem;">&times;</span><img src="https://flagcdn.com/w80/' + u.country + '.png" style="width:60px;"><h2 style="color:#ff6600">' + u.name + '</h2><div style="text-align:left; font-size:0.8rem;">' + u.levelList + '</div>';
-    document.getElementById('uModal').style.display = "block";
-}
-function closeModal() { document.querySelectorAll(".modal").forEach(m => m.style.display = "none"); }
-document.addEventListener("DOMContentLoaded", () => { renderLevels(); renderLeaderboard(); });
-            `;
+document.addEventListener("DOMContentLoaded", renderLevels);`;
+
             const blob = new Blob([script], { type: 'text/javascript' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
