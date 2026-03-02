@@ -1,0 +1,97 @@
+:root {
+    --bg-color: #0c0c0c;
+    --card-bg: #1a1a1a;
+    --prison-orange: #ff6600; /* Color uniforme de recluso */
+    --text-color: #ffffff;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Lexend Deca', sans-serif;
+    margin: 0; padding: 0;
+    display: flex; flex-direction: column; align-items: center;
+}
+
+header {
+    text-align: center;
+    padding: 50px 20px;
+    width: 100%;
+    border-bottom: 3px solid var(--prison-orange);
+}
+
+header h1 { 
+    font-size: 3.5rem; 
+    margin: 0; 
+    letter-spacing: -2px;
+}
+
+header span { 
+    color: var(--prison-orange); 
+    text-shadow: 0 0 15px rgba(255, 102, 0, 0.6); 
+}
+
+#searchBar {
+    margin-top: 25px;
+    padding: 12px 25px;
+    width: 80%;
+    max-width: 450px;
+    border-radius: 5px; /* Bordes más rectos para look industrial */
+    border: 2px solid var(--prison-orange);
+    background: #000;
+    color: white;
+    font-size: 1rem;
+}
+
+#list-container {
+    width: 90%;
+    max-width: 950px;
+    margin-top: 30px;
+}
+
+.level-card {
+    display: grid;
+    grid-template-columns: 180px 1fr 80px;
+    gap: 20px;
+    background: var(--card-bg);
+    margin-bottom: 12px;
+    padding: 15px;
+    border-radius: 4px;
+    border-right: 6px solid var(--prison-orange); /* Borde a la derecha para variar */
+    align-items: center;
+    transition: 0.2s;
+}
+
+.level-card:hover {
+    background: #252525;
+    transform: translateX(-5px); /* Se mueve hacia la izquierda al pasar el mouse */
+}
+
+.level-thumb img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid var(--prison-orange);
+}
+
+.level-info h2 { 
+    margin: 0; 
+    font-size: 1.4rem; 
+    color: var(--prison-orange);
+}
+
+.level-info p { color: #888; margin-top: 5px; text-transform: uppercase; font-size: 0.8rem; }
+
+#scrollTop {
+    position: fixed;
+    bottom: 25px; right: 25px;
+    width: 50px; height: 50px;
+    background: var(--prison-orange);
+    color: black;
+    border: none; border-radius: 5px;
+    cursor: pointer; font-weight: bold; font-size: 1.2rem;
+}
+
+@media (max-width: 600px) {
+    .level-card { grid-template-columns: 1fr; }
+}

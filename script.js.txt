@@ -1,0 +1,75 @@
+const levelNames = [
+    "The Golden", "Shukketsu", "Promethean", "Renevant", "Sky Shredder", 
+    "Crimson Planet", "ATOMIC CANNON MK II", "Cognition", "Cosmic Cyclone", 
+    "Cobwebs", "Coral Cave", "Ragnarok", "Bloodlust", "CITRA", "Nhelv", 
+    "Sigma", "ATOMIC CANNON", "Spectrum Cyclone", "Requiem", "Eternal Moment", 
+    "Omega", "Wasureta", "Arctic Lights", "Sink", "Sonic Wave Rebirth", 
+    "Sonic Wave", "Edge Of The Blade", "Molten Core", "GONER", "Generic Wave", 
+    "Titan Complex", "WOW", "Digital Descent", "Killbot", "Delta Interface", 
+    "Artificial Ascent", "Missing Benefits", "Quantum Processing", 
+    "Black Blizzard", "Ethereal Artifice", "Rate Demon", "Void Wave", 
+    "BBBBBBBBBBBBBBBBBBBB", "Bass Cave", "Ziroikabi", "Hatred", 
+    "Auditory Breaker", "Surge of the Shield", "Dolos", "Cheyenne", 
+    "Dusker Processing", "Athanatos", "New Record", "Infernal Abyys", 
+    "Mystic", "Wcropolix", "Blade Of Justice", "Phobos", "Sakupen Hell", 
+    "Alpha Baa X", "Tenth Circle", "Carcano", "Untitled", "OPSM1", 
+    "Barbaros Finale", "Gravity", "Bloodbath", "Idols", "Moment", 
+    "Quaoar (ViPriN)", "The Hell Factory", "Le Fishe", "Down Bass", 
+    "PROTOFLICKER", "Prismatic Haze", "A Bizarre Phantasm", "Artificial Ideology", 
+    "Conical Depression", "Triple Six", "EKO", "Callisto", "Burn To Dust", 
+    "Arctic Arena", "Aftermath", "Overtime", "Sigma Interface", "KINGSLAYER", 
+    "WaveBreaker", "Annihilation Nation", "Plasma Pulse III", "Laranja Azul Rosa", 
+    "Twisted Tranquility", "Maybe Possibly Thing", "Panasonic", "Concaved Memories", 
+    "Codependence (2P)", "Audio Extraction", "Libertas", "Heartbeat (Krmal)", 
+    "Esencia", "Sarthix", "Welcome To GD News", "Pumped Up Kicks", "Recrystallize", 
+    "Cupid", "Sunburn", "4Elements", "Another Phase", "Nowdead", "Fexty", 
+    "SUBVERSIVE", "The Ultimate Phase", "Broken Signal", "Reverence", "Napalm", 
+    "Stellaluna", "Tech Manifestation", "Awakening Horus", "Retention", 
+    "La Llorona", "Ballistic Funk", "Red World Rebirth", "Clown Control", 
+    "Dismal Duststorm", "Breakout", "Zettabyte", "Explosion", "Doradura", 
+    "Deception Dive", "Crowd Control", "Elite Z Rebirth", "CYCLONE", 
+    "TROLLMACHINE", "STRATUS", "Night Party", "Voided", "The Flawless", 
+    "SHINE", "UltraSans", "Allegiance", "BLACKLIGHTS", "IDOL19", "HyperSonic", 
+    "Just DANCE", "Incipient", "Melon River", "Matilda The Machine", "AcropoliX", 
+    "The Ultimate Demon", "Hidden In The Sand", "Robotchief Exposal", "Uprise", 
+    "Disruption", "FISH FISH GODMODE", "Clarity", "Proteus", "Penombre", 
+    "Forbidden Isle", "The Lost Existence", "Verisimilitude", "Phantasmagoria (whlt)", 
+    "Cataclysm", "Lost Love", "Twitch Denan", "Anya III", "Komodo", "GLISTEN", 
+    "Azurite (Sillow)", "Reverie", "Decay", "TANTRUM", "Misty Mountains", 
+    "Niwa", "Duplication", "Raindance", "Shotgun", "Bang Gang (2P)", "Supernova", 
+    "Ion", "Cerebral Torment", "Troll Level", "White Album", "Acu", 
+    "Through The Decay", "Precipitance", "Red World"
+];
+
+const container = document.getElementById('list-container');
+
+function loadLevels(filter = "") {
+    container.innerHTML = "";
+    levelNames.forEach((name, index) => {
+        if (name.toLowerCase().includes(filter.toLowerCase())) {
+            const card = document.createElement('div');
+            card.className = 'level-card';
+            const searchLink = `https://www.youtube.com/results?search_query=Geometry+Dash+Shitty+${name.replace(/ /g, "+")}`;
+            
+            card.innerHTML = `
+                <div class="level-thumb">
+                    <img src="https://i.ytimg.com/vi/6d8vIAt6h_s/mqdefault.jpg" alt="thumbnail">
+                </div>
+                <div class="level-info">
+                    <h2>#${index + 1} - ${name}</h2>
+                    <p>Creador: Community Project</p>
+                    <a href="${searchLink}" target="_blank" style="color:var(--accent); font-size:0.8rem;">Ver Video</a>
+                </div>
+                <div style="font-size: 1.5rem; color: var(--accent); font-weight: bold;">#${index + 1}</div>
+            `;
+            container.appendChild(card);
+        }
+    });
+}
+
+function searchLevel() {
+    const text = document.getElementById('searchBar').value;
+    loadLevels(text);
+}
+
+document.addEventListener('DOMContentLoaded', () => loadLevels());

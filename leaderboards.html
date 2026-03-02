@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scully Leaderboards | Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root { --accent: #ff6600; --bg: #050505; }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; text-align: center; }
+        
+        .top-credits { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.8); border-bottom: 1px solid #111; font-size: 0.65rem; }
+        .credit-box i { color: var(--accent); margin-right: 5px; }
+
+        .wrapper { width: 95%; max-width: 850px; margin: 30px auto; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 5px; }
+        .rank-row { background: #0a0a0a; cursor: pointer; transition: 0.3s; }
+        .rank-row:hover { background: #111; }
+        td { padding: 15px; border-top: 1px solid #111; border-bottom: 1px solid #111; }
+
+        /* Admin */
+        .auth-zone { margin-top: 80px; opacity: 0.02; transition: 0.5s; }
+        .auth-zone:hover { opacity: 1; }
+        #adminPanel { display: none; background: #000; border: 1px solid var(--accent); padding: 25px; margin-top: 40px; border-radius: 10px; text-align: left; }
+        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        input, select, textarea { width: 100%; background: #080808; border: 1px solid #222; color: #fff; padding: 10px; margin-bottom: 10px; font-family: 'Lexend Deca'; box-sizing: border-box; }
+        
+        .btn-scully { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 10px 20px; cursor: pointer; font-family: 'Lexend Deca'; }
+        .btn-red { background: #300; color: #f44; border: 1px solid #500; padding: 10px; cursor: pointer; width: 100%; }
+
+        /* Perfil */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(8px); }
+        .modal-content { background: #080808; margin: 5% auto; padding: 30px; width: 90%; max-width: 450px; border: 1px solid var(--accent); border-radius: 15px; position: relative; }
+    </style>
+</head>
+<body>
+    <nav class="top-credits">
+        <div class="credit-box"><i class="fas fa-crown"></i> OWNER <span>score</span></div>
+        <div class="credit-box"><i class="fas fa-user-shield"></i> ADMIN <span>Vegardo</span></div>
+        <div class="credit-box"><i class="fas fa-hands-helping"></i> HELPER <span>Blitz</span></div>
+        <div class="credit-box"><i class="fas fa-code"></i> CODIFICADOR <span>score</span></div>
+    </nav>
+
+    <header style="padding:40px 0;">
+        <h1>SCULLY <span>LEADERBOARDS</span></h1>
+        <a href="index.html" style="color:var(--accent); text-decoration:none; font-size:0.8rem;">← VOLVER AL DIRECTORIO</a>
+    </header>
+
+    <main class="wrapper">
+        <table>
+            <thead>
+                <tr style="color:var(--accent); font-size:0.6rem; text-transform:uppercase;">
+                    <th>#</th><th style="text-align:left">Identidad</th><th>Puntos</th><th>Lvls</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboardBody"></tbody>
+        </table>
+
+        <div class="auth-zone">
+            <input type="password" id="tokenInput" placeholder="...">
+            <button class="btn-scully" onclick="checkAuth()">AUTENTICAR</button>
+        </div>
+
+        <div id="adminPanel">
+            <div class="admin-grid">
+                <div style="grid-column: 1 / -1; border-bottom: 1px solid #222; padding-bottom: 15px;">
+                    <h4 style="color:var(--accent); margin:0 0 10px 0;">BANDEJA DE ENTRADA</h4>
+                    <div id="inboxContent"></div>
+                    <button class="btn-red" style="width:auto;" onclick="localStorage.removeItem('scully_pendientes'); renderInbox();">Limpiar Bandeja</button>
+                </div>
+                <div>
+                    <h4>PERFILES</h4>
+                    <input type="text" id="targetUser" placeholder="Nombre">
+                    <select id="targetCountry"><option value="cl">Chile</option><option value="ar">Argentina</option><option value="mx">México</option><option value="br">Brasil</option></select>
+                    <textarea id="targetList" placeholder="Niveles (Acu, The Golden...)"></textarea>
+                    <button class="btn-scully" style="width:100%" onclick="saveUser()">GUARDAR</button>
+                    <button class="btn-red" style="margin-top:5px" onclick="deleteUser()">ELIMINAR JUGADOR</button>
+                </div>
+                <div>
+                    <h4>DIRECTORIO</h4>
+                    <input type="text" id="lvlName" placeholder="Nombre Nivel">
+                    <input type="text" id="lvlYT" placeholder="ID YouTube">
+                    <input type="text" id="lvlFirst" placeholder="Primer Victor (First)">
+                    <input type="number" id="lvlPos" placeholder="Puesto (1-150)">
+                    <textarea id="lvlVictors" placeholder="Otros Victors (Comas)"></textarea>
+                    <button class="btn-scully" style="width:100%" onclick="saveLevel()">PUBLICAR</button>
+                    <button class="btn-red" style="margin-top:5px" onclick="deleteLevel()">ELIMINAR NIVEL</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="uModal" class="modal">
+        <div class="modal-content">
+            <span style="position:absolute; right:20px; top:10px; cursor:pointer; color:var(--accent); font-size:2rem;" onclick="closeM()">&times;</span>
+            <img id="uFlag" src="" style="width:60px; border-radius:4px;">
+            <h2 id="uName" style="margin:10px 0;"></h2>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
+                <div style="background:#000; padding:10px;"><b id="uPoints" style="color:var(--accent); font-size:1.5rem;"></b><br><small>PTS</small></div>
+                <div style="background:#000; padding:10px;"><b id="uCount" style="font-size:1.5rem;"></b><br><small>LVLS</small></div>
+            </div>
+            <div id="uList" style="text-align:left; max-height:180px; overflow-y:auto; background:#000; padding:10px; font-size:0.8rem;"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        const TOKEN = "GdfuFCRy";
+        function checkAuth() {
+            if(document.getElementById('tokenInput').value === TOKEN) {
+                document.getElementById('adminPanel').style.display = "block";
+                renderInbox();
+                alert("Protocolo Scully: Acceso Maestro.");
+            }
+        }
+        function saveLevel() {
+            const name = document.getElementById('lvlName').value.trim();
+            const id = document.getElementById('lvlYT').value.trim();
+            const first = document.getElementById('lvlFirst').value.trim();
+            const pos = parseInt(document.getElementById('lvlPos').value) - 1;
+            const victors = document.getElementById('lvlVictors').value.split(',').filter(v => v.trim() !== "");
+            let db = JSON.parse(localStorage.getItem('scully_db_levels')) || [];
+            db = db.filter(l => l.name.toLowerCase() !== name.toLowerCase());
+            db.splice(pos >= 0 ? pos : db.length, 0, { name, id, first, victors });
+            localStorage.setItem('scully_db_levels', JSON.stringify(db));
+            location.reload();
+        }
+        function deleteLevel() {
+            const name = document.getElementById('lvlName').value.trim();
+            let db = JSON.parse(localStorage.getItem('scully_db_levels')) || [];
+            db = db.filter(l => l.name.toLowerCase() !== name.toLowerCase());
+            localStorage.setItem('scully_db_levels', JSON.stringify(db));
+            location.reload();
+        }
+        function saveUser() {
+            const name = document.getElementById('targetUser').value.trim();
+            const list = document.getElementById('targetList').value;
+            const country = document.getElementById('targetCountry').value;
+            let users = JSON.parse(localStorage.getItem('scully_ranks')) || [];
+            const idx = users.findIndex(u => u.name.toLowerCase() === name.toLowerCase());
+            if(idx > -1) users[idx] = { name, levelList: list, country };
+            else users.push({ name, levelList: list, country });
+            localStorage.setItem('scully_ranks', JSON.stringify(users));
+            renderLeaderboard(); alert("Sincronizado.");
+        }
+        function deleteUser() {
+            const name = document.getElementById('targetUser').value.trim();
+            let users = JSON.parse(localStorage.getItem('scully_ranks')) || [];
+            users = users.filter(u => u.name.toLowerCase() !== name.toLowerCase());
+            localStorage.setItem('scully_ranks', JSON.stringify(users));
+            renderLeaderboard();
+        }
+        function renderInbox() {
+            const cont = document.getElementById('inboxContent');
+            const data = JSON.parse(localStorage.getItem('scully_pendientes')) || [];
+            cont.innerHTML = data.map((r, i) => `<div style="background:#111; padding:10px; border-left:3px solid var(--accent); margin-bottom:5px; font-size:0.8rem; display:flex; justify-content:space-between; align-items:center;"><span><b>${r.user}</b> -> ${r.level} | <a href="${r.video}" target="_blank" style="color:var(--accent)">Vid</a> | <a href="${r.drive}" target="_blank" style="color:#0088ff">RAW</a></span><button onclick="delMsg(${i})" style="background:none; border:none; color:#500; cursor:pointer;">&times;</button></div>`).join('') || "Sin mensajes.";
+        }
+        function delMsg(i) {
+            let d = JSON.parse(localStorage.getItem('scully_pendientes'));
+            d.splice(i, 1);
+            localStorage.setItem('scully_pendientes', JSON.stringify(d));
+            renderInbox();
+        }
+        function closeM() { document.getElementById('uModal').style.display = "none"; }
+        window.onload = renderLeaderboard;
+    </script>
+</body>
+</html>

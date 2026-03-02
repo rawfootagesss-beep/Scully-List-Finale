@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Scully List - GD</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <h1>THE <span>SCULLY</span> LIST</h1>
+        <p>Directorio de niveles Shitty • Protocolo de Máxima Seguridad</p>
+        <input type="text" id="searchBar" placeholder="Buscar recluso (nivel)..." onkeyup="searchLevel()">
+    </header>
+
+    <main id="list-container">
+        </main>
+
+    <button id="scrollTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
