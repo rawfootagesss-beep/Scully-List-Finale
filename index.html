@@ -10,7 +10,6 @@
         :root { --accent: #ff6600; --bg: #050505; --card: #0a0a0a; --glow: 0 0 15px rgba(255, 102, 0, 0.3); }
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; }
         
-        /* Créditos del Staff */
         .top-credits { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.8); border-bottom: 1px solid #111; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; }
         .credit-box i { color: var(--accent); margin-right: 5px; }
         .credit-box span { color: #888; }
@@ -25,11 +24,11 @@
         .btn-scully { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 10px 20px; text-decoration: none; font-size: 0.8rem; transition: 0.3s; cursor: pointer; font-family: 'Lexend Deca'; }
         .btn-scully:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
 
-        /* Lista de Niveles */
+        /* LISTA PRINCIPAL DE NIVELES */
         #list-container { width: 95%; max-width: 900px; margin: 40px auto; display: grid; gap: 15px; min-height: 100px; }
         .level-card { background: var(--card); border: 1px solid #111; display: flex; align-items: center; padding: 15px; position: relative; transition: 0.3s; cursor: pointer; }
         .level-card:hover { transform: scale(1.02); border-color: var(--accent); }
-        .level-thumb img { width: 120px; border-radius: 4px; margin-right: 20px; }
+        .level-thumb img { width: 120px; border-radius: 4px; margin-right: 20px; display: block; }
         .level-info h2 { margin: 0; font-size: 1.1rem; text-transform: uppercase; }
         .rank-number { position: absolute; right: 20px; font-size: 2rem; font-weight: 700; color: rgba(255,255,255,0.05); }
 
@@ -44,7 +43,7 @@
         .modal-content { background: #080808; margin: 5% auto; padding: 30px; width: 90%; max-width: 500px; border: 1px solid var(--accent); border-radius: 15px; position: relative; text-align: center; }
         .close-btn { position: absolute; right: 20px; top: 15px; color: var(--accent); font-size: 2rem; cursor: pointer; }
 
-        /* Acceso Admin */
+        /* Candado de Acceso */
         .admin-access { margin: 80px 0 20px; text-align: center; color: #111; }
         .admin-access i { cursor: pointer; transition: 0.3s; }
         .admin-access i:hover { color: var(--accent); }
@@ -73,14 +72,14 @@
     <div class="admin-access">
         <i class="fas fa-lock" onclick="toggleAuth()"></i>
         <div id="authBox">
-            <input type="password" id="tokenInput" placeholder="Token Scully" style="width:140px; text-align:center; border: 1px solid #222; background: #000; color: #fff;">
+            <input type="password" id="tokenInput" placeholder="Token" style="width:140px; text-align:center; border: 1px solid #222; background: #000; color: #fff;">
             <button class="btn-scully" onclick="checkAuth()">ENTRAR</button>
         </div>
     </div>
 
     <div id="adminPanel">
         <h4 style="color:var(--accent); margin-bottom: 20px; text-transform: uppercase; font-size: 0.8rem; border-bottom: 1px solid #222; padding-bottom: 10px;">
-            <i class="fas fa-tools"></i> Gestión del Directorio
+            <i class="fas fa-tools"></i> Gestión del Directorio Principal
         </h4>
         <div class="admin-flex">
             <div class="form-side">
@@ -89,11 +88,11 @@
                 <input type="text" id="lvlFirst" placeholder="Primer Victor">
                 <input type="number" id="lvlPos" placeholder="Puesto (1 = Top 1)">
                 <textarea id="lvlVictors" placeholder="Otros Victors (separados por coma)"></textarea>
-                <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; font-weight:bold;" onclick="saveLevel()">PUBLICAR CAMBIO LOCAL</button>
+                <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; font-weight:bold;" onclick="saveLevel()">AÑADIR A LA LISTA</button>
                 <button class="btn-scully" style="width:100%; margin-top:10px; border-color:#fff; color:#fff;" onclick="descargarScript()">DESCARGAR SCRIPT.JS FINAL</button>
             </div>
             <div class="list-side">
-                <p style="font-size: 0.6rem; color: #444; margin-bottom: 10px; text-transform: uppercase;">Lista Actual (Borrar niveles)</p>
+                <p style="font-size: 0.6rem; color: #444; margin-bottom: 10px; text-transform: uppercase;">Eliminar Niveles Rápido</p>
                 <div id="adminListView" style="background:#080808; padding:10px; max-height:300px; overflow-y:auto; border: 1px solid #111;"></div>
             </div>
         </div>
@@ -102,9 +101,50 @@
     <div id="levelModal" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeModal()">&times;</span><div id="modal-body"></div></div></div>
 
     <script src="script.js"></script>
+    
     <script>
         const TOKEN = "GdfuFCRy";
 
+        // Funciones de Fuerza Bruta Local para ignorar el script.js antiguo
+        function getDBLevels() { return JSON.parse(localStorage.getItem('scully_db_levels')) || []; }
+        function calculatePoints(i) { return Math.max(100 - (i * 0.6), 5).toFixed(1); }
+
+        window.renderLevels = function(f = "") {
+            const c = document.getElementById('list-container');
+            if(!c) return;
+            c.innerHTML = "";
+            const db = getDBLevels();
+            if(db.length === 0) { c.innerHTML = "<p style='color:#333; text-align:center; width:100%;'>Directorio vacío.</p>"; return; }
+            
+            db.forEach((l, i) => { 
+                if(l.name.toLowerCase().includes(f.toLowerCase())) {
+                    c.innerHTML += `
+                    <div class="level-card" onclick="openDetails(${i})">
+                        <div class="level-thumb"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"></div>
+                        <div class="level-info"><h2>${l.name}</h2><p style="color:#ff6600; font-weight:bold; font-size:0.75rem;">+${calculatePoints(i)} PTS</p></div>
+                        <div class="rank-number">#${i + 1}</div>
+                    </div>`;
+                }
+            });
+        }
+
+        window.openDetails = function(i) {
+            const l = getDBLevels()[i];
+            const victors = l.victors && l.victors.length > 0 ? l.victors.join(", ") : "Sin victors registrados";
+            document.getElementById('modal-body').innerHTML = `
+                <h1 style="color:#ff6600; margin-bottom:5px;">${l.name}</h1>
+                <p style="font-size:0.7rem; color:#444; margin-bottom:15px;">TOP #${i + 1} • ${calculatePoints(i)} PTS</p>
+                <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
+                    <iframe style="position:absolute; top:0; left:0; width:100%; height:100%;" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div style="text-align:left; margin-top:15px;">
+                    <p style="margin:0;"><b style="color:#ff6600">FIRST VICTOR:</b> ${l.first || 'Nadie'}</p>
+                    <p style="font-size:0.8rem; color:#888; margin-top:5px;"><b>OTROS:</b> ${victors}</p>
+                </div>`;
+            document.getElementById('levelModal').style.display = "block";
+        }
+
+        // Sistema de Admin
         function toggleAuth() {
             const box = document.getElementById('authBox');
             box.style.display = box.style.display === "block" ? "none" : "block";
@@ -123,7 +163,7 @@
                 document.querySelector('.admin-access').style.display = "none";
                 updateAdminList();
             }
-            if(typeof renderLevels === 'function') renderLevels();
+            renderLevels();
         };
 
         function closeModal() { document.getElementById('levelModal').style.display = "none"; }
@@ -142,16 +182,24 @@
             db.splice(pos >= 0 ? pos : db.length, 0, { name, id, first, victors });
             
             localStorage.setItem('scully_db_levels', JSON.stringify(db));
-            if(typeof renderLevels === 'function') renderLevels();
+            
+            // ACTUALIZA AMBAS LISTAS INSTANTÁNEAMENTE
+            renderLevels();
             updateAdminList();
-            alert("Nivel guardado. Recuerda descargar el script.js para que todos lo vean.");
+            
+            // Limpia los campos
+            document.getElementById('lvlName').value = "";
+            document.getElementById('lvlYT').value = "";
+            document.getElementById('lvlFirst').value = "";
+            document.getElementById('lvlPos').value = "";
+            document.getElementById('lvlVictors').value = "";
         }
 
         function deleteLevel(i) {
             let db = JSON.parse(localStorage.getItem('scully_db_levels')) || [];
             db.splice(i, 1);
             localStorage.setItem('scully_db_levels', JSON.stringify(db));
-            if(typeof renderLevels === 'function') renderLevels();
+            renderLevels();
             updateAdminList();
         }
 
@@ -171,19 +219,24 @@
             const r = localStorage.getItem('scully_ranks') || "[]";
             
             const scriptContenido = `
-// MOTOR CENTRAL SCULLY - ACTUALIZADO
+// MOTOR CENTRAL SCULLY - V2 (Blindado)
 const NIVELES = ${n};
 const RANKING = ${r};
 
-localStorage.setItem('scully_db_levels', JSON.stringify(NIVELES));
-localStorage.setItem('scully_ranks', JSON.stringify(RANKING));
+if (sessionStorage.getItem('scully_session') !== 'active') {
+    localStorage.setItem('scully_db_levels', JSON.stringify(NIVELES));
+    localStorage.setItem('scully_ranks', JSON.stringify(RANKING));
+}
 
+function getDBLevelsLive() { return JSON.parse(localStorage.getItem('scully_db_levels')) || NIVELES; }
+function getDBRanksLive() { return JSON.parse(localStorage.getItem('scully_ranks')) || RANKING; }
 function calculatePoints(i) { return Math.max(100 - (i * 0.6), 5).toFixed(1); }
 
 function renderLevels(f = "") {
     const c = document.getElementById('list-container'); if(!c) return;
     c.innerHTML = "";
-    NIVELES.forEach((l, i) => { 
+    const db = getDBLevelsLive();
+    db.forEach((l, i) => { 
         if(l.name.toLowerCase().includes(f.toLowerCase())) {
             c.innerHTML += '<div class="level-card" onclick="openDetails(' + i + ')"><div class="level-thumb"><img src="https://img.youtube.com/vi/' + l.id + '/mqdefault.jpg"></div><div class="level-info"><h2>' + l.name + '</h2><p style="color:#ff6600; font-weight:bold;">+' + calculatePoints(i) + ' PTS</p></div><div class="rank-number">#' + (i + 1) + '</div></div>';
         }
@@ -191,7 +244,7 @@ function renderLevels(f = "") {
 }
 
 function openDetails(i) {
-    const l = NIVELES[i];
+    const l = getDBLevelsLive()[i];
     const victors = l.victors && l.victors.length > 0 ? l.victors.join(", ") : "Sin victors registrados";
     document.getElementById('modal-body').innerHTML = '<h1 style="color:#ff6600; margin-bottom:5px;">' + l.name + '</h1><p style="font-size:0.7rem; color:#444; margin-bottom:15px;">TOP #' + (i + 1) + ' • ' + calculatePoints(i) + ' PTS</p><div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;"><iframe style="position:absolute; top:0; left:0; width:100%; height:100%;" src="https://www.youtube.com/embed/' + l.id + '" frameborder="0" allowfullscreen></iframe></div><div style="text-align:left; margin-top:15px;"><p style="margin:0;"><b style="color:#ff6600">FIRST VICTOR:</b> ' + (l.first || 'Nadie') + '</p><p style="font-size:0.8rem; color:#888; margin-top:5px;"><b>OTROS:</b> ' + victors + '</p></div>';
     document.getElementById('levelModal').style.display = "block";
@@ -199,17 +252,19 @@ function openDetails(i) {
 
 function renderLeaderboard() {
     const b = document.getElementById('leaderboardBody'); if(!b) return;
-    RANKING.forEach(u => {
+    const db = getDBLevelsLive();
+    const ranks = getDBRanksLive();
+    ranks.forEach(u => {
         let t = 0; let list = u.levelList ? u.levelList.split(",") : [];
-        list.forEach(lvl => { const idx = NIVELES.findIndex(item => item.name.trim().toLowerCase() === lvl.trim().toLowerCase()); if(idx > -1) t += parseFloat(calculatePoints(idx)); });
+        list.forEach(lvl => { const idx = db.findIndex(item => item.name.trim().toLowerCase() === lvl.trim().toLowerCase()); if(idx > -1) t += parseFloat(calculatePoints(idx)); });
         u.pts = t.toFixed(1); u.cnt = list.filter(x => x.trim() !== "").length;
     });
-    RANKING.sort((a,b) => b.pts - a.pts);
-    b.innerHTML = RANKING.map((u, i) => '<tr class="rank-row" onclick="openUserProfile(\\'' + u.name + '\\')"><td>#' + (i + 1) + '</td><td style="text-align:left;"><img src="https://flagcdn.com/w20/' + u.country + '.png" style="margin-right:10px;">' + u.name + '</td><td style="color:#ff6600; font-weight:bold;">' + u.pts + '</td><td>' + u.cnt + '</td></tr>').join("");
+    ranks.sort((a,b) => b.pts - a.pts);
+    b.innerHTML = ranks.map((u, i) => '<tr class="rank-row" onclick="openUserProfile(\\'' + u.name + '\\')"><td>#' + (i + 1) + '</td><td style="text-align:left;"><img src="https://flagcdn.com/w20/' + u.country + '.png" style="margin-right:10px;">' + u.name + '</td><td style="color:#ff6600; font-weight:bold;">' + u.pts + '</td><td>' + u.cnt + '</td></tr>').join("");
 }
 
 function openUserProfile(n) {
-    const u = RANKING.find(x => x.name === n);
+    const u = getDBRanksLive().find(x => x.name === n);
     document.getElementById('uModalContent').innerHTML = '<span onclick="closeM()" style="cursor:pointer; color:#ff6600; position:absolute; right:20px; top:10px; font-size:2rem;">&times;</span><img src="https://flagcdn.com/w80/' + u.country + '.png" style="width:60px;"><h2 style="color:#ff6600">' + u.name + '</h2><div style="text-align:left; font-size:0.8rem; border-top:1px solid #111; padding-top:10px;">' + u.levelList + '</div>';
     document.getElementById('uModal').style.display = "block";
 }
@@ -223,4 +278,6 @@ document.addEventListener("DOMContentLoaded", () => { renderLevels(); renderLead
     </script>
 </body>
 </html>
+</html>
+
 
