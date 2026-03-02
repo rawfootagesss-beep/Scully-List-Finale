@@ -10,9 +10,11 @@
         :root { --accent: #ff6600; --bg: #050505; --card: #0a0a0a; --glow: 0 0 15px rgba(255, 102, 0, 0.3); }
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; }
         
-        .top-credits { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.8); border-bottom: 1px solid #111; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; }
-        .credit-box i { color: var(--accent); margin-right: 5px; }
+        .top-credits { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; padding: 12px; background: rgba(0,0,0,0.8); border-bottom: 1px solid #111; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; }
+        .credit-box { display: flex; align-items: center; gap: 5px; }
+        .credit-box i { color: var(--accent); }
         .credit-box span { color: #888; }
+        .discord-btn { color: #5865F2 !important; font-weight: bold; text-decoration: none; text-transform: uppercase; }
 
         header { padding: 50px 20px; text-align: center; }
         h1 { font-size: 2.5rem; letter-spacing: 5px; margin: 0; text-transform: uppercase; }
@@ -24,7 +26,6 @@
         .btn-scully { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 10px 20px; text-decoration: none; font-size: 0.8rem; transition: 0.3s; cursor: pointer; font-family: 'Lexend Deca'; }
         .btn-scully:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
 
-        /* LISTA PRINCIPAL DE NIVELES */
         #list-container { width: 95%; max-width: 900px; margin: 40px auto; display: grid; gap: 15px; min-height: 100px; }
         .level-card { background: var(--card); border: 1px solid #111; display: flex; align-items: center; padding: 15px; position: relative; transition: 0.3s; cursor: pointer; }
         .level-card:hover { transform: scale(1.02); border-color: var(--accent); }
@@ -32,7 +33,6 @@
         .level-info h2 { margin: 0; font-size: 1.1rem; text-transform: uppercase; }
         .rank-number { position: absolute; right: 20px; font-size: 2rem; font-weight: 700; color: rgba(255,255,255,0.05); }
 
-        /* Panel Admin */
         #adminPanel { display: none; background: #000; border: 1px solid var(--accent); padding: 25px; width: 95%; max-width: 800px; margin: 50px auto; border-radius: 10px; text-align: left; }
         .admin-flex { display: flex; flex-wrap: wrap; gap: 20px; }
         .form-side, .list-side { flex: 1; min-width: 300px; }
@@ -43,7 +43,6 @@
         .modal-content { background: #080808; margin: 5% auto; padding: 30px; width: 90%; max-width: 500px; border: 1px solid var(--accent); border-radius: 15px; position: relative; text-align: center; }
         .close-btn { position: absolute; right: 20px; top: 15px; color: var(--accent); font-size: 2rem; cursor: pointer; }
 
-        /* Candado de Acceso */
         .admin-access { margin: 80px 0 20px; text-align: center; color: #111; }
         .admin-access i { cursor: pointer; transition: 0.3s; }
         .admin-access i:hover { color: var(--accent); }
@@ -52,6 +51,7 @@
 </head>
 <body>
     <nav class="top-credits">
+        <div class="credit-box"><i class="fab fa-discord" style="color:#5865F2;"></i> <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="discord-btn">Discord</a></div>
         <div class="credit-box"><i class="fas fa-crown"></i> OWNER <span>score</span></div>
         <div class="credit-box"><i class="fas fa-user-shield"></i> ADMIN <span>Vegardo</span></div>
         <div class="credit-box"><i class="fas fa-hands-helping"></i> HELPER <span>Blitz</span></div>
@@ -92,20 +92,17 @@
                 <button class="btn-scully" style="width:100%; margin-top:10px; border-color:#fff; color:#fff;" onclick="descargarScript()">DESCARGAR SCRIPT.JS FINAL</button>
             </div>
             <div class="list-side">
-                <p style="font-size: 0.6rem; color: #444; margin-bottom: 10px; text-transform: uppercase;">Eliminar Niveles Rápido</p>
+                <p style="font-size: 0.6rem; color: #444; margin-bottom: 10px; text-transform: uppercase;">Eliminar Niveles</p>
                 <div id="adminListView" style="background:#080808; padding:10px; max-height:300px; overflow-y:auto; border: 1px solid #111;"></div>
             </div>
         </div>
     </div>
 
-    <div id="levelModal" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeModal()">&times;</span><div id="modal-body"></div></div></div>
+    <div id="levelModal" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeModal('levelModal')">&times;</span><div id="modal-body"></div></div></div>
 
     <script src="script.js"></script>
-    
     <script>
         const TOKEN = "GdfuFCRy";
-
-        // Funciones de Fuerza Bruta Local para ignorar el script.js antiguo
         function getDBLevels() { return JSON.parse(localStorage.getItem('scully_db_levels')) || []; }
         function calculatePoints(i) { return Math.max(100 - (i * 0.6), 5).toFixed(1); }
 
@@ -144,19 +141,9 @@
             document.getElementById('levelModal').style.display = "block";
         }
 
-        // Sistema de Admin
-        function toggleAuth() {
-            const box = document.getElementById('authBox');
-            box.style.display = box.style.display === "block" ? "none" : "block";
-        }
-
-        function checkAuth() {
-            if(document.getElementById('tokenInput').value === TOKEN) {
-                sessionStorage.setItem('scully_session', 'active');
-                location.reload();
-            }
-        }
-
+        function toggleAuth() { const box = document.getElementById('authBox'); box.style.display = box.style.display === "block" ? "none" : "block"; }
+        function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
+        
         window.onload = function() {
             if(sessionStorage.getItem('scully_session') === 'active') {
                 document.getElementById('adminPanel').style.display = "block";
@@ -166,7 +153,7 @@
             renderLevels();
         };
 
-        function closeModal() { document.getElementById('levelModal').style.display = "none"; }
+        function closeModal(id) { document.getElementById(id).style.display = "none"; }
 
         function saveLevel() {
             const name = document.getElementById('lvlName').value.trim();
@@ -174,44 +161,25 @@
             const first = document.getElementById('lvlFirst').value.trim();
             const pos = parseInt(document.getElementById('lvlPos').value) - 1;
             const victors = document.getElementById('lvlVictors').value.split(',').filter(v => v.trim() !== "");
-            
             if(!name || !id) return alert("Faltan datos obligatorios.");
-
             let db = JSON.parse(localStorage.getItem('scully_db_levels')) || [];
             db = db.filter(l => l.name.toLowerCase() !== name.toLowerCase());
             db.splice(pos >= 0 ? pos : db.length, 0, { name, id, first, victors });
-            
             localStorage.setItem('scully_db_levels', JSON.stringify(db));
-            
-            // ACTUALIZA AMBAS LISTAS INSTANTÁNEAMENTE
-            renderLevels();
-            updateAdminList();
-            
-            // Limpia los campos
-            document.getElementById('lvlName').value = "";
-            document.getElementById('lvlYT').value = "";
-            document.getElementById('lvlFirst').value = "";
-            document.getElementById('lvlPos').value = "";
-            document.getElementById('lvlVictors').value = "";
+            renderLevels(); updateAdminList();
+            document.getElementById('lvlName').value = ""; document.getElementById('lvlYT').value = ""; document.getElementById('lvlFirst').value = ""; document.getElementById('lvlPos').value = ""; document.getElementById('lvlVictors').value = "";
         }
 
         function deleteLevel(i) {
             let db = JSON.parse(localStorage.getItem('scully_db_levels')) || [];
             db.splice(i, 1);
             localStorage.setItem('scully_db_levels', JSON.stringify(db));
-            renderLevels();
-            updateAdminList();
+            renderLevels(); updateAdminList();
         }
 
         function updateAdminList() {
             const db = JSON.parse(localStorage.getItem('scully_db_levels')) || [];
-            const cont = document.getElementById('adminListView');
-            cont.innerHTML = db.map((l, i) => `
-                <div class="lvl-item-edit">
-                    <span>#${i+1} ${l.name}</span>
-                    <i class="fas fa-trash" style="color:#f44; cursor:pointer;" onclick="deleteLevel(${i})"></i>
-                </div>
-            `).join("");
+            document.getElementById('adminListView').innerHTML = db.map((l, i) => `<div class="lvl-item-edit"><span>#${i+1} ${l.name}</span><i class="fas fa-trash" style="color:#f44; cursor:pointer;" onclick="deleteLevel(${i})"></i></div>`).join("");
         }
 
         function descargarScript() {
@@ -219,7 +187,7 @@
             const r = localStorage.getItem('scully_ranks') || "[]";
             
             const scriptContenido = `
-// MOTOR CENTRAL SCULLY - V2 (Blindado)
+// MOTOR CENTRAL SCULLY - V3 (Interactivo)
 const NIVELES = ${n};
 const RANKING = ${r};
 
@@ -265,19 +233,30 @@ function renderLeaderboard() {
 
 function openUserProfile(n) {
     const u = getDBRanksLive().find(x => x.name === n);
-    document.getElementById('uModalContent').innerHTML = '<span onclick="closeM()" style="cursor:pointer; color:#ff6600; position:absolute; right:20px; top:10px; font-size:2rem;">&times;</span><img src="https://flagcdn.com/w80/' + u.country + '.png" style="width:60px;"><h2 style="color:#ff6600">' + u.name + '</h2><div style="text-align:left; font-size:0.8rem; border-top:1px solid #111; padding-top:10px;">' + u.levelList + '</div>';
+    const db = getDBLevelsLive();
+    let listHTML = "";
+    let list = u.levelList ? u.levelList.split(",") : [];
+    list.forEach(lvl => {
+        let lvlClean = lvl.trim();
+        if(lvlClean) {
+            const idx = db.findIndex(item => item.name.trim().toLowerCase() === lvlClean.toLowerCase());
+            if(idx > -1) {
+                listHTML += '<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #111; cursor:pointer;" onclick="document.getElementById(\\'uModal\\').style.display=\\'none\\'; openDetails(' + idx + ');"><span style="color:#fff; transition:0.3s;" onmouseover="this.style.color=\\'#ff6600\\'" onmouseout="this.style.color=\\'#fff\\'"><i class="fas fa-play-circle" style="color:var(--accent); margin-right:5px;"></i>' + db[idx].name + '</span><b style="color:#ff6600">+' + calculatePoints(idx) + '</b></div>';
+            } else {
+                listHTML += '<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #111;"><span style="color:#666;">' + lvlClean + '</span><b style="color:#666;">+0.0</b></div>';
+            }
+        }
+    });
+
+    document.getElementById('uModalContent').innerHTML = '<span onclick="closeModal(\\'uModal\\')" style="cursor:pointer; color:#ff6600; position:absolute; right:20px; top:10px; font-size:2rem;">&times;</span><img src="https://flagcdn.com/w80/' + u.country + '.png" style="width:60px;"><h2 style="color:#ff6600; margin:0; padding-top:10px;">' + u.name + '</h2><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;"><div style="background:#000; padding:10px;"><b style="color:#ff6600; font-size:1.2rem;">' + u.pts + '</b><br><small>PTS</small></div><div style="background:#000; padding:10px;"><b style="font-size:1.2rem;">' + u.cnt + '</b><br><small>LVLS</small></div></div><div style="text-align:left; font-size:0.8rem; border-top:1px solid #111; padding-top:10px; margin-top:15px; max-height:200px; overflow-y:auto;">' + (listHTML || '<p style="color:#888;">Sin niveles.</p>') + '</div>';
     document.getElementById('uModal').style.display = "block";
 }
 
 document.addEventListener("DOMContentLoaded", () => { renderLevels(); renderLeaderboard(); });
 `;
             const blob = new Blob([scriptContenido], { type: 'text/javascript' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob); a.download = 'script.js'; a.click();
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'script.js'; a.click();
         }
     </script>
 </body>
 </html>
-</html>
-
-
