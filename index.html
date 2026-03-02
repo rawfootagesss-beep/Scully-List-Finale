@@ -30,21 +30,22 @@
         .level-info { padding: 15px; }
         .rank-number { position: absolute; right: 15px; font-size: 1.2rem; font-weight: 700; color: rgba(255,255,255,0.05); }
 
-        /* FORMULARIO DE RECORDS */
+        /* Estilos Victors en el Modal */
+        .victors-container { margin-top: 20px; text-align: left; border-top: 1px solid #111; padding-top: 15px; }
+        .victor-link { display: flex; justify-content: space-between; align-items: center; background: #111; padding: 10px; border-radius: 4px; margin-bottom: 5px; text-decoration: none; color: #fff; font-size: 0.8rem; border-left: 3px solid #5865F2; transition: 0.2s; }
+        .victor-link:hover { background: #181818; border-left-color: var(--accent); }
+        .victor-link i { color: #f00; }
+
         #form-section { background: #080808; border-top: 1px solid #111; padding: 60px 20px; margin-top: 50px; }
         .form-box { max-width: 500px; margin: 0 auto; text-align: left; }
         input, select, textarea { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 12px; margin-bottom: 15px; font-family: 'Lexend Deca'; box-sizing: border-box; }
-        input:focus { border-color: var(--accent); outline: none; }
-        label { font-size: 0.7rem; color: #888; margin-bottom: 5px; display: block; text-transform: uppercase; }
-
-        /* Panel Admin */
+        
         #adminPanel { display: none; background: #000; border: 2px solid var(--accent); padding: 30px; width: 95%; max-width: 1100px; margin: 50px auto; border-radius: 15px; text-align: left; }
         .admin-layout { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
         .admin-col { background: #080808; padding: 15px; border-radius: 8px; border: 1px solid #111; }
-        .submission-item { background: #000; padding: 12px; margin-bottom: 10px; border-left: 3px solid var(--accent); font-size: 0.75rem; line-height: 1.4; }
-
+        
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
-        .modal-content { background: #080808; margin: 5% auto; padding: 30px; width: 90%; max-width: 600px; border: 1px solid var(--accent); border-radius: 15px; position: relative; text-align: center; }
+        .modal-content { background: #080808; margin: 2% auto; padding: 30px; width: 90%; max-width: 600px; border: 1px solid var(--accent); border-radius: 15px; position: relative; text-align: center; max-height: 90vh; overflow-y: auto; }
         .admin-access { margin: 100px 0 30px; text-align: center; opacity: 0.05; }
     </style>
 </head>
@@ -72,26 +73,11 @@
     <section id="form-section">
         <div class="form-box">
             <h2 style="color:var(--accent); text-align:center; margin-bottom:10px;">ENVIAR RÉCORD</h2>
-            <p style="font-size:0.7rem; color:#666; text-align:center; margin-bottom:30px;">Recuerda que el RAW es obligatorio para validar tu progreso.</p>
-            
-            <label>Nombre de Usuario</label>
-            <input type="text" id="recPlayer" placeholder="Ej: score_gd">
-            
-            <label>Nivel Completado</label>
+            <input type="text" id="recPlayer" placeholder="Nombre de Usuario">
             <select id="recLevel"><option value="">-- Selecciona el Nivel --</option></select>
-            
-            <label>Link del Video (YouTube/Twitch)</label>
-            <input type="text" id="recLink" placeholder="https://youtu.be/...">
-            
-            <label>Link del RAW (SOLO GOOGLE DRIVE)</label>
-            <input type="text" id="recRaw" placeholder="https://drive.google.com/...">
-            
-            <label>País</label>
-            <select id="recCountry">
-                <option value="cl">Chile</option><option value="ar">Argentina</option><option value="mx">México</option>
-                <option value="es">España</option><option value="pe">Perú</option><option value="co">Colombia</option>
-            </select>
-            
+            <input type="text" id="recLink" placeholder="Link del Video">
+            <input type="text" id="recRaw" placeholder="Link del RAW (Google Drive)">
+            <select id="recCountry"><option value="cl">Chile</option><option value="ar">Argentina</option><option value="mx">México</option><option value="es">España</option></select>
             <button class="btn-scully" style="width:100%; background:var(--accent); color:#000;" onclick="submitRecord()">ENVIAR A REVISIÓN</button>
         </div>
     </section>
@@ -99,7 +85,7 @@
     <div class="admin-access"><i class="fas fa-lock" onclick="toggleAuth()"></i><div id="authBox" style="display:none;"><input type="password" id="tokenInput" placeholder="Token"><button class="btn-scully" onclick="checkAuth()">ENTRAR</button></div></div>
 
     <div id="adminPanel">
-        <h2 style="color:var(--accent); text-align:center; margin-bottom:20px;">CENTRAL DE MANDO SCULLY</h2>
+        <h2 style="color:var(--accent); text-align:center; margin-bottom:20px;">CENTRAL DE MANDO</h2>
         <div class="admin-layout">
             <div class="admin-col">
                 <p style="color:var(--accent); font-size:0.7rem; font-weight:bold;">AÑADIR NIVEL</p>
@@ -110,12 +96,10 @@
                 <button class="btn-scully" style="width:100%; font-size:0.7rem;" onclick="saveLevel()">PUBLICAR</button>
                 <div id="adminLvlList" style="margin-top:15px; max-height:150px; overflow-y:auto;"></div>
             </div>
-
             <div class="admin-col">
                 <p style="color:#5865F2; font-size:0.7rem; font-weight:bold;">RÉCORDS PENDIENTES</p>
                 <div id="submissionsList" style="max-height:400px; overflow-y:auto;"></div>
             </div>
-
             <div class="admin-col">
                 <p style="color:#444; font-size:0.7rem; font-weight:bold;">ESTADÍSTICAS</p>
                 <div id="statsBox" style="font-size:0.8rem; color:#888;"></div>
@@ -133,16 +117,70 @@
         const db = firebase.database();
         const TOKEN = "GdfuFCRy";
 
+        let fullData = {};
+
         db.ref('/').on('value', (snapshot) => {
-            const data = snapshot.val() || {};
-            renderLevels(data.levels || []);
-            updateLevelSelect(data.levels || []);
+            fullData = snapshot.val() || {};
+            const niveles = fullData.levels || [];
+            renderLevels(niveles);
+            updateLevelSelect(niveles);
             if(sessionStorage.getItem('scully_session') === 'active') {
-                updateAdminList(data.levels || []);
-                renderSubmissions(data.submissions || {});
-                document.getElementById('statsBox').innerHTML = `Niveles: ${(data.levels || []).length}<br>Jugadores: ${Object.keys(data.players || {}).length}`;
+                updateAdminList(niveles);
+                renderSubmissions(fullData.submissions || {});
+                document.getElementById('statsBox').innerHTML = `Niveles: ${niveles.length}<br>Jugadores: ${Object.keys(fullData.players || {}).length}`;
             }
         });
+
+        function calculatePoints(i) { return Math.max(100 - (i * 0.6), 5).toFixed(1); }
+
+        function renderLevels(niveles) {
+            document.getElementById('list-container').innerHTML = niveles.map((l, i) => `
+                <div class="level-card" onclick="openDetails(${i})">
+                    <div class="level-thumb"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"></div>
+                    <div class="level-info"><h2>${l.name}</h2><p style="color:#ff6600; font-weight:bold;">+${calculatePoints(i)} PTS</p></div>
+                    <div class="rank-number">#${i + 1}</div>
+                </div>`).join("");
+        }
+
+        function openDetails(index) {
+            const l = fullData.levels[index];
+            const players = Object.values(fullData.players || {});
+            
+            // Buscar victors que tengan este nivel en sus completions
+            const victors = players.filter(p => {
+                const comps = p.completions || [];
+                return comps.some(c => c.level.toLowerCase() === l.name.toLowerCase());
+            });
+
+            const victorsHTML = victors.map(v => {
+                const comp = v.completions.find(c => c.level.toLowerCase() === l.name.toLowerCase());
+                return `
+                    <a href="${comp.link || '#'}" target="_blank" class="victor-link">
+                        <span><img src="https://flagcdn.com/w20/${v.country}.png" style="margin-right:8px; vertical-align:middle;">${v.name}</span>
+                        <i class="fab fa-youtube"></i>
+                    </a>`;
+            }).join("");
+
+            document.getElementById('modal-body').innerHTML = `
+                <h1 style="color:var(--accent); margin:0;">${l.name}</h1>
+                <p style="font-size:0.7rem; color:#444; margin-bottom:15px;">TOP #${index + 1} • ${calculatePoints(index)} PTS</p>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:8px;"></iframe>
+                
+                <div class="victors-container">
+                    <p style="font-size:0.7rem; color:var(--accent); font-weight:bold; margin-bottom:10px; text-transform:uppercase;">Lista de Victors (${victors.length})</p>
+                    ${victorsHTML || '<p style="font-size:0.8rem; color:#333;">Nadie se ha pasado este nivel aún.</p>'}
+                </div>
+            `;
+            document.getElementById('levelModal').style.display = "block";
+        }
+
+        // Resto de funciones (submitRecord, saveLevel, deleteSubmission, etc.)
+        function updateLevelSelect(niveles) {
+            const sel = document.getElementById('recLevel');
+            const current = sel.value;
+            sel.innerHTML = '<option value="">-- Selecciona el Nivel --</option>' + niveles.map(l => `<option value="${l.name}">${l.name}</option>`).join("");
+            sel.value = current;
+        }
 
         function submitRecord() {
             const player = document.getElementById('recPlayer').value.trim();
@@ -150,53 +188,26 @@
             const link = document.getElementById('recLink').value.trim();
             const raw = document.getElementById('recRaw').value.trim();
             const country = document.getElementById('recCountry').value;
-
-            if(!player || !level || !link || !raw) return alert("Todos los campos son obligatorios.");
-            
-            // VALIDACIÓN DE GOOGLE DRIVE
-            if(!raw.includes("drive.google.com")) {
-                return alert("ERROR: El link del RAW debe ser de Google Drive obligatoriamente.");
-            }
-
+            if(!player || !level || !link || !raw) return alert("Completa todo.");
+            if(!raw.includes("drive.google.com")) return alert("RAW de Drive obligatorio.");
             db.ref('submissions').push({ player, level, link, raw, country, date: new Date().toLocaleDateString() });
-            alert("¡Récord enviado con éxito!");
-            document.getElementById('recPlayer').value = "";
-            document.getElementById('recLink').value = "";
-            document.getElementById('recRaw').value = "";
+            alert("¡Enviado!");
+            document.getElementById('recPlayer').value = ""; document.getElementById('recLink').value = ""; document.getElementById('recRaw').value = "";
         }
 
         function renderSubmissions(subms) {
             const cont = document.getElementById('submissionsList');
             const entries = Object.entries(subms);
-            if(entries.length === 0) { cont.innerHTML = "<small style='color:#333;'>No hay envíos pendientes.</small>"; return; }
-            
+            if(entries.length === 0) { cont.innerHTML = "<small style='color:#333;'>Vacio.</small>"; return; }
             cont.innerHTML = entries.map(([key, s]) => `
-                <div class="submission-item">
-                    <b style="color:var(--accent)">${s.player}</b> en <b>${s.level}</b><br>
-                    <a href="${s.link}" target="_blank" style="color:#5865F2">Video Público</a><br>
-                    <a href="${s.raw}" target="_blank" style="color:#00ff00">Link del RAW (Drive)</a><br>
-                    <small style="color:#666">${s.date} | ${s.country.toUpperCase()}</small><br>
-                    <button onclick="deleteSubmission('${key}')" style="background:none; border:none; color:red; cursor:pointer; font-size:0.6rem; margin-top:5px;">ELIMINAR SOLICITUD</button>
-                </div>
-            `).join("");
-        }
-
-        function calculatePoints(i) { return Math.max(100 - (i * 0.6), 5).toFixed(1); }
-        function renderLevels(niveles) {
-            document.getElementById('list-container').innerHTML = niveles.map((l, i) => `
-                <div class="level-card" onclick="openDetails('${l.id}', '${l.name}', ${i}, '${l.first}')">
-                    <div class="level-thumb"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"></div>
-                    <div class="level-info"><h2>${l.name}</h2><p style="color:#ff6600;">+${calculatePoints(i)} PTS</p></div>
-                    <div class="rank-number">#${i + 1}</div>
+                <div style="background:#000; padding:10px; margin-bottom:10px; border-left:3px solid var(--accent); font-size:0.7rem;">
+                    <b>${s.player}</b> en <b>${s.level}</b><br>
+                    <a href="${s.link}" target="_blank" style="color:#5865F2">Video</a> | <a href="${s.raw}" target="_blank" style="color:#0f0">RAW</a><br>
+                    <button onclick="deleteSubmission('${key}')" style="background:none; border:none; color:red; cursor:pointer; font-size:0.6rem; margin-top:5px;">ELIMINAR</button>
                 </div>`).join("");
         }
-        function updateLevelSelect(niveles) {
-            const sel = document.getElementById('recLevel');
-            const current = sel.value;
-            sel.innerHTML = '<option value="">-- Selecciona el Nivel --</option>' + niveles.map(l => `<option value="${l.name}">${l.name}</option>`).join("");
-            sel.value = current;
-        }
-        function deleteSubmission(key) { if(confirm("¿Eliminar?")) db.ref('submissions/' + key).remove(); }
+
+        function deleteSubmission(key) { if(confirm("¿Borrar?")) db.ref('submissions/' + key).remove(); }
         function saveLevel() {
             const name = document.getElementById('lvlName').value.trim();
             const id = document.getElementById('lvlYT').value.trim();
@@ -213,10 +224,6 @@
         function updateAdminList(l) { document.getElementById('adminLvlList').innerHTML = l.map((lvl, i) => `<div style="display:flex; justify-content:space-between; font-size:0.6rem; padding:3px; border-bottom:1px solid #111;"><span>#${i+1} ${lvl.name}</span><i class="fas fa-trash" onclick="deleteLvl(${i})" style="color:red; cursor:pointer;"></i></div>`).join(""); }
         function toggleAuth() { const b = document.getElementById('authBox'); b.style.display = b.style.display === "block" ? "none" : "block"; }
         function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
-        function openDetails(id, name, i, first) {
-            document.getElementById('modal-body').innerHTML = `<h1>${name}</h1><iframe width="100%" height="315" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe><p><b>FIRST VICTOR:</b> ${first || 'Nadie'}</p>`;
-            document.getElementById('levelModal').style.display = "block";
-        }
         function closeM() { document.getElementById('levelModal').style.display = "none"; }
         window.onload = () => { if(sessionStorage.getItem('scully_session') === 'active') document.getElementById('adminPanel').style.display = "block"; };
     </script>
