@@ -33,12 +33,13 @@
         .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         input, select, textarea { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #fff; padding: 10px; margin-bottom: 8px; font-family: 'Lexend Deca'; box-sizing: border-box; }
         
-        .lvl-item-pill { display: flex; justify-content: space-between; align-items: center; background: #111; padding: 8px 12px; border-radius: 5px; margin-bottom: 5px; font-size: 0.75rem; border-left: 3px solid var(--accent); }
-        .lvl-item-pill i { color: #ff4444; cursor: pointer; transition: 0.2s; }
-        .lvl-item-pill i:hover { transform: scale(1.3); }
+        /* Estilo de Niveles en Perfil */
+        .u-lvl-btn { display: flex; justify-content: space-between; align-items: center; background: #111; padding: 12px; border-radius: 5px; margin-bottom: 8px; text-decoration: none; color: #fff; border-left: 4px solid var(--accent); transition: 0.3s; }
+        .u-lvl-btn:hover { background: #181818; transform: translateX(5px); box-shadow: var(--glow); }
+        .u-lvl-btn i { color: var(--accent); font-size: 1.1rem; }
 
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
-        .modal-content { background: #080808; margin: 5% auto; padding: 30px; width: 90%; max-width: 450px; border: 1px solid var(--accent); border-radius: 15px; position: relative; }
+        .modal-content { background: #080808; margin: 5% auto; padding: 30px; width: 90%; max-width: 450px; border: 1px solid var(--accent); border-radius: 15px; position: relative; text-align: center; }
         .admin-access { margin: 80px 0 20px; opacity: 0.05; }
     </style>
 </head>
@@ -54,7 +55,7 @@
         <h1>SCULLY <span>LEADERBOARDS</span></h1>
         <div class="btn-container">
             <a href="index.html" class="btn-scully">REGRESAR AL DIRECTORIO</a>
-            <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully btn-discord">DISCORD</a>
+            <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully" style="border-color:#5865F2; color:#5865F2;">DISCORD</a>
         </div>
     </header>
 
@@ -68,27 +69,24 @@
     <div class="admin-access"><i class="fas fa-lock" onclick="toggleAuth()"></i><div id="authBox" style="display:none;"><input type="password" id="tokenInput" placeholder="Token"><button class="btn-scully" onclick="checkAuth()">ENTRAR</button></div></div>
     
     <div id="adminPanel">
-        <h4 style="color:var(--accent); text-align:center; text-transform:uppercase; margin-bottom: 20px;">Panel de Gestión de Ranking</h4>
+        <h4 style="color:var(--accent); text-align:center; text-transform:uppercase; margin-bottom: 20px;">Gestión de Jugadores con Pruebas</h4>
         <div class="admin-grid">
             <div>
-                <p style="font-size:0.7rem; color:#444; margin-bottom:5px;">1. SELECCIONAR JUGADOR</p>
-                <input type="text" id="targetUser" placeholder="Nombre del Jugador" readonly style="color:var(--accent); font-weight:bold;">
+                <p style="font-size:0.7rem; color:#444;">1. SELECCIONAR JUGADOR</p>
+                <input type="text" id="targetUser" placeholder="Nombre del Jugador">
                 <select id="targetCountry"><option value="cl">Chile</option><option value="ar">Argentina</option><option value="mx">México</option><option value="es">España</option></select>
                 
-                <p style="font-size:0.7rem; color:#444; margin:15px 0 5px;">2. AÑADIR NUEVO NIVEL</p>
-                <select id="levelSelect"><option value="">-- Seleccionar nivel --</option></select>
-                <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; margin-top:5px;" onclick="addLevelToUser()">AÑADIR NIVEL</button>
+                <p style="font-size:0.7rem; color:#444; margin-top:10px;">2. AÑADIR NIVEL + VIDEO</p>
+                <select id="levelSelect"><option value="">-- Seleccionar Nivel --</option></select>
+                <input type="text" id="levelLink" placeholder="URL del Video del Jugador (YouTube)">
+                <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; margin-top:5px;" onclick="addCompletion()">AÑADIR COMPLETION</button>
                 
-                <p style="font-size:0.7rem; color:#444; margin:15px 0 5px;">3. NIVELES ACTUALES (CLICK EN X PARA QUITAR)</p>
-                <div id="currentUserLevels" style="max-height: 200px; overflow-y: auto; background: #080808; padding: 10px; border: 1px solid #111;">
-                    <small style="color:#333;">Selecciona un jugador para ver sus niveles...</small>
-                </div>
+                <p style="font-size:0.7rem; color:#444; margin-top:20px;">NIVELES ACTUALES</p>
+                <div id="currentUserLevels" style="max-height: 200px; overflow-y: auto; background: #080808; padding: 10px; border: 1px solid #111;"></div>
             </div>
-
             <div>
-                <p style="font-size:0.7rem; color:#444; margin-bottom:5px;">LISTA DE JUGADORES (CLICK PARA EDITAR)</p>
-                <div id="adminUserList" style="background:#080808; padding:10px; max-height:450px; overflow-y:auto; border:1px solid #111;"></div>
-                <button class="btn-scully" style="width:100%; font-size:0.7rem; margin-top:10px; border-color:#333; color:#333;" onclick="resetFields()">LIMPIAR SELECCIÓN</button>
+                <p style="font-size:0.7rem; color:#444;">LISTA GLOBAL (CLICK PARA EDITAR)</p>
+                <div id="adminUserList" style="background:#080808; padding:10px; max-height:400px; overflow-y:auto; border:1px solid #111;"></div>
             </div>
         </div>
     </div>
@@ -103,20 +101,19 @@
         const db = firebase.database();
         const TOKEN = "GdfuFCRy";
 
-        let globalData = {}; // Para acceso rápido
+        let localDB = {};
 
         db.ref('/').on('value', (s) => {
-            globalData = s.val() || { levels: [], players: [] };
-            const lvls = globalData.levels || [];
-            const players = Object.values(globalData.players || {});
+            localDB = s.val() || { levels: [], players: [] };
+            const lvls = localDB.levels || [];
+            const players = Object.values(localDB.players || {});
             
             renderLeaderboard(lvls, players);
             updateLevelSelect(lvls);
             if(sessionStorage.getItem('scully_session') === 'active') {
                 updateAdminUserList(players);
-                // Si hay un usuario seleccionado, refrescar su lista de niveles
-                const selected = document.getElementById('targetUser').value;
-                if(selected) selectUserToEdit(selected);
+                const sel = document.getElementById('targetUser').value;
+                if(sel) selectUser(sel);
             }
         });
 
@@ -125,118 +122,105 @@
         function renderLeaderboard(lvls, players) {
             const b = document.getElementById('leaderboardBody');
             players.forEach(u => {
-                let t = 0; let list = u.levelList ? u.levelList.split(",") : [];
-                list.forEach(lvl => {
-                    const idx = lvls.findIndex(item => item.name.trim().toLowerCase() === lvl.trim().toLowerCase());
+                let t = 0; 
+                let list = u.completions || []; // Nuevo formato
+                // Compatibilidad con viejo formato string
+                if(u.levelList && list.length === 0) list = u.levelList.split(",").map(n => ({ level: n.trim() }));
+
+                list.forEach(c => {
+                    const idx = lvls.findIndex(l => l.name.trim().toLowerCase() === c.level.trim().toLowerCase());
                     if(idx > -1) t += parseFloat(calculatePoints(idx));
                 });
-                u.pts = t.toFixed(1); u.cnt = list.filter(x => x.trim() !== "").length;
+                u.pts = t.toFixed(1); u.cnt = list.length;
             });
             players.sort((a,b) => b.pts - a.pts);
             b.innerHTML = players.map((u, i) => `<tr class="rank-row" onclick="openUserProfile('${u.name}')"><td>#${i+1}</td><td style="text-align:left;"><img src="https://flagcdn.com/w20/${u.country}.png" style="margin-right:10px;">${u.name}</td><td style="color:#ff6600; font-weight:bold;">${u.pts}</td><td>${u.cnt}</td></tr>`).join("");
         }
 
         function updateLevelSelect(lvls) {
-            const select = document.getElementById('levelSelect');
-            const val = select.value;
-            select.innerHTML = '<option value="">-- Seleccionar nivel --</option>' + lvls.map(l => `<option value="${l.name}">${l.name}</option>`).join("");
-            select.value = val;
+            const sel = document.getElementById('levelSelect');
+            const val = sel.value;
+            sel.innerHTML = '<option value="">-- Seleccionar Nivel --</option>' + lvls.map(l => `<option value="${l.name}">${l.name}</option>`).join("");
+            sel.value = val;
         }
 
-        // --- SELECCIONAR USUARIO PARA EDITAR ---
-        function selectUserToEdit(name) {
+        function selectUser(name) {
             document.getElementById('targetUser').value = name;
-            const players = Object.values(globalData.players || {});
-            const user = players.find(u => u.name === name);
-            if(!user) return;
-
-            document.getElementById('targetCountry').value = user.country;
-            const lvls = user.levelList ? user.levelList.split(",").map(x => x.trim()).filter(x => x !== "") : [];
-            
-            const cont = document.getElementById('currentUserLevels');
-            if(lvls.length === 0) {
-                cont.innerHTML = `<small style="color:#444;">Este jugador no tiene niveles.</small>`;
-            } else {
-                cont.innerHTML = lvls.map(l => `
-                    <div class="lvl-item-pill">
-                        <span>${l}</span>
-                        <i class="fas fa-times-circle" onclick="removeLevelFromUser('${name}', '${l}')"></i>
-                    </div>
-                `).join("");
-            }
+            const u = Object.values(localDB.players || {}).find(p => p.name === name);
+            if(!u) return;
+            document.getElementById('targetCountry').value = u.country;
+            const list = u.completions || [];
+            document.getElementById('currentUserLevels').innerHTML = list.map((c, i) => `
+                <div style="display:flex; justify-content:space-between; font-size:0.7rem; background:#111; padding:5px; margin-bottom:5px; border-left:2px solid var(--accent);">
+                    <span>${c.level}</span>
+                    <i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="removeCompletion(${i})"></i>
+                </div>`).join("");
         }
 
-        function addLevelToUser() {
-            let name = document.getElementById('targetUser').value.trim();
-            const newLvl = document.getElementById('levelSelect').value;
+        function addCompletion() {
+            const name = document.getElementById('targetUser').value.trim();
+            const level = document.getElementById('levelSelect').value;
+            const link = document.getElementById('levelLink').value.trim();
             const country = document.getElementById('targetCountry').value;
 
-            // Si el nombre está vacío, permitir escribir uno nuevo para crear jugador
-            if(name === "") {
-                name = prompt("Nombre del nuevo jugador:");
-                if(!name) return;
-                document.getElementById('targetUser').value = name;
-            }
-
-            if(!newLvl) return alert("Selecciona un nivel.");
+            if(!name || !level) return alert("Jugador y Nivel requeridos");
 
             db.ref('players').once('value', (s) => {
-                let p = Object.values(s.val() || {});
-                const idx = p.findIndex(u => u.name.toLowerCase() === name.toLowerCase());
+                let players = Object.values(s.val() || {});
+                let idx = players.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+                
+                let newCompletion = { level, link };
 
                 if(idx > -1) {
-                    let currentList = p[idx].levelList ? p[idx].levelList.split(",").map(x => x.trim()).filter(x => x !== "") : [];
-                    if(currentList.includes(newLvl)) return alert("Ya tiene este nivel.");
-                    currentList.push(newLvl);
-                    p[idx].levelList = currentList.join(", ");
-                    p[idx].country = country;
+                    if(!players[idx].completions) players[idx].completions = [];
+                    if(players[idx].completions.find(c => c.level === level)) return alert("Ya tiene este nivel");
+                    players[idx].completions.push(newCompletion);
+                    players[idx].country = country;
                 } else {
-                    p.push({ name, levelList: newLvl, country });
+                    players.push({ name, country, completions: [newCompletion] });
                 }
-                db.ref('players').set(p);
+                db.ref('players').set(players);
+                document.getElementById('levelLink').value = "";
             });
         }
 
-        // --- QUITAR NIVEL ESPECÍFICO ---
-        function removeLevelFromUser(userName, levelName) {
-            if(!confirm(`¿Quitar ${levelName} de ${userName}?`)) return;
-
+        function removeCompletion(index) {
+            const name = document.getElementById('targetUser').value;
             db.ref('players').once('value', (s) => {
                 let p = Object.values(s.val() || {});
-                const idx = p.findIndex(u => u.name === userName);
+                let idx = p.findIndex(u => u.name === name);
                 if(idx > -1) {
-                    let list = p[idx].levelList.split(",").map(x => x.trim());
-                    list = list.filter(l => l !== levelName); // Quitar el nivel
-                    p[idx].levelList = list.join(", ");
+                    p[idx].completions.splice(index, 1);
                     db.ref('players').set(p);
                 }
             });
         }
 
-        function resetFields() {
-            document.getElementById('targetUser').value = "";
-            document.getElementById('currentUserLevels').innerHTML = `<small style="color:#333;">Selecciona un jugador...</small>`;
-        }
-
-        function deleteUser(i) { if(confirm("¿Borrar jugador completo?")) db.ref('players').once('value', (s) => { let p = Object.values(s.val() || {}); p.splice(i, 1); db.ref('players').set(p); }); }
-
         function openUserProfile(n) {
-            db.ref('/').once('value', (s) => {
-                const d = s.val(); const u = Object.values(d.players).find(x => x.name === n);
-                const lvls = d.levels || [];
-                const links = u.levelList.split(",").map(l => {
-                    const nc = l.trim(); const lvl = lvls.find(x => x.name.toLowerCase() === nc.toLowerCase());
-                    return lvl ? `<a href="https://youtu.be/${lvl.id}" target="_blank" style="display:block; color:var(--accent); text-decoration:none; margin-bottom:5px; border-bottom:1px solid #111; padding:5px;">${nc} <i class="fab fa-youtube" style="float:right;"></i></a>` : `<div style="color:#444; padding:5px;">${nc}</div>`;
-                }).join("");
-                document.getElementById('uModalContent').innerHTML = `<span onclick="closeM()" style="position:absolute; right:20px; top:10px; cursor:pointer; font-size:2rem; color:var(--accent)">&times;</span><img src="https://flagcdn.com/w80/${u.country}.png" style="width:60px; border-radius:4px; margin-bottom:10px;"><h2>${u.name}</h2><div style="text-align:left; max-height:250px; overflow-y:auto; border-top:1px solid #111; padding-top:10px;">${links}</div>`;
-                document.getElementById('uModal').style.display = "block";
-            });
+            const u = Object.values(localDB.players || {}).find(x => x.name === n);
+            const list = u.completions || [];
+            
+            const htmlList = list.map(c => `
+                <a href="${c.link || '#'}" target="_blank" class="u-lvl-btn">
+                    <span>${c.level}</span>
+                    <i class="${c.link ? 'fab fa-youtube' : 'fas fa-question-circle'}"></i>
+                </a>
+            `).join("");
+
+            document.getElementById('uModalContent').innerHTML = `
+                <span onclick="closeM()" style="position:absolute; right:20px; top:10px; cursor:pointer; font-size:2rem; color:var(--accent)">&times;</span>
+                <img src="https://flagcdn.com/w80/${u.country}.png" style="width:60px; margin-bottom:10px; border-radius:4px;">
+                <h2 style="color:var(--accent); margin:0;">${u.name}</h2>
+                <div style="margin-top:20px; text-align:left;">${htmlList || '<p>Sin niveles</p>'}</div>
+            `;
+            document.getElementById('uModal').style.display = "block";
         }
 
+        function deleteUser(i) { if(confirm("¿Eliminar jugador?")) db.ref('players').once('value', (s) => { let p = Object.values(s.val() || {}); p.splice(i, 1); db.ref('players').set(p); }); }
         function toggleAuth() { const b = document.getElementById('authBox'); b.style.display = b.style.display === "block" ? "none" : "block"; }
         function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
         function closeM() { document.getElementById('uModal').style.display = "none"; }
-        function updateAdminUserList(p) { document.getElementById('adminUserList').innerHTML = p.map((u, i) => `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #111; font-size:0.75rem;"><span onclick="selectUserToEdit('${u.name}')" style="cursor:pointer; color:var(--accent); font-weight:bold;">${u.name}</span><i class="fas fa-trash" onclick="deleteUser(${i})" style="color:#300; cursor:pointer;"></i></div>`).join(""); }
+        function updateAdminUserList(p) { document.getElementById('adminUserList').innerHTML = p.map((u, i) => `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #111; font-size:0.75rem;"><span onclick="selectUser('${u.name}')" style="cursor:pointer; color:var(--accent); font-weight:bold;">${u.name}</span><i class="fas fa-trash" onclick="deleteUser(${i})" style="color:#300; cursor:pointer;"></i></div>`).join(""); }
         window.onload = () => { if(sessionStorage.getItem('scully_session') === 'active') document.getElementById('adminPanel').style.display = "block"; };
     </script>
 </body>
