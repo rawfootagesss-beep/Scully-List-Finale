@@ -2,8 +2,9 @@
 const NIVELES_GLOBALES = [{"name":"Renevant","id":"lb2f1NkSJrU","first":"BillowV","victors":["score"]}];
 const RANKING_GLOBAL = [{"name":"BillowV","levelList":"Renevant","country":"mx"},{"name":"score","levelList":"Renevant","country":"cl"}];
 
-if (!localStorage.getItem('scully_db_levels') || NIVELES_GLOBALES.length > 0) localStorage.setItem('scully_db_levels', JSON.stringify(NIVELES_GLOBALES));
-if (!localStorage.getItem('scully_ranks') || RANKING_GLOBAL.length > 0) localStorage.setItem('scully_ranks', JSON.stringify(RANKING_GLOBAL));
+// INYECCIÓN FORZADA: Sobrescribe LocalStorage con datos globales
+if (NIVELES_GLOBALES.length > 0) localStorage.setItem('scully_db_levels', JSON.stringify(NIVELES_GLOBALES));
+if (RANKING_GLOBAL.length > 0) localStorage.setItem('scully_ranks', JSON.stringify(RANKING_GLOBAL));
 
 function getDBLevels() { return JSON.parse(localStorage.getItem('scully_db_levels')) || []; }
 function calculatePoints(index) { return Math.max(100 - (index * 0.6), 5).toFixed(1); }
