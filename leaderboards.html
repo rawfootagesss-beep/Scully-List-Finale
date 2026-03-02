@@ -8,22 +8,42 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root { --accent: #ff6600; --bg: #050505; --card: #0a0a0a; --glow: 0 0 15px rgba(255, 102, 0, 0.3); }
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; text-align: center; }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; text-align: center; }
+        
         .top-credits { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.8); border-bottom: 1px solid #111; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; }
         .credit-box i { color: var(--accent); margin-right: 5px; }
-        header { padding: 40px 20px; }
-        h1 { font-weight: 700; letter-spacing: 4px; text-transform: uppercase; }
+        .credit-box span { color: #888; }
+
+        header { padding: 50px 20px; text-align: center; }
+        h1 { font-size: 2.5rem; letter-spacing: 5px; margin: 0; text-transform: uppercase; }
         h1 span { color: var(--accent); text-shadow: var(--glow); }
-        .btn-scully { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 10px 25px; cursor: pointer; text-decoration: none; display: inline-block; font-family: 'Lexend Deca'; }
-        table { width: 95%; max-width: 850px; margin: 20px auto; border-collapse: separate; border-spacing: 0 8px; }
+        .btn-scully { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 10px 20px; text-decoration: none; font-size: 0.8rem; transition: 0.3s; cursor: pointer; font-family: 'Lexend Deca'; display: inline-block; margin-top: 20px; }
+        .btn-scully:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
+
+        /* TABLA PRINCIPAL DEL RANKING */
+        .wrapper { width: 95%; max-width: 850px; margin: 20px auto; min-height: 100px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
         th { color: var(--accent); font-size: 0.65rem; text-transform: uppercase; padding: 10px; border-bottom: 1px solid #111; }
         .rank-row { background: var(--card); cursor: pointer; transition: 0.2s; }
+        .rank-row:hover { background: #111; transform: translateY(-2px); border: 1px solid var(--accent); }
         td { padding: 15px; border-top: 1px solid #151515; border-bottom: 1px solid #151515; }
-        #adminPanel { display: none; background: #000; border: 1px solid var(--accent); padding: 25px; width: 90%; max-width: 800px; margin: 40px auto; border-radius: 10px; text-align: left; }
+
+        /* Panel Admin */
+        #adminPanel { display: none; background: #000; border: 1px solid var(--accent); padding: 25px; width: 95%; max-width: 800px; margin: 50px auto; border-radius: 10px; text-align: left; }
         .admin-flex { display: flex; flex-wrap: wrap; gap: 20px; }
-        input, select, textarea { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #fff; padding: 10px; margin-bottom: 8px; font-family: 'Lexend Deca'; }
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(8px); }
-        .modal-content { background: #080808; margin: 10% auto; padding: 30px; width: 90%; max-width: 450px; border: 1px solid var(--accent); border-radius: 15px; position: relative; }
+        .form-side, .list-side { flex: 1; min-width: 300px; text-align: left; }
+        input, select, textarea { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #fff; padding: 10px; margin-bottom: 8px; font-family: 'Lexend Deca'; box-sizing: border-box; }
+        .lvl-item-edit { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #111; font-size: 0.75rem; color: #888; }
+        
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(8px); }
+        .modal-content { background: #080808; margin: 10% auto; padding: 30px; width: 90%; max-width: 450px; border: 1px solid var(--accent); border-radius: 15px; position: relative; text-align: center; }
+        .close-btn { position: absolute; right: 20px; top: 15px; color: var(--accent); font-size: 2rem; cursor: pointer; }
+
+        /* Candado de Acceso */
+        .admin-access { margin: 80px 0 20px; text-align: center; color: #111; }
+        .admin-access i { cursor: pointer; transition: 0.3s; }
+        .admin-access i:hover { color: var(--accent); }
+        #authBox { display: none; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -33,70 +53,248 @@
         <div class="credit-box"><i class="fas fa-hands-helping"></i> HELPER <span>Blitz</span></div>
         <div class="credit-box"><i class="fas fa-code"></i> CODIFICADOR <span>score</span></div>
     </nav>
+
     <header>
         <h1>SCULLY <span>LEADERBOARDS</span></h1>
         <a href="index.html" class="btn-scully">REGRESAR AL DIRECTORIO</a>
     </header>
-    <table>
-        <thead><tr><th>#</th><th style="text-align:left">Identidad</th><th>Puntos</th><th>Lvls</th></tr></thead>
-        <tbody id="leaderboardBody"></tbody>
-    </table>
 
-    <div style="margin-top: 60px; opacity: 0.05;" id="authBox">
-        <input type="password" id="tokenInput" placeholder="..." style="width:100px; text-align:center; border:none; background:none;">
-        <button onclick="checkAuth()" style="border:none; background:none; cursor:pointer;">.</button>
+    <main class="wrapper">
+        <table>
+            <thead>
+                <tr><th>#</th><th style="text-align:left">Identidad</th><th>Puntos</th><th>Lvls</th></tr>
+            </thead>
+            <tbody id="leaderboardBody">
+                </tbody>
+        </table>
+    </main>
+
+    <div class="admin-access">
+        <i class="fas fa-lock" onclick="toggleAuth()"></i>
+        <div id="authBox">
+            <input type="password" id="tokenInput" placeholder="Token" style="width:140px; text-align:center; border: 1px solid #222; background: #000; color: #fff;">
+            <button class="btn-scully" onclick="checkAuth()" style="margin-top:0;">ENTRAR</button>
+        </div>
     </div>
+
     <div id="adminPanel">
-        <h4 style="color:var(--accent); margin-bottom: 15px;">GESTIÓN DE JUGADORES</h4>
+        <h4 style="color:var(--accent); margin-bottom: 20px; text-transform: uppercase; font-size: 0.8rem; border-bottom: 1px solid #222; padding-bottom: 10px; text-align: center;">
+            <i class="fas fa-users-cog"></i> Gestión de Jugadores
+        </h4>
         <div class="admin-flex">
-            <div style="flex:1; min-width:300px;">
-                <input type="text" id="targetUser" placeholder="Nombre Jugador">
-                <select id="targetCountry"><option value="cl">Chile</option><option value="ar">Argentina</option><option value="mx">México</option></select>
-                <textarea id="targetList" placeholder="Acu, Bloodbath..."></textarea>
-                <button class="btn-scully" style="width:100%; background:var(--accent); color:#000;" onclick="saveUser()">GUARDAR JUGADOR</button>
-                <button class="btn-scully" style="width:100%; margin-top:10px; border-color:#fff; color:#fff;" onclick="descargarScript()">DESCARGAR SCRIPT.JS</button>
+            <div class="form-side">
+                <input type="text" id="targetUser" placeholder="Nombre del Jugador">
+                <select id="targetCountry">
+                    <option value="cl">Chile</option>
+                    <option value="ar">Argentina</option>
+                    <option value="mx">México</option>
+                    <option value="es">España</option>
+                    <option value="pe">Perú</option>
+                    <option value="co">Colombia</option>
+                    <option value="us">Estados Unidos</option>
+                    <option value="br">Brasil</option>
+                </select>
+                <textarea id="targetList" placeholder="Niveles completados (Ej: Acu, The Golden, Bloodbath...)"></textarea>
+                <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; font-weight:bold; margin-top:0;" onclick="saveUser()">AÑADIR / ACTUALIZAR JUGADOR</button>
+                <button class="btn-scully" style="width:100%; margin-top:10px; border-color:#fff; color:#fff;" onclick="descargarScript()">DESCARGAR SCRIPT.JS FINAL</button>
             </div>
-            <div id="adminUserList" style="flex:1; background:#080808; padding:10px; max-height:300px; overflow-y:auto;"></div>
+            <div class="list-side">
+                <p style="font-size: 0.6rem; color: #444; margin-bottom: 10px; text-transform: uppercase;">Eliminar Jugadores</p>
+                <div id="adminUserList" style="background:#080808; padding:10px; max-height:300px; overflow-y:auto; border: 1px solid #111;"></div>
+            </div>
         </div>
     </div>
 
     <div id="uModal" class="modal"><div class="modal-content" id="uModalContent"></div></div>
 
     <script src="script.js"></script>
+
     <script>
         const TOKEN = "GdfuFCRy";
-        function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
-        window.onload = function() { 
-            if(sessionStorage.getItem('scully_session') === 'active') { document.getElementById('adminPanel').style.display = "block"; document.getElementById('authBox').style.display = "none"; updateAdminUserList(); }
-            if(typeof renderLeaderboard === 'function') renderLeaderboard(); 
+
+        // Funciones de Fuerza Bruta Local para calcular el ranking
+        function getDBLevels() { return JSON.parse(localStorage.getItem('scully_db_levels')) || []; }
+        function getDBRanks() { return JSON.parse(localStorage.getItem('scully_ranks')) || []; }
+        function calculatePoints(i) { return Math.max(100 - (i * 0.6), 5).toFixed(1); }
+
+        window.renderLeaderboard = function() {
+            const b = document.getElementById('leaderboardBody');
+            if(!b) return;
+            const db = getDBLevels();
+            const ranks = getDBRanks();
+            
+            if(ranks.length === 0) { b.innerHTML = "<tr><td colspan='4' style='text-align:center; color:#444;'>No hay jugadores registrados.</td></tr>"; return; }
+
+            ranks.forEach(u => {
+                let t = 0; 
+                let list = u.levelList ? u.levelList.split(",") : [];
+                list.forEach(lvl => { 
+                    const idx = db.findIndex(item => item.name.trim().toLowerCase() === lvl.trim().toLowerCase()); 
+                    if(idx > -1) t += parseFloat(calculatePoints(idx)); 
+                });
+                u.pts = t.toFixed(1); 
+                u.cnt = list.filter(x => x.trim() !== "").length;
+            });
+            
+            ranks.sort((a,b) => b.pts - a.pts); // Ordenar por puntos
+            
+            b.innerHTML = ranks.map((u, i) => `
+                <tr class="rank-row" onclick="openUserProfile('${u.name}')">
+                    <td>#${i + 1}</td>
+                    <td style="text-align:left;"><img src="https://flagcdn.com/w20/${u.country}.png" style="margin-right:10px; vertical-align:middle;">${u.name}</td>
+                    <td style="color:#ff6600; font-weight:bold;">${u.pts}</td>
+                    <td>${u.cnt}</td>
+                </tr>
+            `).join("");
+        }
+
+        window.openUserProfile = function(n) {
+            const u = getDBRanks().find(x => x.name === n);
+            document.getElementById('uModalContent').innerHTML = `
+                <span onclick="closeM()" style="cursor:pointer; color:#ff6600; position:absolute; right:20px; top:10px; font-size:2rem;">&times;</span>
+                <img src="https://flagcdn.com/w80/${u.country}.png" style="width:60px; border-radius:4px; margin-bottom:10px;">
+                <h2 style="color:#ff6600; margin:0;">${u.name}</h2>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px;">
+                    <div style="background:#000; padding:10px;"><b style="color:#ff6600; font-size:1.5rem;">${u.pts}</b><br><small>PTS</small></div>
+                    <div style="background:#000; padding:10px;"><b style="font-size:1.5rem;">${u.cnt}</b><br><small>LVLS</small></div>
+                </div>
+                <div style="text-align:left; font-size:0.8rem; margin-top:15px; max-height:200px; overflow-y:auto; border-top:1px solid #111; padding-top:10px; color:#888;">
+                    <strong style="color:#fff;">NIVELES COMPLETADOS:</strong><br><br>${u.levelList}
+                </div>`;
+            document.getElementById('uModal').style.display = "block";
+        }
+
+        // Sistema de Admin
+        function toggleAuth() {
+            const box = document.getElementById('authBox');
+            box.style.display = box.style.display === "block" ? "none" : "block";
+        }
+
+        function checkAuth() {
+            if(document.getElementById('tokenInput').value === TOKEN) {
+                sessionStorage.setItem('scully_session', 'active');
+                location.reload();
+            }
+        }
+
+        window.onload = function() {
+            if(sessionStorage.getItem('scully_session') === 'active') {
+                document.getElementById('adminPanel').style.display = "block";
+                document.querySelector('.admin-access').style.display = "none";
+                updateAdminUserList();
+            }
+            renderLeaderboard();
         };
+
+        function closeM() { document.getElementById('uModal').style.display = "none"; }
+
         function saveUser() {
             const name = document.getElementById('targetUser').value.trim();
             const list = document.getElementById('targetList').value;
             const country = document.getElementById('targetCountry').value;
+            
+            if(!name) return alert("El nombre del jugador es obligatorio.");
+
             let users = JSON.parse(localStorage.getItem('scully_ranks')) || [];
             const idx = users.findIndex(u => u.name.toLowerCase() === name.toLowerCase());
-            if(idx > -1) users[idx] = { name, levelList: list, country };
-            else users.push({ name, levelList: list, country });
+            
+            if(idx > -1) {
+                users[idx] = { name, levelList: list, country }; // Actualiza
+            } else {
+                users.push({ name, levelList: list, country }); // Añade nuevo
+            }
+            
             localStorage.setItem('scully_ranks', JSON.stringify(users));
-            location.reload();
+            
+            // ACTUALIZA LA TABLA DE ARRIBA INSTANTÁNEAMENTE
+            renderLeaderboard();
+            updateAdminUserList();
+            
+            // Limpia los campos
+            document.getElementById('targetUser').value = "";
+            document.getElementById('targetList').value = "";
         }
+
         function deleteUser(i) {
             let users = JSON.parse(localStorage.getItem('scully_ranks')) || [];
             users.splice(i, 1);
             localStorage.setItem('scully_ranks', JSON.stringify(users));
-            location.reload();
+            renderLeaderboard();
+            updateAdminUserList();
         }
+
         function updateAdminUserList() {
             const users = JSON.parse(localStorage.getItem('scully_ranks')) || [];
-            document.getElementById('adminUserList').innerHTML = users.map((u, i) => `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #111; font-size:0.8rem;"><span>${u.name}</span><i class="fas fa-trash" style="color:#f44; cursor:pointer;" onclick="deleteUser(${i})"></i></div>`).join("");
+            const cont = document.getElementById('adminUserList');
+            cont.innerHTML = users.map((u, i) => `
+                <div class="lvl-item-edit">
+                    <span>${u.name} (${u.country.toUpperCase()})</span>
+                    <i class="fas fa-trash" style="color:#f44; cursor:pointer;" onclick="deleteUser(${i})"></i>
+                </div>
+            `).join("");
         }
-        function closeM() { document.querySelectorAll(".modal").forEach(m => m.style.display = "none"); }
 
+        // Generador de Script.js (IDENTICO al de index.html para evitar fallos)
         function descargarScript() {
-            // Reutiliza la misma función de descarga del index.html
-            // (La función descargarScript debe ser la misma en ambos archivos para consistencia)
-            // [Copia la misma función descargarScript() del index.html aquí]
+            const n = localStorage.getItem('scully_db_levels') || "[]";
+            const r = localStorage.getItem('scully_ranks') || "[]";
+            
+            const scriptContenido = `
+// MOTOR CENTRAL SCULLY - V2 (Blindado)
+const NIVELES = ${n};
+const RANKING = ${r};
+
+if (sessionStorage.getItem('scully_session') !== 'active') {
+    localStorage.setItem('scully_db_levels', JSON.stringify(NIVELES));
+    localStorage.setItem('scully_ranks', JSON.stringify(RANKING));
+}
+
+function getDBLevelsLive() { return JSON.parse(localStorage.getItem('scully_db_levels')) || NIVELES; }
+function getDBRanksLive() { return JSON.parse(localStorage.getItem('scully_ranks')) || RANKING; }
+function calculatePoints(i) { return Math.max(100 - (i * 0.6), 5).toFixed(1); }
+
+function renderLevels(f = "") {
+    const c = document.getElementById('list-container'); if(!c) return;
+    c.innerHTML = "";
+    const db = getDBLevelsLive();
+    db.forEach((l, i) => { 
+        if(l.name.toLowerCase().includes(f.toLowerCase())) {
+            c.innerHTML += '<div class="level-card" onclick="openDetails(' + i + ')"><div class="level-thumb"><img src="https://img.youtube.com/vi/' + l.id + '/mqdefault.jpg"></div><div class="level-info"><h2>' + l.name + '</h2><p style="color:#ff6600; font-weight:bold;">+' + calculatePoints(i) + ' PTS</p></div><div class="rank-number">#' + (i + 1) + '</div></div>';
+        }
+    });
+}
+
+function openDetails(i) {
+    const l = getDBLevelsLive()[i];
+    const victors = l.victors && l.victors.length > 0 ? l.victors.join(", ") : "Sin victors registrados";
+    document.getElementById('modal-body').innerHTML = '<h1 style="color:#ff6600; margin-bottom:5px;">' + l.name + '</h1><p style="font-size:0.7rem; color:#444; margin-bottom:15px;">TOP #' + (i + 1) + ' • ' + calculatePoints(i) + ' PTS</p><div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;"><iframe style="position:absolute; top:0; left:0; width:100%; height:100%;" src="https://www.youtube.com/embed/' + l.id + '" frameborder="0" allowfullscreen></iframe></div><div style="text-align:left; margin-top:15px;"><p style="margin:0;"><b style="color:#ff6600">FIRST VICTOR:</b> ' + (l.first || 'Nadie') + '</p><p style="font-size:0.8rem; color:#888; margin-top:5px;"><b>OTROS:</b> ' + victors + '</p></div>';
+    document.getElementById('levelModal').style.display = "block";
+}
+
+function renderLeaderboard() {
+    const b = document.getElementById('leaderboardBody'); if(!b) return;
+    const db = getDBLevelsLive();
+    const ranks = getDBRanksLive();
+    ranks.forEach(u => {
+        let t = 0; let list = u.levelList ? u.levelList.split(",") : [];
+        list.forEach(lvl => { const idx = db.findIndex(item => item.name.trim().toLowerCase() === lvl.trim().toLowerCase()); if(idx > -1) t += parseFloat(calculatePoints(idx)); });
+        u.pts = t.toFixed(1); u.cnt = list.filter(x => x.trim() !== "").length;
+    });
+    ranks.sort((a,b) => b.pts - a.pts);
+    b.innerHTML = ranks.map((u, i) => '<tr class="rank-row" onclick="openUserProfile(\\'' + u.name + '\\')"><td>#' + (i + 1) + '</td><td style="text-align:left;"><img src="https://flagcdn.com/w20/' + u.country + '.png" style="margin-right:10px;">' + u.name + '</td><td style="color:#ff6600; font-weight:bold;">' + u.pts + '</td><td>' + u.cnt + '</td></tr>').join("");
+}
+
+function openUserProfile(n) {
+    const u = getDBRanksLive().find(x => x.name === n);
+    document.getElementById('uModalContent').innerHTML = '<span onclick="closeM()" style="cursor:pointer; color:#ff6600; position:absolute; right:20px; top:10px; font-size:2rem;">&times;</span><img src="https://flagcdn.com/w80/' + u.country + '.png" style="width:60px;"><h2 style="color:#ff6600; margin:0; padding-top:10px;">' + u.name + '</h2><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;"><div style="background:#000; padding:10px;"><b style="color:#ff6600; font-size:1.2rem;">' + u.pts + '</b><br><small>PTS</small></div><div style="background:#000; padding:10px;"><b style="font-size:1.2rem;">' + u.cnt + '</b><br><small>LVLS</small></div></div><div style="text-align:left; font-size:0.8rem; border-top:1px solid #111; padding-top:10px; margin-top:15px;">' + u.levelList + '</div>';
+    document.getElementById('uModal').style.display = "block";
+}
+
+document.addEventListener("DOMContentLoaded", () => { renderLevels(); renderLeaderboard(); });
+`;
+            const blob = new Blob([scriptContenido], { type: 'text/javascript' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob); a.download = 'script.js'; a.click();
         }
     </script>
 </body>
