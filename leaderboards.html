@@ -13,16 +13,19 @@
         .credit-box i { color: var(--accent); margin-right: 5px; }
         header { padding: 50px 20px; }
         h1 span { color: var(--accent); }
-        .btn-scully { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 10px 20px; text-decoration: none; font-size: 0.8rem; cursor: pointer; display: inline-block; margin-top: 20px; }
+        .btn-container { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+        .btn-scully { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 10px 20px; text-decoration: none; font-size: 0.8rem; cursor: pointer; display: inline-block; font-weight: bold; }
+        .btn-discord { border-color: #5865F2; color: #5865F2; }
         .wrapper { width: 95%; max-width: 850px; margin: 20px auto; }
         table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-        .rank-row { background: var(--card); cursor: pointer; }
+        .rank-row { background: var(--card); cursor: pointer; transition: 0.2s; }
+        .rank-row:hover { border: 1px solid var(--accent); transform: translateY(-2px); }
         td { padding: 15px; border-top: 1px solid #151515; border-bottom: 1px solid #151515; }
         #adminPanel { display: none; background: #000; border: 1px solid var(--accent); padding: 25px; width: 95%; max-width: 800px; margin: 40px auto; border-radius: 10px; text-align: left; }
         input, select, textarea { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #fff; padding: 10px; margin-bottom: 8px; font-family: 'Lexend Deca'; box-sizing: border-box; }
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
         .modal-content { background: #080808; margin: 5% auto; padding: 30px; width: 90%; max-width: 450px; border: 1px solid var(--accent); border-radius: 15px; position: relative; }
-        .admin-access { margin: 80px 0 20px; opacity: 0.1; }
+        .admin-access { margin: 80px 0 20px; opacity: 0.05; }
     </style>
 </head>
 <body>
@@ -30,8 +33,15 @@
         <div class="credit-box"><i class="fas fa-crown"></i> OWNER <span>score</span></div>
         <div class="credit-box"><i class="fas fa-user-shield"></i> ADMIN <span>Vegardo</span></div>
         <div class="credit-box"><i class="fas fa-hands-helping"></i> HELPER <span>Blitz</span></div>
+        <div class="credit-box"><i class="fas fa-code"></i> CODIFICADOR <span>score</span></div>
     </nav>
-    <header><h1>SCULLY <span>LEADERBOARDS</span></h1><a href="index.html" class="btn-scully">REGRESAR AL DIRECTORIO</a></header>
+    <header>
+        <h1>SCULLY <span>LEADERBOARDS</span></h1>
+        <div class="btn-container">
+            <a href="index.html" class="btn-scully">REGRESAR AL DIRECTORIO</a>
+            <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully btn-discord">DISCORD</a>
+        </div>
+    </header>
     <main class="wrapper"><table><thead><tr><th>#</th><th style="text-align:left">Identidad</th><th>Puntos</th><th>Lvls</th></tr></thead><tbody id="leaderboardBody"></tbody></table></main>
 
     <div class="admin-access"><i class="fas fa-lock" onclick="toggleAuth()"></i><div id="authBox" style="display:none;"><input type="password" id="tokenInput" placeholder="Token"><button class="btn-scully" onclick="checkAuth()">ENTRAR</button></div></div>
@@ -39,10 +49,10 @@
     <div id="adminPanel">
         <h4 style="color:var(--accent);">ADMIN JUGADORES</h4>
         <input type="text" id="targetUser" placeholder="Nombre Jugador">
-        <select id="targetCountry"><option value="cl">Chile</option><option value="ar">Argentina</option><option value="mx">México</option></select>
-        <textarea id="targetList" placeholder="Niveles (separados por coma)"></textarea>
-        <button class="btn-scully" style="width:100%; background:var(--accent); color:#000;" onclick="saveUser()">GUARDAR</button>
-        <div id="adminUserList" style="margin-top:20px;"></div>
+        <select id="targetCountry"><option value="cl">Chile</option><option value="ar">Argentina</option><option value="mx">México</option><option value="es">España</option></select>
+        <textarea id="targetList" placeholder="Niveles (Acu, Cataclysm...)"></textarea>
+        <button class="btn-scully" style="width:100%; background:var(--accent); color:#000;" onclick="saveUser()">GUARDAR JUGADOR</button>
+        <div id="adminUserList" style="margin-top:20px; max-height: 200px; overflow-y: auto;"></div>
     </div>
 
     <div id="uModal" class="modal"><div class="modal-content" id="uModalContent"></div></div>
@@ -73,12 +83,13 @@
         }
         function openUserProfile(n) {
             db.ref('/').once('value', (s) => {
-                const d = s.val(); const u = Object.values(d.players).find(x => x.name === n);
+                const d = s.val(); const pObj = d.players || {}; const u = Object.values(pObj).find(x => x.name === n);
+                const lvls = d.levels || [];
                 const links = u.levelList.split(",").map(l => {
-                    const nc = l.trim(); const lvl = (d.levels || []).find(x => x.name.toLowerCase() === nc.toLowerCase());
-                    return lvl ? `<a href="https://youtu.be/${lvl.id}" target="_blank" style="display:block; color:var(--accent);">${nc}</a>` : `<div>${nc}</div>`;
+                    const nc = l.trim(); const lvl = lvls.find(x => x.name.toLowerCase() === nc.toLowerCase());
+                    return lvl ? `<a href="https://youtu.be/${lvl.id}" target="_blank" style="display:block; color:var(--accent); margin-bottom:5px;">${nc} <i class="fab fa-youtube"></i></a>` : `<div style="color:#444;">${nc}</div>`;
                 }).join("");
-                document.getElementById('uModalContent').innerHTML = `<span onclick="closeM()" style="position:absolute; right:20px; top:10px; cursor:pointer; font-size:2rem; color:var(--accent)">&times;</span><img src="https://flagcdn.com/w80/${u.country}.png" style="width:60px;"><h2>${u.name}</h2><div style="text-align:left;">${links}</div>`;
+                document.getElementById('uModalContent').innerHTML = `<span onclick="closeM()" style="position:absolute; right:20px; top:10px; cursor:pointer; font-size:2rem; color:var(--accent)">&times;</span><img src="https://flagcdn.com/w80/${u.country}.png" style="width:60px; border-radius:4px;"><h2>${u.name}</h2><div style="text-align:left; border-top:1px solid #111; padding-top:10px; margin-top:10px;">${links}</div>`;
                 document.getElementById('uModal').style.display = "block";
             });
         }
@@ -92,11 +103,11 @@
                 let p = Object.values(s.val() || {});
                 const idx = p.findIndex(u => u.name.toLowerCase() === name.toLowerCase());
                 if(idx > -1) p[idx] = { name, levelList: list, country }; else p.push({ name, levelList: list, country });
-                db.ref('players').set(p); alert("¡Guardado!");
+                db.ref('players').set(p); alert("¡Jugador Guardado!");
             });
         }
-        function deleteUser(i) { db.ref('players').once('value', (s) => { let p = Object.values(s.val() || {}); p.splice(i, 1); db.ref('players').set(p); }); }
-        function updateAdminUserList(p) { document.getElementById('adminUserList').innerHTML = p.map((u, i) => `<div style="display:flex; justify-content:space-between;"><span>${u.name}</span><i class="fas fa-trash" onclick="deleteUser(${i})" style="color:red; cursor:pointer;"></i></div>`).join(""); }
+        function deleteUser(i) { if(confirm("¿Borrar?")) db.ref('players').once('value', (s) => { let p = Object.values(s.val() || {}); p.splice(i, 1); db.ref('players').set(p); }); }
+        function updateAdminUserList(p) { document.getElementById('adminUserList').innerHTML = p.map((u, i) => `<div style="display:flex; justify-content:space-between; padding:5px; border-bottom:1px solid #111;"><span>${u.name}</span><i class="fas fa-trash" onclick="deleteUser(${i})" style="color:red; cursor:pointer;"></i></div>`).join(""); }
         window.onload = () => { if(sessionStorage.getItem('scully_session') === 'active') document.getElementById('adminPanel').style.display = "block"; };
         function closeM() { document.getElementById('uModal').style.display = "none"; }
     </script>
