@@ -12,7 +12,6 @@
         
         .top-credits { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.8); border-bottom: 1px solid #111; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; }
         .credit-box i { color: var(--accent); margin-right: 5px; }
-        .credit-box span { color: #888; }
 
         header { padding: 60px 20px; text-align: center; }
         h1 { font-size: 3rem; letter-spacing: 8px; margin: 0; text-transform: uppercase; font-weight: 700; }
@@ -21,10 +20,10 @@
         .btn-container { margin-top: 30px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         .btn-scully { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 12px 25px; text-decoration: none; font-size: 0.8rem; transition: 0.3s; cursor: pointer; display: inline-block; font-weight: bold; }
         .btn-scully:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
-        .btn-discord { border-color: #5865F2; color: #5865F2; }
-        .btn-discord:hover { background: #5865F2; color: #fff; box-shadow: 0 0 15px rgba(88, 101, 242, 0.4); }
 
-        .wrapper { width: 95%; max-width: 1000px; margin: 40px auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        /* Directorio */
+        .section-title { color: var(--accent); letter-spacing: 4px; font-size: 0.8rem; margin: 50px 0 20px; text-transform: uppercase; }
+        .wrapper { width: 95%; max-width: 1000px; margin: 0 auto 60px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         .level-card { background: var(--card); border: 1px solid #111; border-radius: 8px; overflow: hidden; display: flex; align-items: center; cursor: pointer; transition: 0.3s; position: relative; }
         .level-card:hover { border-color: var(--accent); transform: translateY(-3px); }
         .level-thumb { width: 120px; height: 70px; flex-shrink: 0; }
@@ -32,17 +31,25 @@
         .level-info { padding: 15px; }
         .rank-number { position: absolute; right: 15px; font-size: 1.2rem; font-weight: 700; color: rgba(255,255,255,0.05); }
 
-        #adminPanel { display: none; background: #000; border: 1px solid var(--accent); padding: 25px; width: 95%; max-width: 900px; margin: 50px auto; border-radius: 10px; }
-        input { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #fff; padding: 12px; margin-bottom: 10px; font-family: 'Lexend Deca'; box-sizing: border-box; }
-        
+        /* FORMULARIO DE RECORDS */
+        #form-section { background: #080808; border-top: 1px solid #111; padding: 60px 20px; margin-top: 50px; }
+        .form-box { max-width: 500px; margin: 0 auto; text-align: left; }
+        input, select, textarea { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 12px; margin-bottom: 15px; font-family: 'Lexend Deca'; box-sizing: border-box; }
+        input:focus { border-color: var(--accent); outline: none; }
+
+        /* Panel Admin */
+        #adminPanel { display: none; background: #000; border: 2px solid var(--accent); padding: 30px; width: 95%; max-width: 1100px; margin: 50px auto; border-radius: 15px; text-align: left; }
+        .admin-layout { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .admin-col { background: #080808; padding: 15px; border-radius: 8px; border: 1px solid #111; }
+        .submission-item { background: #000; padding: 10px; margin-bottom: 10px; border-left: 3px solid var(--accent); font-size: 0.7rem; }
+
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
         .modal-content { background: #080808; margin: 5% auto; padding: 30px; width: 90%; max-width: 600px; border: 1px solid var(--accent); border-radius: 15px; position: relative; text-align: center; }
-        
-        .admin-access { margin: 100px 0 30px; text-align: center; opacity: 0.05; transition: 0.3s; }
-        .admin-access:hover { opacity: 1; }
+        .admin-access { margin: 100px 0 30px; text-align: center; opacity: 0.05; }
     </style>
 </head>
 <body>
+
     <nav class="top-credits">
         <div class="credit-box"><i class="fas fa-crown"></i> OWNER <span>score</span></div>
         <div class="credit-box"><i class="fas fa-user-shield"></i> ADMIN <span>Vegardo</span></div>
@@ -54,22 +61,60 @@
         <h1>THE SCULLY <span>LIST</span></h1>
         <div class="btn-container">
             <a href="leaderboards.html" class="btn-scully">LEADERBOARDS</a>
-            <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully btn-discord"><i class="fab fa-discord"></i> DISCORD OFICIAL</a>
+            <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully" style="border-color:#5865F2; color:#5865F2;">DISCORD</a>
+            <a href="#form-section" class="btn-scully">SUBIR RÉCORD</a>
         </div>
     </header>
 
+    <center><div class="section-title">Niveles del Directorio</div></center>
     <main class="wrapper" id="list-container"></main>
+
+    <section id="form-section">
+        <div class="form-box">
+            <h2 style="color:var(--accent); text-align:center; margin-bottom:10px;">ENVIAR RÉCORD</h2>
+            <p style="font-size:0.7rem; color:#666; text-align:center; margin-bottom:30px;">Completa los datos para ser añadido a los Leaderboards.</p>
+            
+            <input type="text" id="recPlayer" placeholder="Tu Nombre de Usuario">
+            <select id="recLevel">
+                <option value="">-- Selecciona el Nivel --</option>
+            </select>
+            <input type="text" id="recLink" placeholder="Link de tu Video (YouTube/Twitch)">
+            <select id="recCountry">
+                <option value="cl">Chile</option><option value="ar">Argentina</option><option value="mx">México</option>
+                <option value="es">España</option><option value="pe">Perú</option><option value="co">Colombia</option>
+            </select>
+            <button class="btn-scully" style="width:100%; background:var(--accent); color:#000;" onclick="submitRecord()">ENVIAR RÉCORD A REVISIÓN</button>
+        </div>
+    </section>
 
     <div class="admin-access"><i class="fas fa-lock" onclick="toggleAuth()"></i><div id="authBox" style="display:none;"><input type="password" id="tokenInput" placeholder="Token"><button class="btn-scully" onclick="checkAuth()">ENTRAR</button></div></div>
 
     <div id="adminPanel">
-        <h2 style="color:var(--accent); text-align:center;">ADMIN DIRECTORIO</h2>
-        <input type="text" id="lvlName" placeholder="Nombre Nivel">
-        <input type="text" id="lvlYT" placeholder="ID YouTube">
-        <input type="text" id="lvlFirst" placeholder="First Victor">
-        <input type="number" id="lvlPos" placeholder="Posición (1, 2...)">
-        <button class="btn-scully" style="width:100%; background:var(--accent); color:#000;" onclick="saveLevel()">PUBLICAR EN LA NUBE</button>
-        <div id="adminLvlList" style="margin-top:20px; max-height: 200px; overflow-y: auto;"></div>
+        <h2 style="color:var(--accent); text-align:center; margin-bottom:20px;">CENTRAL DE MANDO SCULLY</h2>
+        <div class="admin-layout">
+            <div class="admin-col">
+                <p style="color:var(--accent); font-size:0.7rem; font-weight:bold;">AÑADIR NIVEL</p>
+                <input type="text" id="lvlName" placeholder="Nombre Nivel">
+                <input type="text" id="lvlYT" placeholder="ID YouTube">
+                <input type="text" id="lvlFirst" placeholder="First Victor">
+                <input type="number" id="lvlPos" placeholder="Posición">
+                <button class="btn-scully" style="width:100%; font-size:0.7rem;" onclick="saveLevel()">PUBLICAR NIVEL</button>
+                <div id="adminLvlList" style="margin-top:15px; max-height:150px; overflow-y:auto;"></div>
+            </div>
+
+            <div class="admin-col">
+                <p style="color:#5865F2; font-size:0.7rem; font-weight:bold;">RÉCORDS PENDIENTES</p>
+                <div id="submissionsList" style="max-height:400px; overflow-y:auto;">
+                    <small style="color:#333;">No hay envíos pendientes.</small>
+                </div>
+            </div>
+
+            <div class="admin-col">
+                <p style="color:#444; font-size:0.7rem; font-weight:bold;">ESTADÍSTICAS</p>
+                <div id="statsBox" style="font-size:0.8rem; color:#888;">Cargando...</div>
+                <button class="btn-scully" style="margin-top:20px; width:100%; border-color:#300; color:#300;" onclick="clearAllData()">BORRADO TOTAL (CUIDADO)</button>
+            </div>
+        </div>
     </div>
 
     <div id="levelModal" class="modal"><div class="modal-content"><span onclick="closeM()" style="position:absolute; right:20px; top:10px; cursor:pointer; font-size:2rem; color:var(--accent)">&times;</span><div id="modal-body"></div></div></div>
@@ -82,13 +127,24 @@
         const db = firebase.database();
         const TOKEN = "GdfuFCRy";
 
-        db.ref('levels').on('value', (snapshot) => {
-            const niveles = snapshot.val() || [];
+        // ESCUCHA FIREBASE
+        db.ref('/').on('value', (snapshot) => {
+            const data = snapshot.val() || {};
+            const niveles = data.levels || [];
+            const subms = data.submissions || {};
+            
             renderLevels(niveles);
-            if(sessionStorage.getItem('scully_session') === 'active') updateAdminList(niveles);
+            updateLevelSelect(niveles);
+            if(sessionStorage.getItem('scully_session') === 'active') {
+                updateAdminList(niveles);
+                renderSubmissions(subms);
+                updateStats(data);
+            }
         });
 
+        // FUNCIONES PÚBLICAS
         function calculatePoints(i) { return Math.max(100 - (i * 0.6), 5).toFixed(1); }
+        
         function renderLevels(niveles) {
             document.getElementById('list-container').innerHTML = niveles.map((l, i) => `
                 <div class="level-card" onclick="openDetails('${l.id}', '${l.name}', ${i}, '${l.first}')">
@@ -97,12 +153,44 @@
                     <div class="rank-number">#${i + 1}</div>
                 </div>`).join("");
         }
-        function openDetails(id, name, i, first) {
-            document.getElementById('modal-body').innerHTML = `<h1>${name}</h1><iframe width="100%" height="315" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe><p style="margin-top:15px;"><b>FIRST VICTOR:</b> ${first || 'Nadie'}</p>`;
-            document.getElementById('levelModal').style.display = "block";
+
+        function updateLevelSelect(niveles) {
+            const sel = document.getElementById('recLevel');
+            sel.innerHTML = '<option value="">-- Selecciona el Nivel --</option>' + 
+                niveles.map(l => `<option value="${l.name}">${l.name}</option>`).join("");
         }
-        function toggleAuth() { const b = document.getElementById('authBox'); b.style.display = b.style.display === "block" ? "none" : "block"; }
-        function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
+
+        function submitRecord() {
+            const player = document.getElementById('recPlayer').value.trim();
+            const level = document.getElementById('recLevel').value;
+            const link = document.getElementById('recLink').value.trim();
+            const country = document.getElementById('recCountry').value;
+
+            if(!player || !level || !link) return alert("Por favor, completa todos los campos.");
+
+            db.ref('submissions').push({ player, level, link, country, date: new Date().toLocaleDateString() });
+            alert("¡Récord enviado! El staff lo revisará pronto.");
+            document.getElementById('recPlayer').value = "";
+            document.getElementById('recLink').value = "";
+        }
+
+        // FUNCIONES ADMIN
+        function renderSubmissions(subms) {
+            const cont = document.getElementById('submissionsList');
+            const entries = Object.entries(subms);
+            if(entries.length === 0) { cont.innerHTML = "<small style='color:#333;'>Sin pendientes.</small>"; return; }
+            
+            cont.innerHTML = entries.map(([key, s]) => `
+                <div class="submission-item">
+                    <b>${s.player}</b> en <b>${s.level}</b><br>
+                    <a href="${s.link}" target="_blank" style="color:var(--accent)">Ver Video</a> | ${s.country}<br>
+                    <button onclick="deleteSubmission('${key}')" style="background:none; border:none; color:red; cursor:pointer; font-size:0.6rem; margin-top:5px;">ELIMINAR SOLICITUD</button>
+                </div>
+            `).join("");
+        }
+
+        function deleteSubmission(key) { if(confirm("¿Borrar esta solicitud?")) db.ref('submissions/' + key).remove(); }
+
         function saveLevel() {
             const name = document.getElementById('lvlName').value.trim();
             const id = document.getElementById('lvlYT').value.trim();
@@ -112,13 +200,26 @@
                 let lvls = s.val() || [];
                 lvls = lvls.filter(l => l.name.toLowerCase() !== name.toLowerCase());
                 lvls.splice(pos >= 0 ? pos : lvls.length, 0, { name, id, first });
-                db.ref('levels').set(lvls); alert("¡Guardado en la Nube!");
+                db.ref('levels').set(lvls);
             });
         }
-        function deleteLvl(index) { if(confirm("¿Borrar?")) db.ref('levels').once('value', (s) => { let l = s.val() || []; l.splice(index, 1); db.ref('levels').set(l); }); }
-        function updateAdminList(l) { document.getElementById('adminLvlList').innerHTML = l.map((lvl, i) => `<div style="display:flex; justify-content:space-between; padding:5px; border-bottom:1px solid #111;"><span>#${i+1} ${lvl.name}</span><i class="fas fa-trash" onclick="deleteLvl(${i})" style="color:red; cursor:pointer;"></i></div>`).join(""); }
-        window.onload = () => { if(sessionStorage.getItem('scully_session') === 'active') document.getElementById('adminPanel').style.display = "block"; };
+
+        function updateStats(data) {
+            const lvls = (data.levels || []).length;
+            const players = Object.keys(data.players || {}).length;
+            document.getElementById('statsBox').innerHTML = `Niveles: ${lvls}<br>Jugadores: ${players}`;
+        }
+
+        function toggleAuth() { const b = document.getElementById('authBox'); b.style.display = b.style.display === "block" ? "none" : "block"; }
+        function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
+        function openDetails(id, name, i, first) {
+            document.getElementById('modal-body').innerHTML = `<h1>${name}</h1><iframe width="100%" height="315" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe><p><b>FIRST VICTOR:</b> ${first || 'Nadie'}</p>`;
+            document.getElementById('levelModal').style.display = "block";
+        }
         function closeM() { document.getElementById('levelModal').style.display = "none"; }
+        function deleteLvl(index) { db.ref('levels').once('value', (s) => { let l = s.val() || []; l.splice(index, 1); db.ref('levels').set(l); }); }
+        function updateAdminList(l) { document.getElementById('adminLvlList').innerHTML = l.map((lvl, i) => `<div style="display:flex; justify-content:space-between; font-size:0.6rem; padding:3px; border-bottom:1px solid #111;"><span>#${i+1} ${lvl.name}</span><i class="fas fa-trash" onclick="deleteLvl(${i})" style="color:red; cursor:pointer;"></i></div>`).join(""); }
+        window.onload = () => { if(sessionStorage.getItem('scully_session') === 'active') document.getElementById('adminPanel').style.display = "block"; };
     </script>
 </body>
 </html>
