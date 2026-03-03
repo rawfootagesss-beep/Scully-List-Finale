@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Scully List | Hub Automatizado</title>
+    <title>The Scully List | Hub de Moderación</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
             --accent: #ff6600; --accent-grad: linear-gradient(135deg, #ff6600 0%, #ff9900 100%);
             --bg: #030303; --card-bg: rgba(15, 15, 15, 0.7);
-            --border: rgba(255, 255, 255, 0.05);
+            --glow: 0 0 20px rgba(255, 102, 0, 0.2); --border: rgba(255, 255, 255, 0.05);
             --green: #00ff66; --red: #ff3333; --blue: #00ccff; --purple: #cc00ff; --yellow: #ffff00;
         }
 
@@ -48,13 +48,21 @@
         .level-card { background: var(--card-bg); border-radius: 20px; padding: 12px; display: flex; align-items: center; cursor: pointer; border: 1px solid var(--border); transition: 0.3s; position: relative; }
         .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
 
-        /* ADMIN */
-        #adminPanel { display: none; background: #000; border: 2px solid var(--accent); padding: 35px; width: 95%; max-width: 1150px; margin: 50px auto; border-radius: 25px; }
+        /* ADMIN PANEL - MEJORADO */
+        #adminPanel { display: none; background: #000; border: 2px solid var(--accent); padding: 35px; width: 95%; max-width: 1150px; margin: 50px auto; border-radius: 25px; box-shadow: var(--glow); }
         .admin-layout { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; }
         .admin-col { background: #080808; padding: 20px; border-radius: 15px; border: 1px solid #111; }
-        .admin-sub-card { background: #000; padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid #333; font-size: 0.7rem; }
-        .admin-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 10px; }
-        .admin-btns button { font-size: 0.6rem; padding: 8px; cursor: pointer; background: #050505; color: #fff; border: 1px solid #222; border-radius: 5px; }
+        .admin-sub-card { background: #000; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #222; font-size: 0.75rem; position: relative; border-left: 4px solid var(--accent); }
+        
+        .proof-links { display: flex; gap: 15px; margin: 15px 0; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 10px; }
+        .proof-links a { color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .proof-links a:hover { color: var(--accent); transform: translateY(-2px); }
+        .proof-links .yt-link i { color: #ff0000; }
+        .proof-links .raw-link i { color: #00ccff; }
+
+        .admin-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .admin-btns button { font-size: 0.65rem; padding: 10px; cursor: pointer; background: #111; color: #fff; border: 1px solid #333; border-radius: 8px; font-weight: bold; transition: 0.2s; }
+        .admin-btns button:hover { border-color: var(--accent); background: #181818; }
         
         input, select { width: 100%; background: #0a0a0a !important; border: 1px solid #222; color: #fff !important; padding: 14px; border-radius: 15px; margin-bottom: 20px; font-family: 'Lexend Deca'; box-sizing: border-box; }
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
@@ -88,8 +96,8 @@
 
     <section class="status-tracker">
         <h2 style="color:var(--accent); font-size: 0.9rem; letter-spacing: 2px;">STATUS TRACKER</h2>
-        <input type="text" id="checkInput" placeholder="Tu Nick exacto...">
-        <button class="btn-scully" style="width:100%; justify-content:center; border-radius:15px;" onclick="checkStatus()">CONSULTAR MI ESTADO</button>
+        <input type="text" id="checkInput" placeholder="Busca tu Nickname...">
+        <button class="btn-scully" style="width:100%; justify-content:center; border-radius:15px;" onclick="checkStatus()">VER ESTADO</button>
         <div id="statusDisplay" style="margin-top:25px;"></div>
     </section>
 
@@ -99,15 +107,15 @@
         <div class="glass-form">
             <h2 style="margin-top:0; color:var(--accent); text-align:center;">SUBIR RÉCORD</h2>
             <input type="text" id="recPlayer" placeholder="Nickname">
-            <select id="recLevel"><option value="">-- Seleccionar Nivel --</option></select>
-            <input type="text" id="recLink" placeholder="Link del Video">
-            <input type="text" id="recRaw" placeholder="Link RAW (Drive)">
+            <select id="recLevel"><option value="">-- Nivel --</option></select>
+            <input type="text" id="recLink" placeholder="Link YouTube">
+            <input type="text" id="recRaw" placeholder="Link RAW (Google Drive)">
             <select id="recCountry">
                 <option value="es">España 🇪🇸</option><option value="mx">México 🇲🇽</option>
                 <option value="ar">Argentina 🇦🇷</option><option value="cl">Chile 🇨🇱</option>
                 <option value="co">Colombia 🇨🇴</option><option value="pe">Perú 🇵🇪</option>
             </select>
-            <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; border:none; justify-content:center; font-weight:800;" onclick="submitRecord()">ENVIAR A REVISIÓN</button>
+            <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; border:none; justify-content:center; font-weight:800;" onclick="submitRecord()">ENVIAR RÉCORD</button>
         </div>
     </section>
 
@@ -117,19 +125,16 @@
         <div class="admin-layout">
             <div class="admin-col">
                 <p style="font-size:0.6rem; color:#444; font-weight:bold;">AÑADIR NIVEL</p>
-                <input type="text" id="lvlName" placeholder="Nombre">
-                <input type="text" id="lvlYT" placeholder="ID YouTube">
-                <input type="text" id="lvlFirst" placeholder="First Victor">
-                <input type="number" id="lvlPos" placeholder="Posición">
-                <button class="btn-scully" style="width:100%; justify-content:center;" onclick="saveLevel()">PUBLICAR</button>
+                <input type="text" id="lvlName" placeholder="Nombre"><input type="text" id="lvlYT" placeholder="ID YouTube"><input type="text" id="lvlFirst" placeholder="First Victor">
+                <button class="btn-scully" style="width:100%; justify-content:center;" onclick="saveLevel()">Publicar</button>
             </div>
             <div class="admin-col">
-                <p style="font-size:0.6rem; color:var(--green); font-weight:bold;">MODERACIÓN</p>
-                <div id="submissionsList" style="max-height:450px; overflow-y:auto;"></div>
+                <p style="font-size:0.6rem; color:var(--green); font-weight:bold;">REVISIÓN DE PRUEBAS</p>
+                <div id="submissionsList" style="max-height:500px; overflow-y:auto;"></div>
             </div>
             <div class="admin-col">
-                <p style="font-size:0.6rem; color:var(--red); font-weight:bold;">BANEOS</p>
-                <input type="text" id="banUser" placeholder="Nick"><button class="btn-scully" style="width:100%; border-color:var(--red); color:var(--red); justify-content:center;" onclick="banPlayer()">BANEAR</button>
+                <p style="font-size:0.6rem; color:var(--red); font-weight:bold;">MODERACIÓN</p>
+                <input type="text" id="banUser" placeholder="Nick"><button class="btn-scully" style="width:100%; border-color:var(--red); color:var(--red); justify-content:center;" onclick="banPlayer()">Banear</button>
                 <div id="banList" style="font-size:0.6rem; margin-top:10px;"></div>
             </div>
         </div>
@@ -158,38 +163,45 @@
             }
         });
 
-        // --- SISTEMA DE ACTUALIZACIÓN AUTOMÁTICA ---
+        // --- RENDERIZAR SUBMISSIONS CON LINKS DE PRUEBA ---
+        function renderSubmissions(s) {
+            document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k, x]) => `
+                <div class="admin-sub-card">
+                    <div style="font-weight:800; color:var(--accent); font-size:0.85rem;">${x.player}</div>
+                    <div style="color:#666;">Nivel: <b>${x.level}</b></div>
+                    
+                    <div class="proof-links">
+                        <a href="${x.link}" target="_blank" class="yt-link"><i class="fab fa-youtube"></i> Video</a>
+                        <a href="${x.raw}" target="_blank" class="raw-link"><i class="fas fa-cloud-download-alt"></i> RAW</a>
+                    </div>
+
+                    <div class="admin-btns">
+                        <button onclick="setStatus('${k}','En revisión')">REVISIÓN</button>
+                        <button onclick="setStatus('${k}','Aceptado')" style="background:var(--green); color:#000; border:none;">ACEPTAR</button>
+                        <button onclick="setStatus('${k}','Rechazado')" style="background:var(--red); color:#fff; border:none;">RECHAZAR</button>
+                    </div>
+                </div>`).join("");
+        }
+
         function setStatus(key, newStatus) {
             const sub = fullData.submissions[key];
-            if(!sub) return;
-            const staff = prompt("Staff encargado:");
+            const staff = prompt("¿Staff activo?");
             if(!staff) return;
 
             if(newStatus === 'Aceptado') {
-                // 1. Añadir al Ranking automáticamente
                 db.ref('players').once('value', s => {
-                    let players = Object.values(s.val() || {});
-                    let idx = players.findIndex(p => p.name.toLowerCase() === sub.player.toLowerCase());
+                    let p = Object.values(s.val() || {});
+                    let i = p.findIndex(u => u.name.toLowerCase() === sub.player.toLowerCase());
                     let completion = { level: sub.level, link: sub.link };
-
-                    if(idx > -1) {
-                        if(!players[idx].completions) players[idx].completions = [];
-                        // Evitar duplicados
-                        if(!players[idx].completions.find(c => c.level === sub.level)) {
-                            players[idx].completions.push(completion);
-                        }
-                    } else {
-                        players.push({ name: sub.player, country: sub.country, completions: [completion] });
-                    }
-                    db.ref('players').set(players);
+                    if(i > -1) {
+                        if(!p[i].completions) p[i].completions = [];
+                        if(!p[i].completions.find(c => c.level === sub.level)) p[i].completions.push(completion);
+                    } else { p.push({ name: sub.player, country: sub.country, completions: [completion] }); }
+                    db.ref('players').set(p);
                 });
-
-                // 2. Mover a historia y Log
                 db.ref('history').push({...sub, status: newStatus});
                 db.ref('logs').push({ type: 'accept', msg: `✅ ${sub.player} -> ${sub.level} ACEPTADO POR ${staff}` });
                 db.ref('submissions/' + key).remove();
-                alert("Récord aceptado y RANKING ACTUALIZADO.");
-
             } else if(newStatus === 'Rechazado') {
                 const r = prompt("Razón?");
                 db.ref('history').push({...sub, status: newStatus});
@@ -201,28 +213,24 @@
             }
         }
 
+        // --- FUNCIONES HUB ---
         function checkStatus() {
             const nick = document.getElementById('checkInput').value.trim().toLowerCase();
             if(!nick) return;
             const all = [...Object.values(fullData.submissions || {}), ...Object.values(fullData.history || {})];
             const res = all.filter(s => s.player.toLowerCase() === nick);
-            document.getElementById('statusDisplay').innerHTML = res.length ? res.map(r => `
-                <div class="status-pill st-${(r.status||'pendiente').toLowerCase().replace(/ /g, "")}">
-                    <b>${r.level}</b> <span style="font-weight:800;">${(r.status||'PENDIENTE').toUpperCase()}</span>
-                </div>`).join("") : "<p style='color:#444;'>Sin registros.</p>";
+            document.getElementById('statusDisplay').innerHTML = res.length ? res.map(r => `<div class="status-pill st-${(r.status||'pendiente').toLowerCase().replace(/ /g, "")}"><b>${r.level}</b> <span>${(r.status||'PENDIENTE').toUpperCase()}</span></div>`).join("") : "<p style='color:#444;'>Sin registros.</p>";
         }
-
-        function renderLevels(lvls) { const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); document.getElementById('list-container').innerHTML = lvls.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0; font-size:0.9rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.7rem; margin:0;">+${c(i)} PTS</p></div><div style="position:absolute; right:15px; opacity:0.05; font-size:2rem; font-weight:900;">#${i+1}</div></div>`).join(""); }
-        function submitRecord() { const r = document.getElementById('recRaw').value; const l = document.getElementById('recLevel').value; db.ref('submissions').push({ player: document.getElementById('recPlayer').value, level: l, link: document.getElementById('recLink').value, raw: r || "N/A", country: document.getElementById('recCountry').value, status: "Pendiente" }); alert("¡Enviado!"); }
-        function renderSubmissions(s) { document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k, x]) => `<div class="admin-sub-card"><b>${x.player}</b> -> ${x.level}<div class="admin-btns"><button onclick="setStatus('${k}','En revisión')">REVISIÓN</button><button onclick="setStatus('${k}','Aceptado')" style="color:var(--green)">ACEPTAR</button><button onclick="setStatus('${k}','Rechazado')" style="color:var(--red)">RECHAZAR</button></div></div>`).join(""); }
-        function openDetails(idx) { const l = fullData.levels[idx]; const p = Object.values(fullData.players || {}); const victors = p.filter(v => (v.completions || []).some(c => c.level === l.name)); document.getElementById('modal-body').innerHTML = `<h1>${l.name}</h1><p style="font-size:0.75rem;">FIRST VICTOR: <b style="color:#fff;">${l.first || 'Nadie'}</b></p><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:15px; margin-top:15px;"></iframe><div style="margin-top:15px; text-align:left;"><small>VICTORS REGISTRADOS:</small>${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111; font-size:0.8rem;">${v.name}</div>`).join("")}</div>`; document.getElementById('levelModal').style.display = "block"; }
         function updateTicker(l) { const c = document.getElementById('pulse-content'); const e = Object.values(l).reverse().slice(0,10); if(e.length===0){c.innerHTML=`<span class="log-item">🚀 bienvenido scully miembro</span>`; return;} c.innerHTML = e.map(x => `<span class="log-item ${x.type==='accept'?'log-accept':x.type==='info'?'log-info':'log-reject'}">${x.msg}</span>`).join(""); }
+        function renderLevels(n) { const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); document.getElementById('list-container').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0; font-size:0.9rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.7rem; margin:0;">+${c(i)} PTS</p></div><div style="position:absolute; right:15px; opacity:0.05; font-size:2rem; font-weight:900;">#${i+1}</div></div>`).join(""); }
+        function submitRecord() { const r = document.getElementById('recRaw').value; const l = document.getElementById('recLevel').value; db.ref('submissions').push({ player: document.getElementById('recPlayer').value, level: l, link: document.getElementById('recLink').value, raw: r || "N/A", country: document.getElementById('recCountry').value, status: "Pendiente" }); alert("¡Enviado!"); }
+        function saveLevel() { const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const f = document.getElementById('lvlFirst').value; const p = parseInt(document.getElementById('lvlPos').value)-1; db.ref('levels').once('value', s => { let l = s.val() || []; l = l.filter(x => x.name.toLowerCase() !== n.toLowerCase()); l.splice(p >= 0 ? p : l.length, 0, { name: n, id: y, first: f }); db.ref('levels').set(l); alert("Nivel Publicado!"); }); }
         function banPlayer() { const n = document.getElementById('banUser').value.trim(); const s = prompt("Staff?"); db.ref('bans').push(n); db.ref('logs').push({ type: 'reject', msg: `⛔ ${n} BANEADO POR ${s || 'ADMIN'}` }); }
         function renderBanList(b) { document.getElementById('banList').innerHTML = "Baneados: " + Object.values(b).join(", "); }
         function toggleAuth() { const p = prompt("Acceso:"); if(p === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
+        function openDetails(idx) { const l = fullData.levels[idx]; const p = Object.values(fullData.players || {}); const victors = p.filter(v => (v.completions || []).some(c => c.level === l.name)); document.getElementById('modal-body').innerHTML = `<h1>${l.name}</h1><p style="font-size:0.75rem;">FIRST VICTOR: <b style="color:#fff;">${l.first || 'Nadie'}</b></p><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:15px; margin-top:15px;"></iframe><div style="margin-top:15px; text-align:left;"><small>VICTORS REGISTRADOS:</small>${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111; font-size:0.8rem;">${v.name}</div>`).join("")}</div>`; document.getElementById('levelModal').style.display = "block"; }
         function closeM() { document.getElementById('levelModal').style.display = "none"; }
         function updateLevelSelect(n) { document.getElementById('recLevel').innerHTML = '<option value="">-- Nivel --</option>' + n.map(l => `<option value="${l.name}">${l.name}</option>`).join(""); }
-        function saveLevel() { const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const f = document.getElementById('lvlFirst').value; const p = parseInt(document.getElementById('lvlPos').value) - 1; db.ref('levels').once('value', s => { let l = s.val() || []; l = l.filter(x => x.name.toLowerCase() !== n.toLowerCase()); l.splice(p >= 0 ? p : l.length, 0, { name: n, id: y, first: f }); db.ref('levels').set(l); alert("Nivel Publicado!"); }); }
     </script>
 </body>
 </html>
