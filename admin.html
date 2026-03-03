@@ -24,14 +24,17 @@
         .manage-item:hover { background: rgba(255,255,255,0.02); }
 
         .btn-tool { background: var(--accent); color: #000; border: none; font-weight: 800; cursor: pointer; padding: 12px; transition: 0.3s; }
-        .btn-tool:hover { transform: scale(1.02); filter: brightness(1.2); }
         .btn-red { border-color: var(--red); color: var(--red); }
         .btn-green { border-color: var(--green); color: var(--green); }
 
-        /* LISTA DE VICTORS EN EDITOR */
+        /* ESTILO LINKS DE PRUEBAS */
+        .proof-box { display: flex; gap: 5px; margin: 8px 0; }
+        .btn-proof { flex: 1; text-decoration: none; text-align: center; font-size: 0.55rem; font-weight: 800; padding: 5px; border-radius: 4px; border: 1px solid #222; transition: 0.3s; }
+        .btn-yt { color: #ff0000; } .btn-yt:hover { background: #ff0000; color: #fff; }
+        .btn-drive { color: var(--blue); } .btn-drive:hover { background: var(--blue); color: #000; }
+
         .victor-edit-item { display: flex; justify-content: space-between; background: #050505; padding: 6px 10px; border-radius: 5px; margin-bottom: 4px; border: 1px solid #111; font-size: 0.55rem; align-items: center; }
-        .victor-edit-item i { color: var(--red); cursor: pointer; padding: 5px; }
-        .victor-edit-item i:hover { color: #fff; background: var(--red); border-radius: 4px; }
+        .victor-edit-item i { color: var(--red); cursor: pointer; }
     </style>
 </head>
 <body>
@@ -39,7 +42,6 @@
     <div class="admin-header">
         <h1 style="font-size:1rem; margin:0;"><i class="fas fa-terminal" style="color:var(--accent); margin-right:10px;"></i>SCULLY <span style="color:var(--accent);">COMMAND CENTER</span></h1>
         <div style="display:flex; gap:15px; align-items:center;">
-            <span style="font-size:0.6rem; color:#444;">ENGINE v8.0</span>
             <a href="index.html" style="color:#fff; text-decoration:none; font-size:0.7rem; background:#111; padding:8px 15px; border-radius:5px; border:1px solid #222;">VOLVER AL HUB</a>
         </div>
     </div>
@@ -54,16 +56,10 @@
                 <input type="text" id="lvlYT" placeholder="ID Video YT">
                 <input type="text" id="lvlFirst" placeholder="Verifier">
                 <input type="number" id="lvlPos" placeholder="Posición">
-                <button onclick="saveLevel()" class="btn-tool">GUARDAR CAMBIOS</button>
-                
-                <p style="font-size:0.5rem; color:var(--green); margin:10px 0 5px;">INYECTAR VICTOR:</p>
-                <div style="display:flex; gap:5px;">
-                    <input type="text" id="manualNick" placeholder="Nick" style="margin:0;">
-                    <button onclick="injectVictor()" style="width:auto; margin:0;" class="btn-green"><i class="fas fa-plus"></i></button>
-                </div>
-
-                <p style="font-size:0.5rem; color:var(--red); margin:15px 0 5px;">GESTIONAR VICTORS (QUITAR):</p>
-                <div id="lvlVictorsList" style="max-height:120px; overflow-y:auto;"></div>
+                <button onclick="saveLevel()" class="btn-tool">GUARDAR NIVEL</button>
+                <input type="text" id="manualNick" placeholder="Inyectar Nick Victor">
+                <button onclick="injectVictor()" class="btn-green">INYECTAR VICTOR</button>
+                <div id="lvlVictorsList" style="max-height:100px; overflow-y:auto; margin-top:10px;"></div>
             </div>
         </div>
 
@@ -85,7 +81,7 @@
         <div class="admin-col">
             <h2>5. Lista Negra</h2>
             <div id="banListInteractive" class="admin-list-scroll"></div>
-            <input type="text" id="banUser" placeholder="Nick Jugador"><button onclick="banPlayer()" class="btn-red">BANEAR</button>
+            <input type="text" id="banUser" placeholder="Nick"><button onclick="banPlayer()" class="btn-red">BANEAR</button>
         </div>
 
         <div class="admin-col">
@@ -122,15 +118,25 @@
             renderAdminHistory(fullData.history || {});
         });
 
-        // --- GESTIÓN DE NIVELES Y VICTORS ---
-        function renderAdminLevelsList(l) { 
-            document.getElementById('adminLevelsList').innerHTML = l.map((x,i) => `
-                <div class="manage-item">
-                    <span>#${i+1} ${x.name}</span>
-                    <button onclick="loadLevelToEditor(${i})" style="width:auto; padding:3px 8px; font-size:0.5rem; background:none; color:var(--accent); border-color:var(--accent);">EDIT</button>
-                </div>`).join(""); 
+        // 1. MODERACIÓN RÉCORDS (CON LINKS VISIBLES)
+        function renderSubmissions(s) {
+            document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k,x]) => `
+                <div class="sub-card">
+                    <b>${x.player}</b> -> ${x.level}
+                    <div class="proof-box">
+                        <a href="${x.link}" target="_blank" class="btn-proof btn-yt"><i class="fab fa-youtube"></i> VER VIDEO</a>
+                        <a href="${x.raw}" target="_blank" class="btn-proof btn-drive"><i class="fab fa-google-drive"></i> RAW (DRIVE)</a>
+                    </div>
+                    <div style="display:flex; gap:5px;">
+                        <button onclick="setStatus('${k}','Aceptado')" class="btn-green" style="margin:0;">ACEPTAR</button>
+                        <button onclick="setStatus('${k}','Rechazado')" class="btn-red" style="margin:0;">RECHAZAR</button>
+                    </div>
+                </div>`).join("") || "<p style='font-size:0.6rem; color:#333; text-align:center;'>No hay envíos pendientes.</p>";
         }
 
+        // 2. GESTIÓN NIVELES & VICTORS
+        function renderAdminLevelsList(l) { document.getElementById('adminLevelsList').innerHTML = l.map((x,i) => `<div class="manage-item"><span>#${i+1} ${x.name}</span><button onclick="loadLevelToEditor(${i})" style="width:auto; padding:3px 8px; font-size:0.5rem; background:none; color:var(--accent); border-color:var(--accent); cursor:pointer;">EDIT</button></div>`).join(""); }
+        
         function loadLevelToEditor(i) {
             const x = fullData.levels[i];
             document.getElementById('editLvlIdx').value = i;
@@ -138,116 +144,65 @@
             document.getElementById('lvlYT').value = x.id;
             document.getElementById('lvlFirst').value = x.first || "";
             document.getElementById('lvlPos').value = i + 1;
-            
-            // Buscar victors de este nivel
-            const players = Object.values(fullData.players || {});
-            const victors = players.filter(p => p.completions?.some(c => c.level === x.name));
-            
-            document.getElementById('lvlVictorsList').innerHTML = victors.map(v => `
-                <div class="victor-edit-item">
-                    <span>${v.name}</span>
-                    <i class="fas fa-trash-alt" onclick="removeVictor('${x.name}', '${v.name}')" title="Quitar victor"></i>
-                </div>`).join("") || "<p style='font-size:0.5rem; color:#333;'>Sin victors.</p>";
+            const victors = Object.values(fullData.players || {}).filter(p => p.completions?.some(c => c.level === x.name));
+            document.getElementById('lvlVictorsList').innerHTML = victors.map(v => `<div class="victor-edit-item"><span>${v.name}</span><i class="fas fa-trash-alt" onclick="removeVictor('${x.name}', '${v.name}')"></i></div>`).join("");
         }
 
-        function removeVictor(levelName, playerNick) {
-            if(!confirm(`¿Borrar el récord de ${playerNick} en ${levelName}? Sus puntos se recalcularán.`)) return;
+        function removeVictor(lName, pNick) {
+            if(!confirm(`¿Quitar récord de ${pNick}?`)) return;
             db.ref('players').once('value', s => {
-                let players = Object.values(s.val() || {});
-                let i = players.findIndex(p => p.name === playerNick);
-                if(i > -1) {
-                    players[i].completions = players[i].completions.filter(c => c.level !== levelName);
-                    db.ref('players').set(players);
-                    alert("Récord eliminado.");
-                    // Forzar recarga del editor
-                    loadLevelToEditor(document.getElementById('editLvlIdx').value);
-                }
+                let p = Object.values(s.val() || {}); let i = p.findIndex(x => x.name === pNick);
+                if(i > -1) { p[i].completions = p[i].completions.filter(c => c.level !== lName); db.ref('players').set(p); alert("Borrado."); loadLevelToEditor(document.getElementById('editLvlIdx').value); }
             });
         }
 
         function injectVictor() {
-            const idx = document.getElementById('editLvlIdx').value;
-            const nick = document.getElementById('manualNick').value.trim();
-            if(idx === "" || !nick) return alert("Selecciona un nivel y escribe un nombre.");
+            const idx = document.getElementById('editLvlIdx').value; const nick = document.getElementById('manualNick').value.trim();
+            if(idx === "" || !nick) return alert("Error.");
             const lName = fullData.levels[idx].name;
-
             db.ref('players').once('value', s => {
-                let p = Object.values(s.val() || {});
-                let i = p.findIndex(x => x.name.toLowerCase() === nick.toLowerCase());
-                let rec = { level: lName, link: "Añadido por Admin" };
-                if(i > -1) {
-                    if(!p[i].completions) p[i].completions = [];
-                    if(p[i].completions.find(c => c.level === lName)) return alert("Ya tiene este nivel.");
-                    p[i].completions.push(rec);
-                } else {
-                    p.push({ name: nick, country: 'es', completions: [rec] });
-                }
-                db.ref('players').set(p);
-                alert("Victor inyectado!");
-                document.getElementById('manualNick').value = "";
-                loadLevelToEditor(idx);
+                let p = Object.values(s.val() || {}); let i = p.findIndex(x => x.name.toLowerCase() === nick.toLowerCase());
+                let rec = { level: lName, link: "Inyectado por Admin" };
+                if(i > -1) { if(!p[i].completions) p[i].completions = []; if(p[i].completions.find(c => c.level === lName)) return; p[i].completions.push(rec); }
+                else { p.push({ name: nick, country: 'es', completions: [rec] }); }
+                db.ref('players').set(p); alert("Inyectado!"); document.getElementById('manualNick').value = ""; loadLevelToEditor(idx);
             });
         }
 
         function saveLevel() {
-            const idx = document.getElementById('editLvlIdx').value;
-            const n = document.getElementById('lvlName').value.trim();
-            const y = document.getElementById('lvlYT').value.trim();
-            const f = document.getElementById('lvlFirst').value.trim();
-            const p = parseInt(document.getElementById('lvlPos').value) - 1;
-            if(!n || !y) return alert("Nombre e ID YT obligatorios.");
-
-            db.ref('levels').once('value', s => {
-                let lvls = s.val() || [];
-                if(idx !== "") lvls.splice(idx, 1);
-                lvls.splice(p >= 0 ? p : lvls.length, 0, { name: n, id: y, first: f });
-                db.ref('levels').set(lvls);
-                alert("Nivel Guardado/Actualizado");
-            });
+            const idx = document.getElementById('editLvlIdx').value; const n = document.getElementById('lvlName').value.trim(); const y = document.getElementById('lvlYT').value.trim(); const f = document.getElementById('lvlFirst').value.trim(); const p = parseInt(document.getElementById('lvlPos').value) - 1;
+            db.ref('levels').once('value', s => { let lvls = s.val() || []; const newL = { name:n, id:y, first:f }; if(idx!=="") lvls.splice(idx,1); lvls.splice(p>=0?p:lvls.length, 0, newL); db.ref('levels').set(lvls); alert("Guardado!"); });
         }
 
-        // --- RESTO DE MODERACIÓN (Récords, Mercado, PFPs) ---
+        // 3. CORE MODERACIÓN
         function setStatus(k, s) {
-            const sub = fullData.submissions[k]; const staff = prompt("Nombre Staff:"); if(!staff) return;
+            const sub = fullData.submissions[k]; const staff = prompt("Staff:"); if(!staff) return;
             if(s === 'Aceptado') {
                 db.ref('players').once('value', v => {
                     let p = Object.values(v.val() || {}); let i = p.findIndex(u => u.name.toLowerCase() === sub.player.toLowerCase());
                     let rec = { level: sub.level, link: sub.link };
                     if(i > -1) { if(!p[i].completions) p[i].completions = []; p[i].completions.push(rec); }
-                    else { p.push({ name: sub.player, country: 'es', completions: [rec] }); }
+                    else { p.push({ name: sub.player, country: sub.country || 'es', completions: [rec] }); }
                     db.ref('players').set(p);
                 });
                 db.ref('history').push({...sub, status: 'Aceptado'});
-                db.ref('logs').push({type:'accept', msg:`✅ ${sub.player} -> ${sub.level} POR ${staff}`});
+                db.ref('logs').push({ type: 'accept', msg: `✅ ${sub.player} POR ${staff}` });
                 db.ref('submissions/'+k).remove();
             } else if(s === 'Rechazado') {
                 db.ref('history').push({...sub, status: 'Rechazado'});
-                db.ref('logs').push({type:'reject', msg:`❌ ${sub.player} RECHAZADO POR ${staff}`});
+                db.ref('logs').push({ type: 'reject', msg: `❌ ${sub.player} RECHAZADO` });
                 db.ref('submissions/'+k).remove();
             }
         }
 
-        function renderSubmissions(s) { document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k,x]) => `<div class="sub-card"><b>${x.player}</b> -> ${x.level}<br><button onclick="setStatus('${k}','Aceptado')" class="btn-green">ACEPTAR</button><button onclick="setStatus('${k}','Rechazado')" class="btn-red">RECHAZAR</button></div>`).join(""); }
         function renderBanList(b) { document.getElementById('banListInteractive').innerHTML = Object.entries(b).map(([k,v]) => `<div class="manage-item"><span>${v}</span><i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="db.ref('bans/${k}').remove()"></i></div>`).join(""); }
-        function banPlayer() { const n = document.getElementById('banUser').value; if(!n) return; db.ref('bans').push(n); db.ref('logs').push({type:'reject', msg:`⛔ ${n} BANEADO`}); }
-        function renderAdminLogs(l) { document.getElementById('adminLogList').innerHTML = Object.entries(l).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.msg}</span><i class="fas fa-trash" style="cursor:pointer;" onclick="db.ref('logs/${k}').remove()"></i></div>`).join(""); }
-        function renderAdminHistory(h) { document.getElementById('adminHistoryList').innerHTML = Object.entries(h).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.player}</span><i class="fas fa-trash" style="cursor:pointer;" onclick="db.ref('history/${k}').remove()"></i></div>`).join(""); }
+        function banPlayer() { const n = document.getElementById('banUser').value.trim(); if(!n) return; db.ref('bans').push(n); db.ref('logs').push({type:'reject', msg:`⛔ ${n} BANEADO`}); }
+        function renderAdminLogs(l) { document.getElementById('adminLogList').innerHTML = Object.entries(l).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.msg}</span><i class="fas fa-trash" onclick="db.ref('logs/${k}').remove()" style="cursor:pointer;"></i></div>`).join(""); }
+        function renderAdminHistory(h) { document.getElementById('adminHistoryList').innerHTML = Object.entries(h).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.player}</span><i class="fas fa-trash" onclick="db.ref('history/${k}').remove()" style="cursor:pointer;"></i></div>`).join(""); }
         function renderMarketModeration(m) { document.getElementById('marketSubList').innerHTML = Object.entries(m).map(([k,v]) => `<div class="sub-card">${v.nick}: <b>${v.item}</b><button onclick="approveCosmetic('${k}')" class="btn-green">APROBAR</button></div>`).join(""); }
-        function approveCosmetic(k) { 
-            const r = fullData.market_requests[k]; 
-            db.ref('players').once('value', s => { 
-                let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick);
-                if(i>-1) { if(!p[i].cosmetics) p[i].cosmetics={}; p[i].cosmetics[r.item]=true; db.ref('players').set(p); db.ref('market_requests/'+k).remove(); } 
-            }); 
-        }
-        function renderPFPModeration(p) { document.getElementById('pfpSubList').innerHTML = Object.entries(p).map(([k,v]) => `<div class="sub-card">${v.nick}<br><img src="${v.url}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;margin:5px 0;"><button onclick="approvePFP('${k}')" class="btn-green">ACEPTAR</button></div>`).join(""); }
-        function approvePFP(k) { 
-            const r = fullData.pfp_requests[k]; 
-            db.ref('players').once('value', s => { 
-                let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick);
-                if(i>-1) { p[i].pfp=r.url; db.ref('players').set(p); db.ref('pfp_requests/'+k).remove(); } 
-            }); 
-        }
+        function approveCosmetic(k) { const r = fullData.market_requests[k]; db.ref('players').once('value', s => { let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick); if(i>-1) { if(!p[i].cosmetics) p[i].cosmetics={}; p[i].cosmetics[r.item]=true; db.ref('players').set(p); db.ref('market_requests/'+k).remove(); } }); }
+        function renderPFPModeration(p) { document.getElementById('pfpSubList').innerHTML = Object.entries(p).map(([k,v]) => `<div class="sub-card">${v.nick}<br><img src="${v.url}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;margin:5px 0;"><button onclick="approvePFP('${k}')" class="btn-green">ACEPTAR</button></div>`).join(""); }
+        function approvePFP(k) { const r = fullData.pfp_requests[k]; db.ref('players').once('value', s => { let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick); if(i>-1) { p[i].pfp=r.url; db.ref('players').set(p); db.ref('pfp_requests/'+k).remove(); } }); }
     </script>
 </body>
 </html>
