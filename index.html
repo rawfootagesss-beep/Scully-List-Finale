@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Scully List | Hub Central & Tributo</title>
+    <title>The Scully List | Hub de Prestigio & Tributo</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
             --accent: #ff6600; --accent-grad: linear-gradient(135deg, #ff6600 0%, #ff9900 100%);
             --bg: #030303; --card-bg: rgba(15, 15, 15, 0.7);
-            --glow: 0 0 20px rgba(255, 102, 0, 0.2); --border: rgba(255, 255, 255, 0.05);
+            --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
             --green: #00ff66; --red: #ff3333; --blue: #00ccff; --purple: #cc00ff; --yellow: #ffff00;
         }
 
@@ -23,14 +23,11 @@
             scroll-behavior: smooth; 
         }
 
-        /* 1. MARQUESINA DE NOVEDADES (TICKER) */
+        /* 1. MARQUESINA DE NOVEDADES */
         .news-ticker { 
-            background: rgba(0,0,0,0.95); 
-            backdrop-filter: blur(15px); 
-            border-bottom: 1px solid var(--border); 
-            padding: 12px 0; 
-            font-size: 0.65rem; 
-            position: sticky; top: 0; z-index: 1000; 
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); 
+            border-bottom: 1px solid var(--border); padding: 12px 0; 
+            font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; 
             overflow: hidden; display: flex; 
         }
         .ticker-content { display: flex; white-space: nowrap; animation: ticker-scroll 45s linear infinite; }
@@ -52,7 +49,7 @@
         .tribute-item { color: #fff; font-weight: 800; gap: 5px; text-shadow: 0 0 10px rgba(255,255,255,0.4); }
 
         /* 3. HEADER & ESLOGAN */
-        header { padding: 60px 20px 40px; text-align: center; }
+        header { padding: 60px 20px 20px; text-align: center; }
         h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 800; margin: 0; letter-spacing: -2px; }
         h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .slogan { font-size: 0.85rem; color: #777; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; font-weight: 400; }
@@ -66,29 +63,36 @@
         }
         .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: 0 0 15px var(--accent); }
 
-        /* 4. STATUS TRACKER */
+        /* 4. EL TRONO (TOP #1 SECTION) */
+        .throne-section { width: 90%; max-width: 800px; margin: 40px auto; position: relative; }
+        .throne-card { 
+            background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(255, 102, 0, 0.1)), url('') no-repeat center; 
+            background-size: cover; border-radius: 30px; padding: 40px; border: 2px solid var(--accent); 
+            box-shadow: var(--glow); position: relative; overflow: hidden; display: flex; align-items: center;
+        }
+        .throne-info h2 { margin: 0; font-size: 2.5rem; color: #fff; text-shadow: 0 0 20px #000; }
+        .throne-badge { background: var(--accent); color: #000; padding: 5px 15px; border-radius: 50px; font-weight: 800; font-size: 0.7rem; margin-bottom: 10px; display: inline-block; }
+
+        /* 5. STATUS TRACKER CON XP & MEDALLAS */
         .status-tracker { 
             max-width: 600px; margin: 40px auto; padding: 30px; 
             background: var(--card-bg); border-radius: 30px; border: 1px solid var(--border); 
             text-align: center; backdrop-filter: blur(10px); 
         }
         .status-pill { 
-            padding: 15px; border-radius: 12px; margin-bottom: 10px; font-size: 0.85rem; 
+            padding: 15px; border-radius: 12px; margin-bottom: 12px; font-size: 0.85rem; 
             display: flex; justify-content: space-between; align-items: center; 
-            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); 
+            background: rgba(0,0,0,0.5); border: 1px solid var(--border); 
         }
-        .status-pill b { color: #fff; text-transform: uppercase; }
-        .st-pendiente { border-left: 6px solid var(--yellow); color: var(--yellow); }
-        .st-enrevisión { border-left: 6px solid var(--blue); color: var(--blue); }
-        .st-enconsideración { border-left: 6px solid var(--purple); color: var(--purple); }
-        .st-aceptado { border-left: 6px solid var(--green); color: var(--green); }
-        .st-rechazado { border-left: 6px solid var(--red); color: var(--red); }
+        .st-pendiente { border-left: 6px solid var(--yellow); } .st-aceptado { border-left: 6px solid var(--green); }
+        .st-rechazado { border-left: 6px solid var(--red); } .st-enrevisión { border-left: 6px solid var(--blue); }
+        
+        .xp-tag { background: #111; color: var(--accent); padding: 5px 12px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; border: 1px solid var(--accent); }
+        .badges-row { display: flex; gap: 8px; margin-top: 10px; justify-content: center; }
+        .badge-icon { font-size: 1.2rem; filter: drop-shadow(0 0 5px var(--accent)); }
 
-        /* 5. GRID DIRECTORIO */
-        .list-grid { 
-            width: 95%; max-width: 1200px; margin: 60px auto; 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; 
-        }
+        /* 6. GRID Y DIRECTORIO */
+        .list-grid { width: 95%; max-width: 1200px; margin: 60px auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
         .level-card { 
             background: var(--card-bg); border-radius: 20px; padding: 12px; 
             display: flex; align-items: center; cursor: pointer; border: 1px solid var(--border); 
@@ -97,10 +101,9 @@
         .level-card:hover { border-color: var(--accent); transform: scale(1.02); }
         .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
 
-        /* 6. FORMULARIO */
-        .form-section { background: rgba(10,10,10,0.5); padding: 100px 20px; border-top: 1px solid var(--border); }
+        /* 7. FORMULARIO RAW DINÁMICO */
         .glass-form { 
-            max-width: 550px; margin: 0 auto; background: var(--card-bg); 
+            max-width: 550px; margin: 60px auto; background: var(--card-bg); 
             padding: 45px; border-radius: 35px; border: 1px solid var(--border); 
             box-shadow: 0 0 20px rgba(0,0,0,0.5); 
         }
@@ -109,51 +112,32 @@
             color: #fff !important; padding: 16px; border-radius: 15px; margin-bottom: 20px; 
             font-family: 'Lexend Deca'; box-sizing: border-box; 
         }
-        option { background: #000; color: #fff; }
-
         .checkbox-container { 
             display: flex; align-items: center; gap: 10px; 
             margin-top: -10px; margin-bottom: 25px; padding-left: 5px; 
-            cursor: pointer; font-size: 0.8rem; color: #777; transition: 0.3s; 
+            cursor: pointer; font-size: 0.8rem; color: #777; 
         }
-        .checkbox-container:hover { color: #fff; }
-        .checkbox-container input { width: auto; margin: 0; cursor: pointer; }
+        .checkbox-container input { width: auto; margin: 0; }
 
-        /* 7. ADMIN PANEL FULL (4 COLUMNAS) */
+        /* 8. ADMIN PANEL FULL (4 COLUMNAS) */
         #adminPanel { 
             display: none; background: #000; border: 2px solid var(--accent); 
             padding: 35px; width: 95%; max-width: 1300px; margin: 50px auto; 
             border-radius: 25px; box-shadow: var(--glow); 
         }
-        .admin-layout { display: grid; grid-template-columns: 1fr 1.2fr 1fr 1.2fr; gap: 20px; }
+        .admin-layout { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; }
         .admin-col { background: #080808; padding: 20px; border-radius: 15px; border: 1px solid #111; }
-        
         .admin-sub-card { 
             background: #000; padding: 15px; border-radius: 12px; 
             margin-bottom: 12px; border: 1px solid #222; font-size: 0.7rem; 
             border-left: 4px solid var(--accent); 
         }
-        .proof-links { display: flex; gap: 10px; margin: 10px 0; }
-        .proof-links a { 
-            color: #fff; text-decoration: none; font-size: 0.6rem; 
-            background: #111; padding: 5px 10px; border-radius: 5px; border: 1px solid #333; 
-        }
-        .admin-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
-        .admin-btns button { 
-            font-size: 0.55rem; padding: 8px; cursor: pointer; 
-            background: #050505; color: #fff; border: 1px solid #222; border-radius: 5px; 
-        }
+        .log-manage-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #111; font-size: 0.6rem; color: #aaa; }
 
-        .log-manage-item { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 10px; border-bottom: 1px solid #111; font-size: 0.6rem; color: #aaa; 
-        }
-        .log-manage-item i { color: var(--red); cursor: pointer; font-size: 0.8rem; }
-
-        /* 8. MODALES & LOCK */
+        /* 9. MODALES */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .modal-content { background: #0a0a0a; margin: 5vh auto; padding: 35px; width: 90%; max-width: 650px; border-radius: 30px; border: 1px solid var(--border); text-align: center; }
-        .admin-lock { text-align: center; padding: 100px 0; opacity: 0.05; cursor: pointer; }
+        .admin-lock { text-align: center; padding: 80px 0; opacity: 0.05; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -178,16 +162,18 @@
         <p class="slogan">Tanta diversión que es ilegal, sin limites para la diversión</p>
         <div class="main-nav">
             <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking</a>
-            <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully" style="color:#5865F2; border-color:#5865F2;"><i class="fab fa-discord"></i> Discord</a>
-            <a href="#submit" class="btn-scully"><i class="fas fa-upload"></i> Enviar Récord</a>
             <a href="https://scullyteam.netlify.app/" target="_blank" class="btn-scully" style="border-color: var(--accent); color: var(--accent);"><i class="fas fa-users"></i> Sobre nosotros</a>
+            <a href="#submit" class="btn-scully"><i class="fas fa-upload"></i> Enviar</a>
         </div>
     </header>
 
+    <section class="throne-section" id="throneDisplay">
+        </section>
+
     <section class="status-tracker">
-        <h2 style="color:var(--accent); font-size: 0.9rem; letter-spacing: 2px;">STATUS TRACKER</h2>
-        <input type="text" id="checkInput" placeholder="Nickname exacto...">
-        <button class="btn-scully" style="width:100%; justify-content:center; border-radius:15px;" onclick="checkStatus()">CONSULTAR MI ESTADO</button>
+        <h2 style="color:var(--accent); font-size: 0.9rem; letter-spacing: 2px;">PERFIL DE PRESTIGIO</h2>
+        <input type="text" id="checkInput" placeholder="Introduce tu Nickname...">
+        <button class="btn-scully" style="width:100%; justify-content:center; border-radius:15px;" onclick="checkStatus()">VER STATUS Y XP</button>
         <div id="statusDisplay" style="margin-top:25px;"></div>
     </section>
 
@@ -195,23 +181,20 @@
 
     <section class="form-section" id="submit">
         <div class="glass-form">
-            <h2 style="margin-top:0; color:var(--accent); text-align:center; letter-spacing:2px;">NUEVO ENVÍO</h2>
+            <h2 style="margin-top:0; color:var(--accent); text-align:center;">NUEVO ENVÍO</h2>
             <input type="text" id="recPlayer" placeholder="Nombre de Usuario">
             <select id="recLevel"><option value="">-- Seleccionar Nivel --</option></select>
-            <input type="text" id="recLink" placeholder="Enlace de YouTube/Twitch">
-            
-            <input type="text" id="recRaw" placeholder="Enlace RAW (Google Drive)">
+            <input type="text" id="recLink" placeholder="Link Video YouTube">
+            <input type="text" id="recRaw" placeholder="Link RAW (Google Drive)">
             <label class="checkbox-container">
                 <input type="checkbox" id="rawOptional"> El nivel es Top 101+ (RAW Opcional)
             </label>
-
             <select id="recCountry">
                 <option value="es">España 🇪🇸</option><option value="mx">México 🇲🇽</option>
                 <option value="ar">Argentina 🇦🇷</option><option value="cl">Chile 🇨🇱</option>
                 <option value="co">Colombia 🇨🇴</option><option value="pe">Perú 🇵🇪</option>
-                <option value="ve">Venezuela 🇻🇪</option><option value="uy">Uruguay 🇺🇾</option>
             </select>
-            <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; border:none; justify-content:center; font-weight:800;" onclick="submitRecord()">SUBIR RÉCORD</button>
+            <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; border:none; justify-content:center; font-weight:800;" onclick="submitRecord()">ENVIAR RÉCORD</button>
         </div>
     </section>
 
@@ -251,11 +234,13 @@
         const TOKEN = "GdfuFCRy";
         let fullData = {};
 
+        // Listener Principal
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {};
             renderLevels(fullData.levels || []);
             updateLevelSelect(fullData.levels || []);
             updateTicker(fullData.logs || {});
+            renderThrone(fullData.levels || []);
             if(sessionStorage.getItem('scully_session') === 'active') {
                 document.getElementById('adminPanel').style.display = "block";
                 renderSubmissions(fullData.submissions || {});
@@ -264,6 +249,70 @@
             }
         });
 
+        // 1. EL TRONO DINÁMICO
+        function renderThrone(lvls) {
+            const cont = document.getElementById('throneDisplay');
+            if(!lvls || lvls.length === 0) return;
+            const top1 = lvls[0];
+            cont.innerHTML = `
+                <div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.4)), url('https://img.youtube.com/vi/${top1.id}/maxresdefault.jpg');">
+                    <div class="throne-info">
+                        <div class="throne-badge">TOP #1 - FINAL BOSS</div>
+                        <h2>${top1.name}</h2>
+                        <p style="color:var(--accent); font-size:0.8rem; font-weight:800;">FIRST VICTOR: <span style="color:#fff;">${top1.first || 'Desconocido'}</span></p>
+                        <button class="btn-scully" style="padding:10px 20px; font-size:0.6rem;" onclick="openDetails(0)">VER NIVEL</button>
+                    </div>
+                </div>`;
+        }
+
+        // 2. SISTEMA DE STATUS, XP Y MEDALLAS
+        function checkStatus() {
+            const nick = document.getElementById('checkInput').value.trim().toLowerCase();
+            if(!nick) return;
+            const allSubs = [...Object.values(fullData.submissions || {}), ...Object.values(fullData.history || {})];
+            const userRecords = allSubs.filter(s => s.player.toLowerCase() === nick);
+            
+            // Calcular puntos y medallas
+            const players = Object.values(fullData.players || {});
+            const playerData = players.find(p => p.name.toLowerCase() === nick);
+            let pts = 0; let badges = [];
+            
+            if(playerData) {
+                playerData.completions?.forEach(c => {
+                    const idx = fullData.levels.findIndex(l => l.name.toLowerCase() === c.level.toLowerCase());
+                    if(idx > -1) pts += parseFloat(Math.max(100 - (idx * 0.6), 5));
+                    // Medalla Hardcore: Tiene un Top 10
+                    if(idx >= 0 && idx <= 9) badges.push('🔥');
+                    // Medalla First Victor: Nombre coincide con First Victor del nivel
+                    if(fullData.levels[idx]?.first?.toLowerCase() === nick) badges.push('🥇');
+                });
+                // Medalla Veterano: +5 records
+                if(playerData.completions?.length >= 5) badges.push('🛡️');
+            }
+
+            const uniqueBadges = [...new Set(badges)];
+            const level = Math.floor(pts / 10);
+            const rankName = level > 50 ? "Scully Legend" : level > 20 ? "Demon Slayer" : "Novato";
+
+            let html = `
+                <div style="background:rgba(255,102,0,0.1); padding:20px; border-radius:20px; border:1px solid var(--accent); margin-bottom:20px;">
+                    <h3 style="margin:0; color:#fff;">${nick.toUpperCase()}</h3>
+                    <div style="display:flex; justify-content:center; gap:10px; margin:10px 0;">
+                        <span class="xp-tag">LVL ${level}</span>
+                        <span class="xp-tag" style="background:var(--accent); color:#000;">${rankName}</span>
+                    </div>
+                    <div class="badges-row">${uniqueBadges.map(b => `<span class="badge-icon">${b}</span>`).join("")}</div>
+                </div>`;
+
+            html += userRecords.map(r => `
+                <div class="status-pill st-${(r.status||'pendiente').toLowerCase().replace(/ /g, "")}">
+                    <b>${r.level}</b> <span style="font-weight:800;">${(r.status||'PENDIENTE').toUpperCase()}</span>
+                </div>`).join("");
+
+            document.getElementById('statusDisplay').innerHTML = userRecords.length || playerData ? html : "<p style='color:#444;'>Sin registros.</p>";
+        }
+
+        // 3. AUTOMATIZACIÓN ADMIN
         function setStatus(key, newStatus) {
             const sub = fullData.submissions[key];
             const staff = prompt("Nombre Staff:");
@@ -277,9 +326,7 @@
                     if(i > -1) {
                         if(!p[i].completions) p[i].completions = [];
                         if(!p[i].completions.find(c => c.level === sub.level)) p[i].completions.push(completion);
-                    } else {
-                        p.push({ name: sub.player, country: sub.country, completions: [completion] });
-                    }
+                    } else { p.push({ name: sub.player, country: sub.country, completions: [completion] }); }
                     db.ref('players').set(p);
                 });
                 db.ref('history').push({...sub, status: newStatus});
@@ -296,50 +343,28 @@
             }
         }
 
-        function deleteLog(k) { if(confirm("¿Eliminar log?")) db.ref('logs/' + k).remove(); }
-
-        function renderAdminLogs(logs) {
-            document.getElementById('adminLogList').innerHTML = Object.entries(logs).reverse().map(([k, v]) => `
-                <div class="log-manage-item">
-                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:85%;">${v.msg}</span>
-                    <i class="fas fa-trash-alt" onclick="deleteLog('${k}')"></i>
-                </div>`).join("");
-        }
-
+        // 4. FUNCIONES HUB & OTROS
         function submitRecord() {
             const lName = document.getElementById('recLevel').value;
             const raw = document.getElementById('recRaw').value;
             const opt = document.getElementById('rawOptional').checked;
             const idx = fullData.levels.findIndex(lvl => lvl.name === lName);
-            if (idx <= 99 && idx !== -1) {
-                if (!raw.includes("drive.google.com")) return alert("RAW OBLIGATORIO PARA TOP 100.");
-            } else if (!opt && !raw.includes("drive.google.com")) {
-                return alert("Pon el RAW o marca 'Top 101+' para omitirlo.");
-            }
-            db.ref('submissions').push({ 
-                player: document.getElementById('recPlayer').value,
-                level: lName, link: document.getElementById('recLink').value,
-                raw: raw || "N/A", country: document.getElementById('recCountry').value,
-                status: "Pendiente" 
-            });
+            if (idx <= 99 && idx !== -1) { if (!raw.includes("drive.google.com")) return alert("RAW OBLIGATORIO PARA TOP 100."); }
+            else if (!opt && !raw.includes("drive.google.com")) { return alert("Pon el RAW o marca la casilla."); }
+            db.ref('submissions').push({ player: document.getElementById('recPlayer').value, level: lName, link: document.getElementById('recLink').value, raw: raw || "N/A", country: document.getElementById('recCountry').value, status: "Pendiente" });
             alert("¡Enviado!");
         }
 
-        function checkStatus() {
-            const nick = document.getElementById('checkInput').value.trim().toLowerCase();
-            const all = [...Object.values(fullData.submissions || {}), ...Object.values(fullData.history || {})];
-            const res = all.filter(s => s.player.toLowerCase() === nick);
-            document.getElementById('statusDisplay').innerHTML = res.length ? res.map(r => `<div class="status-pill st-${(r.status||'pendiente').toLowerCase().replace(/ /g, "")}"><b>${r.level}</b> <span style="font-weight:800;">${(r.status||'PENDIENTE').toUpperCase()}</span></div>`).join("") : "<p style='color:#444;'>Sin registros.</p>";
-        }
-
+        function deleteLog(k) { if(confirm("¿Borrar aviso?")) db.ref('logs/' + k).remove(); }
+        function renderAdminLogs(logs) { document.getElementById('adminLogList').innerHTML = Object.entries(logs).reverse().map(([k, v]) => `<div class="log-manage-item"><span>${v.msg}</span><i class="fas fa-trash-alt" onclick="deleteLog('${k}')"></i></div>`).join(""); }
         function updateTicker(l) { const c = document.getElementById('pulse-content'); const e = Object.values(l).reverse().slice(0,12); if(e.length===0){c.innerHTML=`<span class="log-item">🚀 bienvenido scully miembro</span>`; return;} c.innerHTML = e.map(x => `<span class="log-item ${x.type==='accept'?'log-accept':x.type==='info'?'log-info':'log-reject'}">${x.msg}</span>`).join(""); }
         function renderLevels(n) { const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); document.getElementById('list-container').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0; font-size:0.9rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.7rem; margin:0;">+${c(i)} PTS</p></div><div style="position:absolute; right:15px; opacity:0.05; font-size:2rem; font-weight:900;">#${i+1}</div></div>`).join(""); }
         function renderSubmissions(s) { document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k, x]) => `<div class="admin-sub-card"><b>${x.player}</b> -> ${x.level} <div class="proof-links"><a href="${x.link}" target="_blank">YT</a><a href="${x.raw}" target="_blank">RAW</a></div><div class="admin-btns"><button onclick="setStatus('${k}','En revisión')">REV</button><button onclick="setStatus('${k}','Aceptado')" style="color:var(--green)">ACEP</button><button onclick="setStatus('${k}','Rechazado')" style="color:var(--red)">RECH</button></div></div>`).join(""); }
-        function openDetails(idx) { const l = fullData.levels[idx]; const p = Object.values(fullData.players || {}); const victors = p.filter(v => (v.completions || []).some(c => c.level === l.name)); document.getElementById('modal-body').innerHTML = `<h1>${l.name}</h1><p style="font-size:0.75rem;">FIRST VICTOR: <b style="color:#fff;">${l.first || 'Nadie'}</b></p><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:15px; margin-top:15px;"></iframe><div style="margin-top:15px; text-align:left;"><small>VICTORS REGISTRADOS:</small>${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111; font-size:0.8rem;">${v.name}</div>`).join("")}</div>`; document.getElementById('levelModal').style.display = "block"; }
-        function saveLevel() { const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const f = document.getElementById('lvlFirst').value; const p = parseInt(document.getElementById('lvlPos').value)-1; db.ref('levels').once('value', s => { let l = s.val() || []; l = l.filter(x => x.name.toLowerCase() !== n.toLowerCase()); l.splice(p >= 0 ? p : l.length, 0, { name: n, id: y, first: f }); db.ref('levels').set(l); alert("¡Nivel Publicado!"); }); }
+        function openDetails(idx) { const l = fullData.levels[idx]; const victors = Object.values(fullData.players || {}).filter(v => (v.completions || []).some(c => c.level === l.name)); document.getElementById('modal-body').innerHTML = `<h1>${l.name}</h1><p style="font-size:0.75rem;">FIRST VICTOR: <b style="color:#fff;">${l.first || 'Nadie'}</b></p><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:15px; margin-top:15px;"></iframe><div style="margin-top:15px; text-align:left;"><small>VICTORS REGISTRADOS:</small>${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111; font-size:0.8rem;">${v.name}</div>`).join("")}</div>`; document.getElementById('levelModal').style.display = "block"; }
+        function saveLevel() { const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const f = document.getElementById('lvlFirst').value; const p = parseInt(document.getElementById('lvlPos').value)-1; db.ref('levels').once('value', s => { let l = s.val() || []; l = l.filter(x => x.name.toLowerCase() !== n.toLowerCase()); l.splice(p >= 0 ? p : l.length, 0, { name: n, id: y, first: f }); db.ref('levels').set(l); alert("¡Hecho!"); }); }
         function banPlayer() { const n = document.getElementById('banUser').value.trim(); const staff = prompt("Staff?"); db.ref('bans').push(n); db.ref('logs').push({ type: 'reject', msg: `⛔ ${n} BANEADO POR ${staff || 'ADMIN'}` }); }
         function renderBanList(b) { document.getElementById('banList').innerHTML = "Baneados: " + Object.values(b).join(", "); }
-        function toggleAuth() { const p = prompt("Acceso Codificador:"); if(p === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
+        function toggleAuth() { const p = prompt("Acceso:"); if(p === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
         function closeM() { document.getElementById('levelModal').style.display = "none"; }
         function updateLevelSelect(n) { document.getElementById('recLevel').innerHTML = '<option value="">-- Nivel --</option>' + n.map(l => `<option value="${l.name}">${l.name}</option>`).join(""); }
     </script>
