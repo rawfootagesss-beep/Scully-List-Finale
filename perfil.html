@@ -59,8 +59,17 @@
         #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 15px; padding: 15px 20px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; transform: translate(-50%, 50px); opacity: 0; }
         #scullyToast.show { visibility: visible; transform: translate(-50%, 0); opacity: 1; }
 
-        /* Estilo para el rango activo */
         .staff-badge { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 25px; background: rgba(255,255,0,0.1); border: 2px solid var(--yellow); color: var(--yellow); border-radius: 50px; font-weight: 900; font-size: 1.2rem; letter-spacing: 1px; margin-top: 10px; }
+
+        /* NUEVOS ESTILOS PARA LA ZONA DE STATUS DE RÉCORDS */
+        .status-list { max-height: 250px; overflow-y: auto; padding-right: 10px; margin-top: 15px; }
+        .record-card { background: rgba(0,0,0,0.4); border: 1px solid var(--border); padding: 15px 20px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .record-info h4 { margin: 0 0 5px 0; font-size: 0.95rem; color: #fff; }
+        .record-info p { margin: 0; font-size: 0.75rem; color: #888; display: flex; align-items: center; gap: 5px; }
+        .status-badge { padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .badge-pending { background: rgba(255,255,0,0.1); color: var(--yellow); border: 1px solid var(--yellow); }
+        .badge-accepted { background: rgba(0,255,102,0.1); color: var(--green); border: 1px solid var(--green); }
+        .badge-rejected { background: rgba(255,51,51,0.1); color: var(--red); border: 1px solid var(--red); }
     </style>
 </head>
 <body>
@@ -114,6 +123,15 @@
                 <button onclick="saveProfile()" class="btn-save"><i class="fas fa-save"></i> GUARDAR CAMBIOS</button>
             </div>
 
+            <div class="panel" style="border-color: rgba(255,102,0,0.3);">
+                <h2 style="color:var(--accent);"><i class="fas fa-clipboard-list" style="color:var(--accent);"></i> Estado de mis envíos</h2>
+                <p style="font-size:0.8rem; color:#888; margin-bottom: 10px;">Aquí puedes ver en tiempo real si el Staff ya revisó tus récords o si siguen en la sala de espera.</p>
+                
+                <div class="status-list" id="myRecordsStatus">
+                    <p style="text-align:center; color:#555; font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i> Cargando tus récords...</p>
+                </div>
+            </div>
+
             <div class="panel" style="border-color: rgba(0,255,102,0.2);">
                 <h2 style="color:var(--green);"><i class="fas fa-image" style="color:var(--green);"></i> Foto de Perfil</h2>
                 <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">El Staff revisará tu imagen. Usa links directos (Imgur, Discord) .png o .jpg.</p>
@@ -153,6 +171,7 @@
         let currentUser = null;
         let myProfileData = null;
         let myPlayerIndex = -1;
+        let myNick = "";
 
         const STAFF_CODES = {
             "ADMIN-SCORE-777": { nick: "score", role: "admin" },
@@ -178,12 +197,15 @@
         function logout() { auth.signOut(); }
 
         function loadPlayerData() {
-            db.ref('players').on('value', snap => {
-                const players = Object.values(snap.val() || {});
+            db.ref('/').on('value', snap => {
+                const fullData = snap.val() || {};
+                const players = Object.values(fullData.players || {});
                 myPlayerIndex = players.findIndex(p => p.email === currentUser.email);
                 
                 if(myPlayerIndex > -1) {
                     myProfileData = players[myPlayerIndex];
+                    myNick = myProfileData.name;
+
                     document.getElementById('viewClaim').style.display = "none";
                     document.getElementById('viewProfile').style.display = "block";
                     
@@ -192,7 +214,6 @@
                     document.getElementById('twInput').value = myProfileData.socials?.tw || "";
                     document.getElementById('dcInput').value = myProfileData.socials?.dc || "";
 
-                    // LÓGICA VISUAL DEL RANGO Y BOTÓN DE CHAT
                     if(myProfileData.role) {
                         let colorHex = myProfileData.role === 'admin' ? '#ff6600' : '#66fcf1';
                         let icon = myProfileData.role === 'admin' ? 'fa-crown' : 'fa-shield-alt';
@@ -211,11 +232,61 @@
                             <button onclick="upgradeToStaff()" class="btn-save" style="background:var(--yellow); color:#000;"><i class="fas fa-key"></i> ACTIVAR RANGO STAFF</button>
                         `;
                     }
+
+                    // CARGAR EL STATUS DE LOS RÉCORDS DEL JUGADOR
+                    loadMyRecordsStatus(fullData.submissions || {}, fullData.history || {});
+
                 } else {
                     document.getElementById('viewClaim').style.display = "block";
                     document.getElementById('viewProfile').style.display = "none";
                 }
             });
+        }
+
+        // NUEVA FUNCIÓN: RECUPERAR ESTADO DE LOS RÉCORDS
+        function loadMyRecordsStatus(submissions, history) {
+            let html = "";
+            let recordsFound = 0;
+
+            // 1. Buscar en Subidas Pendientes (submissions)
+            Object.values(submissions).forEach(sub => {
+                if(sub.player.toLowerCase() === myNick.toLowerCase()) {
+                    recordsFound++;
+                    html += `
+                    <div class="record-card">
+                        <div class="record-info">
+                            <h4>${sub.level}</h4>
+                            <p><i class="fab fa-youtube" style="color:var(--red)"></i> <a href="${sub.link}" target="_blank" style="color:#888;">Ver prueba enviada</a></p>
+                        </div>
+                        <div class="status-badge badge-pending"><i class="fas fa-clock"></i> Pendiente</div>
+                    </div>`;
+                }
+            });
+
+            // 2. Buscar en Historial de Resueltos (history)
+            Object.values(history).reverse().forEach(hist => {
+                if(hist.player.toLowerCase() === myNick.toLowerCase()) {
+                    recordsFound++;
+                    let isAccepted = hist.status === "Aceptado";
+                    let badgeClass = isAccepted ? "badge-accepted" : "badge-rejected";
+                    let icon = isAccepted ? "fa-check" : "fa-times";
+                    
+                    html += `
+                    <div class="record-card">
+                        <div class="record-info">
+                            <h4>${hist.level}</h4>
+                            <p><i class="fab fa-youtube" style="color:var(--red)"></i> <a href="${hist.link}" target="_blank" style="color:#888;">Prueba</a></p>
+                        </div>
+                        <div class="status-badge ${badgeClass}"><i class="fas ${icon}"></i> ${hist.status}</div>
+                    </div>`;
+                }
+            });
+
+            if(recordsFound === 0) {
+                html = `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">No has enviado ningún récord todavía.</p>`;
+            }
+
+            document.getElementById('myRecordsStatus').innerHTML = html;
         }
 
         function sendClaimRequest() {
