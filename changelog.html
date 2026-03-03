@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scully List | Changelog</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --bg: #050505; --card: #111; --border: rgba(255,255,255,0.05);
+            --text-main: #c5c6c7; --text-light: #ffffff;
+            --accent: #ff6600; --accent-hover: #ff8533;
+            --blue: #66fcf1; --green: #45a29e; --red: #f05454; --yellow: #ffff00;
+        }
+        body { background: var(--bg); color: var(--text-main); font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; line-height: 1.6; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+        header { padding: 50px 20px 30px; text-align: center; background: var(--card); border-bottom: 1px solid var(--border); }
+        h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin: 0; text-transform: uppercase; font-weight: 800; letter-spacing: -1px; color: var(--text-light); font-family: 'JetBrains Mono', monospace; }
+        h1 span { color: var(--accent); }
+        p.subtitle { color: #888; font-size: 0.9rem; max-width: 600px; margin: 10px auto 20px auto; font-family: 'JetBrains Mono', monospace;}
+        
+        .btn-hub { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-light); padding: 10px 20px; text-decoration: none; font-size: 0.8rem; border-radius: 50px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .btn-hub:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+
+        .changelog-container { width: 90%; max-width: 800px; margin: 40px auto; }
+
+        .timeline { border-left: 2px solid var(--border); padding-left: 30px; position: relative; }
+
+        .update-card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 25px; margin-bottom: 40px; position: relative; transition: 0.3s; }
+        .update-card:hover { border-color: rgba(255,102,0,0.3); transform: translateX(5px); }
+        
+        /* El puntito de la línea de tiempo */
+        .update-card::before { content: ''; position: absolute; left: -36px; top: 30px; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; border: 2px solid var(--bg); box-shadow: 0 0 10px var(--accent); }
+
+        .version-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .version-number { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--text-light); margin: 0; }
+        .update-date { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #888; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 5px; }
+
+        .change-list { list-style: none; padding: 0; margin: 0; font-size: 0.9rem; }
+        .change-list li { margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; }
+        
+        /* Etiquetas tipo GitHub */
+        .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; margin-top: 3px; min-width: 60px; text-align: center; }
+        .tag.added { background: rgba(0,255,102,0.1); color: var(--green); border: 1px solid var(--green); }
+        .tag.fixed { background: rgba(240,84,84,0.1); color: var(--red); border: 1px solid var(--red); }
+        .tag.changed { background: rgba(102,252,241,0.1); color: var(--blue); border: 1px solid var(--blue); }
+        .tag.security { background: rgba(255,255,0,0.1); color: var(--yellow); border: 1px solid var(--yellow); }
+
+        .change-text { flex-grow: 1; }
+        .change-text b { color: var(--text-light); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>SYS.<span>CHANGELOG</span></h1>
+        <p class="subtitle">>_ Registro de actualizaciones y notas de parche de The Scully List.</p>
+        <a href="index.html" class="btn-hub"><i class="fas fa-arrow-left"></i> VOLVER AL HUB</a>
+    </header>
+
+    <div class="changelog-container">
+        <div class="timeline">
+
+            <div class="update-card">
+                <div class="version-header">
+                    <h2 class="version-number">v1.1.0 - The Identity Update</h2>
+                    <span class="update-date">3 de Marzo, 2026</span>
+                </div>
+                <ul class="change-list">
+                    <li>
+                        <span class="tag added">added</span>
+                        <div class="change-text"><b>Sistema de Cuentas:</b> Los usuarios ahora pueden registrarse con correo y contraseña.</div>
+                    </li>
+                    <li>
+                        <span class="tag added">added</span>
+                        <div class="change-text"><b>Panel de Perfil Personal:</b> Los jugadores autenticados pueden personalizar su biografía, vincular redes sociales (YouTube, Twitter, Discord) y solicitar fotos de perfil al Staff.</div>
+                    </li>
+                    <li>
+                        <span class="tag added">added</span>
+                        <div class="change-text"><b>Reclamo de Identidad:</b> Nuevo sistema para que los usuarios vinculen su Nickname de Geometry Dash a su cuenta de correo de forma segura.</div>
+                    </li>
+                    <li>
+                        <span class="tag changed">changed</span>
+                        <div class="change-text"><b>Rediseño del Ranking:</b> El Leaderboard ahora muestra tarjetas de jugador completas con biografía, redes sociales y botón para ver el historial de récords en una ventana emergente.</div>
+                    </li>
+                    <li>
+                        <span class="tag security">security</span>
+                        <div class="change-text"><b>Paneles Staff Separados:</b> Se dividió el panel de administración. Ahora existe la "Master Console" (acceso total) y un "Helper Panel" (moderación limitada).</div>
+                    </li>
+                    <li>
+                        <span class="tag fixed">fixed</span>
+                        <div class="change-text">Corrección de un error silencioso donde las listas de niveles completados se corrompían en Firebase al ser editadas manualmente.</div>
+                    </li>
+                    <li>
+                        <span class="tag changed">changed</span>
+                        <div class="change-text"><b>Manual de Reglas:</b> Actualizado para incluir guías sobre el nuevo ecosistema de cuentas y perfiles.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="update-card">
+                <div class="version-header">
+                    <h2 class="version-number">v1.0.5 - The Automation Patch</h2>
+                    <span class="update-date">2 de Marzo, 2026</span>
+                </div>
+                <ul class="change-list">
+                    <li>
+                        <span class="tag added">added</span>
+                        <div class="change-text"><b>Motor AREDL Blindado:</b> Nuevo sistema de sincronización automática de posiciones que no puede ser bloqueado por la API de la AREDL.</div>
+                    </li>
+                    <li>
+                        <span class="tag added">added</span>
+                        <div class="change-text"><b>Auditoría Automática de First Victors:</b> El panel ahora escanea los servidores de YouTube en tiempo real. Si un récord enviado es más antiguo que el del verificador actual, sugiere coronarlo automáticamente.</div>
+                    </li>
+                    <li>
+                        <span class="tag added">added</span>
+                        <div class="change-text"><b>Herramienta de Auditoría Manual:</b> Agregada al panel de administración para comparar dos links de YouTube y determinar el más antiguo al milisegundo.</div>
+                    </li>
+                    <li>
+                        <span class="tag changed">changed</span>
+                        <div class="change-text">Rediseño total de la Master Console a un estilo SaaS Premium con notificaciones Toast.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="update-card">
+                <div class="version-header">
+                    <h2 class="version-number">v1.0.0 - Initial Release</h2>
+                    <span class="update-date">Marzo, 2026</span>
+                </div>
+                <ul class="change-list">
+                    <li>
+                        <span class="tag added">added</span>
+                        <div class="change-text">Lanzamiento oficial de The Scully List.</div>
+                    </li>
+                    <li>
+                        <span class="tag added">added</span>
+                        <div class="change-text">Sistema de experiencia (XP) y niveles dinámicos.</div>
+                    </li>
+                    <li>
+                        <span class="tag added">added</span>
+                        <div class="change-text">Integración con Firebase Realtime Database.</div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
