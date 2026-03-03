@@ -31,10 +31,10 @@
         .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 14px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; text-transform: uppercase; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: var(--glow); }
         
-        /* FIX CSS DEL TRONO */
         .throne-section { width: 90%; max-width: 850px; margin: 40px auto; }
-        .throne-card { border-radius: 30px; padding: 60px; border: 2px solid var(--accent); box-shadow: var(--glow); display: flex; align-items: center; min-height: 250px; background-size: cover; background-position: center; position: relative; }
-        .throne-info { position: relative; z-index: 2; text-align: left; }
+        .throne-card { background-size: cover; background-position: center; border-radius: 30px; padding: 60px; border: 2px solid var(--accent); box-shadow: var(--glow); display: flex; align-items: center; position: relative; overflow: hidden; min-height: 200px; }
+        .throne-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, #000 40%, transparent); z-index: 1; }
+        .throne-info { position: relative; z-index: 2; }
         
         .list-grid { width: 95%; max-width: 1200px; margin: 40px auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
         .level-card { background: var(--card-bg); border-radius: 20px; padding: 12px; display: flex; align-items: center; border: 1px solid var(--border); cursor: pointer; transition: 0.3s; position: relative; }
@@ -44,6 +44,7 @@
         .status-tracker { max-width: 600px; margin: 60px auto; padding: 45px; background: var(--card-bg); border-radius: 40px; border: 1px solid var(--border); text-align: center; }
         .user-pfp-display { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--accent); margin: 0 auto 20px; object-fit: cover; background: #111; display: block; }
         .xp-tag { background: #000; color: var(--accent); padding: 8px 18px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--accent); display: inline-block; margin-bottom: 20px; }
+        
         .status-pill { padding: 15px; border-radius: 12px; margin-bottom: 10px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.3s; }
         .status-pill:hover { background: rgba(255,255,255,0.05); }
         .st-label { font-weight: 800; text-transform: uppercase; font-size: 0.6rem; padding: 5px 10px; border-radius: 6px; }
@@ -57,17 +58,14 @@
     </style>
 </head>
 <body>
-
     <div class="news-ticker"><div class="ticker-content" id="pulse-content"></div></div>
-
     <nav class="staff-bar">
         <div class="staff-item tribute-item" style="color:#fff; font-weight:800;">Tributo a 2parx 🕊️</div>
-        <div class="staff-item"><i class="fas fa-crown"></i> OWNER <b>score</b></div>
-        <div class="staff-item"><i class="fas fa-user-shield"></i> ADMIN <b>Vegardo</b></div>
-        <div class="staff-item"><i class="fas fa-hands-helping"></i> HELPER <b>Blitz</b></div>
-        <div class="staff-item"><i class="fas fa-hands-helping"></i> HELPER <b>Sopa354</b></div>
+        <div class="staff-item"><i class="fas fa-crown" style="color:var(--accent)"></i> OWNER <b style="color:#fff">score</b></div>
+        <div class="staff-item"><i class="fas fa-user-shield" style="color:var(--accent)"></i> ADMIN <b style="color:#fff">Vegardo</b></div>
+        <div class="staff-item"><i class="fas fa-hands-helping" style="color:var(--accent)"></i> HELPER <b style="color:#fff">Blitz</b></div>
+        <div class="staff-item"><i class="fas fa-hands-helping" style="color:var(--accent)"></i> HELPER <b style="color:#fff">Sopa354</b></div>
     </nav>
-
     <header>
         <h1>THE SCULLY <span>LIST</span></h1>
         <p class="version-note" style="font-size:0.7rem; color:#444; margin-top:10px; font-style:italic;">Versión 1.0 | Muchos niveles por agregar, atentos ;)</p>
@@ -77,7 +75,11 @@
             <a href="versus.html" class="btn-scully"><i class="fas fa-bolt"></i> Versus</a>
             <a href="market.html" class="btn-scully"><i class="fas fa-shopping-cart"></i> Mercado</a>
             <a href="submit.html" class="btn-scully"><i class="fas fa-upload"></i> Enviar</a>
-            <button class="btn-scully" onclick="spinRoulette()"><i class="fas fa-dice"></i></button>
+            
+            <a href="rules.html" class="btn-scully" style="color:var(--blue); border-color:var(--blue);"><i class="fas fa-book"></i> Reglas</a>
+            <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully" style="color:#7289da; border-color:#7289da;"><i class="fab fa-discord"></i> Discord</a>
+            
+            <button class="btn-scully" onclick="spinRoulette()" title="Ruleta"><i class="fas fa-dice"></i></button>
             <a href="admin.html" id="adminHubBtn" class="btn-scully" style="display:none; background:var(--accent); color:#000;"><i class="fas fa-user-cog"></i> ADMIN</a>
         </div>
     </header>
@@ -140,11 +142,13 @@
             if (l.first && !isVerifierHidden) {
                 victorsHTML += `<div style="padding:12px; border-bottom:1px solid #111; color:var(--blue); font-weight:800; display:flex; justify-content:space-between;"><span>🥇 ${l.first}</span> <small>VERIFICADOR</small></div>`;
             }
+
             approved.forEach(p => { 
                 if(p.name.toLowerCase() !== (l.first || '').toLowerCase()) {
                     victorsHTML += `<div style="padding:12px; border-bottom:1px solid #111; font-size:0.85rem;">${p.name}</div>`; 
                 }
             });
+
             if (victorsHTML === "") victorsHTML = `<p style="color:#444; font-size:0.8rem;">Sin registros visibles.</p>`;
 
             document.getElementById('modal-body').innerHTML = `<span onclick="closeM()" style="position:absolute; top:15px; right:20px; cursor:pointer; font-size:1.5rem; color:#444;">&times;</span><h1 style="color:var(--accent); margin:0; font-size:1.8rem;">${l.name}</h1><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}?autoplay=1" frameborder="0" allowfullscreen style="border-radius:20px; margin-top:15px;"></iframe><div style="margin-top:20px; text-align:left;"><small style="color:#444; font-weight:800; letter-spacing:1px;">LIGA DE VICTORIAS:</small><div style="margin-top:10px; max-height:180px; overflow-y:auto;">${victorsHTML}</div></div>`;
@@ -156,9 +160,12 @@
             const p = Object.values(fullData.players || {}).find(x => x.name.toLowerCase() === nickL);
             const lvls = fullData.levels || [];
             let uniqueLevels = new Set(); let verifObjs = [];
+            
             lvls.forEach(l => { if(l.first?.toLowerCase() === nickL) { uniqueLevels.add(l.name); verifObjs.push(l); } });
             p?.completions?.forEach(c => uniqueLevels.add(c.level));
-            let pts = 0; uniqueLevels.forEach(name => { const idx = lvls.findIndex(l => l.name === name); if(idx > -1) pts += parseFloat(Math.max(100 - (idx * 0.6), 5)); });
+            
+            let pts = 0; 
+            uniqueLevels.forEach(name => { const idx = lvls.findIndex(l => l.name === name); if(idx > -1) pts += parseFloat(Math.max(100 - (idx * 0.6), 5)); });
             return { name: p?.name || nick, pts: pts.toFixed(1), lvl: Math.floor(pts / 50), pfp: p?.pfp || "https://i.imgur.com/8pw98K4.png", verifLevels: verifObjs, cosmetics: p?.cosmetics || {} };
         }
 
@@ -177,13 +184,12 @@
         
         function renderThrone(lvls) { 
             if(!lvls || lvls.length === 0) return; const t = lvls[0]; 
-            // FIX DEFINITIVO DEL TOP 1: Gradiente negro al 80% sobre la imagen hqdefault garantiza lectura perfecta y visualización
             document.getElementById('throneDisplay').innerHTML = `
-                <div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.3) 100%), url('https://img.youtube.com/vi/${t.id}/hqdefault.jpg');">
+                <div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.3) 100%), url('https://i.ytimg.com/vi/${t.id}/0.jpg');">
                     <div class="throne-info">
                         <div style="background:var(--accent); color:#000; padding:6px 15px; border-radius:50px; font-size:0.65rem; font-weight:900; margin-bottom:15px; display:inline-block; box-shadow: 0 0 15px var(--accent);">TOP #1 BOSS</div>
-                        <h2 style="font-size:clamp(2rem, 6vw, 3.5rem); margin:0; text-transform:uppercase; letter-spacing:-1px;">${t.name}</h2>
-                        <p style="font-size:0.9rem; color:#ccc; margin-top:5px;">FIRST VICTOR: <b style="color:var(--accent);">${t.first || 'Nadie'}</b></p>
+                        <h2 style="font-size:clamp(2rem, 6vw, 3.5rem); margin:0; text-transform:uppercase; letter-spacing:-1px; text-shadow:0 0 15px #000;">${t.name}</h2>
+                        <p style="font-size:0.9rem; color:#ccc; margin-top:5px; text-shadow:0 0 10px #000;">FIRST VICTOR: <b style="color:var(--accent);">${t.first || 'Nadie'}</b></p>
                         <button class="btn-scully" style="margin-top:20px; border-color:var(--accent); color:var(--accent);" onclick="openDetails(0)">VER NIVEL</button>
                     </div>
                 </div>`; 
