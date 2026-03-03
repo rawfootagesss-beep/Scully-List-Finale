@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Scully List | Hub de Ingeniería & Niveles</title>
+    <title>The Scully List | Hub de Ingeniería</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
-            --accent: #ff6600; 
-            --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
+            --accent: #ff6600; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
             --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
             --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
-            --green: #00ff66; --red: #ff3333; --blue: #00ccff; --purple: #cc00ff; --yellow: #ffff00;
+            --green: #00ff66; --red: #ff3333; --blue: #00ccff; --yellow: #ffff00;
         }
 
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
@@ -23,13 +22,13 @@
         .cos-fire { box-shadow: 0 0 20px #ff3300 !important; border: 2px solid #ff3300 !important; }
         .cos-electric { box-shadow: 0 0 20px #00ccff !important; border: 2px solid #00ccff !important; }
 
-        /* 1. NOVEDADES (TICKER) */
+        /* 1. NOVEDADES */
         .news-ticker { background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 0; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; overflow: hidden; display: flex; }
         .ticker-content { display: flex; white-space: nowrap; animation: ticker-scroll 45s linear infinite; }
         .log-item { margin-right: 100px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; gap: 8px; }
         @keyframes ticker-scroll { 0% { transform: translateX(80vw); } 100% { transform: translateX(-250%); } }
 
-        /* 2. STAFF BAR */
+        /* 2. BARRA STAFF */
         .staff-bar { display: flex; justify-content: center; gap: 25px; padding: 15px; background: rgba(255,255,255,0.02); font-size: 0.6rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center; }
         .staff-item { display: flex; align-items: center; gap: 8px; color: #888; }
         .staff-item i { color: var(--accent); }
@@ -38,11 +37,10 @@
         header { padding: 60px 20px 20px; text-align: center; }
         h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 800; margin: 0; letter-spacing: -2px; }
         h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .slogan { font-size: 0.85rem; color: #777; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; }
-        .version-note { font-size: 0.65rem; color: #444; margin-top: 10px; font-style: italic; letter-spacing: 1px; }
+        .version-note { font-size: 0.65rem; color: #444; margin-top: 10px; font-style: italic; }
 
         .main-nav { margin-top: 35px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center; }
-        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 14px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 14px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; text-transform: uppercase; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: var(--glow); }
 
         /* 3. LISTA DE NIVELES */
@@ -51,26 +49,20 @@
         .level-card:hover { border-color: var(--accent); transform: scale(1.02); }
         .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
 
-        .throne-section { width: 90%; max-width: 800px; margin: 40px auto; }
-        .throne-card { background: linear-gradient(to right, rgba(0,0,0,0.95), rgba(255, 102, 0, 0.1)); background-size: cover; border-radius: 30px; padding: 40px; border: 2px solid var(--accent); box-shadow: var(--glow); display: flex; align-items: center; }
-
         /* 4. IDENTIDAD SCULLY */
         .status-tracker { max-width: 600px; margin: 60px auto; padding: 45px; background: var(--card-bg); border-radius: 40px; border: 1px solid var(--border); text-align: center; }
-        .user-pfp-display { width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--accent); margin: 0 auto 25px; object-fit: cover; background: #111; display: block; }
-        .xp-tag { background: #000; color: var(--accent); padding: 8px 18px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--accent); display: inline-block; }
+        .user-pfp-display { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--accent); margin: 0 auto 20px; object-fit: cover; background: #111; display: block; }
+        .xp-tag { background: #000; color: var(--accent); padding: 8px 18px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--accent); display: inline-block; margin-bottom: 20px; }
         
-        .status-pill { padding: 18px 25px; border-radius: 15px; margin-bottom: 12px; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; background: #000; border: 1px solid rgba(255,255,255,0.05); }
+        .status-pill { padding: 15px; border-radius: 12px; margin-bottom: 10px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid var(--border); }
         .st-label { font-weight: 800; text-transform: uppercase; font-size: 0.6rem; padding: 5px 10px; border-radius: 6px; }
-        .st-aceptado { color: var(--green); border: 1px solid var(--green); }
-        .st-pendiente { color: var(--yellow); border: 1px solid var(--yellow); }
-        .st-rechazado { color: var(--red); border: 1px solid var(--red); }
 
         /* 5. FOOTER & MODALES */
         .footer-credits { padding: 60px 20px; text-align: center; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); margin-top: 100px; }
         .color-trigger { display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: var(--accent); color: #000; border-radius: 50%; cursor: pointer; font-size: 1.2rem; box-shadow: var(--glow); transition: 0.3s; margin-top: 20px; }
         #themeColor { opacity: 0; position: absolute; pointer-events: none; }
         
-        .admin-lock { text-align: center; padding: 80px 0; opacity: 0.03; cursor: pointer; }
+        .admin-lock { text-align: center; padding: 100px 0; opacity: 0.03; cursor: pointer; }
         .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .modal-content { background: #0a0a0a; margin: 5vh auto; padding: 35px; width: 90%; max-width: 650px; border-radius: 35px; border: 1px solid var(--border); text-align: center; position: relative; }
     </style>
@@ -80,7 +72,7 @@
     <div class="news-ticker"><div class="ticker-content" id="pulse-content"></div></div>
 
     <nav class="staff-bar">
-        <div class="staff-item tribute-item">Tributo a 2parx 🕊️</div>
+        <div class="staff-item" style="color:#fff; font-weight:800;">Tributo a 2parx 🕊️</div>
         <div class="staff-item"><i class="fas fa-crown"></i> OWNER <b>score</b></div>
         <div class="staff-item"><i class="fas fa-user-shield"></i> ADMIN <b>Vegardo</b></div>
         <div class="staff-item"><i class="fas fa-hands-helping"></i> HELPER <b>Blitz</b></div>
@@ -89,7 +81,7 @@
 
     <header>
         <h1>THE SCULLY <span>LIST</span></h1>
-        <p class="slogan">Tanta diversión que es ilegal, sin limites para la diversión</p>
+        <p style="font-size:0.8rem; color:#777; text-transform:uppercase; letter-spacing:2px;">Ilegalmente divertido</p>
         <p class="version-note">Esta es la versión 1.0, faltan agregar muchos niveles así que estén atentos ;)</p>
         <div class="main-nav">
             <a href="index.html" class="btn-scully" style="color:var(--green); border-color:var(--green);"><i class="fas fa-list-ol"></i> Lista</a>
@@ -102,12 +94,12 @@
         </div>
     </header>
 
-    <section class="throne-section" id="throneDisplay"></section>
+    <section id="throneDisplay" style="width:90%; max-width:800px; margin:0 auto;"></section>
     <main class="list-grid" id="main-list"></main>
 
     <section class="status-tracker">
-        <h2 style="color:var(--accent); font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;">Identidad Scully</h2>
-        <div id="statusDisplay" style="margin-bottom:20px;"><p style="color:#444;">Escribe tu Nickname para ver tu perfil.</p></div>
+        <h2 style="color:var(--accent); font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase;">Identidad Scully</h2>
+        <div id="statusDisplay" style="margin-bottom:20px;"><p style="color:#444;">Consulta tu Nickname para ver tu perfil.</p></div>
         <input type="text" id="checkInput" placeholder="Introduce tu Nick..." style="background:#000; border:1px solid #222; color:#fff; padding:15px; width:100%; border-radius:15px; margin-bottom:20px; box-sizing:border-box; text-align:center;">
         <button class="btn-scully" style="width:100%; justify-content:center; border-radius:15px;" onclick="checkStatus()">VER MI PERFIL</button>
     </section>
@@ -121,7 +113,6 @@
     <div class="admin-lock" onclick="toggleAuth()"><i class="fas fa-lock"></i></div>
 
     <div id="ruletaModal" class="modal"><div class="modal-content"><h2 style="color:var(--accent);">RULETA</h2><div id="ruletaText" style="font-size:2rem; font-weight:800; margin:20px 0;">---</div><button class="btn-scully" onclick="spinRoulette()">GIRAR</button><button class="btn-scully" onclick="closeRuleta()" style="background:transparent; border:none; color:#444;">CERRAR</button></div></div>
-    
     <div id="levelModal" class="modal"><div class="modal-content" id="modal-body"></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -135,6 +126,7 @@
 
         const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
         updateThemeColor(savedColor);
+        document.getElementById('themeColor').value = savedColor;
         if(sessionStorage.getItem('scully_session') === 'active') document.getElementById('adminHubBtn').style.display = "flex";
 
         function updateThemeColor(v) { document.documentElement.style.setProperty('--accent', v); localStorage.setItem('scully-theme-color', v); }
@@ -146,55 +138,73 @@
             updateTicker(fullData.logs || {});
         });
 
-        // FIX DE AUDIO: Limpiar innerHTML al cerrar
-        function closeM() { 
-            const modal = document.getElementById('levelModal');
-            modal.style.display = "none"; 
-            document.getElementById('modal-body').innerHTML = ""; 
-        }
-
+        function closeM() { const modal = document.getElementById('levelModal'); modal.style.display = "none"; document.getElementById('modal-body').innerHTML = ""; }
+        
         function openDetails(idx) { 
             const l = fullData.levels[idx]; 
             const victors = Object.values(fullData.players || {}).filter(p => p.completions?.some(c => c.level === l.name));
-            document.getElementById('modal-body').innerHTML = `
-                <span onclick="closeM()" style="position:absolute; top:15px; right:20px; cursor:pointer; font-size:1.5rem; color:#444;">&times;</span>
-                <h1 style="color:var(--accent); margin-top:0;">${l.name}</h1>
-                <iframe width="100%" height="320" src="https://www.youtube.com/embed/${l.id}?autoplay=1" frameborder="0" allowfullscreen style="border-radius:20px;"></iframe>
-                <div style="margin-top:20px; text-align:left;">
-                    <small style="color:#444; font-weight:800;">LIGA DE VICTORS:</small>
-                    <div style="margin-top:10px; max-height:150px; overflow-y:auto;">
-                        ${victors.map(v => `<div style="padding:10px; border-bottom:1px solid #111;">${v.name}</div>`).join("") || '<p>Nadie aún.</p>'}
-                    </div>
-                </div>`;
+            document.getElementById('modal-body').innerHTML = `<span onclick="closeM()" style="position:absolute; top:15px; right:20px; cursor:pointer; font-size:1.5rem; color:#444;">&times;</span><h1 style="color:var(--accent); margin:0;">${l.name}</h1><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}?autoplay=1" frameborder="0" allowfullscreen style="border-radius:20px;"></iframe><div style="margin-top:20px; text-align:left;"><small style="color:#444; font-weight:800;">VICTORS:</small><div style="margin-top:10px; max-height:150px; overflow-y:auto;">${victors.map(v => `<div style="padding:10px; border-bottom:1px solid #111;">${v.name}</div>`).join("")}</div></div>`;
             document.getElementById('levelModal').style.display = "block";
         }
 
+        // --- LÓGICA DE XP Y HERENCIA DE FIRST VICTOR ---
         function calcUserStats(nick) {
             const player = Object.values(fullData.players || {}).find(p => p.name.toLowerCase() === nick.toLowerCase());
-            if(!player) return { pts: 0, name: null };
+            const levels = fullData.levels || [];
+            
+            // HERENCIA: Buscar niveles donde este usuario es el FIRST VICTOR
+            const inheritedLevels = levels.filter(l => l.first && l.first.toLowerCase() === nick.toLowerCase());
+            
+            if(!player && inheritedLevels.length === 0) return { pts: 0, name: null };
+            
             let pts = 0; let badges = [];
-            player.completions?.forEach(c => {
-                const idx = fullData.levels.findIndex(l => l.name.toLowerCase() === c.level.toLowerCase());
-                if(idx > -1) { pts += parseFloat(Math.max(100 - (idx * 0.6), 5)); if(idx <= 9) badges.push('🔥'); if(fullData.levels[idx]?.first?.toLowerCase() === nick.toLowerCase()) badges.push('🥇'); }
+            const pName = player ? player.name : nick;
+
+            // 1. Calcular puntos de records manuales
+            player?.completions?.forEach(c => {
+                const idx = levels.findIndex(l => l.name.toLowerCase() === c.level.toLowerCase());
+                if(idx > -1) pts += parseFloat(Math.max(100 - (idx * 0.6), 5));
             });
-            return { name: player.name, pts: pts.toFixed(1), lvl: Math.floor(pts / 50), badges: [...new Set(badges)], pfp: player.pfp || "https://i.imgur.com/8pw98K4.png", cosmetics: player.cosmetics || {} };
+
+            // 2. Calcular puntos de Niveles Verificados (First Victor) 
+            // Solo si no los tiene ya en completions para no duplicar
+            inheritedLevels.forEach(il => {
+                const alreadyHas = player?.completions?.some(c => c.level.toLowerCase() === il.name.toLowerCase());
+                if(!alreadyHas) {
+                    const idx = levels.findIndex(l => l.name.toLowerCase() === il.name.toLowerCase());
+                    if(idx > -1) pts += parseFloat(Math.max(100 - (idx * 0.6), 5));
+                }
+            });
+
+            return {
+                name: pName, pts: pts.toFixed(1),
+                lvl: Math.floor(pts / 50),
+                pfp: player?.pfp || "https://i.imgur.com/8pw98K4.png",
+                cosmetics: player?.cosmetics || {},
+                inherited: inheritedLevels.map(l => l.name)
+            };
         }
 
         function checkStatus() {
             const nick = document.getElementById('checkInput').value.trim(); if(!nick) return;
-            const stats = calcUserStats(nick);
-            if(!stats.name) return document.getElementById('statusDisplay').innerHTML = "<p>Jugador no encontrado.</p>";
-            const userRecords = [...Object.values(fullData.submissions || {}), ...Object.values(fullData.history || {})].filter(s => s.player.toLowerCase() === nick.toLowerCase());
-            let cos = stats.cosmetics?.aura_fire ? "cos-fire" : stats.cosmetics?.aura_electric ? "cos-electric" : "";
-            let html = `<div style="background:rgba(255,102,0,0.05); padding:30px; border-radius:30px; border:1px solid var(--accent); margin-bottom:20px;"><img src="${stats.pfp}" class="user-pfp-display ${cos}"><h3 class="${stats.cosmetics?.name_rainbow?'cos-rainbow':''}">${stats.name.toUpperCase()}</h3><div style="margin:15px 0;"><span class="xp-tag">LVL ${stats.lvl} (${stats.pts} XP)</span></div><div>${stats.badges.map(b => `<span style="font-size:1.5rem; margin:0 5px;">${b}</span>`).join("")}</div></div>`;
-            html += userRecords.map(r => `<div class="status-pill"><b>${r.level}</b> <span class="st-label st-${r.status.toLowerCase()}">${r.status.toUpperCase()}</span></div>`).join("");
+            const s = calcUserStats(nick); if(!s.name) return;
+            const recs = [...Object.values(fullData.submissions || {}), ...Object.values(fullData.history || {})].filter(x => x.player.toLowerCase() === nick.toLowerCase());
+            let html = `<div style="background:rgba(255,102,0,0.05); padding:30px; border-radius:30px; border:1px solid var(--accent); margin-bottom:20px;"><img src="${s.pfp}" class="user-pfp-display"><h3 class="${s.cosmetics?.name_rainbow?'cos-rainbow':''}">${s.name.toUpperCase()}</h3><div style="margin:15px 0;"><span class="xp-tag">LVL ${s.lvl} (${s.pts} XP)</span></div></div>`;
+            
+            // Render de Niveles Verificados (First Victor)
+            s.inherited.forEach(l => {
+                html += `<div class="status-pill" style="border-color:var(--blue); background:rgba(0,204,255,0.05);"><b>${l}</b> <span class="st-label" style="color:var(--blue); border:1px solid var(--blue);">NIVEL VERIFICADO</span></div>`;
+            });
+
+            // Render de Records Manuales
+            html += recs.map(r => `<div class="status-pill"><b>${r.level}</b> <span class="st-label" style="color:var(--${r.status.toLowerCase()==='aceptado'?'green':'yellow'})">${r.status.toUpperCase()}</span></div>`).join("");
             document.getElementById('statusDisplay').innerHTML = html;
         }
 
         function renderLevels(n) { const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); document.getElementById('main-list').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0; font-size:0.85rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.6rem;">+${c(i)} XP</p></div><div style="position:absolute; right:15px; opacity:0.1; font-weight:900; font-size:1.5rem;">#${i+1}</div></div>`).join(""); }
-        function renderThrone(lvls) { if(!lvls || lvls.length === 0) return; const t = lvls[0]; document.getElementById('throneDisplay').innerHTML = `<div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95), rgba(0,0,0,0.4)), url('https://img.youtube.com/vi/${t.id}/maxresdefault.jpg');"><div class="throne-info"><div style="background:var(--accent); color:#000; padding:4px 12px; border-radius:50px; font-weight:800; font-size:0.6rem; display:inline-block; margin-bottom:10px;">TOP #1</div><h2>${t.name}</h2><p>VERIFICADOR: <b>${t.first || 'Nadie'}</b></p></div></div>`; }
+        function renderThrone(lvls) { if(!lvls || lvls.length === 0) return; const t = lvls[0]; document.getElementById('throneDisplay').innerHTML = `<div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95), rgba(0,0,0,0.4)), url('https://img.youtube.com/vi/${t.id}/maxresdefault.jpg');"><div class="throne-info"><div style="background:var(--accent); color:#000; padding:4px 12px; border-radius:50px; font-weight:800; font-size:0.6rem; display:inline-block; margin-bottom:10px;">TOP #1</div><h2>${t.name}</h2><p>FIRST VICTOR: <b>${t.first || 'Nadie'}</b></p></div></div>`; }
         function updateTicker(l) { const e = Object.values(l).reverse().slice(0,10); document.getElementById('pulse-content').innerHTML = e.map(x => `<span class="log-item">${x.msg}</span>`).join(""); }
-        function spinRoulette() { const lvls = fullData.levels || []; if(lvls.length === 0) return; document.getElementById('ruletaModal').style.display = "block"; const res = document.getElementById('ruletaText'); let count = 0; const interval = setInterval(() => { res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name; count++; if(count > 15) { clearInterval(interval); res.style.color = "var(--green)"; setTimeout(()=>res.style.color="#fff",1000); } }, 80); }
+        function spinRoulette() { const lvls = fullData.levels || []; if(lvls.length === 0) return; document.getElementById('ruletaModal').style.display = "block"; const res = document.getElementById('ruletaText'); let count = 0; const interval = setInterval(() => { res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name; count++; if(count > 15) { clearInterval(interval); res.style.color = "var(--green)"; } }, 80); }
         function closeRuleta() { document.getElementById('ruletaModal').style.display = "none"; }
         function toggleAuth() { if(prompt("Acceso:") === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
     </script>
