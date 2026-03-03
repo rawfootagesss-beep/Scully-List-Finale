@@ -59,8 +59,16 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     
     <script>
-        const firebaseConfig = { 
-            databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" 
+        // CONFIGURACIÓN EXACTA DE SCORE
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",
+            authDomain: "scullylist.firebaseapp.com",
+            databaseURL: "https://scullylist-default-rtdb.firebaseio.com",
+            projectId: "scullylist",
+            storageBucket: "scullylist.firebasestorage.app",
+            messagingSenderId: "498548914021",
+            appId: "1:498548914021:web:59128b5e06b36a4e81938c",
+            measurementId: "G-X3JF2DVWYH"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -71,9 +79,7 @@
 
         // Si ya está logueado, mandarlo directo a su perfil
         auth.onAuthStateChanged(user => {
-            if (user) {
-                window.location.href = "perfil.html"; 
-            }
+            if (user) { window.location.href = "perfil.html"; }
         });
 
         function loginUser() {
@@ -85,9 +91,7 @@
             errorMsg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
 
             auth.signInWithEmailAndPassword(email, pass)
-                .then((userCredential) => {
-                    window.location.href = "perfil.html";
-                })
+                .then(() => { window.location.href = "perfil.html"; })
                 .catch((error) => {
                     errorMsg.style.color = "var(--red)";
                     errorMsg.innerText = traducirError(error.code);
@@ -104,9 +108,7 @@
             errorMsg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando identidad...';
 
             auth.createUserWithEmailAndPassword(email, pass)
-                .then((userCredential) => {
-                    window.location.href = "perfil.html";
-                })
+                .then(() => { window.location.href = "perfil.html"; })
                 .catch((error) => {
                     errorMsg.style.color = "var(--red)";
                     errorMsg.innerText = traducirError(error.code);
