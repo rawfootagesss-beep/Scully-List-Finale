@@ -16,7 +16,7 @@
 
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
 
-        /* --- COSMÉTICOS --- */
+        /* --- EFECTOS COSMÉTICOS --- */
         @keyframes rainbow { 0% { color: #ff0000; } 20% { color: #ff9900; } 40% { color: #ffff00; } 60% { color: #00ff00; } 80% { color: #00ffff; } 100% { color: #cc00ff; } }
         .cos-rainbow { animation: rainbow 3s linear infinite !important; font-weight: 800; }
         .cos-fire { box-shadow: 0 0 20px #ff3300 !important; border: 2px solid #ff3300 !important; }
@@ -40,7 +40,7 @@
         .version-note { font-size: 0.65rem; color: #444; margin-top: 10px; font-style: italic; }
 
         .main-nav { margin-top: 35px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center; }
-        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 14px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; text-transform: uppercase; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 14px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 10px; }
         .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: var(--glow); }
 
         /* 3. LISTA DE NIVELES */
@@ -54,7 +54,8 @@
         .user-pfp-display { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--accent); margin: 0 auto 20px; object-fit: cover; background: #111; display: block; }
         .xp-tag { background: #000; color: var(--accent); padding: 8px 18px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--accent); display: inline-block; margin-bottom: 20px; }
         
-        .status-pill { padding: 15px; border-radius: 12px; margin-bottom: 10px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid var(--border); }
+        .status-pill { padding: 15px; border-radius: 12px; margin-bottom: 10px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.3s; }
+        .status-pill:hover { background: rgba(255,255,255,0.05); }
         .st-label { font-weight: 800; text-transform: uppercase; font-size: 0.6rem; padding: 5px 10px; border-radius: 6px; }
 
         /* 5. FOOTER & MODALES */
@@ -99,7 +100,7 @@
 
     <section class="status-tracker">
         <h2 style="color:var(--accent); font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase;">Identidad Scully</h2>
-        <div id="statusDisplay" style="margin-bottom:20px;"><p style="color:#444;">Consulta tu Nickname para ver tu perfil.</p></div>
+        <div id="statusDisplay" style="margin-bottom:20px;"><p style="color:#444;">Escribe tu Nickname para sincronizar.</p></div>
         <input type="text" id="checkInput" placeholder="Introduce tu Nick..." style="background:#000; border:1px solid #222; color:#fff; padding:15px; width:100%; border-radius:15px; margin-bottom:20px; box-sizing:border-box; text-align:center;">
         <button class="btn-scully" style="width:100%; justify-content:center; border-radius:15px;" onclick="checkStatus()">VER MI PERFIL</button>
     </section>
@@ -143,31 +144,25 @@
         function openDetails(idx) { 
             const l = fullData.levels[idx]; 
             const victors = Object.values(fullData.players || {}).filter(p => p.completions?.some(c => c.level === l.name));
-            document.getElementById('modal-body').innerHTML = `<span onclick="closeM()" style="position:absolute; top:15px; right:20px; cursor:pointer; font-size:1.5rem; color:#444;">&times;</span><h1 style="color:var(--accent); margin:0;">${l.name}</h1><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}?autoplay=1" frameborder="0" allowfullscreen style="border-radius:20px;"></iframe><div style="margin-top:20px; text-align:left;"><small style="color:#444; font-weight:800;">VICTORS:</small><div style="margin-top:10px; max-height:150px; overflow-y:auto;">${victors.map(v => `<div style="padding:10px; border-bottom:1px solid #111;">${v.name}</div>`).join("")}</div></div>`;
+            document.getElementById('modal-body').innerHTML = `<span onclick="closeM()" style="position:absolute; top:15px; right:20px; cursor:pointer; font-size:1.5rem; color:#444;">&times;</span><h1 style="color:var(--accent); margin:0;">${l.name}</h1><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}?autoplay=1" frameborder="0" allowfullscreen style="border-radius:20px;"></iframe><div style="margin-top:20px; text-align:left;"><small style="color:#444; font-weight:800;">VICTORS REGISTRADOS:</small><div style="margin-top:10px; max-height:150px; overflow-y:auto;">${victors.map(v => `<div style="padding:10px; border-bottom:1px solid #111;">${v.name}</div>`).join("")}</div></div>`;
             document.getElementById('levelModal').style.display = "block";
         }
 
-        // --- LÓGICA DE XP Y HERENCIA DE FIRST VICTOR ---
         function calcUserStats(nick) {
             const player = Object.values(fullData.players || {}).find(p => p.name.toLowerCase() === nick.toLowerCase());
             const levels = fullData.levels || [];
-            
-            // HERENCIA: Buscar niveles donde este usuario es el FIRST VICTOR
             const inheritedLevels = levels.filter(l => l.first && l.first.toLowerCase() === nick.toLowerCase());
             
             if(!player && inheritedLevels.length === 0) return { pts: 0, name: null };
             
-            let pts = 0; let badges = [];
+            let pts = 0;
             const pName = player ? player.name : nick;
 
-            // 1. Calcular puntos de records manuales
             player?.completions?.forEach(c => {
                 const idx = levels.findIndex(l => l.name.toLowerCase() === c.level.toLowerCase());
                 if(idx > -1) pts += parseFloat(Math.max(100 - (idx * 0.6), 5));
             });
 
-            // 2. Calcular puntos de Niveles Verificados (First Victor) 
-            // Solo si no los tiene ya en completions para no duplicar
             inheritedLevels.forEach(il => {
                 const alreadyHas = player?.completions?.some(c => c.level.toLowerCase() === il.name.toLowerCase());
                 if(!alreadyHas) {
@@ -177,11 +172,10 @@
             });
 
             return {
-                name: pName, pts: pts.toFixed(1),
-                lvl: Math.floor(pts / 50),
+                name: pName, pts: pts.toFixed(1), lvl: Math.floor(pts / 50),
                 pfp: player?.pfp || "https://i.imgur.com/8pw98K4.png",
                 cosmetics: player?.cosmetics || {},
-                inherited: inheritedLevels.map(l => l.name)
+                inherited: inheritedLevels // Ahora guardamos el objeto completo del nivel
             };
         }
 
@@ -191,18 +185,16 @@
             const recs = [...Object.values(fullData.submissions || {}), ...Object.values(fullData.history || {})].filter(x => x.player.toLowerCase() === nick.toLowerCase());
             let html = `<div style="background:rgba(255,102,0,0.05); padding:30px; border-radius:30px; border:1px solid var(--accent); margin-bottom:20px;"><img src="${s.pfp}" class="user-pfp-display"><h3 class="${s.cosmetics?.name_rainbow?'cos-rainbow':''}">${s.name.toUpperCase()}</h3><div style="margin:15px 0;"><span class="xp-tag">LVL ${s.lvl} (${s.pts} XP)</span></div></div>`;
             
-            // Render de Niveles Verificados (First Victor)
             s.inherited.forEach(l => {
-                html += `<div class="status-pill" style="border-color:var(--blue); background:rgba(0,204,255,0.05);"><b>${l}</b> <span class="st-label" style="color:var(--blue); border:1px solid var(--blue);">NIVEL VERIFICADO</span></div>`;
+                html += `<a href="https://youtu.be/${l.id}" target="_blank" class="status-pill" style="border-color:var(--blue); background:rgba(0,204,255,0.05);"><b>${l.name}</b> <span class="st-label" style="color:var(--blue); border:1px solid var(--blue);">NIVEL VERIFICADOR <i class="fas fa-external-link-alt" style="margin-left:5px; font-size:0.5rem;"></i></span></a>`;
             });
 
-            // Render de Records Manuales
             html += recs.map(r => `<div class="status-pill"><b>${r.level}</b> <span class="st-label" style="color:var(--${r.status.toLowerCase()==='aceptado'?'green':'yellow'})">${r.status.toUpperCase()}</span></div>`).join("");
             document.getElementById('statusDisplay').innerHTML = html;
         }
 
         function renderLevels(n) { const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); document.getElementById('main-list').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0; font-size:0.85rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.6rem;">+${c(i)} XP</p></div><div style="position:absolute; right:15px; opacity:0.1; font-weight:900; font-size:1.5rem;">#${i+1}</div></div>`).join(""); }
-        function renderThrone(lvls) { if(!lvls || lvls.length === 0) return; const t = lvls[0]; document.getElementById('throneDisplay').innerHTML = `<div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95), rgba(0,0,0,0.4)), url('https://img.youtube.com/vi/${t.id}/maxresdefault.jpg');"><div class="throne-info"><div style="background:var(--accent); color:#000; padding:4px 12px; border-radius:50px; font-weight:800; font-size:0.6rem; display:inline-block; margin-bottom:10px;">TOP #1</div><h2>${t.name}</h2><p>FIRST VICTOR: <b>${t.first || 'Nadie'}</b></p></div></div>`; }
+        function renderThrone(lvls) { if(!lvls || lvls.length === 0) return; const t = lvls[0]; document.getElementById('throneDisplay').innerHTML = `<div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95), rgba(0,0,0,0.4)), url('https://img.youtube.com/vi/${t.id}/maxresdefault.jpg');"><div class="throne-info"><div style="background:var(--accent); color:#000; padding:4px 12px; border-radius:50px; font-weight:800; font-size:0.6rem; display:inline-block; margin-bottom:10px;">FINAL BOSS</div><h2>${t.name}</h2><p>FIRST VICTOR: <b>${t.first || 'Nadie'}</b></p></div></div>`; }
         function updateTicker(l) { const e = Object.values(l).reverse().slice(0,10); document.getElementById('pulse-content').innerHTML = e.map(x => `<span class="log-item">${x.msg}</span>`).join(""); }
         function spinRoulette() { const lvls = fullData.levels || []; if(lvls.length === 0) return; document.getElementById('ruletaModal').style.display = "block"; const res = document.getElementById('ruletaText'); let count = 0; const interval = setInterval(() => { res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name; count++; if(count > 15) { clearInterval(interval); res.style.color = "var(--green)"; } }, 80); }
         function closeRuleta() { document.getElementById('ruletaModal').style.display = "none"; }
