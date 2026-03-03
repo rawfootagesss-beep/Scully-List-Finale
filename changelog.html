@@ -11,7 +11,7 @@
             --bg: #050505; --card: #111; --border: rgba(255,255,255,0.05);
             --text-main: #c5c6c7; --text-light: #ffffff;
             --accent: #ff6600; --accent-hover: #ff8533;
-            --blue: #66fcf1; --green: #45a29e; --red: #f05454; --yellow: #ffff00;
+            --blue: #66fcf1; --green: #45a29e; --red: #f05454; --yellow: #ffff00; --purple: #cc00ff;
         }
         body { background: var(--bg); color: var(--text-main); font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; line-height: 1.6; }
         
@@ -28,13 +28,9 @@
         .btn-hub:hover { background: var(--accent); color: #000; border-color: var(--accent); }
 
         .changelog-container { width: 90%; max-width: 800px; margin: 40px auto; }
-
         .timeline { border-left: 2px solid var(--border); padding-left: 30px; position: relative; }
-
         .update-card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 25px; margin-bottom: 40px; position: relative; transition: 0.3s; }
         .update-card:hover { border-color: rgba(255,102,0,0.3); transform: translateX(5px); }
-        
-        /* El puntito de la línea de tiempo */
         .update-card::before { content: ''; position: absolute; left: -36px; top: 30px; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; border: 2px solid var(--bg); box-shadow: 0 0 10px var(--accent); }
 
         .version-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
@@ -44,22 +40,21 @@
         .change-list { list-style: none; padding: 0; margin: 0; font-size: 0.9rem; }
         .change-list li { margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; }
         
-        /* Etiquetas tipo GitHub */
         .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; margin-top: 3px; min-width: 60px; text-align: center; }
         .tag.added { background: rgba(0,255,102,0.1); color: var(--green); border: 1px solid var(--green); }
         .tag.fixed { background: rgba(240,84,84,0.1); color: var(--red); border: 1px solid var(--red); }
         .tag.changed { background: rgba(102,252,241,0.1); color: var(--blue); border: 1px solid var(--blue); }
         .tag.security { background: rgba(255,255,0,0.1); color: var(--yellow); border: 1px solid var(--yellow); }
+        .tag.community { background: rgba(204,0,255,0.1); color: var(--purple); border: 1px solid var(--purple); }
 
         .change-text { flex-grow: 1; }
         .change-text b { color: var(--text-light); }
     </style>
 </head>
 <body>
-
     <header>
         <h1>SYS.<span>CHANGELOG</span></h1>
-        <p class="subtitle">>_ Registro de actualizaciones y notas de parche de The Scully List.</p>
+        <p class="subtitle">>_ Registro de evolución técnica de The Scully List.</p>
         <a href="index.html" class="btn-hub"><i class="fas fa-arrow-left"></i> VOLVER AL HUB</a>
     </header>
 
@@ -68,25 +63,42 @@
 
             <div class="update-card">
                 <div class="version-header">
-                    <h2 class="version-number">v1.2.0 - Staff Quality of Life Update</h2>
+                    <h2 class="version-number">v1.3.0 - The Community Power</h2>
+                    <span class="update-date">4 de Marzo, 2026</span>
+                </div>
+                <ul class="change-list">
+                    <li>
+                        <span class="tag community">community</span>
+                        <div class="change-text"><b>Sistema de Sugerencias:</b> Se habilitó un cuestionario para que cualquier usuario sugiera niveles de la AREDL, especificando su dificultad relativa (arriba/abajo de niveles existentes).</div>
+                    </li>
+                    <li>
+                        <span class="tag added">added</span>
+                        <div class="change-text"><b>Rastreador de Récords Privado:</b> Ahora los jugadores pueden ver el estado de sus envíos (Pendiente/Aceptado/Rechazado) directamente desde su perfil personal.</div>
+                    </li>
+                    <li>
+                        <span class="tag changed">changed</span>
+                        <div class="change-text"><b>Master Editor:</b> Se añadió una función de auto-llenado para sugerencias aprobadas, facilitando la inserción de nuevos niveles al Staff.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="update-card">
+                <div class="version-header">
+                    <h2 class="version-number">v1.2.0 - Staff QoL Update</h2>
                     <span class="update-date">3 de Marzo, 2026</span>
                 </div>
                 <ul class="change-list">
                     <li>
                         <span class="tag added">added</span>
-                        <div class="change-text"><b>Chat de Coordinación (Staff Comms):</b> Se agregó un canal de comunicación privado y encriptado directamente en el Perfil de los moderadores. Ahora el equipo puede debatir sobre la legitimidad de un récord o coordinar decisiones rápidamente sin tener que salir a Discord.</div>
-                    </li>
-                    <li>
-                        <span class="tag changed">changed</span>
-                        <div class="change-text"><b>Moderación Optimizada:</b> Interfaz de los paneles de Admin y Helper rediseñada para ser mucho más limpia, cómoda y fácil a la vista. Ahora revisar y aceptar envíos masivos de récords es un proceso más fluido y menos tosco.</div>
+                        <div class="change-text"><b>Staff Comms:</b> Chat interno encriptado para la coordinación del equipo administrativo.</div>
                     </li>
                     <li>
                         <span class="tag security">security</span>
-                        <div class="change-text"><b>Asignación Automática de Rangos (RBAC):</b> Se eliminaron los botones ocultos del Hub. Ahora el Staff recibe códigos únicos para inyectar su rango (Admin o Helper) directamente a su cuenta, manteniendo sus consolas administrativas vinculadas permanentemente y de forma segura.</div>
+                        <div class="change-text"><b>RBAC System:</b> Implementación de rangos automáticos mediante códigos de Staff vinculados a cuentas de usuario.</div>
                     </li>
                     <li>
                         <span class="tag changed">changed</span>
-                        <div class="change-text"><b>Homogeneización Visual:</b> La estética de toda la plataforma (Reglas, Perfiles y Consolas) se unificó bajo el diseño cristalino oscuro del Hub principal, entregando una experiencia premium.</div>
+                        <div class="change-text"><b>Visual Overhaul:</b> Unificación estética de todos los paneles bajo el estilo cristalino oscuro.</div>
                     </li>
                 </ul>
             </div>
@@ -97,73 +109,11 @@
                     <span class="update-date">3 de Marzo, 2026</span>
                 </div>
                 <ul class="change-list">
-                    <li>
-                        <span class="tag added">added</span>
-                        <div class="change-text"><b>Sistema de Cuentas:</b> Los usuarios ahora pueden registrarse con correo y contraseña.</div>
-                    </li>
-                    <li>
-                        <span class="tag added">added</span>
-                        <div class="change-text"><b>Panel de Perfil Personal:</b> Los jugadores autenticados pueden personalizar su biografía, vincular redes sociales (YouTube, Twitter, Discord) y solicitar fotos de perfil al Staff.</div>
-                    </li>
-                    <li>
-                        <span class="tag added">added</span>
-                        <div class="change-text"><b>Reclamo de Identidad:</b> Nuevo sistema para que los usuarios vinculen su Nickname de Geometry Dash a su cuenta de correo de forma segura.</div>
-                    </li>
-                    <li>
-                        <span class="tag changed">changed</span>
-                        <div class="change-text"><b>Rediseño del Ranking:</b> El Leaderboard ahora muestra tarjetas de jugador completas con biografía, bandera, redes sociales y botón para ver el historial de récords en una ventana emergente.</div>
-                    </li>
-                    <li>
-                        <span class="tag fixed">fixed</span>
-                        <div class="change-text">Corrección de un error silencioso donde las listas de niveles completados se corrompían en Firebase al ser editadas manualmente.</div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="update-card">
-                <div class="version-header">
-                    <h2 class="version-number">v1.0.5 - The Automation Patch</h2>
-                    <span class="update-date">2 de Marzo, 2026</span>
-                </div>
-                <ul class="change-list">
-                    <li>
-                        <span class="tag added">added</span>
-                        <div class="change-text"><b>Motor AREDL Blindado:</b> Nuevo sistema de sincronización automática de posiciones que no puede ser bloqueado por la API de la AREDL.</div>
-                    </li>
-                    <li>
-                        <span class="tag added">added</span>
-                        <div class="change-text"><b>Auditoría Automática de First Victors:</b> El panel ahora escanea los servidores de YouTube en tiempo real. Si un récord enviado es más antiguo que el del verificador actual, sugiere coronarlo automáticamente.</div>
-                    </li>
-                    <li>
-                        <span class="tag added">added</span>
-                        <div class="change-text"><b>Herramienta de Auditoría Manual:</b> Agregada al panel de administración para comparar dos links de YouTube y determinar el más antiguo al milisegundo.</div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="update-card">
-                <div class="version-header">
-                    <h2 class="version-number">v1.0.0 - Initial Release</h2>
-                    <span class="update-date">Marzo, 2026</span>
-                </div>
-                <ul class="change-list">
-                    <li>
-                        <span class="tag added">added</span>
-                        <div class="change-text">Lanzamiento oficial de The Scully List.</div>
-                    </li>
-                    <li>
-                        <span class="tag added">added</span>
-                        <div class="change-text">Sistema de experiencia (XP) y niveles dinámicos basado en dificultad matemática.</div>
-                    </li>
-                    <li>
-                        <span class="tag added">added</span>
-                        <div class="change-text">Integración con Firebase Realtime Database.</div>
-                    </li>
+                    <li><span class="tag added">added</span> <div class="change-text">Lanzamiento del sistema de cuentas y perfiles personalizables.</div></li>
                 </ul>
             </div>
 
         </div>
     </div>
-
 </body>
 </html>
