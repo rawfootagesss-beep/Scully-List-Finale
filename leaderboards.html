@@ -31,7 +31,6 @@
         .rank-row { background: var(--card-bg); backdrop-filter: blur(10px); cursor: pointer; transition: 0.3s; border: 1px solid var(--border); }
         .rank-row:hover { border-color: var(--accent); transform: scale(1.02); }
         
-        /* PODIO */
         .rank-row.top-0 { border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); }
         .rank-row.top-0 td:first-child { color: var(--gold); text-shadow: 0 0 10px var(--gold); font-size: 1.5rem; }
         .rank-row.top-1 { border-color: var(--silver); }
@@ -60,7 +59,6 @@
         <div class="staff-item">ADMIN <b>Vegardo</b></div>
         <div class="staff-item">HELPER <b>Blitz</b></div>
         <div class="staff-item">HELPER <b>Sopa354</b></div>
-        <div class="staff-item">CODIFICADOR <b>score</b></div>
     </nav>
 
     <header>
@@ -72,7 +70,7 @@
 
     <div class="admin-lock" onclick="toggleAuth()"><i class="fas fa-lock"></i></div>
     <div id="authBox" style="display:none; text-align:center; padding-bottom:100px;">
-        <input type="password" id="tokenInput" placeholder="Token" style="width:150px;"><button onclick="checkAuth()">ENTRAR</button>
+        <input type="password" id="tokenInput" placeholder="Token" style="width:150px;"><button onclick="checkAuth()" style="background:var(--accent); border:none; padding:10px 20px; border-radius:50px; cursor:pointer; font-weight:bold;">ENTRAR</button>
     </div>
 
     <div id="adminPanel">
@@ -86,6 +84,7 @@
                     <option value="ar">Argentina 🇦🇷</option><option value="cl">Chile 🇨🇱</option>
                     <option value="co">Colombia 🇨🇴</option><option value="pe">Perú 🇵🇪</option>
                     <option value="ve">Venezuela 🇻🇪</option><option value="ec">Ecuador 🇪🇨</option>
+                    <option value="uy">Uruguay 🇺🇾</option>
                 </select>
                 <select id="levelSelect"></select>
                 <input type="text" id="levelLink" placeholder="URL Video YouTube">
@@ -152,6 +151,7 @@
                     p[idx].completions.push({ level, link });
                 } else { p.push({ name, country, completions: [{ level, link }] }); }
                 db.ref('players').set(p);
+                alert("¡Perfil Actualizado!");
             });
         }
 
