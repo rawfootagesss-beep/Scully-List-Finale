@@ -3,53 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Scully List | Central</title>
+    <title>The Scully List | Hub Interactivo</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root { --accent: #ff6600; --bg: #050505; --card: #0a0a0a; --glow: 0 0 15px rgba(255, 102, 0, 0.3); }
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; scroll-behavior: smooth; overflow-x: hidden; }
         
-        /* Barra de Créditos Actualizada */
-        .top-credits { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.8); border-bottom: 1px solid #111; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; flex-wrap: wrap; }
+        /* 1. COMMUNITY PULSE (MARQUESINA) */
+        .marquee-container { background: #111; border-bottom: 1px solid var(--accent); padding: 8px 0; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; position: sticky; top: 40px; z-index: 999; }
+        .marquee-content { display: flex; white-space: nowrap; animation: marquee 30px linear infinite; }
+        .marquee-item { margin-right: 50px; color: #888; }
+        .marquee-item b { color: var(--accent); }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* STAFF CREDITS */
+        .top-credits { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.9); border-bottom: 1px solid #111; font-size: 0.6rem; position: sticky; top: 0; z-index: 1000; flex-wrap: wrap; }
         .credit-box i { color: var(--accent); margin-right: 5px; }
-        .credit-box span { color: #888; }
 
         header { padding: 60px 20px; text-align: center; }
-        h1 { font-size: 3rem; letter-spacing: 8px; margin: 0; text-transform: uppercase; font-weight: 700; }
+        h1 { font-size: 3.5rem; letter-spacing: 10px; margin: 0; text-transform: uppercase; font-weight: 700; }
         h1 span { color: var(--accent); text-shadow: var(--glow); }
 
-        .btn-container { margin-top: 30px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        .btn-scully { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 12px 25px; text-decoration: none; font-size: 0.8rem; transition: 0.3s; cursor: pointer; display: inline-block; font-weight: bold; }
-        .btn-scully:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
+        /* 2. SCULLY ROULETTE */
+        #roulette-section { background: #080808; padding: 40px 20px; border-radius: 20px; border: 1px solid #111; max-width: 800px; margin: 20px auto; text-align: center; }
+        .roulette-display { height: 100px; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: var(--accent); text-transform: uppercase; background: #000; border: 2px dashed #222; border-radius: 10px; margin: 20px 0; transition: 0.3s; }
+        .roulette-btn { background: var(--accent); color: #000; border: none; padding: 15px 40px; font-family: 'Lexend Deca'; font-weight: bold; cursor: pointer; border-radius: 5px; box-shadow: var(--glow); transition: 0.3s; }
+        .roulette-btn:hover { transform: scale(1.1); filter: brightness(1.2); }
 
-        /* Estilos del Directorio */
-        .section-title { color: var(--accent); letter-spacing: 4px; font-size: 0.8rem; margin: 50px 0 20px; text-transform: uppercase; text-align: center; }
-        .wrapper { width: 95%; max-width: 1000px; margin: 0 auto 60px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .level-card { background: var(--card); border: 1px solid #111; border-radius: 8px; overflow: hidden; display: flex; align-items: center; cursor: pointer; transition: 0.3s; position: relative; }
-        .level-card:hover { border-color: var(--accent); transform: translateY(-3px); }
-        .level-thumb { width: 120px; height: 70px; flex-shrink: 0; }
+        /* DIRECTORIO */
+        .wrapper { width: 95%; max-width: 1100px; margin: 40px auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .level-card { background: var(--card); border: 1px solid #111; border-radius: 12px; overflow: hidden; display: flex; align-items: center; cursor: pointer; transition: 0.3s; position: relative; }
+        .level-card:hover { border-color: var(--accent); transform: scale(1.02); }
+        .level-thumb { width: 130px; height: 75px; flex-shrink: 0; }
         .level-thumb img { width: 100%; height: 100%; object-fit: cover; }
         .level-info { padding: 15px; }
-        .rank-number { position: absolute; right: 15px; font-size: 1.2rem; font-weight: 700; color: rgba(255,255,255,0.05); }
+        .rank-number { position: absolute; right: 15px; font-size: 1.5rem; font-weight: 700; color: rgba(255,255,255,0.03); }
 
-        /* Estilo Victors en el Perfil del Nivel */
-        .victors-container { margin-top: 20px; text-align: left; border-top: 1px solid #111; padding-top: 15px; }
-        .victor-link { display: flex; justify-content: space-between; align-items: center; background: #111; padding: 10px; border-radius: 4px; margin-bottom: 5px; text-decoration: none; color: #fff; font-size: 0.8rem; border-left: 3px solid #5865F2; transition: 0.2s; }
-        .victor-link:hover { background: #181818; border-left-color: var(--accent); transform: translateX(5px); }
+        /* SUGERENCIAS DE PROGRESO (Skill Tree Logic) */
+        .tree-box { margin-top: 20px; padding: 15px; background: #000; border: 1px solid #222; border-radius: 8px; text-align: left; }
+        .tree-item { color: #555; font-size: 0.75rem; margin-bottom: 5px; }
+        .tree-item b { color: #fff; }
 
-        /* Formulario de Envío */
-        #form-section { background: #080808; border-top: 1px solid #111; padding: 60px 20px; margin-top: 50px; }
+        /* FORMULARIO */
+        #form-section { background: #080808; padding: 80px 20px; border-top: 1px solid #111; }
         .form-box { max-width: 500px; margin: 0 auto; text-align: left; }
-        input, select { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 12px; margin-bottom: 15px; font-family: 'Lexend Deca'; box-sizing: border-box; }
-        label { font-size: 0.65rem; color: #555; text-transform: uppercase; margin-bottom: 5px; display: block; }
-
-        /* Panel Admin */
-        #adminPanel { display: none; background: #000; border: 2px solid var(--accent); padding: 30px; width: 95%; max-width: 1100px; margin: 50px auto; border-radius: 15px; text-align: left; }
+        input, select { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 12px; margin-bottom: 15px; font-family: 'Lexend Deca'; }
+        
+        #adminPanel { display: none; background: #000; border: 2px solid var(--accent); padding: 30px; width: 95%; max-width: 1100px; margin: 50px auto; border-radius: 15px; }
         .admin-layout { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
         .admin-col { background: #080808; padding: 15px; border-radius: 8px; border: 1px solid #111; }
-        .submission-item { background: #000; padding: 10px; margin-bottom: 10px; border-left: 3px solid var(--accent); font-size: 0.7rem; }
-
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
         .modal-content { background: #080808; margin: 2% auto; padding: 30px; width: 90%; max-width: 600px; border: 1px solid var(--accent); border-radius: 15px; position: relative; text-align: center; max-height: 90vh; overflow-y: auto; }
         .admin-access { margin: 100px 0 30px; text-align: center; opacity: 0.05; }
@@ -65,58 +68,64 @@
         <div class="credit-box"><i class="fas fa-code"></i> CODIFICADOR <span>score</span></div>
     </nav>
 
+    <div class="marquee-container">
+        <div class="marquee-content" id="pulse-content">
+            <span class="marquee-item">🚀 ¡Bienvenidos a la nueva <b>Scully List</b> interactiva!</span>
+            <span class="marquee-item">🔥 Registra tus récords para subir de nivel</span>
+            <span class="marquee-item">🏆 El Top 1 sigue esperando a su dueño</span>
+        </div>
+    </div>
+
     <header>
         <h1>THE SCULLY <span>LIST</span></h1>
-        <div class="btn-container">
-            <a href="leaderboards.html" class="btn-scully">LEADERBOARDS</a>
-            <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully" style="border-color:#5865F2; color:#5865F2;">DISCORD OFICIAL</a>
-            <a href="#form-section" class="btn-scully">SUBIR RÉCORD</a>
+        <div style="margin-top:20px;">
+            <a href="leaderboards.html" class="btn-scully">RANKING GLOBAL</a>
+            <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully" style="border-color:#5865F2; color:#5865F2;">DISCORD</a>
         </div>
     </header>
 
-    <div class="section-title">Niveles del Directorio</div>
+    <section id="roulette-section">
+        <h2 style="font-size: 0.8rem; letter-spacing: 5px; color: #444;">SCULLY ROULETTE</h2>
+        <div class="roulette-display" id="roulette-result">¿QUÉ DEBO PASARME HOY?</div>
+        <button class="roulette-btn" onclick="spinRoulette()">GIRAR RULETA</button>
+        <p style="font-size: 0.6rem; color: #333; margin-top: 10px;">SELECCIONA UN NIVEL AL AZAR PARA TU PRÓXIMO DESAFÍO</p>
+    </section>
+
+    <center><div style="color:var(--accent); font-size: 0.7rem; letter-spacing: 5px; margin-top: 40px;">DIRECTORIO DE NIVELES</div></center>
     <main class="wrapper" id="list-container"></main>
 
     <section id="form-section">
         <div class="form-box">
-            <h2 style="color:var(--accent); text-align:center; margin-bottom:20px;">ENVÍO DE RÉCORDS</h2>
-            <label>Nombre de Usuario</label>
-            <input type="text" id="recPlayer" placeholder="Tu Nick">
-            <label>Nivel</label>
+            <h2 style="color:var(--accent); text-align:center;">SUBIR RÉCORD</h2>
+            <input type="text" id="recPlayer" placeholder="Nombre de Usuario">
             <select id="recLevel"><option value="">-- Selecciona el Nivel --</option></select>
-            <label>Link de YouTube</label>
-            <input type="text" id="recLink" placeholder="https://youtu.be/...">
-            <label>Link de RAW (Google Drive Obligatorio)</label>
-            <input type="text" id="recRaw" placeholder="https://drive.google.com/...">
-            <label>País</label>
-            <select id="recCountry">
-                <option value="cl">Chile</option><option value="ar">Argentina</option><option value="mx">México</option><option value="es">España</option>
-            </select>
-            <button class="btn-scully" style="width:100%; background:var(--accent); color:#000;" onclick="submitRecord()">ENVIAR A REVISIÓN</button>
+            <input type="text" id="recLink" placeholder="Link de YouTube">
+            <input type="text" id="recRaw" placeholder="Link de Google Drive (RAW)">
+            <select id="recCountry"><option value="cl">Chile</option><option value="ar">Argentina</option><option value="mx">México</option><option value="es">España</option></select>
+            <button class="btn-scully" style="width:100%; background:var(--accent); color:#000;" onclick="submitRecord()">ENVIAR RÉCORD</button>
         </div>
     </section>
 
     <div class="admin-access"><i class="fas fa-lock" onclick="toggleAuth()"></i><div id="authBox" style="display:none;"><input type="password" id="tokenInput" placeholder="Token"><button class="btn-scully" onclick="checkAuth()">ENTRAR</button></div></div>
 
     <div id="adminPanel">
-        <h2 style="color:var(--accent); text-align:center; margin-bottom:20px;">CENTRAL DE MANDO</h2>
         <div class="admin-layout">
             <div class="admin-col">
-                <p style="color:var(--accent); font-size:0.7rem; font-weight:bold;">AÑADIR NIVEL</p>
+                <p style="color:var(--accent); font-weight:bold;">AÑADIR NIVEL</p>
                 <input type="text" id="lvlName" placeholder="Nombre Nivel">
                 <input type="text" id="lvlYT" placeholder="ID YouTube">
                 <input type="text" id="lvlFirst" placeholder="First Victor">
                 <input type="number" id="lvlPos" placeholder="Posición">
-                <button class="btn-scully" style="width:100%; font-size:0.7rem;" onclick="saveLevel()">PUBLICAR</button>
-                <div id="adminLvlList" style="margin-top:15px; max-height:150px; overflow-y:auto;"></div>
+                <button class="btn-scully" style="width:100%;" onclick="saveLevel()">PUBLICAR</button>
+                <div id="adminLvlList" style="margin-top:10px; max-height:150px; overflow-y:auto;"></div>
             </div>
             <div class="admin-col">
-                <p style="color:#5865F2; font-size:0.7rem; font-weight:bold;">RÉCORDS PENDIENTES</p>
-                <div id="submissionsList" style="max-height:400px; overflow-y:auto;"></div>
+                <p style="color:#5865F2; font-weight:bold;">SOLICITUDES</p>
+                <div id="submissionsList"></div>
             </div>
             <div class="admin-col">
-                <p style="color:#444; font-size:0.7rem; font-weight:bold;">ESTADÍSTICAS</p>
-                <div id="statsBox" style="font-size:0.8rem; color:#888;"></div>
+                <p style="color:#444; font-weight:bold;">STATS</p>
+                <div id="statsBox"></div>
             </div>
         </div>
     </div>
@@ -138,12 +147,41 @@
             const niveles = currentData.levels || [];
             renderLevels(niveles);
             updateLevelSelect(niveles);
+            updatePulse(currentData.submissions || {});
             if(sessionStorage.getItem('scully_session') === 'active') {
                 updateAdminList(niveles);
                 renderSubmissions(currentData.submissions || {});
                 document.getElementById('statsBox').innerHTML = `Niveles: ${niveles.length}<br>Jugadores: ${Object.keys(currentData.players || {}).length}`;
             }
         });
+
+        // INNOVACIÓN 1: RULETA
+        function spinRoulette() {
+            const niveles = currentData.levels || [];
+            if(niveles.length === 0) return;
+            const res = document.getElementById('roulette-result');
+            let count = 0;
+            const interval = setInterval(() => {
+                const rand = niveles[Math.floor(Math.random() * niveles.length)];
+                res.innerText = rand.name;
+                count++;
+                if(count > 20) {
+                    clearInterval(interval);
+                    res.style.textShadow = "0 0 20px #ff6600";
+                }
+            }, 50);
+        }
+
+        // INNOVACIÓN 2: COMMUNITY PULSE
+        function updatePulse(subms) {
+            const cont = document.getElementById('pulse-content');
+            const list = Object.values(subms).reverse().slice(0, 5);
+            let pulseHTML = `<span class="marquee-item">🚀 ¡Bienvenidos a la <b>Scully List</b>!</span>`;
+            list.forEach(s => {
+                pulseHTML += `<span class="marquee-item">🔥 Nuevo envío de <b>${s.player}</b> en <b>${s.level}</b></span>`;
+            });
+            cont.innerHTML = pulseHTML;
+        }
 
         function calculatePoints(i) { return Math.max(100 - (i * 0.6), 5).toFixed(1); }
 
@@ -156,26 +194,29 @@
                 </div>`).join("");
         }
 
+        // INNOVACIÓN 3: SUGERENCIAS DE PROGRESO (Skill Tree)
         function openDetails(index) {
             const l = currentData.levels[index];
             const players = Object.values(currentData.players || {});
             const victors = players.filter(p => (p.completions || []).some(c => c.level.toLowerCase() === l.name.toLowerCase()));
 
-            const victorsHTML = victors.map(v => {
-                const comp = v.completions.find(c => c.level.toLowerCase() === l.name.toLowerCase());
-                return `
-                    <a href="${comp.link || '#'}" target="_blank" class="victor-link">
-                        <span><img src="https://flagcdn.com/w20/${v.country}.png" style="margin-right:8px;">${v.name}</span>
-                        <i class="fab fa-youtube"></i>
-                    </a>`;
-            }).join("");
+            // Lógica de progreso
+            const nextHarder = currentData.levels[index - 1] ? currentData.levels[index - 1].name : "Eres el Top 1";
+            const nextEasier = currentData.levels[index + 1] ? currentData.levels[index + 1].name : "No hay más niveles";
 
             document.getElementById('modal-body').innerHTML = `
                 <h1 style="color:var(--accent);">${l.name}</h1>
-                <iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:8px;"></iframe>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:10px;"></iframe>
+                
+                <div class="tree-box">
+                    <p style="font-size:0.6rem; color:var(--accent); font-weight:bold;">SKILL TREE (RUTA DE PROGRESO)</p>
+                    <div class="tree-item">⏫ Si te pasaste este, intenta: <b>${nextHarder}</b></div>
+                    <div class="tree-item">⏬ Si este te cuesta, practica: <b>${nextEasier}</b></div>
+                </div>
+
                 <div class="victors-container">
-                    <p style="font-size:0.7rem; color:var(--accent); font-weight:bold; margin-bottom:10px;">LISTA DE VICTORS (${victors.length})</p>
-                    ${victorsHTML || '<p style="font-size:0.8rem; color:#333;">Sin victors aún.</p>'}
+                    <p style="font-size:0.7rem; color:var(--accent); font-weight:bold;">VICTORS (${victors.length})</p>
+                    ${victors.map(v => `<a href="${v.completions.find(c => c.level === l.name).link}" target="_blank" class="victor-link"><span>${v.name}</span><i class="fab fa-youtube"></i></a>`).join("") || '<p>Sin victors.</p>'}
                 </div>`;
             document.getElementById('levelModal').style.display = "block";
         }
@@ -186,31 +227,15 @@
             const link = document.getElementById('recLink').value.trim();
             const raw = document.getElementById('recRaw').value.trim();
             const country = document.getElementById('recCountry').value;
-            if(!player || !level || !link || !raw) return alert("Completa todos los campos.");
-            if(!raw.includes("drive.google.com")) return alert("El RAW debe ser un link de Google Drive.");
+            if(!player || !level || !link || !raw) return alert("Completa todo.");
+            if(!raw.includes("drive.google.com")) return alert("RAW de Drive obligatorio.");
             db.ref('submissions').push({ player, level, link, raw, country, date: new Date().toLocaleDateString() });
-            alert("¡Récord enviado!");
-            document.getElementById('recPlayer').value = ""; document.getElementById('recLink').value = ""; document.getElementById('recRaw').value = "";
+            alert("¡Enviado!");
         }
 
-        function renderSubmissions(subms) {
-            const cont = document.getElementById('submissionsList');
-            const entries = Object.entries(subms);
-            cont.innerHTML = entries.map(([key, s]) => `
-                <div class="submission-item">
-                    <b>${s.player}</b> -> ${s.level}<br>
-                    <a href="${s.link}" target="_blank" style="color:#5865F2">Video</a> | <a href="${s.raw}" target="_blank" style="color:#0f0">RAW</a><br>
-                    <button onclick="deleteSubmission('${key}')" style="background:none; border:none; color:red; cursor:pointer; font-size:0.6rem;">BORRAR</button>
-                </div>`).join("");
-        }
-
-        function updateLevelSelect(niveles) {
-            const sel = document.getElementById('recLevel');
-            const val = sel.value;
-            sel.innerHTML = '<option value="">-- Selecciona el Nivel --</option>' + niveles.map(l => `<option value="${l.name}">${l.name}</option>`).join("");
-            sel.value = val;
-        }
-
+        function toggleAuth() { const b = document.getElementById('authBox'); b.style.display = b.style.display === "block" ? "none" : "block"; }
+        function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
+        function closeM() { document.getElementById('levelModal').style.display = "none"; }
         function saveLevel() {
             const name = document.getElementById('lvlName').value.trim();
             const id = document.getElementById('lvlYT').value.trim();
@@ -223,13 +248,19 @@
                 db.ref('levels').set(lvls);
             });
         }
-
         function deleteSubmission(key) { if(confirm("¿Borrar?")) db.ref('submissions/' + key).remove(); }
+        function renderSubmissions(subms) {
+            const cont = document.getElementById('submissionsList');
+            cont.innerHTML = Object.entries(subms).map(([key, s]) => `<div style="font-size:0.6rem; border-bottom:1px solid #111; padding:5px;"><b>${s.player}</b> -> ${s.level} <button onclick="deleteSubmission('${key}')" style="color:red; background:none; border:none;">X</button></div>`).join("");
+        }
+        function updateLevelSelect(niveles) {
+            const sel = document.getElementById('recLevel');
+            const val = sel.value;
+            sel.innerHTML = '<option value="">-- Selecciona el Nivel --</option>' + niveles.map(l => `<option value="${l.name}">${l.name}</option>`).join("");
+            sel.value = val;
+        }
+        function updateAdminList(l) { document.getElementById('adminLvlList').innerHTML = l.map((lvl, i) => `<div style="font-size:0.6rem; display:flex; justify-content:space-between;"><span>#${i+1} ${lvl.name}</span><i class="fas fa-trash" onclick="deleteLvl(${i})" style="color:red; cursor:pointer;"></i></div>`).join(""); }
         function deleteLvl(index) { db.ref('levels').once('value', (s) => { let l = s.val() || []; l.splice(index, 1); db.ref('levels').set(l); }); }
-        function updateAdminList(l) { document.getElementById('adminLvlList').innerHTML = l.map((lvl, i) => `<div style="display:flex; justify-content:space-between; font-size:0.6rem; padding:3px; border-bottom:1px solid #111;"><span>#${i+1} ${lvl.name}</span><i class="fas fa-trash" onclick="deleteLvl(${i})" style="color:red; cursor:pointer;"></i></div>`).join(""); }
-        function toggleAuth() { const b = document.getElementById('authBox'); b.style.display = b.style.display === "block" ? "none" : "block"; }
-        function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
-        function closeM() { document.getElementById('levelModal').style.display = "none"; }
         window.onload = () => { if(sessionStorage.getItem('scully_session') === 'active') document.getElementById('adminPanel').style.display = "block"; };
     </script>
 </body>
