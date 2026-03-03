@@ -97,7 +97,7 @@
         .level-card:hover { border-color: var(--accent); transform: scale(1.02); }
         .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
 
-        /* 6. FORMULARIO (FIX CASILLA RAW) */
+        /* 6. FORMULARIO */
         .form-section { background: rgba(10,10,10,0.5); padding: 100px 20px; border-top: 1px solid var(--border); }
         .glass-form { 
             max-width: 550px; margin: 0 auto; background: var(--card-bg); 
@@ -180,6 +180,7 @@
             <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking</a>
             <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully" style="color:#5865F2; border-color:#5865F2;"><i class="fab fa-discord"></i> Discord</a>
             <a href="#submit" class="btn-scully"><i class="fas fa-upload"></i> Enviar Récord</a>
+            <a href="https://scullyteam.netlify.app/" target="_blank" class="btn-scully" style="border-color: var(--accent); color: var(--accent);"><i class="fas fa-users"></i> Sobre nosotros</a>
         </div>
     </header>
 
@@ -250,7 +251,6 @@
         const TOKEN = "GdfuFCRy";
         let fullData = {};
 
-        // Listener Principal
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {};
             renderLevels(fullData.levels || []);
@@ -264,14 +264,12 @@
             }
         });
 
-        // 1. GESTIÓN DE STATUS & AUTOMATIZACIÓN DE RANKING
         function setStatus(key, newStatus) {
             const sub = fullData.submissions[key];
             const staff = prompt("Nombre Staff:");
             if(!staff) return;
 
             if(newStatus === 'Aceptado') {
-                // Sincronizar con el Ranking automáticamente
                 db.ref('players').once('value', s => {
                     let p = Object.values(s.val() || {});
                     let i = p.findIndex(u => u.name.toLowerCase() === sub.player.toLowerCase());
@@ -298,109 +296,47 @@
             }
         }
 
-        // 2. BORRAR NOVEDADES ESPECÍFICAS
-        function deleteLog(k) { if(confirm("¿Eliminar este aviso de la marquesina?")) db.ref('logs/' + k).remove(); }
+        function deleteLog(k) { if(confirm("¿Eliminar log?")) db.ref('logs/' + k).remove(); }
 
         function renderAdminLogs(logs) {
-            const cont = document.getElementById('adminLogList');
-            cont.innerHTML = Object.entries(logs).reverse().map(([k, v]) => `
+            document.getElementById('adminLogList').innerHTML = Object.entries(logs).reverse().map(([k, v]) => `
                 <div class="log-manage-item">
                     <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:85%;">${v.msg}</span>
                     <i class="fas fa-trash-alt" onclick="deleteLog('${k}')"></i>
                 </div>`).join("");
         }
 
-        // 3. ENVÍO CON LÓGICA RAW TOP 100
         function submitRecord() {
             const lName = document.getElementById('recLevel').value;
             const raw = document.getElementById('recRaw').value;
             const opt = document.getElementById('rawOptional').checked;
             const idx = fullData.levels.findIndex(lvl => lvl.name === lName);
-
-            if (idx <= 99 && idx !== -1) { // Niveles del 1 al 100
-                if (!raw.includes("drive.google.com")) return alert("RAW OBLIGATORIO PARA TOP 100. Google Drive requerido.");
+            if (idx <= 99 && idx !== -1) {
+                if (!raw.includes("drive.google.com")) return alert("RAW OBLIGATORIO PARA TOP 100.");
             } else if (!opt && !raw.includes("drive.google.com")) {
-                return alert("Para niveles 101+, pon el RAW o marca la casilla para omitirlo.");
+                return alert("Pon el RAW o marca 'Top 101+' para omitirlo.");
             }
-
             db.ref('submissions').push({ 
                 player: document.getElementById('recPlayer').value,
                 level: lName, link: document.getElementById('recLink').value,
                 raw: raw || "N/A", country: document.getElementById('recCountry').value,
                 status: "Pendiente" 
             });
-            alert("¡Enviado con éxito!");
+            alert("¡Enviado!");
         }
 
-        // 4. FUNCIONES DEL HUB & RENDER
         function checkStatus() {
             const nick = document.getElementById('checkInput').value.trim().toLowerCase();
             const all = [...Object.values(fullData.submissions || {}), ...Object.values(fullData.history || {})];
             const res = all.filter(s => s.player.toLowerCase() === nick);
-            document.getElementById('statusDisplay').innerHTML = res.length ? res.map(r => `
-                <div class="status-pill st-${(r.status||'pendiente').toLowerCase().replace(/ /g, "")}">
-                    <b>${r.level}</b> <span style="font-weight:800;">${(r.status||'PENDIENTE').toUpperCase()}</span>
-                </div>`).join("") : "<p style='color:#444;'>Sin registros para este nick.</p>";
+            document.getElementById('statusDisplay').innerHTML = res.length ? res.map(r => `<div class="status-pill st-${(r.status||'pendiente').toLowerCase().replace(/ /g, "")}"><b>${r.level}</b> <span style="font-weight:800;">${(r.status||'PENDIENTE').toUpperCase()}</span></div>`).join("") : "<p style='color:#444;'>Sin registros.</p>";
         }
 
-        function updateTicker(l) { 
-            const c = document.getElementById('pulse-content'); 
-            const e = Object.values(l).reverse().slice(0,12); 
-            if(e.length===0){c.innerHTML=`<span class="log-item">🚀 bienvenido scully miembro</span>`; return;} 
-            c.innerHTML = e.map(x => `<span class="log-item ${x.type==='accept'?'log-accept':x.type==='info'?'log-info':'log-reject'}">${x.msg}</span>`).join(""); 
-        }
-
-        function renderLevels(n) { 
-            const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); 
-            document.getElementById('list-container').innerHTML = n.map((l, i) => `
-                <div class="level-card" onclick="openDetails(${i})">
-                    <img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg">
-                    <div><h3 style="margin:0; font-size:0.9rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.7rem; margin:0;">+${c(i)} PTS</p></div>
-                    <div style="position:absolute; right:15px; opacity:0.05; font-size:2rem; font-weight:900;">#${i+1}</div>
-                </div>`).join(""); 
-        }
-
-        function renderSubmissions(s) { 
-            document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k, x]) => `
-                <div class="admin-sub-card">
-                    <b>${x.player}</b> -> ${x.level}
-                    <div class="proof-links">
-                        <a href="${x.link}" target="_blank">YT</a>
-                        <a href="${x.raw}" target="_blank">RAW</a>
-                    </div>
-                    <div class="admin-btns">
-                        <button onclick="setStatus('${k}','En revisión')">REV</button>
-                        <button onclick="setStatus('${k}','Aceptado')" style="color:var(--green)">ACEP</button>
-                        <button onclick="setStatus('${k}','Rechazado')" style="color:var(--red)">RECH</button>
-                    </div>
-                </div>`).join(""); 
-        }
-
-        function openDetails(idx) { 
-            const l = fullData.levels[idx]; 
-            const p = Object.values(fullData.players || {}); 
-            const victors = p.filter(v => (v.completions || []).some(c => c.level === l.name)); 
-            document.getElementById('modal-body').innerHTML = `
-                <h1>${l.name}</h1>
-                <p style="font-size:0.75rem;">FIRST VICTOR: <b style="color:#fff;">${l.first || 'Nadie'}</b></p>
-                <iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:15px; margin-top:15px;"></iframe>
-                <div style="margin-top:15px; text-align:left;"><small>VICTORS REGISTRADOS:</small>${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111; font-size:0.8rem;">${v.name}</div>`).join("")}</div>`; 
-            document.getElementById('levelModal').style.display = "block"; 
-        }
-
-        function saveLevel() { 
-            const n = document.getElementById('lvlName').value; 
-            const y = document.getElementById('lvlYT').value; 
-            const f = document.getElementById('lvlFirst').value; 
-            const p = parseInt(document.getElementById('lvlPos').value)-1; 
-            db.ref('levels').once('value', s => { 
-                let l = s.val() || []; 
-                l = l.filter(x => x.name.toLowerCase() !== n.toLowerCase()); 
-                l.splice(p >= 0 ? p : l.length, 0, { name: n, id: y, first: f }); 
-                db.ref('levels').set(l); alert("¡Nivel Publicado!"); 
-            }); 
-        }
-
+        function updateTicker(l) { const c = document.getElementById('pulse-content'); const e = Object.values(l).reverse().slice(0,12); if(e.length===0){c.innerHTML=`<span class="log-item">🚀 bienvenido scully miembro</span>`; return;} c.innerHTML = e.map(x => `<span class="log-item ${x.type==='accept'?'log-accept':x.type==='info'?'log-info':'log-reject'}">${x.msg}</span>`).join(""); }
+        function renderLevels(n) { const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); document.getElementById('list-container').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0; font-size:0.9rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.7rem; margin:0;">+${c(i)} PTS</p></div><div style="position:absolute; right:15px; opacity:0.05; font-size:2rem; font-weight:900;">#${i+1}</div></div>`).join(""); }
+        function renderSubmissions(s) { document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k, x]) => `<div class="admin-sub-card"><b>${x.player}</b> -> ${x.level} <div class="proof-links"><a href="${x.link}" target="_blank">YT</a><a href="${x.raw}" target="_blank">RAW</a></div><div class="admin-btns"><button onclick="setStatus('${k}','En revisión')">REV</button><button onclick="setStatus('${k}','Aceptado')" style="color:var(--green)">ACEP</button><button onclick="setStatus('${k}','Rechazado')" style="color:var(--red)">RECH</button></div></div>`).join(""); }
+        function openDetails(idx) { const l = fullData.levels[idx]; const p = Object.values(fullData.players || {}); const victors = p.filter(v => (v.completions || []).some(c => c.level === l.name)); document.getElementById('modal-body').innerHTML = `<h1>${l.name}</h1><p style="font-size:0.75rem;">FIRST VICTOR: <b style="color:#fff;">${l.first || 'Nadie'}</b></p><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:15px; margin-top:15px;"></iframe><div style="margin-top:15px; text-align:left;"><small>VICTORS REGISTRADOS:</small>${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111; font-size:0.8rem;">${v.name}</div>`).join("")}</div>`; document.getElementById('levelModal').style.display = "block"; }
+        function saveLevel() { const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const f = document.getElementById('lvlFirst').value; const p = parseInt(document.getElementById('lvlPos').value)-1; db.ref('levels').once('value', s => { let l = s.val() || []; l = l.filter(x => x.name.toLowerCase() !== n.toLowerCase()); l.splice(p >= 0 ? p : l.length, 0, { name: n, id: y, first: f }); db.ref('levels').set(l); alert("¡Nivel Publicado!"); }); }
         function banPlayer() { const n = document.getElementById('banUser').value.trim(); const staff = prompt("Staff?"); db.ref('bans').push(n); db.ref('logs').push({ type: 'reject', msg: `⛔ ${n} BANEADO POR ${staff || 'ADMIN'}` }); }
         function renderBanList(b) { document.getElementById('banList').innerHTML = "Baneados: " + Object.values(b).join(", "); }
         function toggleAuth() { const p = prompt("Acceso Codificador:"); if(p === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
