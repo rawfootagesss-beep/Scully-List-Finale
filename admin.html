@@ -189,8 +189,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     
     <script>
-        // SEGURIDAD Y CONFIGURACIÓN
-        if(sessionStorage.getItem('scully_session') !== 'active') location.href = 'index.html';
+        // 1. SEGURIDAD Y CONFIGURACIÓN BASE CORREGIDA
+        if(sessionStorage.getItem('scully_session') !== 'admin') location.href = 'index.html';
+        
         const firebaseConfig = { databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -198,9 +199,6 @@
 
         const YT_API_KEY = "AIzaSyCLeUZ_mJxJHuCCLr-GMkMdy0q-JHTUi7w";
 
-        // ==========================================
-        // FUNCIONES UX (TOASTS, BÚSQUEDAS Y SCROLL)
-        // ==========================================
         function showToast(message, isError = false) {
             const toast = document.getElementById("scullyToast");
             toast.innerHTML = isError ? `<i class="fas fa-times-circle"></i> ${message}` : `<i class="fas fa-check-circle"></i> ${message}`;
@@ -219,9 +217,6 @@
             }
         }
 
-        // ==========================================
-        // CARGA DE DATOS EN TIEMPO REAL
-        // ==========================================
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {}; 
             let lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels : Object.values(fullData.levels)) : [];
@@ -238,9 +233,6 @@
             renderAdminHistory(fullData.history || {});
         });
 
-        // ==========================================
-        // FUNCIONES YOUTUBE API
-        // ==========================================
         function extractYTId(url) {
             if(!url) return null;
             let match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?\n]+)/);
@@ -283,9 +275,6 @@
             `;
         }
 
-        // ==========================================
-        // PANEL 1: NIVELES Y AREDL
-        // ==========================================
         function renderAdminLevelsList(levelsArray) { 
             let html = "";
             for(let i = 0; i < levelsArray.length; i++) {
@@ -299,11 +288,9 @@
             document.getElementById('editLvlIdx').value = index; document.getElementById('lvlName').value = levelObj.name; document.getElementById('lvlYT').value = levelObj.id; document.getElementById('lvlFirst').value = levelObj.first || ""; document.getElementById('lvlPos').value = index + 1; 
             
             const victors = Object.values(fullData.players || {}).filter(p => p.completions?.some(c => c.level === levelObj.name)); 
-            let victorsHtml = `<p style="font-size:0.65rem; color:var(--accent); margin:0 0 10px 0;">VICTORS REGISTRADOS</p>`;
+            let victorsHtml = `<p style="font-size:0.65rem; color:var(--accent); margin:0 0 10px 0; text-transform:uppercase;">Victors Registrados</p>`;
             for(let i = 0; i < victors.length; i++) { victorsHtml += `<div class="list-item"><span>${victors[i].name}</span><i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="removeVictorFromLevel('${levelObj.name}', '${victors[i].name}')"></i></div>`; }
             document.getElementById('lvlVictorsList').innerHTML = victorsHtml;
-            
-            // Auto-scroll cómodo hacia arriba
             document.getElementById('panelNivelesContent').scrollTo(0,0);
         }
 
@@ -366,9 +353,6 @@
             });
         }
 
-        // ==========================================
-        // PANEL 2: MODERACIÓN Y AUTO-FIRST VICTOR
-        // ==========================================
         function renderSubmissions(submissionsObj) { 
             let html = "";
             const entries = Object.entries(submissionsObj);
@@ -380,7 +364,7 @@
                 const sub = entries[i][1];
                 html += `
                 <div class="sub-card">
-                    <span style="color:var(--text-light); font-weight:800;">${sub.player}</span> 
+                    <span style="color:var(--text-light); font-weight:800; font-size:0.85rem;">${sub.player}</span> 
                     <i class="fas fa-caret-right" style="color:var(--accent); margin:0 5px;"></i> ${sub.level}
                     <div class="proof-box">
                         <a href="${sub.link}" target="_blank" class="btn-proof proof-yt"><i class="fab fa-youtube"></i> VER YT</a>
@@ -398,7 +382,7 @@
         async function setStatus(key, status) { 
             const staff = document.getElementById('globalStaffSign').value;
             if(!staff) {
-                showToast("Por favor, pon tu firma de Staff en la cabecera primero", true);
+                showToast("Pon tu firma de Staff en la cabecera primero", true);
                 document.getElementById('globalStaffSign').focus();
                 return;
             }
@@ -409,7 +393,6 @@
                 const btnOk = document.getElementById(`btn-ok-${key}`);
                 if(btnOk) { btnOk.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btnOk.disabled = true; }
 
-                // Auditoría Automática YT (OPCIÓN A)
                 try {
                     const subVid = extractYTId(sub.link);
                     const lvlIdx = fullData.levels.findIndex(l => l.name === sub.level);
@@ -447,9 +430,6 @@
             db.ref('submissions/' + key).remove();
         }
 
-        // ==========================================
-        // PANELES 3 AL 8: RESTO DEL SISTEMA
-        // ==========================================
         function renderAdminUserList(p) { 
             let html = "";
             for(let i = 0; i < p.length; i++) {
@@ -473,14 +453,13 @@
             (u.completions || []).forEach((c, i) => recHTML += `<div class="list-item"><span>${c.level}</span><i class="fas fa-times" style="color:var(--red); cursor:pointer;" onclick="removeLevelFromUser(${idx}, ${i})"></i></div>`);
             document.getElementById('playerLevelsInternal').innerHTML = recHTML; 
             
-            // Auto-scroll cómodo hacia arriba
             document.getElementById('panelPlayersContent').scrollTo(0,0);
         }
 
-        function removeVictorFromLevel(l, p) { if(confirm(`¿Quitar récord de ${p}?`)) { db.ref('players').once('value', s => { let list = Object.values(s.val()); let i = list.findIndex(x => x.name === p); if(i > -1) { list[i].completions = list[i].completions.filter(c => c.level !== l); db.ref('players').set(list); loadLevelToEditor(document.getElementById('editLvlIdx').value); showToast("Récord quitado"); } }); } }
+        function removeVictorFromLevel(l, p) { if(confirm(`¿Quitar récord de ${p} en ${l}?`)) { db.ref('players').once('value', s => { let list = Object.values(s.val()); let i = list.findIndex(x => x.name === p); if(i > -1) { list[i].completions = list[i].completions.filter(c => c.level !== l); db.ref('players').set(list); loadLevelToEditor(document.getElementById('editLvlIdx').value); showToast("Récord quitado"); } }); } }
         function removeCosmeticFromUser(pI, cK) { if(confirm("¿Quitar cosmético?")) { db.ref('players').once('value', s => { let list = Object.values(s.val()); list[pI].cosmetics[cK] = false; db.ref('players').set(list); loadPlayerToEditor(pI); showToast("Cosmético removido"); }); } }
-        function savePlayerEdits() { const idx = document.getElementById('editPIdx').value; db.ref('players').once('value', s => { let list = Object.values(s.val()); list[idx].name = document.getElementById('editNick').value; list[idx].country = document.getElementById('editCountry').value; list[idx].hidden = document.getElementById('editHidden').checked; db.ref('players').set(list); showToast("Perfil del jugador actualizado"); }); }
-        function removeLevelFromUser(pI, lI) { if(confirm("¿Borrar nivel?")) { db.ref('players').once('value', s => { let list = Object.values(s.val()); list[pI].completions.splice(lI, 1); db.ref('players').set(list); loadPlayerToEditor(pI); showToast("Nivel borrado del perfil"); }); } }
+        function savePlayerEdits() { const idx = document.getElementById('editPIdx').value; db.ref('players').once('value', s => { let list = Object.values(s.val()); list[idx].name = document.getElementById('editNick').value; list[idx].country = document.getElementById('editCountry').value; list[idx].hidden = document.getElementById('editHidden').checked; db.ref('players').set(list); showToast("Perfil actualizado"); }); }
+        function removeLevelFromUser(pI, lI) { if(confirm("¿Borrar nivel?")) { db.ref('players').once('value', s => { let list = Object.values(s.val()); list[pI].completions.splice(lI, 1); db.ref('players').set(list); loadPlayerToEditor(pI); showToast("Nivel borrado"); }); } }
 
         function renderMarketModeration(m) { 
             let html = ""; Object.entries(m).forEach(([k,v]) => html += `<div class="sub-card"><span style="color:var(--accent); font-weight:800;">${v.nick}</span> pide <b>${v.item}</b><button onclick="approveCosmetic('${k}')" class="btn-green" style="margin-top:10px;"><i class="fas fa-check"></i> APROBAR</button></div>`);
@@ -492,7 +471,7 @@
             let html = ""; Object.entries(pObj).forEach(([k,v]) => html += `<div class="sub-card" style="text-align:center;"><b>${v.nick}</b><br><img src="${v.url}" style="width:60px;height:60px;border-radius:50%; margin:10px 0; object-fit:cover; border:2px solid var(--accent);"><button onclick="approvePFP('${k}')" class="btn-green"><i class="fas fa-check"></i> APROBAR</button></div>`);
             document.getElementById('pfpSubList').innerHTML = html || `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">Sin solicitudes.</p>`;
         }
-        function approvePFP(k) { const r = fullData.pfp_requests[k]; db.ref('players').once('value', s => { let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick); if(i > -1) { p[i].pfp = r.url; db.ref('players').set(p); db.ref('pfp_requests/' + k).remove(); showToast("Foto de Perfil Aprobada"); } }); }
+        function approvePFP(k) { const r = fullData.pfp_requests[k]; db.ref('players').once('value', s => { let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick); if(i > -1) { p[i].pfp = r.url; db.ref('players').set(p); db.ref('pfp_requests/' + k).remove(); showToast("PFP Aprobada"); } }); }
 
         function banPlayer() { const nick = document.getElementById('banUser').value; if(nick) { db.ref('bans').push(nick).then(() => { document.getElementById('banUser').value = ""; showToast("Jugador Baneado", true); }); } }
         function renderBanList(b) { 
