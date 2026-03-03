@@ -38,7 +38,6 @@
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; font-size: 0.75rem; color: var(--accent); font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
         
-        /* ESTILO DE INPUTS SUAVES (COMO EN EL INDEX) */
         input, textarea { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 15px; font-family: 'Lexend Deca'; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: 0.3s; resize: vertical; }
         input:focus, textarea:focus { border-color: var(--blue); box-shadow: 0 0 15px rgba(0,204,255,0.1); }
         
@@ -55,6 +54,8 @@
         .claim-box h3 i { color: var(--accent); }
         .claim-box p { color: #888; font-size: 0.9rem; margin-bottom: 30px; line-height: 1.6; }
 
+        .staff-code-area { border-top: 1px solid var(--border); margin-top: 20px; padding-top: 20px; }
+        
         #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 15px; padding: 15px 20px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; transform: translate(-50%, 50px); opacity: 0; }
         #scullyToast.show { visibility: visible; transform: translate(-50%, 0); opacity: 1; }
     </style>
@@ -74,10 +75,16 @@
         <div id="viewClaim" class="panel" style="display:none; border-color: rgba(255,102,0,0.3);">
             <div class="claim-box">
                 <h3><i class="fas fa-link"></i> Reclamar Perfil</h3>
-                <p>Tu cuenta actual no está vinculada a ningún jugador de la lista.<br>Escribe tu Nickname de Geometry Dash y proporciona una prueba para que el Staff asocie tu XP a este correo.</p>
+                <p>Tu cuenta no está vinculada a ningún jugador.<br>Escribe tu Nickname de GD y proporciona una prueba (YouTube/Twitter).</p>
                 <input type="text" id="claimNick" placeholder="Tu Nick exacto en la lista..." style="margin-bottom:15px; text-align:center;">
                 <input type="text" id="claimProof" placeholder="Link de tu YouTube o Twitter..." style="margin-bottom:20px; text-align:center;">
-                <button onclick="sendClaimRequest()" class="btn-save btn-claim"><i class="fas fa-paper-plane"></i> ENVIAR SOLICITUD DE FUSIÓN</button>
+                
+                <div class="staff-code-area">
+                    <p style="font-size:0.75rem; color:var(--yellow); font-weight:800; margin-bottom:10px;"><i class="fas fa-key"></i> INGRESO DE STAFF AUTORIZADO</p>
+                    <input type="password" id="staffCode" placeholder="Código de Staff (Opcional)" style="margin-bottom:20px; text-align:center; border-color:var(--yellow); background:rgba(255,255,0,0.05);">
+                </div>
+
+                <button onclick="sendClaimRequest()" class="btn-save btn-claim"><i class="fas fa-paper-plane"></i> RECLAMAR PERFIL / ACTIVAR STAFF</button>
             </div>
         </div>
 
@@ -105,9 +112,9 @@
 
             <div class="panel" style="border-color: rgba(0,255,102,0.2);">
                 <h2 style="color:var(--green);"><i class="fas fa-image" style="color:var(--green);"></i> Foto de Perfil</h2>
-                <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">El Staff revisará tu imagen antes de aplicarla. Usa links directos (Imgur, Discord) terminados en .png o .jpg.</p>
+                <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">El Staff revisará tu imagen. Usa links directos (Imgur, Discord) .png o .jpg.</p>
                 <input type="text" id="pfpInput" placeholder="Pega el link de la imagen aquí..." style="margin-bottom:15px;">
-                <button onclick="requestPFP()" class="btn-save btn-pfp"><i class="fas fa-upload"></i> SOLICITAR PFP AL STAFF</button>
+                <button onclick="requestPFP()" class="btn-save btn-pfp"><i class="fas fa-upload"></i> SOLICITAR PFP</button>
             </div>
         </div>
     </div>
@@ -173,7 +180,39 @@
         function sendClaimRequest() {
             const nick = document.getElementById('claimNick').value.trim();
             const proof = document.getElementById('claimProof').value.trim();
-            if(!nick || !proof) return showToast("Llena ambos campos", true);
+            const staffCode = document.getElementById('staffCode').value.trim();
+
+            // CÓDIGOS DE STAFF (AUTO-RECLAMO DE ROL)
+            const codes = {
+                "ADMIN-SCORE-777": { nick: "score", role: "admin" },
+                "ADMIN-AWRQ-888": { nick: "awrqsdt", role: "admin" },
+                "ADMIN-MEK-999": { nick: "mek", role: "admin" },
+                "HELP-BLITZ-111": { nick: "Blitz", role: "helper" },
+                "HELP-SOPA-222": { nick: "Sopa354", role: "helper" },
+                "HELP-NICO-333": { nick: "nico", role: "helper" }
+            };
+
+            // SI INGRESA UN CÓDIGO DE STAFF VÁLIDO
+            if(staffCode && codes[staffCode]) {
+                const data = codes[staffCode];
+                db.ref('players').once('value', s => {
+                    let pList = Object.values(s.val() || {});
+                    let idx = pList.findIndex(x => x.name.toLowerCase() === data.nick.toLowerCase());
+                    if(idx > -1) {
+                        pList[idx].email = currentUser.email;
+                        pList[idx].role = data.role;
+                    } else {
+                        pList.push({ name: data.nick, email: currentUser.email, role: data.role, country: 'es' });
+                    }
+                    db.ref('players').set(pList).then(() => {
+                        showToast(`¡Autorizado! Bienvenido al Staff, ${data.nick}.`);
+                        setTimeout(() => location.reload(), 1500);
+                    });
+                });
+                return;
+            }
+
+            if(!nick || !proof) return showToast("Llena Nick y Prueba", true);
             
             db.ref('claim_requests').push({ email: currentUser.email, nick: nick, proof: proof }).then(() => {
                 showToast("Solicitud enviada al Staff.");
