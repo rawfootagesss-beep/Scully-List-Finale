@@ -16,34 +16,41 @@
         
         body { background: var(--bg); color: var(--text-main); font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; }
         
-        /* SCROLLBAR ESTILIZADO */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent-hover); }
 
-        /* CABECERA */
-        .admin-header { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 20px 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border); margin-bottom: 30px; }
+        /* CABECERA Y FIRMA GLOBAL */
+        .admin-header { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 20px 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border); margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
         .admin-header h1 { font-size: 1.5rem; margin: 0; color: var(--text-light); font-weight: 800; letter-spacing: -1px; }
         .admin-header h1 span { color: var(--accent); }
-        .btn-return { background: rgba(255,255,255,0.05); color: var(--text-light); text-decoration: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; transition: 0.3s; font-size: 0.8rem; border: 1px solid var(--border); }
+        .header-controls { display: flex; align-items: center; gap: 15px; }
+        
+        .btn-return { background: rgba(255,255,255,0.05); color: var(--text-light); text-decoration: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; transition: 0.3s; font-size: 0.8rem; border: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
         .btn-return:hover { background: var(--accent); color: #000; border-color: var(--accent); }
 
-        /* GRID DASHBOARD MODERNO */
+        /* BARRAS DE BÚSQUEDA */
+        .search-bar { background: rgba(0,0,0,0.5) !important; border: 1px solid var(--accent) !important; color: var(--text-light) !important; padding: 10px 15px !important; border-radius: 50px !important; width: 100%; margin-bottom: 15px; font-size: 0.75rem; box-sizing: border-box; }
+        .search-bar:focus { box-shadow: 0 0 15px rgba(255,102,0,0.3); outline: none; }
+
+        /* NOTIFICACIONES TOAST */
+        #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 10px; padding: 15px 20px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); transform: translate(-50%, 50px); opacity: 0; }
+        #scullyToast.show { visibility: visible; transform: translate(-50%, 0); opacity: 1; }
+
+        /* GRID DASHBOARD */
         .admin-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px; align-items: start; }
-        
-        .admin-panel { background: var(--card); border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 8px 25px rgba(0,0,0,0.3); display: flex; flex-direction: column; max-height: 600px; overflow: hidden; transition: transform 0.3s; }
-        .admin-panel:hover { transform: translateY(-5px); border-color: rgba(255,102,0,0.2); }
+        .admin-panel { background: var(--card); border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 8px 25px rgba(0,0,0,0.3); display: flex; flex-direction: column; max-height: 600px; overflow: hidden; transition: transform 0.3s; scroll-behavior: smooth; }
+        .admin-panel:hover { border-color: rgba(255,102,0,0.2); }
         
         .panel-header { background: rgba(0,0,0,0.2); padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .panel-header h2 { font-size: 0.85rem; text-transform: uppercase; color: var(--text-light); margin: 0; font-weight: 800; display: flex; align-items: center; gap: 8px; }
         .panel-header h2 i { color: var(--accent); }
-        
-        .panel-content { padding: 20px; overflow-y: auto; flex-grow: 1; }
+        .panel-content { padding: 20px; overflow-y: auto; flex-grow: 1; scroll-behavior: smooth; }
         
         /* FORMULARIOS Y BOTONES */
         input, select, button { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: var(--text-light); padding: 12px; border-radius: 10px; margin-bottom: 12px; font-family: 'Lexend Deca'; font-size: 0.75rem; transition: 0.3s; outline: none; box-sizing: border-box; }
-        input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(255,102,0,0.2); }
+        input:focus, select:focus { border-color: var(--accent); }
         button { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; border: none; }
         button:hover { filter: brightness(1.15); transform: scale(1.02); }
         button:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -73,16 +80,21 @@
     </style>
 </head>
 <body>
+    <div id="scullyToast"><i class="fas fa-check-circle"></i> Mensaje</div>
+
     <header class="admin-header">
         <h1>SCULLY <span>MASTER CONSOLE</span></h1>
-        <a href="index.html" class="btn-return"><i class="fas fa-arrow-left"></i> Volver al Hub</a>
+        <div class="header-controls">
+            <input type="text" id="globalStaffSign" placeholder="Tu Firma de Staff (Ej: score)" style="margin:0; width: 220px; border-color:var(--accent); background:rgba(255,102,0,0.1);">
+            <a href="index.html" class="btn-return"><i class="fas fa-arrow-left"></i> Volver al Hub</a>
+        </div>
     </header>
     
     <div class="admin-dashboard">
         
         <div class="admin-panel">
             <div class="panel-header"><h2><i class="fas fa-layer-group"></i> 1. Base de Niveles</h2></div>
-            <div class="panel-content">
+            <div class="panel-content" id="panelNivelesContent">
                 <input type="hidden" id="editLvlIdx">
                 <input type="text" id="lvlName" placeholder="Nombre Nivel">
                 <input type="text" id="lvlYT" placeholder="ID Video YT">
@@ -96,7 +108,7 @@
                 </div>
 
                 <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px;">
-                    <h3 style="font-size: 0.65rem; color: #888; text-transform: uppercase; margin-top: 0;">Lista Actual</h3>
+                    <input type="text" id="searchLevels" class="search-bar" placeholder="🔍 Buscar nivel..." onkeyup="filterList('searchLevels', 'adminLevelsList')">
                     <div id="adminLevelsList" style="max-height: 200px; overflow-y: auto;"></div>
                 </div>
                 
@@ -111,7 +123,7 @@
         
         <div class="admin-panel">
             <div class="panel-header"><h2><i class="fas fa-users-cog"></i> 3. Identidad Jugadores</h2></div>
-            <div class="panel-content">
+            <div class="panel-content" id="panelPlayersContent">
                 <div id="playerEditor" style="display:none; background: rgba(0,0,0,0.2); padding: 15px; border: 1px solid var(--blue); border-radius: 12px; margin-bottom: 20px;">
                     <input type="hidden" id="editPIdx">
                     <input type="text" id="editNick" placeholder="Nickname">
@@ -133,23 +145,17 @@
                         <p style="font-size:0.6rem; color:var(--accent); text-transform:uppercase; margin-bottom:5px;">Cosméticos Activos:</p>
                         <div id="playerCosmeticsInternal" style="margin-bottom:10px;"></div>
                         <p style="font-size:0.6rem; color:var(--text-light); text-transform:uppercase; margin-bottom:5px;">Récords Completados:</p>
-                        <div id="playerLevelsInternal"></div>
+                        <div id="playerLevelsInternal" style="max-height:80px; overflow-y:auto;"></div>
                     </div>
                 </div>
+                
+                <input type="text" id="searchPlayers" class="search-bar" placeholder="🔍 Buscar jugador..." onkeyup="filterList('searchPlayers', 'adminUserList')">
                 <div id="adminUserList"></div>
             </div>
         </div>
         
-        <div class="admin-panel">
-            <div class="panel-header"><h2><i class="fas fa-shopping-cart"></i> 4. Tienda (Mercado)</h2></div>
-            <div class="panel-content" id="marketSubList"></div>
-        </div>
-        
-        <div class="admin-panel">
-            <div class="panel-header"><h2><i class="fas fa-image"></i> 5. Solicitudes PFP</h2></div>
-            <div class="panel-content" id="pfpSubList"></div>
-        </div>
-        
+        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-shopping-cart"></i> 4. Tienda (Mercado)</h2></div><div class="panel-content" id="marketSubList"></div></div>
+        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-image"></i> 5. Solicitudes PFP</h2></div><div class="panel-content" id="pfpSubList"></div></div>
         <div class="admin-panel">
             <div class="panel-header"><h2><i class="fas fa-gavel"></i> 6. Blacklist (Baneos)</h2></div>
             <div class="panel-content">
@@ -160,16 +166,8 @@
                 <div id="banListInteractive"></div>
             </div>
         </div>
-        
-        <div class="admin-panel">
-            <div class="panel-header"><h2><i class="fas fa-terminal"></i> 7. Logs de Sistema</h2></div>
-            <div class="panel-content" id="adminLogList"></div>
-        </div>
-        
-        <div class="admin-panel">
-            <div class="panel-header"><h2><i class="fas fa-folder-open"></i> 8. Historial Récords</h2></div>
-            <div class="panel-content" id="adminHistoryList"></div>
-        </div>
+        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-terminal"></i> 7. Logs de Sistema</h2></div><div class="panel-content" id="adminLogList"></div></div>
+        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-folder-open"></i> 8. Historial Récords</h2></div><div class="panel-content" id="adminHistoryList"></div></div>
 
         <div class="admin-panel" style="border-color: rgba(102,252,241,0.3);">
             <div class="panel-header" style="background: rgba(102,252,241,0.05);">
@@ -191,21 +189,41 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     
     <script>
-        // 1. SEGURIDAD Y CONFIGURACIÓN BASE
+        // SEGURIDAD Y CONFIGURACIÓN
         if(sessionStorage.getItem('scully_session') !== 'active') location.href = 'index.html';
-        
         const firebaseConfig = { databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         let fullData = {};
 
-        // 🔑 API KEY YOUTUBE
         const YT_API_KEY = "AIzaSyCLeUZ_mJxJHuCCLr-GMkMdy0q-JHTUi7w";
 
-        // 2. ESCUCHA DE DATOS EN TIEMPO REAL
+        // ==========================================
+        // FUNCIONES UX (TOASTS, BÚSQUEDAS Y SCROLL)
+        // ==========================================
+        function showToast(message, isError = false) {
+            const toast = document.getElementById("scullyToast");
+            toast.innerHTML = isError ? `<i class="fas fa-times-circle"></i> ${message}` : `<i class="fas fa-check-circle"></i> ${message}`;
+            toast.style.backgroundColor = isError ? "var(--red)" : "var(--green)";
+            toast.style.color = "#000";
+            toast.className = "show";
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3500);
+        }
+
+        function filterList(inputId, listId) {
+            let input = document.getElementById(inputId).value.toLowerCase();
+            let items = document.getElementById(listId).getElementsByClassName('list-item');
+            for (let i = 0; i < items.length; i++) {
+                let txtValue = items[i].textContent || items[i].innerText;
+                items[i].style.display = txtValue.toLowerCase().indexOf(input) > -1 ? "" : "none";
+            }
+        }
+
+        // ==========================================
+        // CARGA DE DATOS EN TIEMPO REAL
+        // ==========================================
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {}; 
-            
             let lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels : Object.values(fullData.levels)) : [];
             lvls = lvls.filter(l => l && l.name);
             fullData.levels = lvls;
@@ -239,36 +257,29 @@
             return null;
         }
 
-        // ==========================================
-        // PANEL 9: AUDITORÍA MANUAL YT (OPCIÓN B)
-        // ==========================================
         async function analyzeYT() {
             const v1 = extractYTId(document.getElementById('audit1').value);
             const v2 = extractYTId(document.getElementById('audit2').value);
             const resBox = document.getElementById('auditResult');
             
-            if(!v1 || !v2) return alert("Por favor, ingresa dos links de YouTube válidos.");
-            resBox.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analizando servidores de YouTube...';
+            if(!v1 || !v2) return showToast("Faltan links para comparar", true);
+            resBox.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analizando...';
 
             const d1Str = await getYTDate(v1);
             const d2Str = await getYTDate(v2);
 
             if(!d1Str || !d2Str) {
-                resBox.innerHTML = "<span style='color:var(--red)'><i class='fas fa-exclamation-triangle'></i> Error: Uno o ambos videos no existen o son privados.</span>";
+                resBox.innerHTML = "<span style='color:var(--red)'><i class='fas fa-exclamation-triangle'></i> Video no existe o es privado.</span>";
                 return;
             }
 
-            const d1 = new Date(d1Str);
-            const d2 = new Date(d2Str);
-
-            let winner = d1 < d2 ? "Video Jugador A" : (d2 < d1 ? "Video Jugador B" : "Empate (Mismo momento)");
+            const d1 = new Date(d1Str); const d2 = new Date(d2Str);
+            let winner = d1 < d2 ? "Video Jugador A" : (d2 < d1 ? "Video Jugador B" : "Empate");
             
             resBox.innerHTML = `
                 <div style="margin-bottom:8px;"><b>Jugador A:</b> <span style="color:var(--text-main)">${d1.toLocaleString()}</span></div>
                 <div style="margin-bottom:12px;"><b>Jugador B:</b> <span style="color:var(--text-main)">${d2.toLocaleString()}</span></div>
-                <div style="color:var(--blue); font-weight:800; font-size:0.85rem; border-top:1px solid var(--border); padding-top:10px;">
-                    <i class="fas fa-trophy"></i> Más antiguo: ${winner}
-                </div>
+                <div style="color:var(--blue); font-weight:800; border-top:1px solid var(--border); padding-top:10px;"><i class="fas fa-trophy"></i> Antiguo: ${winner}</div>
             `;
         }
 
@@ -278,33 +289,22 @@
         function renderAdminLevelsList(levelsArray) { 
             let html = "";
             for(let i = 0; i < levelsArray.length; i++) {
-                html += `
-                <div class="list-item">
-                    <span><b>#${i+1}</b> ${levelsArray[i].name}</span>
-                    <button onclick="loadLevelToEditor(${i})" class="btn-blue" style="width:auto; padding:5px 10px; margin:0; font-size:0.6rem;"><i class="fas fa-pen"></i></button>
-                </div>`;
+                html += `<div class="list-item"><span><b>#${i+1}</b> ${levelsArray[i].name}</span><button onclick="loadLevelToEditor(${i})" class="btn-blue" style="width:auto; padding:5px 10px; margin:0;"><i class="fas fa-pen"></i></button></div>`;
             }
             document.getElementById('adminLevelsList').innerHTML = html;
         }
         
         function loadLevelToEditor(index) { 
             const levelObj = fullData.levels[index]; 
-            document.getElementById('editLvlIdx').value = index; 
-            document.getElementById('lvlName').value = levelObj.name; 
-            document.getElementById('lvlYT').value = levelObj.id; 
-            document.getElementById('lvlFirst').value = levelObj.first || ""; 
-            document.getElementById('lvlPos').value = index + 1; 
+            document.getElementById('editLvlIdx').value = index; document.getElementById('lvlName').value = levelObj.name; document.getElementById('lvlYT').value = levelObj.id; document.getElementById('lvlFirst').value = levelObj.first || ""; document.getElementById('lvlPos').value = index + 1; 
             
             const victors = Object.values(fullData.players || {}).filter(p => p.completions?.some(c => c.level === levelObj.name)); 
-            let victorsHtml = `<p style="font-size:0.65rem; color:var(--accent); margin:0 0 10px 0; text-transform:uppercase;">Victors Registrados</p>`;
-            for(let i = 0; i < victors.length; i++) {
-                victorsHtml += `
-                <div class="list-item">
-                    <span>${victors[i].name}</span>
-                    <i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="removeVictorFromLevel('${levelObj.name}', '${victors[i].name}')"></i>
-                </div>`;
-            }
+            let victorsHtml = `<p style="font-size:0.65rem; color:var(--accent); margin:0 0 10px 0;">VICTORS REGISTRADOS</p>`;
+            for(let i = 0; i < victors.length; i++) { victorsHtml += `<div class="list-item"><span>${victors[i].name}</span><i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="removeVictorFromLevel('${levelObj.name}', '${victors[i].name}')"></i></div>`; }
             document.getElementById('lvlVictorsList').innerHTML = victorsHtml;
+            
+            // Auto-scroll cómodo hacia arriba
+            document.getElementById('panelNivelesContent').scrollTo(0,0);
         }
 
         function saveLevel() { 
@@ -314,7 +314,7 @@
             const firstVal = document.getElementById('lvlFirst').value;
             const posVal = document.getElementById('lvlPos').value;
             
-            if(!nameVal || !ytVal) return alert("Nombre e ID de YouTube son obligatorios.");
+            if(!nameVal || !ytVal) return showToast("Nombre e ID son obligatorios", true);
             
             let lvls = [...fullData.levels]; 
             const newLevelObj = { name: nameVal, id: ytVal, first: firstVal }; 
@@ -324,27 +324,25 @@
             lvls.splice(position >= 0 ? position : lvls.length, 0, newLevelObj); 
             
             db.ref('levels').set(lvls).then(() => {
-                alert(`Guardado en la posición #${position + 1}`);
+                showToast(`Nivel Top #${position + 1} Guardado`);
                 document.getElementById('editLvlIdx').value = ""; document.getElementById('lvlName').value = ""; document.getElementById('lvlYT').value = ""; document.getElementById('lvlFirst').value = ""; document.getElementById('lvlPos').value = ""; document.getElementById('lvlVictorsList').innerHTML = "";
             });
         }
 
         async function syncWithAREDL() {
-            if(!confirm("¿Auto-sincronizar con AREDL?\n(Se creará un respaldo de seguridad automáticamente).")) return;
+            if(!confirm("¿Auto-sincronizar con AREDL? Se creará respaldo.")) return;
             const btn = document.getElementById('syncBtn'); const originalText = btn.innerHTML;
             try {
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SYNC...';
                 const res = await fetch('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent('https://api.aredl.net/api/aredl/levels'));
-                if(!res.ok) throw new Error("Error API AREDL");
-                
+                if(!res.ok) throw new Error("Error API");
                 const dataArray = (await res.json()).data || await res.json();
-                if(!dataArray || dataArray.length === 0) throw new Error("AREDL vacío.");
                 
                 const aredlMap = new Map();
                 dataArray.forEach((lvl, idx) => aredlMap.set(lvl.name.toLowerCase().trim(), lvl.position || (idx + 1)));
                 
                 let lvls = [...fullData.levels];
-                if(lvls.length === 0) { btn.innerHTML = originalText; return alert("Lista vacía."); }
+                if(lvls.length === 0) { btn.innerHTML = originalText; return showToast("Lista vacía", true); }
                 
                 db.ref('levels_backup').set(lvls); 
                 lvls.sort((a, b) => {
@@ -353,32 +351,36 @@
                     return posA - posB;
                 });
                 
-                db.ref('levels').set(lvls).then(() => { alert("¡Niveles reordenados idénticamente a la AREDL!"); btn.innerHTML = originalText; });
-            } catch (error) { console.error(error); alert("Error de conexión AREDL."); btn.innerHTML = originalText; }
+                db.ref('levels').set(lvls).then(() => { showToast("Sincronización AREDL Exitosa"); btn.innerHTML = originalText; });
+            } catch (error) { console.error(error); showToast("Error de conexión AREDL", true); btn.innerHTML = originalText; }
         }
 
         function revertAREDL() {
-            if(!confirm("¿REVERTIR la lista a tu último respaldo? Todo cambio reciente se perderá.")) return;
-            const btn = document.getElementById('revertBtn'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>...';
+            if(!confirm("¿REVERTIR al último respaldo?")) return;
+            const btn = document.getElementById('revertBtn'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
             db.ref('levels_backup').once('value', s => {
                 let backup = s.val();
-                if(!backup) { btn.innerHTML = '<i class="fas fa-history"></i> REVERTIR'; return alert("No hay respaldos."); }
+                if(!backup) { btn.innerHTML = '<i class="fas fa-history"></i> REVERTIR'; return showToast("No hay respaldos", true); }
                 let lvls = Array.isArray(backup) ? backup : Object.values(backup);
-                db.ref('levels').set(lvls.filter(x => x && x.name)).then(() => { alert("¡Lista restaurada!"); btn.innerHTML = '<i class="fas fa-history"></i> REVERTIR'; });
+                db.ref('levels').set(lvls.filter(x => x && x.name)).then(() => { showToast("Lista Restaurada"); btn.innerHTML = '<i class="fas fa-history"></i> REVERTIR'; });
             });
         }
 
         // ==========================================
-        // PANEL 2: MODERACIÓN Y AUTO-FIRST VICTOR (OPCIÓN A)
+        // PANEL 2: MODERACIÓN Y AUTO-FIRST VICTOR
         // ==========================================
         function renderSubmissions(submissionsObj) { 
             let html = "";
             const entries = Object.entries(submissionsObj);
+            if(entries.length === 0) {
+                document.getElementById('submissionsList').innerHTML = `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:40px;"><i class="fas fa-glass-cheers fa-2x"></i><br><br>No hay récords pendientes.</p>`;
+                return;
+            }
             for(let i = 0; i < entries.length; i++) {
                 const sub = entries[i][1];
                 html += `
                 <div class="sub-card">
-                    <span style="color:var(--text-light); font-weight:800; font-size:0.85rem;">${sub.player}</span> 
+                    <span style="color:var(--text-light); font-weight:800;">${sub.player}</span> 
                     <i class="fas fa-caret-right" style="color:var(--accent); margin:0 5px;"></i> ${sub.level}
                     <div class="proof-box">
                         <a href="${sub.link}" target="_blank" class="btn-proof proof-yt"><i class="fab fa-youtube"></i> VER YT</a>
@@ -394,80 +396,59 @@
         }
 
         async function setStatus(key, status) { 
+            const staff = document.getElementById('globalStaffSign').value;
+            if(!staff) {
+                showToast("Por favor, pon tu firma de Staff en la cabecera primero", true);
+                document.getElementById('globalStaffSign').focus();
+                return;
+            }
+
             const sub = fullData.submissions[key]; 
-            const staff = prompt("Ingresa la firma del Staff para el Log:"); 
-            if(!staff) return;
             
             if(status === 'Aceptado') { 
-                
-                // Cambiar el botón visualmente para que sepas que está procesando la API
                 const btnOk = document.getElementById(`btn-ok-${key}`);
-                if(btnOk) {
-                    btnOk.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                    btnOk.disabled = true;
-                }
+                if(btnOk) { btnOk.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btnOk.disabled = true; }
 
-                // --- INICIO DE LA OPCIÓN A: AUTO-FIRST VICTOR ---
+                // Auditoría Automática YT (OPCIÓN A)
                 try {
                     const subVid = extractYTId(sub.link);
                     const lvlIdx = fullData.levels.findIndex(l => l.name === sub.level);
-                    
                     if (lvlIdx > -1 && subVid) {
                         const lvlVid = fullData.levels[lvlIdx].id;
-                        
-                        // Validar si el nivel ya tiene un video guardado para comparar
                         if(lvlVid && subVid !== lvlVid) {
                             const subDateStr = await getYTDate(subVid);
                             const lvlDateStr = await getYTDate(lvlVid);
-                            
-                            if (subDateStr && lvlDateStr) {
-                                const subDate = new Date(subDateStr);
-                                const lvlDate = new Date(lvlDateStr);
-                                
-                                // Si el video nuevo es MÁS VIEJO que el del First Victor actual
-                                if (subDate < lvlDate) {
-                                    if(confirm(`⚠️ ¡ALERTA DE FIRST VICTOR!\n\nEl video que envió ${sub.player} es más antiguo que el del verificador actual.\n\nVideo de ${sub.player}: ${subDate.toLocaleString()}\nVideo Actual: ${lvlDate.toLocaleString()}\n\n¿Quieres coronar automáticamente a ${sub.player} como el nuevo First Victor de ${sub.level}?`)) {
-                                        // Actualiza la base de datos con el nuevo First Victor
-                                        db.ref(`levels/${lvlIdx}/first`).set(sub.player);
-                                        db.ref(`levels/${lvlIdx}/id`).set(subVid);
-                                        alert(`¡Actualizado! ${sub.player} es el nuevo First Victor.`);
-                                    }
+                            if (subDateStr && lvlDateStr && (new Date(subDateStr) < new Date(lvlDateStr))) {
+                                if(confirm(`⚠️ ¡NUEVO FIRST VICTOR DETECTADO!\nEl video de ${sub.player} es más antiguo que el actual.\n¿Coronar automáticamente?`)) {
+                                    db.ref(`levels/${lvlIdx}/first`).set(sub.player);
+                                    db.ref(`levels/${lvlIdx}/id`).set(subVid);
+                                    showToast(`${sub.player} es el nuevo First Victor`);
                                 }
                             }
                         }
                     }
-                } catch(e) { 
-                    console.error("Auditoría automática falló (Opción A):", e); 
-                }
-                // --- FIN DE LA OPCIÓN A ---
+                } catch(e) { console.log("Auditoría auto fallida", e); }
 
-                // Guarda el récord de forma normal en el perfil del jugador
                 db.ref('players').once('value', v => { 
                     let p = Object.values(v.val() || {}); 
                     let i = p.findIndex(u => u.name.toLowerCase() === sub.player.toLowerCase()); 
-                    if(i > -1) { 
-                        if(!p[i].completions) p[i].completions = []; 
-                        p[i].completions.push({level: sub.level, link: sub.link}); 
-                    } 
-                    else { 
-                        p.push({ name: sub.player, country: sub.country || 'es', completions: [{level: sub.level, link: sub.link}] }); 
-                    } 
+                    if(i > -1) { if(!p[i].completions) p[i].completions = []; p[i].completions.push({level: sub.level, link: sub.link}); } 
+                    else { p.push({ name: sub.player, country: sub.country || 'es', completions: [{level: sub.level, link: sub.link}] }); } 
                     db.ref('players').set(p); 
                 }); 
-                
                 db.ref('history').push({...sub, status: 'Aceptado'}); 
                 db.ref('logs').push({type: 'accept', msg: `✅ ${sub.player} -> ${sub.level} (${staff})`}); 
+                showToast("Récord Aceptado");
             } else {
                 db.ref('history').push({...sub, status: 'Rechazado'}); 
                 db.ref('logs').push({type: 'reject', msg: `❌ ${sub.player} RECHAZADO`}); 
+                showToast("Récord Rechazado", true);
             }
-            
-            // Eliminar de las subidas pendientes sin importar si se aceptó o rechazó
             db.ref('submissions/' + key).remove();
         }
 
         // ==========================================
-        // PANELES 3 AL 8: PLAYERS, MARKET, PFPS, LOGS
+        // PANELES 3 AL 8: RESTO DEL SISTEMA
         // ==========================================
         function renderAdminUserList(p) { 
             let html = "";
@@ -485,37 +466,38 @@
             document.getElementById('editCountry').value = u.country || 'es'; document.getElementById('editHidden').checked = u.hidden || false; 
             
             let cosHTML = "";
-            if (u.cosmetics) {
-                Object.entries(u.cosmetics).filter(x => x[1]).forEach(x => cosHTML += `<div class="list-item"><span>${x[0]}</span><i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="removeCosmeticFromUser(${idx}, '${x[0]}')"></i></div>`);
-            }
+            if (u.cosmetics) Object.entries(u.cosmetics).filter(x => x[1]).forEach(x => cosHTML += `<div class="list-item"><span>${x[0]}</span><i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="removeCosmeticFromUser(${idx}, '${x[0]}')"></i></div>`);
             document.getElementById('playerCosmeticsInternal').innerHTML = cosHTML || "<span style='font-size:0.65rem;'>Sin cosméticos.</span>"; 
             
             let recHTML = "";
             (u.completions || []).forEach((c, i) => recHTML += `<div class="list-item"><span>${c.level}</span><i class="fas fa-times" style="color:var(--red); cursor:pointer;" onclick="removeLevelFromUser(${idx}, ${i})"></i></div>`);
             document.getElementById('playerLevelsInternal').innerHTML = recHTML; 
+            
+            // Auto-scroll cómodo hacia arriba
+            document.getElementById('panelPlayersContent').scrollTo(0,0);
         }
 
-        function removeVictorFromLevel(l, p) { if(confirm(`¿Quitar récord de ${p} en ${l}?`)) { db.ref('players').once('value', s => { let list = Object.values(s.val()); let i = list.findIndex(x => x.name === p); if(i > -1) { list[i].completions = list[i].completions.filter(c => c.level !== l); db.ref('players').set(list); loadLevelToEditor(document.getElementById('editLvlIdx').value); } }); } }
-        function removeCosmeticFromUser(pI, cK) { if(confirm("¿Quitar cosmético?")) { db.ref('players').once('value', s => { let list = Object.values(s.val()); list[pI].cosmetics[cK] = false; db.ref('players').set(list); loadPlayerToEditor(pI); }); } }
-        function savePlayerEdits() { const idx = document.getElementById('editPIdx').value; db.ref('players').once('value', s => { let list = Object.values(s.val()); list[idx].name = document.getElementById('editNick').value; list[idx].country = document.getElementById('editCountry').value; list[idx].hidden = document.getElementById('editHidden').checked; db.ref('players').set(list); alert("Perfil actualizado."); }); }
-        function removeLevelFromUser(pI, lI) { if(confirm("¿Borrar nivel?")) { db.ref('players').once('value', s => { let list = Object.values(s.val()); list[pI].completions.splice(lI, 1); db.ref('players').set(list); loadPlayerToEditor(pI); }); } }
+        function removeVictorFromLevel(l, p) { if(confirm(`¿Quitar récord de ${p}?`)) { db.ref('players').once('value', s => { let list = Object.values(s.val()); let i = list.findIndex(x => x.name === p); if(i > -1) { list[i].completions = list[i].completions.filter(c => c.level !== l); db.ref('players').set(list); loadLevelToEditor(document.getElementById('editLvlIdx').value); showToast("Récord quitado"); } }); } }
+        function removeCosmeticFromUser(pI, cK) { if(confirm("¿Quitar cosmético?")) { db.ref('players').once('value', s => { let list = Object.values(s.val()); list[pI].cosmetics[cK] = false; db.ref('players').set(list); loadPlayerToEditor(pI); showToast("Cosmético removido"); }); } }
+        function savePlayerEdits() { const idx = document.getElementById('editPIdx').value; db.ref('players').once('value', s => { let list = Object.values(s.val()); list[idx].name = document.getElementById('editNick').value; list[idx].country = document.getElementById('editCountry').value; list[idx].hidden = document.getElementById('editHidden').checked; db.ref('players').set(list); showToast("Perfil del jugador actualizado"); }); }
+        function removeLevelFromUser(pI, lI) { if(confirm("¿Borrar nivel?")) { db.ref('players').once('value', s => { let list = Object.values(s.val()); list[pI].completions.splice(lI, 1); db.ref('players').set(list); loadPlayerToEditor(pI); showToast("Nivel borrado del perfil"); }); } }
 
         function renderMarketModeration(m) { 
             let html = ""; Object.entries(m).forEach(([k,v]) => html += `<div class="sub-card"><span style="color:var(--accent); font-weight:800;">${v.nick}</span> pide <b>${v.item}</b><button onclick="approveCosmetic('${k}')" class="btn-green" style="margin-top:10px;"><i class="fas fa-check"></i> APROBAR</button></div>`);
-            document.getElementById('marketSubList').innerHTML = html;
+            document.getElementById('marketSubList').innerHTML = html || `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">Sin pedidos.</p>`;
         }
-        function approveCosmetic(k) { const r = fullData.market_requests[k]; db.ref('players').once('value', s => { let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick); if(i > -1) { if(!p[i].cosmetics) p[i].cosmetics = {}; p[i].cosmetics[r.item] = true; db.ref('players').set(p); db.ref('market_requests/' + k).remove(); } }); }
+        function approveCosmetic(k) { const r = fullData.market_requests[k]; db.ref('players').once('value', s => { let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick); if(i > -1) { if(!p[i].cosmetics) p[i].cosmetics = {}; p[i].cosmetics[r.item] = true; db.ref('players').set(p); db.ref('market_requests/' + k).remove(); showToast("Compra Aprobada"); } }); }
         
         function renderPFPModeration(pObj) { 
             let html = ""; Object.entries(pObj).forEach(([k,v]) => html += `<div class="sub-card" style="text-align:center;"><b>${v.nick}</b><br><img src="${v.url}" style="width:60px;height:60px;border-radius:50%; margin:10px 0; object-fit:cover; border:2px solid var(--accent);"><button onclick="approvePFP('${k}')" class="btn-green"><i class="fas fa-check"></i> APROBAR</button></div>`);
-            document.getElementById('pfpSubList').innerHTML = html;
+            document.getElementById('pfpSubList').innerHTML = html || `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">Sin solicitudes.</p>`;
         }
-        function approvePFP(k) { const r = fullData.pfp_requests[k]; db.ref('players').once('value', s => { let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick); if(i > -1) { p[i].pfp = r.url; db.ref('players').set(p); db.ref('pfp_requests/' + k).remove(); } }); }
+        function approvePFP(k) { const r = fullData.pfp_requests[k]; db.ref('players').once('value', s => { let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick); if(i > -1) { p[i].pfp = r.url; db.ref('players').set(p); db.ref('pfp_requests/' + k).remove(); showToast("Foto de Perfil Aprobada"); } }); }
 
-        function banPlayer() { const nick = document.getElementById('banUser').value; if(nick) { db.ref('bans').push(nick).then(() => document.getElementById('banUser').value = ""); } }
+        function banPlayer() { const nick = document.getElementById('banUser').value; if(nick) { db.ref('bans').push(nick).then(() => { document.getElementById('banUser').value = ""; showToast("Jugador Baneado", true); }); } }
         function renderBanList(b) { 
-            let html = ""; Object.entries(b).forEach(([k,v]) => html += `<div class="list-item"><span style="color:var(--red); font-weight:800;">${v}</span><i class="fas fa-trash-alt" style="color:var(--text-main); cursor:pointer;" onclick="db.ref('bans/${k}').remove()"></i></div>`);
-            document.getElementById('banListInteractive').innerHTML = html;
+            let html = ""; Object.entries(b).forEach(([k,v]) => html += `<div class="list-item"><span style="color:var(--red); font-weight:800;">${v}</span><i class="fas fa-trash-alt" style="color:var(--text-main); cursor:pointer;" onclick="db.ref('bans/${k}').remove(); showToast('Desbaneado');"></i></div>`);
+            document.getElementById('banListInteractive').innerHTML = html || `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">Nadie en la Blacklist.</p>`;
         }
 
         function renderAdminLogs(l) { 
