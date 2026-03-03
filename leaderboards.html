@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -21,8 +21,10 @@
 
         .leaderboard-container { width: 95%; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
 
-        .player-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: flex; align-items: center; gap: 20px; position: relative; overflow: hidden; transition: 0.3s; }
-        .player-card:hover { border-color: var(--accent); transform: scale(1.01); }
+        .player-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: flex; align-items: center; gap: 20px; position: relative; overflow: hidden; transition: 0.3s; cursor: pointer; }
+        .player-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255,102,0,0.1); }
+        .player-card::after { content: 'VER PERFIL \f061'; font-family: 'Font Awesome 5 Free'; position: absolute; right: -100px; font-weight: 900; font-size: 0.7rem; color: var(--accent); transition: 0.3s; opacity: 0; }
+        .player-card:hover::after { right: 20px; opacity: 1; }
 
         .rank-number { font-size: 2.5rem; font-weight: 800; color: rgba(255,255,255,0.1); width: 50px; text-align: center; }
         
@@ -32,7 +34,7 @@
         .player-info h3 { margin: 0 0 5px 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
         .verifier-badge { font-size: 0.8rem; color: var(--blue); }
         
-        .player-bio { font-size: 0.8rem; color: #aaa; margin: 0 0 10px 0; line-height: 1.4; max-width: 90%; }
+        .player-bio { font-size: 0.8rem; color: #aaa; margin: 0 0 10px 0; line-height: 1.4; max-width: 85%; }
         
         .social-links { display: flex; gap: 12px; font-size: 1.1rem; }
         .social-links a, .social-links span { color: #666; transition: 0.3s; text-decoration: none; cursor: pointer; }
@@ -40,7 +42,8 @@
         .social-links a.tw:hover { color: #1da1f2; }
         .social-links span.dc:hover { color: #7289da; }
 
-        .player-stats { text-align: right; display: flex; flex-direction: column; gap: 8px; }
+        .player-stats { text-align: right; display: flex; flex-direction: column; gap: 8px; z-index: 2; transition: 0.3s; }
+        .player-card:hover .player-stats { transform: translateX(-30px); }
         .stat-badge { background: #000; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--border); }
         .xp-text { color: var(--accent); }
 
@@ -49,6 +52,18 @@
         .cos-rainbow { animation: rainbow 3s linear infinite !important; }
         .cos-fire { box-shadow: 0 0 15px #ff3300 !important; border-color: #ff3300 !important; }
         .cos-electric { box-shadow: 0 0 15px #00ccff !important; border-color: #00ccff !important; }
+
+        /* MODAL DEL PERFIL COMPLETO */
+        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
+        .modal-content { background: #0a0a0a; margin: 5vh auto; padding: 35px; width: 90%; max-width: 550px; border-radius: 30px; border: 1px solid var(--border); text-align: center; position: relative; max-height: 85vh; overflow-y: auto; }
+        .status-pill { padding: 12px; border-radius: 12px; margin-bottom: 8px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.3s; }
+        .status-pill:hover { background: rgba(255,255,255,0.05); transform: translateX(5px); border-color: var(--accent); }
+        .st-label { font-weight: 800; text-transform: uppercase; font-size: 0.65rem; padding: 4px 8px; border-radius: 6px; }
+        
+        /* SCROLLBAR MODAL */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -64,23 +79,44 @@
         <p style="text-align:center; color:#555;"><i class="fas fa-spinner fa-spin"></i> Cargando leyendas...</p>
     </div>
 
+    <div id="playerModal" class="modal">
+        <div class="modal-content" id="modal-body"></div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script>
-        const firebaseConfig = { databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" };
+        // CONFIGURACIÓN EXACTA
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",
+            authDomain: "scullylist.firebaseapp.com",
+            databaseURL: "https://scullylist-default-rtdb.firebaseio.com",
+            projectId: "scullylist",
+            storageBucket: "scullylist.firebasestorage.app",
+            messagingSenderId: "498548914021",
+            appId: "1:498548914021:web:59128b5e06b36a4e81938c",
+            measurementId: "G-X3JF2DVWYH"
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        let globalPlayers = [];
+        let fullData = {};
+
         db.ref('/').on('value', (s) => {
-            const data = s.val() || {};
-            const levels = data.levels || [];
-            let players = Object.values(data.players || {}).filter(p => !p.hidden);
+            fullData = s.val() || {};
+            const levels = fullData.levels || [];
+            let players = Object.values(fullData.players || {}).filter(p => !p.hidden);
             
-            // Lógica matemática oficial de XP
             players.forEach(p => {
                 let uniqueLevels = new Set();
+                
+                // Buscar verificados
                 levels.forEach(l => { if(l.first?.toLowerCase() === p.name.toLowerCase()) uniqueLevels.add(l.name); });
-                (p.completions || []).forEach(c => uniqueLevels.add(c.level));
+                
+                // Reparación: Asegurar que completions sea un array aunque Firebase lo haya guardado como Objeto
+                let compsArray = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : [];
+                compsArray.forEach(c => uniqueLevels.add(c.level));
                 
                 let pts = 0;
                 uniqueLevels.forEach(name => {
@@ -93,15 +129,15 @@
                 p.isVerifier = levels.some(l => l.first?.toLowerCase() === p.name.toLowerCase());
             });
 
-            // Ordenar por Puntos
-            players.sort((a,b) => b.pts - a.pts);
-            renderLeaderboard(players);
+            // Ordenar por Puntos y guardar en variable global
+            globalPlayers = players.sort((a,b) => b.pts - a.pts);
+            renderLeaderboard(globalPlayers);
         });
 
         function renderLeaderboard(players) {
             let html = "";
             players.forEach((p, index) => {
-                if(p.pts === 0) return; // Ocultar gente sin XP
+                if(p.pts === 0) return; 
                 
                 let pfpClass = "player-pfp";
                 if(p.cosmetics?.aura_fire) pfpClass += " cos-fire";
@@ -109,18 +145,17 @@
                 
                 let nameClass = p.cosmetics?.name_rainbow ? "cos-rainbow" : "";
                 let verifierIcon = p.isVerifier ? `<i class="fas fa-check-circle verifier-badge" title="Verificador Original"></i>` : "";
-                
                 let bio = p.bio ? p.bio : "<i>Sin biografía establecida.</i>";
                 
                 let socialsHtml = "";
                 if(p.socials) {
-                    if(p.socials.yt) socialsHtml += `<a href="${p.socials.yt}" target="_blank" class="yt"><i class="fab fa-youtube"></i></a>`;
-                    if(p.socials.tw) socialsHtml += `<a href="${p.socials.tw}" target="_blank" class="tw"><i class="fab fa-twitter"></i></a>`;
-                    if(p.socials.dc) socialsHtml += `<span class="dc" title="${p.socials.dc} (Cópialo)"><i class="fab fa-discord"></i></span>`;
+                    if(p.socials.yt) socialsHtml += `<a href="${p.socials.yt}" target="_blank" class="yt" onclick="event.stopPropagation()"><i class="fab fa-youtube"></i></a>`;
+                    if(p.socials.tw) socialsHtml += `<a href="${p.socials.tw}" target="_blank" class="tw" onclick="event.stopPropagation()"><i class="fab fa-twitter"></i></a>`;
+                    if(p.socials.dc) socialsHtml += `<span class="dc" title="${p.socials.dc} (Cópialo)" onclick="event.stopPropagation(); alert('Discord de ${p.name}: ${p.socials.dc}');"><i class="fab fa-discord"></i></span>`;
                 }
 
                 html += `
-                <div class="player-card">
+                <div class="player-card" onclick="openPlayerProfile(${index})">
                     <div class="rank-number">#${index + 1}</div>
                     <img src="${p.pfp || 'https://i.imgur.com/8pw98K4.png'}" class="${pfpClass}">
                     
@@ -137,6 +172,72 @@
                 </div>`;
             });
             document.getElementById('leaderboardList').innerHTML = html;
+        }
+
+        // FUNCIÓN REPARADA PARA EL PERFIL COMPLETO
+        function openPlayerProfile(index) {
+            const p = globalPlayers[index];
+            const lvls = fullData.levels || [];
+            
+            let pfpClass = p.cosmetics?.aura_fire ? "cos-fire" : p.cosmetics?.aura_electric ? "cos-electric" : "";
+            let nameClass = p.cosmetics?.name_rainbow ? "cos-rainbow" : "";
+
+            let verifHtml = "";
+            let verifiedNames = []; 
+            
+            lvls.forEach(l => {
+                if(l.first?.toLowerCase() === p.name.toLowerCase()) {
+                    verifiedNames.push(l.name.toLowerCase());
+                    verifHtml += `<a href="https://youtu.be/${l.id}" target="_blank" class="status-pill" style="border-color:var(--blue); color:var(--blue); background:rgba(0,204,255,0.05);"><b>${l.name}</b> <span class="st-label" style="background:var(--blue); color:#000;">VERIFICADOR <i class="fas fa-play"></i></span></a>`;
+                }
+            });
+
+            let compHtml = "";
+            // REPARACIÓN: Forzar Array
+            let compsArray = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : [];
+            
+            if(compsArray.length > 0) {
+                // Invertimos el array para ver los recientes primero
+                [...compsArray].reverse().forEach(c => {
+                    if(!verifiedNames.includes(c.level.toLowerCase())) {
+                        compHtml += `<a href="${c.link}" target="_blank" class="status-pill"><b>${c.level}</b> <span class="st-label" style="color:var(--green)">COMPLETADO <i class="fas fa-play"></i></span></a>`;
+                    }
+                });
+            }
+
+            if(!verifHtml && !compHtml) compHtml = "<p style='color:#555; font-size:0.8rem; text-align:center;'>Sin récords registrados aún.</p>";
+
+            document.getElementById('modal-body').innerHTML = `
+                <span onclick="closeModal()" style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.8rem; color:#666; transition:0.3s;">&times;</span>
+                
+                <img src="${p.pfp || 'https://i.imgur.com/8pw98K4.png'}" style="width:110px; height:110px; border-radius:50%; border:3px solid var(--accent); margin-bottom:15px; object-fit:cover;" class="${pfpClass}">
+                <h2 style="margin:0; color:var(--text-light); text-transform:uppercase; font-size:1.8rem;" class="${nameClass}">${p.name}</h2>
+                <div style="margin:10px 0 20px 0;">
+                    <span style="background:#000; color:var(--accent); padding:8px 18px; border-radius:10px; font-size:0.8rem; font-weight:800; border:1px solid var(--accent);">LVL ${p.lvl} (${p.pts} XP)</span>
+                </div>
+                
+                <div style="text-align:left; margin-top:25px;">
+                    <h4 style="color:#888; text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; border-bottom:1px solid #222; padding-bottom:8px; margin-bottom:15px;">Historial de Récords</h4>
+                    <div style="max-height: 350px; overflow-y: auto; padding-right: 5px;">
+                        ${verifHtml}
+                        ${compHtml}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('playerModal').style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById('playerModal').style.display = "none";
+        }
+
+        // Cierra el modal si hacen clic en el fondo oscuro
+        window.onclick = function(event) {
+            let modal = document.getElementById('playerModal');
+            if (event.target == modal) {
+                closeModal();
+            }
         }
     </script>
 </body>
