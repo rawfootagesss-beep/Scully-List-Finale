@@ -3,97 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully List | Reglas y Especificaciones</title>
+    <title>Scully List | Reglas y Guía</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --accent: #ff6600; --bg: #030303; --card: rgba(15,15,15,0.9); --border: rgba(255,255,255,0.05); }
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; line-height: 1.6; padding-bottom: 50px; }
+        :root { 
+            --bg: #0b0c10; --card: #1f2833; --border: rgba(255,255,255,0.05);
+            --text-main: #c5c6c7; --text-light: #ffffff;
+            --accent: #ff6600; --accent-hover: #ff8533;
+            --blue: #66fcf1; --green: #45a29e; --red: #f05454;
+        }
+        body { background: var(--bg); color: var(--text-main); font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; line-height: 1.6; }
         
-        header { padding: 60px 20px 30px; text-align: center; }
-        h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin: 0; text-transform: uppercase; font-weight: 800; letter-spacing: -1px; }
-        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 12px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
-        .btn-scully:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(255,102,0,0.4); }
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+        header { padding: 50px 20px 30px; text-align: center; background: var(--card); border-bottom: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin: 0; text-transform: uppercase; font-weight: 800; letter-spacing: -1px; color: var(--text-light); }
+        h1 span { color: var(--accent); }
+        p.subtitle { color: #888; font-size: 0.9rem; max-width: 600px; margin: 10px auto 20px auto; }
         
-        .rules-container { width: 90%; max-width: 900px; margin: 40px auto; display: flex; flex-direction: column; gap: 35px; }
-        .rule-card { background: var(--card); border: 1px solid var(--border); padding: 40px; border-radius: 30px; border-left: 5px solid var(--accent); }
-        .rule-card h2 { margin-top: 0; color: var(--accent); font-size: 1.6rem; display: flex; align-items: center; gap: 15px; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .btn-hub { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-light); padding: 10px 20px; text-decoration: none; font-size: 0.8rem; border-radius: 50px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; }
+        .btn-hub:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+
+        .container { width: 90%; max-width: 900px; margin: 40px auto; display: flex; flex-direction: column; gap: 30px; }
+
+        .section-title { font-size: 1.5rem; color: var(--text-light); border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-title i { color: var(--accent); }
+
+        .rule-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 25px; transition: 0.3s; }
+        .rule-card:hover { border-color: rgba(255,102,0,0.3); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
         
-        .rule-card p { color: #ccc; font-size: 0.95rem; }
-        .rule-card ul { padding-left: 20px; color: #bbb; font-size: 0.9rem; }
-        .rule-card li { margin-bottom: 12px; }
-        .rule-card li strong { color: #fff; }
-        
-        .highlight { background: rgba(255,102,0,0.1); padding: 2px 8px; border-radius: 5px; color: var(--accent); font-weight: 800; }
-        .highlight-yellow { background: rgba(255,255,0,0.1); padding: 2px 8px; border-radius: 5px; color: #ffcc00; font-weight: 800; }
-        .ban-escalation { background: #0a0a0a; padding: 20px; border-radius: 15px; border: 1px solid #222; margin-top: 15px; }
+        .rule-card h3 { margin-top: 0; color: var(--text-light); font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        .rule-card h3 i { color: var(--blue); }
+        .rule-card p { margin-bottom: 0; font-size: 0.9rem; }
+        .rule-card ul { margin-top: 10px; padding-left: 20px; font-size: 0.9rem; }
+        .rule-card li { margin-bottom: 8px; }
+
+        .highlight { color: var(--accent); font-weight: 800; }
+        .badge-new { background: var(--green); color: #000; padding: 3px 8px; border-radius: 5px; font-size: 0.6rem; font-weight: 800; vertical-align: middle; margin-left: 10px; }
     </style>
 </head>
 <body>
+
     <header>
-        <h1>MANUAL DE <span style="color:var(--accent);">JUGADOR</span></h1>
-        <p style="color:#666; font-size:0.8rem; margin-top:10px;">Lee detenidamente antes de enviar un récord o usar la lista.</p>
-        <a href="index.html" class="btn-scully"><i class="fas fa-arrow-left"></i> VOLVER AL HUB</a>
-        <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully" style="border-color:#7289da; color:#7289da;"><i class="fab fa-discord"></i> DISCORD</a>
+        <h1>MANUAL DE <span>REGLAS</span></h1>
+        <p class="subtitle">Todo lo que necesitas saber para mandar tus récords, reclamar tu identidad y subir de nivel en la Scully List.</p>
+        <a href="index.html" class="btn-hub"><i class="fas fa-arrow-left"></i> VOLVER AL HUB</a>
     </header>
 
-    <div class="rules-container">
-        
-        <div class="rule-card">
-            <h2><i class="fas fa-upload"></i> 1. Pruebas, LDM y Mods</h2>
-            <p>El sistema de evaluación y subida de récords de <b>The Scully List</b> funciona bajo los mismos principios estrictos que listas como <i>AREDL</i> y <i>Pointercrate</i>, pero con un enfoque simplificado <i>(nota: estas normativas aplican de igual forma para todos; el Staff tiene estrictamente prohibido auto-aprobar sus propios récords)</i>:</p>
-            <ul>
-                <li><strong>Vídeo de YouTube Obligatorio:</strong> Todo jugador debe subir su récord a YouTube en calidad aceptable (mínimo 720p). El audio del juego debe ser audible. Los clics del ratón/teclado son altamente recomendados.</li>
-                <li><strong>Evidencia en RAW (Drive):</strong> Para niveles dentro del <b>Top 100</b>, es obligatorio adjuntar un enlace a Google Drive con el vídeo RAW original (directo de la grabadora, sin cortes ni compresión).</li>
-                <li><strong>Políticas de Mods (AREDL/Pointercrate Estándar):</strong> Permitimos modificaciones de "Quality of Life". Están permitidos el FPS Bypass, CBF (Click Between Frames) y mods de Geode estéticos o informativos. <b>Están estrictamente prohibidos:</b> Noclip, Speedhack, Hitbox Multiplier, Macros, Botting, o cualquier mod que altere las físicas del nivel o te dé una ventaja injusta.</li>
-                <li><strong>Uso de LDM / ULDM:</strong> Los modos de bajo detalle oficiales del nivel están siempre permitidos. Los LDM o ULDM personalizados (copias del servidor) están permitidos <b>solo si no alteran el gameplay</b>. No puedes eliminar obstáculos letales (spikes, sierras), alterar hitboxes, ni quitar decoraciones que sirvan como referencias visuales clave (visual cues).</li>
-            </ul>
-        </div>
+    <div class="container">
 
-        <div class="rule-card" style="border-color: var(--red);">
-            <h2 style="color: var(--red);"><i class="fas fa-gavel"></i> 2. Modo Apelable y Sanciones</h2>
-            <p>Entendemos que a veces las grabaciones fallan, un archivo se corrompe o hay malentendidos con una copia LDM. Por eso, hemos implementado el sistema de consideración.</p>
+        <div>
+            <h2 class="section-title"><i class="fas fa-globe"></i> Guía del Ecosistema Scully</h2>
             
-            <p><b><span class="highlight-yellow">EL MODO APELABLE:</span></b> Si tu récord no cumple alguna de las especificaciones mencionadas (falta de clics audibles, un LDM dudoso, o pruebas RAW incompletas), <b>el récord no provocará un baneo ni un rechazo inmediato</b>. En su lugar, entrará en un "Modo Apelable". Se te recomienda ingresar a nuestro servidor de Discord y abrir un ticket o hablar con un miembro del Staff para revisar tu caso detalladamente y poder llegar a un acuerdo de consideración.</p>
-            
-            <p>Sin embargo, si a través de la investigación se descubre que estás <b>haciendo trampas de forma intencionada y continua</b>, se aplicará el siguiente sistema escalonado de baneos:</p>
-            
-            <div class="ban-escalation">
+            <div class="rule-card">
+                <h3><i class="fas fa-user-circle"></i> 1. Sistema de Cuentas <span class="badge-new">NUEVO</span></h3>
+                <p>La Scully List ahora funciona como una red social. Puedes crear una cuenta usando tu correo y una contraseña desde el panel de <b class="highlight">Identidad (Login)</b>. Al tener una cuenta, desbloqueas tu panel privado para personalizar tu presencia en el Ranking.</p>
+            </div>
+
+            <div class="rule-card" style="margin-top: 15px;">
+                <h3><i class="fas fa-link"></i> 2. ¿Cómo Reclamar tu Perfil? <span class="badge-new">NUEVO</span></h3>
+                <p>Para evitar robos de identidad, las cuentas nuevas nacen "vacías". Para asociar tus récords y XP a tu cuenta, sigue estos pasos:</p>
                 <ul>
-                    <li><strong style="color:#ffcc00;">Primera Ofensa:</strong> Baneo de <b>6 meses</b> de la lista y suspensión de récords.</li>
-                    <li><strong style="color:#ff6600;">Segunda Ofensa:</strong> Baneo temporal de <b>1 Año</b> sin posibilidad de apelación temprana.</li>
-                    <li><strong style="color:#ff3333;">Tercera Ofensa:</strong> <span class="highlight" style="color:#ff3333; background:rgba(255,51,51,0.1);">Baneo Permanente (Blacklist)</span>. Cero tolerancia, no podrás volver a registrar récords.</li>
+                    <li>Inicia sesión y ve a <b>"Mi Perfil"</b>.</li>
+                    <li>Usa la opción <b>Reclamar Identidad</b>. Escribe tu Nickname exacto de Geometry Dash.</li>
+                    <li>Proporciona un link a tu canal de YouTube o Twitter para verificar que realmente eres tú.</li>
+                    <li>El Staff revisará la solicitud. Una vez aprobada, todo tu historial y XP se fusionarán mágicamente con tu cuenta.</li>
+                </ul>
+            </div>
+
+            <div class="rule-card" style="margin-top: 15px;">
+                <h3><i class="fas fa-id-card"></i> 3. Personalización y Ranking <span class="badge-new">NUEVO</span></h3>
+                <p>Una vez que el Staff haya aprobado tu perfil, podrás editarlo a tu gusto desde tu panel privado. Podrás:</p>
+                <ul>
+                    <li>Escribir una <b>Biografía</b> corta que todos verán.</li>
+                    <li>Vincular tus redes sociales (YouTube, Twitter y Discord) para que otros jugadores puedan hacer clic y seguirte.</li>
+                    <li>Enviar un link para cambiar tu <b>Foto de Perfil (PFP)</b>. El Staff revisará la imagen antes de hacerla pública.</li>
+                </ul>
+            </div>
+
+            <div class="rule-card" style="margin-top: 15px;">
+                <h3><i class="fas fa-star"></i> 4. Puntos de Experiencia (XP) y Niveles</h3>
+                <p>Tu nivel en la Scully List se basa en la dificultad de lo que te pasas. La fórmula oficial funciona así:</p>
+                <ul>
+                    <li>Se otorgan más puntos por los niveles en el tope de la lista. <span class="highlight">Fórmula: 100 - (Posición * 0.6)</span>.</li>
+                    <li>El XP mínimo garantizado por pasarse cualquier nivel de la lista es de <b>5 XP</b>.</li>
+                    <li><b>Verificadores:</b> Si eres el First Victor/Verificador de un nivel, automáticamente recibes la XP de ese nivel en tu perfil.</li>
+                    <li>Cada <b>50 XP</b> subes de nivel (LVL) de jugador.</li>
                 </ul>
             </div>
         </div>
 
-        <div class="rule-card" style="border-color: var(--blue);">
-            <h2 style="color: var(--blue);"><i class="fas fa-user-circle"></i> 3. Sistema de Fotos de Perfil</h2>
-            <p>Cada jugador en la Leaderboard tiene derecho a personalizar su perfil con una Foto de Perfil (PFP) única.</p>
-            <ul>
-                <li><strong>Proceso de Solicitud:</strong> Las PFPs se solicitan desde la página de "Enviar". Deberás ingresar tu Nick y la URL directa de la imagen (debe terminar en .jpg o .png, se recomienda usar Imgur).</li>
-                <li><strong>Aprobación Manual:</strong> Las PFPs no se actualizan instantáneamente. Deben ser revisadas y aprobadas manualmente por el Staff para evitar contenido inapropiado y mantener la estética de la lista.</li>
-            </ul>
-        </div>
+        <div style="margin-top: 20px;">
+            <h2 class="section-title"><i class="fas fa-video"></i> Reglas de Aprobación de Récords</h2>
+            
+            <div class="rule-card">
+                <h3><i class="fas fa-clipboard-check"></i> Pruebas Obligatorias (Videos)</h3>
+                <p>Para que un récord sea aceptado en la lista, debes cumplir con lo siguiente:</p>
+                <ul>
+                    <li>El video debe estar subido a <b class="highlight">YouTube</b> y ser público o no listado (No privados).</li>
+                    <li>Se deben escuchar claramente los <b>clicks/taps</b>. El nivel del sonido del juego no debe tapar los clicks.</li>
+                    <li>Para niveles extremos o posiciones muy altas, el Staff puede requerir que envíes el <b>video RAW</b> (sin cortes, con la pantalla de muerte previa) subido a Google Drive o similar. Tienes un espacio en el formulario de envío para este link.</li>
+                </ul>
+            </div>
 
-        <div class="rule-card" style="border-color: var(--green);">
-            <h2 style="color: var(--green);"><i class="fas fa-map-signs"></i> 4. Guía de la Plataforma</h2>
-            <p>La Scully List está dividida en varias herramientas interconectadas. Aquí tienes la explicación detallada de cada opción:</p>
-            <ul>
-                <li><strong><i class="fas fa-list-ol"></i> Lista:</strong> El Hub principal. Muestra los niveles por dificultad y expone al "Top #1 Boss". Al hacer clic en un nivel, verás su vídeo y a todos los jugadores aprobados.</li>
-                <li><strong><i class="fas fa-trophy"></i> Ranking:</strong> La Leaderboard Global. Competición basada en XP. Si fuiste el creador/verificador original de un nivel (First Victor), recibirás un <b>Check Azul</b> en tu nombre.</li>
-                <li><strong><i class="fas fa-bolt"></i> Versus:</strong> La arena de Duelos. Compara las estadísticas exactas, nivel y XP de dos jugadores cara a cara.</li>
-                <li><strong><i class="fas fa-shopping-cart"></i> Mercado:</strong> Tienda de prestigio. Puedes gastar tu XP acumulado en "Auras" para tu Foto de Perfil o efectos especiales para tu Nickname. Estas compras son aprobadas por el Staff.</li>
-                <li><strong><i class="fas fa-upload"></i> Enviar:</strong> Terminal para enviar tus formularios de récord (YT/Drive) y para subir nuevas PFPs.</li>
-                <li><strong><i class="fas fa-dice"></i> Ruleta:</strong> Un selector aleatorio para cuando no sepas qué nivel jugar.</li>
-            </ul>
+            <div class="rule-card" style="margin-top: 15px;">
+                <h3><i class="fas fa-ban"></i> Juego Limpio y Hacks</h3>
+                <p>Mantenemos la integridad de la lista por encima de todo:</p>
+                <ul>
+                    <li>Está estrictamente prohibido el uso de <b>Speedhacks, Bots (Botting), Hitboxes alteradas</b> o cualquier macro.</li>
+                    <li>El uso de Megahack u otros mods está permitido <b>SÓLO</b> para herramientas visuales (FPS Bypass, TPS, Practice Music Hack). Modificar físicas del juego resultará en baneo inmediato.</li>
+                    <li>Si eres atrapado falsificando un récord o robando un video de otra persona, tu perfil será enviado a la <b>Blacklist</b> y no podrás volver a enviar récords.</li>
+                </ul>
+            </div>
+
+            <div class="rule-card" style="margin-top: 15px;">
+                <h3><i class="fas fa-trophy"></i> First Victors (Reclamar el Trono)</h3>
+                <p>Si envías un récord de un nivel que ya tenía un verificador o First Victor, pero resulta que <b class="highlight">tu video se subió a YouTube ANTES</b> que el video de la persona que tiene el puesto actualmente, nuestro sistema lo detectará.</p>
+                <p>El panel del Staff incluye una Auditoría de Fechas en los servidores de Google. Si se comprueba que tú te lo pasaste primero, el sistema te coronará como el nuevo First Victor automáticamente.</p>
+            </div>
         </div>
 
     </div>
 
-    <script>
-        const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
-        document.documentElement.style.setProperty('--accent', savedColor);
-    </script>
 </body>
 </html>
