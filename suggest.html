@@ -1,1 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scully List | Sugerir Nivel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --accent: #cc00ff; --accent-grad: linear-gradient(135deg, #cc00ff 0%, #9900cc 100%);
+            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
+            --glow: 0 0 25px rgba(204, 0, 255, 0.3); --border: rgba(255, 255, 255, 0.05);
+            --green: #00ff66; --red: #ff3333; --blue: #00ccff;
+        }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
+        .form-container { background: var(--card-bg); padding: 40px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); border: 1px solid var(--border); width: 100%; max-width: 550px; position: relative; }
+        .form-container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--accent-grad); }
+        
+        h1 { color: #fff; font-size: 1.8rem; margin-top: 0; margin-bottom: 5px; font-weight: 800; text-transform: uppercase; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; }
+        h1 i { color: var(--accent); }
+        p.subtitle { font-size: 0.85rem; margin-bottom: 30px; color: #aaa; line-height: 1.5; }
+
+        .question-group { background: rgba(0,0,0,0.4); border: 1px solid var(--border); padding: 20px; border-radius: 15px; margin-bottom: 15px; transition: 0.3s; }
+        .question-group:hover { border-color: rgba(204,0,255,0.3); }
+
+        label { display: block; font-size: 0.8rem; color: var(--accent); font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 10px; font-family: 'Lexend Deca'; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(204,0,255,0.2); }
+        
+        .flex-row { display: flex; gap: 15px; }
+        .flex-row .input-wrapper { flex: 1; }
+
+        button { width: 100%; padding: 18px; border-radius: 15px; font-family: 'Lexend Deca'; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; border: none; display: flex; justify-content: center; align-items: center; gap: 10px; background: var(--accent); color: #fff; margin-top: 10px; }
+        button:hover { transform: translateY(-3px); box-shadow: var(--glow); }
+        
+        .btn-return { color: #888; text-decoration: none; font-size: 0.8rem; margin-top: 25px; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.3s; font-weight: 600; }
+        .btn-return:hover { color: #fff; }
+
+        #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 15px; padding: 15px 20px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; transform: translate(-50%, 50px); opacity: 0; }
+        #scullyToast.show { visibility: visible; transform: translate(-50%, 0); opacity: 1; }
+        .optional-badge { font-size: 0.6rem; background: #333; color: #aaa; padding: 3px 6px; border-radius: 4px; vertical-align: middle; margin-left: 8px; }
+    </style>
+</head>
+<body>
+    <div id="scullyToast"><i class="fas fa-check-circle"></i> Mensaje</div>
+
+    <div class="form-container">
+        <h1><i class="fas fa-lightbulb"></i> Sugerir Nivel a la Lista</h1>
+        <p class="subtitle">Si te pasaste un Extreme Demon de la AREDL que aún no está aquí, llena este cuestionario. Si el Staff lo aprueba, entrará a la lista y tú serás coronado como el First Victor / Verificador.</p>
+        
+        <div class="question-group">
+            <label><i class="fas fa-user"></i> 1. Tu Identidad</label>
+            <input type="text" id="sugPlayer" placeholder="Tu Nickname exacto de Geometry Dash">
+        </div>
+
+        <div class="question-group">
+            <label><i class="fas fa-ghost"></i> 2. ¿Qué Extreme Demon quieres meter?</label>
+            <input type="text" id="sugLevel" placeholder="Nombre del nivel (Debe estar en AREDL)">
+        </div>
+
+        <div class="question-group">
+            <label><i class="fas fa-sort-amount-down"></i> 3. Posición en la Scully List</label>
+            <div class="flex-row">
+                <div class="input-wrapper">
+                    <input type="text" id="sugAbove" placeholder="Arriba de... (Ej: Bloodbath)">
+                </div>
+                <div class="input-wrapper">
+                    <input type="text" id="sugBelow" placeholder="Abajo de... (Ej: Sonic Wave)">
+                </div>
+            </div>
+            <p style="font-size:0.65rem; color:#666; margin:5px 0 0 0;">Usa los niveles que ya están en nuestra lista como referencia.</p>
+        </div>
+
+        <div class="question-group">
+            <label><i class="fas fa-video"></i> 4. Pruebas de tu victoria</label>
+            <input type="url" id="sugYT" placeholder="Link de YouTube (Obligatorio)" style="margin-bottom:10px;">
+            <input type="url" id="sugRaw" placeholder="Link del RAW (Google Drive, DropBox...)">
+            <span style="font-size:0.65rem; color:#888; margin-top:5px; display:block;">* El RAW no es obligatorio <span class="optional-badge">Opcional</span>, pero ayuda en niveles Top.</span>
+        </div>
+
+        <button onclick="sendSuggestion()"><i class="fas fa-paper-plane"></i> ENVIAR SUGERENCIA Y RÉCORD</button>
+        <a href="index.html" class="btn-return"><i class="fas fa-arrow-left"></i> Volver al Hub Principal</a>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",
+            authDomain: "scullylist.firebaseapp.com",
+            databaseURL: "https://scullylist-default-rtdb.firebaseio.com",
+            projectId: "scullylist",
+            storageBucket: "scullylist.firebasestorage.app",
+            messagingSenderId: "498548914021",
+            appId: "1:498548914021:web:59128b5e06b36a4e81938c",
+            measurementId: "G-X3JF2DVWYH"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function showToast(msg, isError=false) {
+            const t = document.getElementById("scullyToast");
+            t.innerHTML = isError ? `<i class="fas fa-times-circle"></i> ${msg}` : `<i class="fas fa-check-circle"></i> ${msg}`;
+            t.style.backgroundColor = isError ? "var(--red)" : "var(--green)";
+            t.className = "show"; setTimeout(() => { t.className = t.className.replace("show", ""); }, 3500);
+        }
+
+        function sendSuggestion() {
+            const player = document.getElementById('sugPlayer').value.trim();
+            const level = document.getElementById('sugLevel').value.trim();
+            const above = document.getElementById('sugAbove').value.trim();
+            const below = document.getElementById('sugBelow').value.trim();
+            const yt = document.getElementById('sugYT').value.trim();
+            const raw = document.getElementById('sugRaw').value.trim() || "Sin RAW";
+
+            if(!player || !level || !above || !below || !yt) {
+                return showToast("Por favor, llena todos los campos obligatorios.", true);
+            }
+
+            db.ref('level_suggestions').push({
+                player: player,
+                level: level,
+                above: above,
+                below: below,
+                yt: yt,
+                raw: raw,
+                timestamp: Date.now()
+            }).then(() => {
+                showToast("¡Sugerencia y Récord enviados al Staff!");
+                document.getElementById('sugPlayer').value = "";
+                document.getElementById('sugLevel').value = "";
+                document.getElementById('sugAbove').value = "";
+                document.getElementById('sugBelow').value = "";
+                document.getElementById('sugYT').value = "";
+                document.getElementById('sugRaw').value = "";
+            }).catch(e => {
+                showToast("Error al enviar", true);
+            });
+        }
+    </script>
+</body>
+</html>
