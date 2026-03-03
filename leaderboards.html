@@ -30,7 +30,11 @@
         <h1>SCULLY <span style="color:var(--accent);">RANKING</span></h1>
         <a href="index.html" style="color:var(--accent); text-decoration:none; font-size:0.7rem; border:1px solid; padding:10px 25px; border-radius:50px; display:inline-block; margin-top:20px; font-weight:800;">VOLVER AL HUB</a>
     </header>
-    <main class="wrapper"><table><tbody id="leaderboardBody"></tbody></table></main>
+    
+    <main class="wrapper">
+        <table><tbody id="leaderboardBody"></tbody></table>
+    </main>
+
     <div id="uModal" class="modal"><div class="modal-content" id="uModalContent"></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -42,7 +46,7 @@
         const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
         document.documentElement.style.setProperty('--accent', savedColor);
 
-        // DEFINIMOS LA VARIABLE GLOBAL FUERA DE LA PROMESA PARA QUE EL MODAL LA ENCUENTRE SIEMPRE
+        // Variable Global para que el Modal no se rompa
         window.rankData = [];
 
         db.ref('/').on('value', s => {
@@ -52,9 +56,12 @@
             let rank = Array.from(allNicks).map(nick => {
                 const p = players.find(x => x.name.toLowerCase() === nick);
                 let uniqueL = new Set(); let verifL = [];
+                
                 lvls.forEach(l => { if(l.first?.toLowerCase() === nick) { uniqueL.add(l.name); verifL.push(l); } });
                 p?.completions?.forEach(c => uniqueL.add(c.level));
-                let pts = 0; uniqueL.forEach(n => { const i = lvls.findIndex(l => l.name === n); if(i > -1) pts += parseFloat(Math.max(100 - (i*0.6), 5)); });
+                
+                let pts = 0; 
+                uniqueL.forEach(n => { const i = lvls.findIndex(l => l.name === n); if(i > -1) pts += parseFloat(Math.max(100 - (i*0.6), 5)); });
                 
                 return { 
                     name: p?.name || nick, pts: pts.toFixed(1), lvl: Math.floor(pts/50), 
@@ -64,7 +71,7 @@
                 };
             }).filter(p => !p.hidden).sort((a,b) => b.pts - a.pts);
 
-            // ACTUALIZAMOS LA VARIABLE GLOBAL
+            // Asignación crucial a la variable global
             window.rankData = rank;
 
             document.getElementById('leaderboardBody').innerHTML = rank.map((u, i) => `
@@ -80,7 +87,7 @@
                 </tr>`).join("");
         });
 
-        // FUNCIONES GLOBALES DEL MODAL
+        // Funciones anexadas a window para forzar su disponibilidad
         window.openUserProfile = function(nick) {
             const u = window.rankData.find(x => x.name.toLowerCase() === nick.toLowerCase());
             if(!u) return;
@@ -102,9 +109,7 @@
             document.getElementById('uModal').style.display = "block";
         }
 
-        window.closeM = function() { 
-            document.getElementById('uModal').style.display = "none"; 
-        }
+        window.closeM = function() { document.getElementById('uModal').style.display = "none"; }
     </script>
 </body>
 </html>
