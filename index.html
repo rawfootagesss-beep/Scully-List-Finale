@@ -15,7 +15,6 @@
         }
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
         
-        /* SCROLLBAR */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
@@ -49,15 +48,12 @@
         .level-card:hover { border-color: var(--accent); transform: scale(1.02); }
         .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
         
-        /* NUEVA SECCIÓN DE IDENTIDAD */
         .status-tracker { max-width: 600px; margin: 60px auto; padding: 45px 30px; background: var(--card-bg); border-radius: 40px; border: 1px solid var(--border); text-align: center; }
         
         .footer-credits { padding: 60px 20px; text-align: center; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); margin-top: 100px; }
         .color-trigger { display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: var(--accent); color: #000; border-radius: 50%; cursor: pointer; font-size: 1.2rem; box-shadow: var(--glow); transition: 0.3s; margin-top: 20px; }
         #themeColor { opacity: 0; position: absolute; pointer-events: none; }
-        .admin-lock { text-align: center; padding: 100px 0; opacity: 0.03; cursor: pointer; }
         
-        /* MODALES */
         .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .modal-content { background: #0a0a0a; margin: 5vh auto; padding: 35px; width: 90%; max-width: 650px; border-radius: 35px; border: 1px solid var(--border); text-align: center; position: relative; max-height: 85vh; overflow-y: auto; }
     </style>
@@ -110,22 +106,17 @@
     <footer class="footer-credits">
         <p style="color:#444; font-size:0.75rem; text-transform:uppercase; letter-spacing: 2px;">The Scully List &copy; 2026 | score engineering</p>
         <p style="font-size:0.65rem; color:#666; margin-bottom: 20px;">Diseñado por <b style="color:var(--accent)">score</b> | Staff: awrqsdt &bull; mek &bull; Blitz &bull; Sopa354 &bull; nico</p>
-        <label for="themeColor" class="color-trigger" title="Cambiar color del sitio">
-            <i class="fas fa-palette"></i>
-        </label>
+        <label for="themeColor" class="color-trigger" title="Cambiar color del sitio"><i class="fas fa-palette"></i></label>
         <input type="color" id="themeColor" oninput="updateThemeColor(this.value)">
     </footer>
 
-    <div class="admin-lock" onclick="toggleAuth()"><i class="fas fa-lock"></i></div>
-    
     <div id="ruletaModal" class="modal"><div class="modal-content"><h2 style="color:var(--accent);">RULETA</h2><div id="ruletaText" style="font-size:2rem; font-weight:800; margin:20px 0;">---</div><button class="btn-scully" onclick="spinRoulette()" style="width:100%; justify-content:center; margin-bottom:10px;">GIRAR</button><button class="btn-scully" onclick="closeRuleta()" style="width:100%; justify-content:center; background:transparent; border:none; color:#444;">CERRAR</button></div></div>
-    
     <div id="levelModal" class="modal"><div class="modal-content" id="modal-body"></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script>
-        // CONFIGURACIÓN EXACTA
         const firebaseConfig = {
             apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",
             authDomain: "scullylist.firebaseapp.com",
@@ -137,33 +128,36 @@
             measurementId: "G-X3JF2DVWYH"
         };
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.database();
         let fullData = {};
-
-        // SISTEMA DE DOBLE LLAVE
-        const TOKEN_ADMIN = "GdfuFCRy";
-        const TOKEN_HELPER = "ScullyHelp26";
 
         const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
         updateThemeColor(savedColor);
         document.getElementById('themeColor').value = savedColor;
-        
-        // MOSTRAR BOTÓN DE STAFF
-        const role = sessionStorage.getItem('scully_session');
-        if(role === 'admin') {
-            document.getElementById('adminHubBtn').style.display = "inline-flex";
-            document.getElementById('adminHubBtn').href = "admin.html";
-            document.getElementById('adminHubBtn').innerHTML = '<i class="fas fa-user-cog"></i> ADMIN';
-        } else if(role === 'helper') {
-            document.getElementById('adminHubBtn').style.display = "inline-flex";
-            document.getElementById('adminHubBtn').href = "helper.html";
-            document.getElementById('adminHubBtn').innerHTML = '<i class="fas fa-shield-alt"></i> HELPER';
-            document.getElementById('adminHubBtn').style.background = "var(--blue)";
-            document.getElementById('adminHubBtn').style.borderColor = "var(--blue)";
-            document.getElementById('adminHubBtn').style.color = "#000";
-        }
-
         function updateThemeColor(v) { document.documentElement.style.setProperty('--accent', v); localStorage.setItem('scully-theme-color', v); }
+
+        // DETECCIÓN AUTOMÁTICA DE STAFF VÍA AUTH
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                db.ref('players').once('value', snap => {
+                    const players = Object.values(snap.val() || {});
+                    const me = players.find(p => p.email === user.email);
+                    if(me && me.role) {
+                        const btn = document.getElementById('adminHubBtn');
+                        btn.style.display = "inline-flex";
+                        if(me.role === 'admin') {
+                            btn.href = "admin.html";
+                            btn.innerHTML = '<i class="fas fa-user-cog"></i> ADMIN';
+                        } else if (me.role === 'helper') {
+                            btn.href = "helper.html";
+                            btn.innerHTML = '<i class="fas fa-shield-alt"></i> HELPER';
+                            btn.style.background = "var(--blue)"; btn.style.borderColor = "var(--blue)"; btn.style.color = "#000";
+                        }
+                    }
+                });
+            }
+        });
 
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {};
@@ -171,93 +165,37 @@
             lvls = lvls.filter(l => l && l.name);
             fullData.levels = lvls;
             
-            renderLevels(lvls);
-            renderThrone(lvls);
-            updateTicker(fullData.logs || {});
+            renderLevels(lvls); renderThrone(lvls); updateTicker(fullData.logs || {});
         });
 
         function closeM() { document.getElementById('levelModal').style.display = "none"; document.getElementById('modal-body').innerHTML = ""; }
         
         function openDetails(idx) { 
-            const l = fullData.levels[idx]; 
-            const players = Object.values(fullData.players || {});
-            const approved = players.filter(p => {
-                let compsArray = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : [];
-                return compsArray.some(c => c.level === l.name) && !p.hidden;
-            });
-            
+            const l = fullData.levels[idx]; const players = Object.values(fullData.players || {});
+            const approved = players.filter(p => { let cArr = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : []; return cArr.some(c => c.level === l.name) && !p.hidden; });
             const isVerifierHidden = players.some(p => p.name.toLowerCase() === (l.first || '').toLowerCase() && p.hidden);
 
             let victorsHTML = "";
-            if (l.first && !isVerifierHidden) {
-                victorsHTML += `<div style="padding:12px; border-bottom:1px solid #111; color:var(--blue); font-weight:800; display:flex; justify-content:space-between; align-items:center;">
-                    <span>🥇 ${l.first}</span> 
-                    <small style="background:rgba(0,204,255,0.1); padding:4px 8px; border-radius:5px;">VERIFICADOR</small>
-                </div>`;
-            }
+            if (l.first && !isVerifierHidden) victorsHTML += `<div style="padding:12px; border-bottom:1px solid #111; color:var(--blue); font-weight:800; display:flex; justify-content:space-between; align-items:center;"><span>🥇 ${l.first}</span> <small style="background:rgba(0,204,255,0.1); padding:4px 8px; border-radius:5px;">VERIFICADOR</small></div>`;
 
             approved.forEach(p => { 
                 if(p.name.toLowerCase() !== (l.first || '').toLowerCase()) {
                     let compsArray = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : [];
                     const comp = compsArray.find(c => c.level === l.name);
-                    const linkBtn = (comp && comp.link) ? 
-                        `<a href="${comp.link}" target="_blank" style="color:#ff3333; font-weight:800; text-decoration:none; font-size:0.65rem; background:rgba(255,51,51,0.1); padding:5px 10px; border-radius:5px; transition:0.3s;"><i class="fab fa-youtube"></i> VIDEO</a>` : 
-                        `<span style="font-size:0.6rem; color:#555;">SIN PRUEBA VISIBLE</span>`;
-
-                    victorsHTML += `<div style="padding:12px; border-bottom:1px solid #111; font-size:0.85rem; display:flex; justify-content:space-between; align-items:center;">
-                        <span>${p.name}</span>
-                        ${linkBtn}
-                    </div>`; 
+                    const linkBtn = (comp && comp.link) ? `<a href="${comp.link}" target="_blank" style="color:#ff3333; font-weight:800; text-decoration:none; font-size:0.65rem; background:rgba(255,51,51,0.1); padding:5px 10px; border-radius:5px; transition:0.3s;"><i class="fab fa-youtube"></i> VIDEO</a>` : `<span style="font-size:0.6rem; color:#555;">SIN PRUEBA VISIBLE</span>`;
+                    victorsHTML += `<div style="padding:12px; border-bottom:1px solid #111; font-size:0.85rem; display:flex; justify-content:space-between; align-items:center;"><span>${p.name}</span>${linkBtn}</div>`; 
                 }
             });
 
             if (victorsHTML === "") victorsHTML = `<p style="color:#444; font-size:0.8rem; text-align:center; padding:10px;">Sin registros visibles.</p>`;
 
-            document.getElementById('modal-body').innerHTML = `
-                <span onclick="closeM()" style="position:absolute; top:15px; right:20px; cursor:pointer; font-size:1.5rem; color:#444; transition:0.3s;">&times;</span>
-                <h1 style="color:var(--accent); margin:0; font-size:1.8rem; text-transform:uppercase;">${l.name}</h1>
-                <iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}?autoplay=1" frameborder="0" allowfullscreen style="border-radius:20px; margin-top:15px; border:1px solid var(--border);"></iframe>
-                <div style="margin-top:20px; text-align:left;">
-                    <small style="color:#444; font-weight:800; letter-spacing:1px; display:block; margin-bottom:10px;">LIGA DE VICTORIAS:</small>
-                    <div style="max-height:200px; overflow-y:auto; background:rgba(0,0,0,0.4); border-radius:15px; border:1px solid var(--border); padding:5px;">
-                        ${victorsHTML}
-                    </div>
-                </div>`;
+            document.getElementById('modal-body').innerHTML = `<span onclick="closeM()" style="position:absolute; top:15px; right:20px; cursor:pointer; font-size:1.5rem; color:#444; transition:0.3s;">&times;</span><h1 style="color:var(--accent); margin:0; font-size:1.8rem; text-transform:uppercase;">${l.name}</h1><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}?autoplay=1" frameborder="0" allowfullscreen style="border-radius:20px; margin-top:15px; border:1px solid var(--border);"></iframe><div style="margin-top:20px; text-align:left;"><small style="color:#444; font-weight:800; letter-spacing:1px; display:block; margin-bottom:10px;">LIGA DE VICTORIAS:</small><div style="max-height:200px; overflow-y:auto; background:rgba(0,0,0,0.4); border-radius:15px; border:1px solid var(--border); padding:5px;">${victorsHTML}</div></div>`;
             document.getElementById('levelModal').style.display = "block";
         }
 
-        function renderLevels(n) { 
-            const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); 
-            document.getElementById('main-list').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0; font-size:0.85rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.6rem;">+${c(i)} XP</p></div><div style="position:absolute; right:15px; opacity:0.1; font-weight:900; font-size:1.5rem;">#${i+1}</div></div>`).join(""); 
-        }
-        
-        function renderThrone(lvls) { 
-            if(!lvls || lvls.length === 0) return; const t = lvls[0]; 
-            document.getElementById('throneDisplay').innerHTML = `
-                <div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.3) 100%), url('https://i.ytimg.com/vi/${t.id}/0.jpg');">
-                    <div class="throne-info">
-                        <div style="background:var(--accent); color:#000; padding:6px 15px; border-radius:50px; font-size:0.65rem; font-weight:900; margin-bottom:15px; display:inline-block; box-shadow: 0 0 15px var(--accent);">TOP #1 BOSS</div>
-                        <h2 style="font-size:clamp(2rem, 6vw, 3.5rem); margin:0; text-transform:uppercase; letter-spacing:-1px; text-shadow:0 0 15px #000;">${t.name}</h2>
-                        <p style="font-size:0.9rem; color:#ccc; margin-top:5px; text-shadow:0 0 10px #000;">FIRST VICTOR: <b style="color:var(--accent);">${t.first || 'Nadie'}</b></p>
-                        <button class="btn-scully" style="margin-top:20px; border-color:var(--accent); color:var(--accent);" onclick="openDetails(0)">VER NIVEL</button>
-                    </div>
-                </div>`; 
-        }
-
+        function renderLevels(n) { const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); document.getElementById('main-list').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0; font-size:0.85rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.6rem;">+${c(i)} XP</p></div><div style="position:absolute; right:15px; opacity:0.1; font-weight:900; font-size:1.5rem;">#${i+1}</div></div>`).join(""); }
+        function renderThrone(lvls) { if(!lvls || lvls.length === 0) return; const t = lvls[0]; document.getElementById('throneDisplay').innerHTML = `<div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.3) 100%), url('https://i.ytimg.com/vi/${t.id}/0.jpg');"><div class="throne-info"><div style="background:var(--accent); color:#000; padding:6px 15px; border-radius:50px; font-size:0.65rem; font-weight:900; margin-bottom:15px; display:inline-block; box-shadow: 0 0 15px var(--accent);">TOP #1 BOSS</div><h2 style="font-size:clamp(2rem, 6vw, 3.5rem); margin:0; text-transform:uppercase; letter-spacing:-1px; text-shadow:0 0 15px #000;">${t.name}</h2><p style="font-size:0.9rem; color:#ccc; margin-top:5px; text-shadow:0 0 10px #000;">FIRST VICTOR: <b style="color:var(--accent);">${t.first || 'Nadie'}</b></p><button class="btn-scully" style="margin-top:20px; border-color:var(--accent); color:var(--accent);" onclick="openDetails(0)">VER NIVEL</button></div></div>`; }
         function updateTicker(l) { const e = Object.values(l).reverse().slice(0,10); document.getElementById('pulse-content').innerHTML = e.map(x => `<span class="log-item">${x.msg}</span>`).join(""); }
-        
-        // LÓGICA DE LOGIN STAFF
-        function toggleAuth() { 
-            let key = prompt("Ingrese credencial de acceso Staff:"); 
-            if(key === TOKEN_ADMIN) { 
-                sessionStorage.setItem('scully_session', 'admin'); location.reload(); 
-            } else if(key === TOKEN_HELPER) {
-                sessionStorage.setItem('scully_session', 'helper'); location.reload(); 
-            } else if(key) {
-                alert("Acceso denegado. Credencial incorrecta.");
-            }
-        }
-        
         function spinRoulette() { const lvls = fullData.levels || []; if(lvls.length === 0) return; document.getElementById('ruletaModal').style.display = "block"; const res = document.getElementById('ruletaText'); let count = 0; const interval = setInterval(() => { res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name; count++; if(count > 15) { clearInterval(interval); res.style.color = "var(--green)"; } }, 80); }
         function closeRuleta() { document.getElementById('ruletaModal').style.display = "none"; }
         
