@@ -51,40 +51,41 @@
     <div id="scullyToast"><i class="fas fa-check-circle"></i> Mensaje</div>
 
     <div class="form-container">
-        <h1><i class="fas fa-lightbulb"></i> Sugerir Nivel a la Lista</h1>
-        <p class="subtitle">Si te pasaste un Extreme Demon de la AREDL que aún no está aquí, llena este cuestionario. Si el Staff lo aprueba, entrará a la lista y tú serás coronado como el First Victor / Verificador.</p>
+        <h1><i class="fas fa-lightbulb"></i> Sugerir Nivel</h1>
+        <p class="subtitle">Ayúdanos a expandir la Scully List con niveles de la AREDL. Si tu sugerencia es aceptada, serás el Verificador oficial en nuestra lista.</p>
         
         <div class="question-group">
-            <label><i class="fas fa-user"></i> 1. Tu Identidad</label>
-            <input type="text" id="sugPlayer" placeholder="Tu Nickname exacto de Geometry Dash">
+            <label><i class="fas fa-user-tag"></i> 1. ¿Qué nombre quieres usar en la lista?</label>
+            <input type="text" id="sugPlayer" placeholder="Escribe el Nickname que aparecerá en el Ranking">
+            <p style="font-size:0.6rem; color:#555; margin-top:8px;">No tiene por qué ser igual a tu nombre de GD, tú eliges tu identidad.</p>
         </div>
 
         <div class="question-group">
-            <label><i class="fas fa-ghost"></i> 2. ¿Qué Extreme Demon quieres meter?</label>
+            <label><i class="fas fa-ghost"></i> 2. Extreme Demon a sugerir</label>
             <input type="text" id="sugLevel" placeholder="Nombre del nivel (Debe estar en AREDL)">
         </div>
 
         <div class="question-group">
-            <label><i class="fas fa-sort-amount-down"></i> 3. Posición en la Scully List</label>
+            <label><i class="fas fa-sort-amount-down"></i> 3. Posición Relativa</label>
             <div class="flex-row">
                 <div class="input-wrapper">
-                    <input type="text" id="sugAbove" placeholder="Arriba de... (Ej: Bloodbath)">
+                    <input type="text" id="sugAbove" placeholder="Arriba de...">
                 </div>
                 <div class="input-wrapper">
-                    <input type="text" id="sugBelow" placeholder="Abajo de... (Ej: Sonic Wave)">
+                    <input type="text" id="sugBelow" placeholder="Abajo de...">
                 </div>
             </div>
-            <p style="font-size:0.65rem; color:#666; margin:5px 0 0 0;">Usa los niveles que ya están en nuestra lista como referencia.</p>
+            <p style="font-size:0.65rem; color:#666; margin:8px 0 0 0;">Basado en los niveles que ya tenemos en la lista actualmente.</p>
         </div>
 
         <div class="question-group">
-            <label><i class="fas fa-video"></i> 4. Pruebas de tu victoria</label>
+            <label><i class="fas fa-video"></i> 4. Pruebas de Victoria</label>
             <input type="url" id="sugYT" placeholder="Link de YouTube (Obligatorio)" style="margin-bottom:10px;">
-            <input type="url" id="sugRaw" placeholder="Link del RAW (Google Drive, DropBox...)">
-            <span style="font-size:0.65rem; color:#888; margin-top:5px; display:block;">* El RAW no es obligatorio <span class="optional-badge">Opcional</span>, pero ayuda en niveles Top.</span>
+            <input type="url" id="sugRaw" placeholder="Link del RAW (Opcional)">
+            <p style="font-size:0.6rem; color:#888; margin-top:8px;">* El RAW puede ser Google Drive, Mega, etc. No es obligatorio <span class="optional-badge">Opcional</span>.</p>
         </div>
 
-        <button onclick="sendSuggestion()"><i class="fas fa-paper-plane"></i> ENVIAR SUGERENCIA Y RÉCORD</button>
+        <button onclick="sendSuggestion()"><i class="fas fa-paper-plane"></i> ENVIAR AL EQUIPO STAFF</button>
         <a href="index.html" class="btn-return"><i class="fas fa-arrow-left"></i> Volver al Hub Principal</a>
     </div>
 
@@ -121,7 +122,7 @@
             const raw = document.getElementById('sugRaw').value.trim() || "Sin RAW";
 
             if(!player || !level || !above || !below || !yt) {
-                return showToast("Por favor, llena todos los campos obligatorios.", true);
+                return showToast("Por favor, llena los campos obligatorios.", true);
             }
 
             db.ref('level_suggestions').push({
@@ -133,7 +134,7 @@
                 raw: raw,
                 timestamp: Date.now()
             }).then(() => {
-                showToast("¡Sugerencia y Récord enviados al Staff!");
+                showToast("¡Sugerencia enviada! El Staff la revisará pronto.");
                 document.getElementById('sugPlayer').value = "";
                 document.getElementById('sugLevel').value = "";
                 document.getElementById('sugAbove').value = "";
@@ -141,7 +142,7 @@
                 document.getElementById('sugYT').value = "";
                 document.getElementById('sugRaw').value = "";
             }).catch(e => {
-                showToast("Error al enviar", true);
+                showToast("Error de conexión", true);
             });
         }
     </script>
