@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scully Submit | Centro de Envíos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --accent: #ff6600; --bg: #030303; --card: rgba(15,15,15,0.9); --border: rgba(255,255,255,0.05); }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; text-align: center; }
+        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 12px 24px; text-decoration: none; font-size: 0.7rem; border-radius: 50px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; margin: 40px 10px; }
+        .glass-form { background: var(--card); border: 1px solid var(--border); padding: 45px; border-radius: 35px; width: 90%; max-width: 500px; margin: 0 auto 40px; }
+        input, select { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-family: 'Lexend Deca'; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+    <div class="nav"><a href="index.html" class="btn-scully">VOLVER AL HUB</a></div>
+    <h1 style="font-size:3rem; margin-bottom:50px;">CENTRO DE <span style="color:var(--accent);">ENVÍOS</span></h1>
+    
+    <div class="glass-form">
+        <h2 style="color:var(--accent); margin-top:0;">SUBIR RÉCORD</h2>
+        <input type="text" id="recPlayer" placeholder="Nickname">
+        <select id="recLevel"><option value="">-- Nivel --</option></select>
+        <input type="text" id="recLink" placeholder="Link YouTube">
+        <input type="text" id="recRaw" placeholder="Link RAW Drive">
+        <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; margin:0;" onclick="submitRecord()">ENVIAR RÉCORD</button>
+    </div>
+
+    <div class="glass-form" style="border-color:var(--blue);">
+        <h2 style="color:var(--blue); margin-top:0;">FOTO PERFIL</h2>
+        <input type="text" id="pfpNick" placeholder="Nickname">
+        <input type="text" id="pfpUrl" placeholder="URL Imagen Directa">
+        <button class="btn-scully" style="width:100%; border-color:var(--blue); color:var(--blue); margin:0;" onclick="submitPFP()">SOLICITAR PFP</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = { databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
+        document.documentElement.style.setProperty('--accent', savedColor);
+        let lvls = [];
+        db.ref('levels').on('value', s => {
+            lvls = s.val() || [];
+            document.getElementById('recLevel').innerHTML = lvls.map(l => `<option value="${l.name}">${l.name}</option>`).join("");
+        });
+        function submitRecord() {
+            const l = document.getElementById('recLevel').value; const r = document.getElementById('recRaw').value; const idx = lvls.findIndex(lvl => lvl.name === l);
+            if (idx <= 99 && idx !== -1 && !r.includes("drive.google.com")) return alert("RAW OBLIGATORIO.");
+            db.ref('submissions').push({ player: document.getElementById('recPlayer').value, level: l, link: document.getElementById('recLink').value, raw: r || "N/A", status: "Pendiente" });
+            alert("¡Récord enviado!");
+        }
+        function submitPFP() { db.ref('pfp_requests').push({ nick: document.getElementById('pfpNick').value, url: document.getElementById('pfpUrl').value }); alert("¡Foto enviada!"); }
+    </script>
+</body>
+</html>
