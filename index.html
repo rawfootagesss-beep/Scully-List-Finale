@@ -3,58 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Scully List | Hub Principal</title>
+    <title>The Scully List | Hub de Ingeniería & Niveles</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
-            --accent: #ff6600; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
+            --accent: #ff6600; 
+            --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
             --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
             --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
-            --green: #00ff66; --red: #ff3333; --blue: #00ccff;
+            --green: #00ff66; --red: #ff3333; --blue: #00ccff; --purple: #cc00ff; --yellow: #ffff00;
         }
+
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
+
+        /* --- EFECTOS DE COSMÉTICOS (MERCADO) --- */
+        @keyframes rainbow { 0% { color: #ff0000; } 20% { color: #ff9900; } 40% { color: #ffff00; } 60% { color: #00ff00; } 80% { color: #00ffff; } 100% { color: #cc00ff; } }
+        .cos-rainbow { animation: rainbow 3s linear infinite !important; font-weight: 800; }
+        .cos-fire { box-shadow: 0 0 20px #ff3300 !important; border: 2px solid #ff3300 !important; }
+        .cos-electric { box-shadow: 0 0 20px #00ccff !important; border: 2px solid #00ccff !important; }
+
+        /* 1. NOVEDADES (TICKER) */
         .news-ticker { background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 0; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; overflow: hidden; display: flex; }
         .ticker-content { display: flex; white-space: nowrap; animation: ticker-scroll 45s linear infinite; }
         .log-item { margin-right: 100px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        .log-accept { color: var(--green); } .log-reject { color: var(--red); } .log-info { color: var(--blue); }
         @keyframes ticker-scroll { 0% { transform: translateX(80vw); } 100% { transform: translateX(-250%); } }
+
+        /* 2. BARRA DE STAFF */
         .staff-bar { display: flex; justify-content: center; gap: 25px; padding: 15px; background: rgba(255,255,255,0.02); font-size: 0.6rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center; }
         .staff-item { display: flex; align-items: center; gap: 8px; color: #888; }
         .staff-item i { color: var(--accent); }
-        .tribute-item { color: #fff; font-weight: 800; text-shadow: 0 0 10px rgba(255,255,255,0.4); }
+        .staff-item b { color: #fff; }
+        .tribute-item { color: #fff; font-weight: 800; gap: 5px; text-shadow: 0 0 10px rgba(255,255,255,0.4); }
+
+        /* 3. HEADER & NAVEGACIÓN */
         header { padding: 60px 20px 20px; text-align: center; }
         h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 800; margin: 0; letter-spacing: -2px; }
         h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .slogan { font-size: 0.85rem; color: #777; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; }
+        
         .main-nav { margin-top: 35px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center; }
-        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 14px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; text-transform: uppercase; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 14px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 10px; }
         .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: var(--glow); }
+
+        /* 4. EL TRONO (TOP #1) */
         .throne-section { width: 90%; max-width: 800px; margin: 40px auto; }
-        .throne-card { background: linear-gradient(to right, rgba(0,0,0,0.95), rgba(255, 102, 0, 0.1)); border-radius: 30px; padding: 40px; border: 2px solid var(--accent); box-shadow: var(--glow); display: flex; align-items: center; background-size: cover; }
+        .throne-card { background: linear-gradient(to right, rgba(0,0,0,0.95), rgba(255, 102, 0, 0.1)); background-size: cover; border-radius: 30px; padding: 40px; border: 2px solid var(--accent); box-shadow: var(--glow); display: flex; align-items: center; }
+        .throne-badge { background: var(--accent); color: #000; padding: 4px 12px; border-radius: 50px; font-weight: 800; font-size: 0.65rem; margin-bottom: 10px; display: inline-block; }
+
+        /* 5. LISTA DE NIVELES (Grid) */
         .list-grid { width: 95%; max-width: 1200px; margin: 40px auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
         .level-card { background: var(--card-bg); border-radius: 20px; padding: 12px; display: flex; align-items: center; border: 1px solid var(--border); cursor: pointer; transition: 0.3s; position: relative; }
         .level-card:hover { border-color: var(--accent); transform: scale(1.02); }
         .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
+
+        /* 6. STATUS TRACKER */
+        .status-tracker { max-width: 600px; margin: 60px auto; padding: 40px; background: var(--card-bg); border-radius: 35px; border: 1px solid var(--border); text-align: center; }
+        .user-pfp-display { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--accent); margin: 0 auto 20px; object-fit: cover; background: #111; }
+        .xp-tag { background: #000; color: var(--accent); padding: 8px 18px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--accent); display: inline-block; }
+        .status-pill { padding: 15px; border-radius: 12px; margin-bottom: 10px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid var(--border); }
+
+        /* 7. FOOTER CRÉDITOS & COLOR CUSTOM */
         .footer-credits { padding: 60px 20px; text-align: center; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); margin-top: 100px; }
         .color-trigger { display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: var(--accent); color: #000; border-radius: 50%; cursor: pointer; font-size: 1.2rem; box-shadow: var(--glow); transition: 0.3s; margin-top: 20px; }
+        .color-trigger:hover { transform: rotate(45deg) scale(1.1); }
         #themeColor { opacity: 0; position: absolute; pointer-events: none; }
-        .admin-lock { text-align: center; padding: 100px 0; opacity: 0.03; cursor: pointer; }
+
+        /* MODALES */
         .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .modal-content { background: #0a0a0a; margin: 5vh auto; padding: 35px; width: 90%; max-width: 650px; border-radius: 30px; border: 1px solid var(--border); text-align: center; }
+        .admin-lock { text-align: center; padding: 100px 0; opacity: 0.05; cursor: pointer; }
     </style>
 </head>
 <body>
-    <div class="news-ticker"><div class="ticker-content" id="pulse-content"></div></div>
+
+    <div class="news-ticker"><div class="ticker-content" id="pulse-content"><span class="log-item">🚀 bienvenido scully miembro</span></div></div>
+
     <nav class="staff-bar">
         <div class="staff-item tribute-item">Tributo a 2parx 🕊️</div>
         <div class="staff-item"><i class="fas fa-crown"></i> OWNER <b>score</b></div>
         <div class="staff-item"><i class="fas fa-user-shield"></i> ADMIN <b>Vegardo</b></div>
         <div class="staff-item"><i class="fas fa-hands-helping"></i> HELPER <b>Blitz</b></div>
         <div class="staff-item"><i class="fas fa-hands-helping"></i> HELPER <b>Sopa354</b></div>
+        <div class="staff-item"><i class="fas fa-code"></i> CODIFICADOR <b>score</b></div>
     </nav>
+
     <header>
         <h1>THE SCULLY <span>LIST</span></h1>
+        <p class="slogan">Tanta diversión que es ilegal, sin limites para la diversión</p>
         <div class="main-nav">
-            <a href="index.html" class="btn-scully" style="color:var(--green); border-color:var(--green);"><i class="fas fa-list-ol"></i> Lista</a>
+            <a href="index.html" class="btn-scully" style="color:var(--green); border-color:var(--green);"><i class="fas fa-list-ol"></i> Lista Principal</a>
             <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking</a>
             <a href="versus.html" class="btn-scully"><i class="fas fa-bolt"></i> Versus</a>
             <a href="market.html" class="btn-scully"><i class="fas fa-shopping-cart"></i> Mercado</a>
@@ -63,16 +102,34 @@
             <a href="admin.html" id="adminHubBtn" class="btn-scully" style="display:none; background:var(--accent); color:#000;"><i class="fas fa-user-cog"></i> ADMIN</a>
         </div>
     </header>
+
     <section class="throne-section" id="throneDisplay"></section>
+
     <main class="list-grid" id="main-list"></main>
+
+    <section class="status-tracker">
+        <h2 style="color:var(--accent); font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase;">Identidad Scully</h2>
+        <div id="statusDisplay" style="margin-bottom:20px;"><p style="color:#444;">Busca tu Nickname para ver tu XP y Perfil.</p></div>
+        <input type="text" id="checkInput" placeholder="Introduce tu Nick...">
+        <button class="btn-scully" style="width:100%; justify-content:center; border-radius:15px;" onclick="checkStatus()">CONSULTAR PERFIL</button>
+    </section>
+
     <footer class="footer-credits">
-        <p style="color:#444; font-size:0.7rem; text-transform:uppercase;">The Scully List &copy; 2026</p>
-        <label for="themeColor" class="color-trigger"><i class="fas fa-palette"></i></label>
-        <input type="color" id="themeColor" oninput="updateThemeColor(this.value)">
+        <p style="color:#444; font-size:0.7rem; text-transform:uppercase;">The Scully List &copy; 2026 | score engineering</p>
+        <p style="font-size:0.6rem; color:#666;">Vegardo &bull; Blitz &bull; Sopa354</p>
+        
+        <label for="themeColor" class="color-trigger" title="Cambiar color del sitio">
+            <i class="fas fa-palette"></i>
+        </label>
+        <input type="color" id="themeColor" value="#ff6600" oninput="updateThemeColor(this.value)">
     </footer>
+
     <div class="admin-lock" onclick="toggleAuth()"><i class="fas fa-lock"></i></div>
-    <div id="ruletaModal" class="modal"><div class="modal-content"><h2 style="color:var(--accent);">RULETA</h2><div id="ruletaText" style="font-size:2rem; font-weight:800; margin:20px 0;">---</div><button class="btn-scully" onclick="spinRoulette()">GIRAR</button><button class="btn-scully" onclick="closeRuleta()" style="background:transparent; border:none; color:#444;">CERRAR</button></div></div>
+
+    <div id="ruletaModal" class="modal"><div class="modal-content"><h2 style="color:var(--accent);">RULETA SCULLY</h2><div id="ruletaText" style="font-size:2rem; font-weight:800; margin:20px 0; text-transform:uppercase;">---</div><button class="btn-scully" onclick="spinRoulette()">GIRAR</button><button class="btn-scully" onclick="closeRuleta()" style="background:transparent; border:none; color:#444;">CERRAR</button></div></div>
+    
     <div id="levelModal" class="modal"><div class="modal-content" id="modal-body"></div></div>
+
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script>
@@ -81,28 +138,154 @@
         const db = firebase.database();
         const TOKEN = "GdfuFCRy";
         let fullData = {};
+
+        // 1. INICIALIZACIÓN DE COLOR PERSONALIZADO
         const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
         updateThemeColor(savedColor);
-        if(sessionStorage.getItem('scully_session') === 'active') document.getElementById('adminHubBtn').style.display = "flex";
-        function updateThemeColor(v) { document.documentElement.style.setProperty('--accent', v); localStorage.setItem('scully-theme-color', v); }
+        document.getElementById('themeColor').value = savedColor;
+
+        function updateThemeColor(val) {
+            document.documentElement.style.setProperty('--accent', val);
+            localStorage.setItem('scully-theme-color', val);
+        }
+
+        // 2. VERIFICACIÓN DE SESIÓN ADMIN
+        if(sessionStorage.getItem('scully_session') === 'active') {
+            document.getElementById('adminHubBtn').style.display = "flex";
+        }
+
+        // 3. ESCUCHA DE DATOS (FIREBASE)
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {};
             renderLevels(fullData.levels || []);
             renderThrone(fullData.levels || []);
             updateTicker(fullData.logs || {});
         });
-        function renderLevels(n) { const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); document.getElementById('main-list').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0; font-size:0.85rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.6rem;">+${c(i)} XP</p></div><div style="position:absolute; right:15px; opacity:0.1; font-weight:900;">#${i+1}</div></div>`).join(""); }
-        function renderThrone(lvls) { if(!lvls || lvls.length === 0) return; const t = lvls[0]; document.getElementById('throneDisplay').innerHTML = `<div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95), rgba(0,0,0,0.4)), url('https://img.youtube.com/vi/${t.id}/maxresdefault.jpg');"><div class="throne-info"><div style="background:var(--accent); color:#000; padding:4px 12px; border-radius:50px; font-weight:800; font-size:0.6rem; display:inline-block; margin-bottom:10px;">FINAL BOSS</div><h2>${t.name}</h2><p>FIRST VICTOR: <b>${t.first || 'Nadie'}</b></p></div></div>`; }
-        function updateTicker(l) { const e = Object.values(l).reverse().slice(0,10); document.getElementById('pulse-content').innerHTML = e.map(x => `<span class="log-item">${x.msg}</span>`).join(""); }
-        function spinRoulette() { const lvls = fullData.levels || []; if(lvls.length === 0) return; document.getElementById('ruletaModal').style.display = "block"; const res = document.getElementById('ruletaText'); let count = 0; const interval = setInterval(() => { res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name; count++; if(count > 15) clearInterval(interval); }, 80); }
+
+        // 4. LÓGICA DE XP (1 NIVEL = 50 PTS)
+        function calcUserStats(nick) {
+            const player = Object.values(fullData.players || {}).find(p => p.name.toLowerCase() === nick.toLowerCase());
+            if(!player) return { pts: 0, name: null };
+            
+            let pts = 0; let badges = [];
+            player.completions?.forEach(c => {
+                const idx = fullData.levels.findIndex(l => l.name.toLowerCase() === c.level.toLowerCase());
+                if(idx > -1) {
+                    pts += parseFloat(Math.max(100 - (idx * 0.6), 5));
+                    if(idx <= 9) badges.push('🔥');
+                    if(fullData.levels[idx]?.first?.toLowerCase() === nick.toLowerCase()) badges.push('🥇');
+                }
+            });
+            if(player.completions?.length >= 5) badges.push('🛡️');
+            
+            return {
+                name: player.name, 
+                pts: pts.toFixed(1),
+                lvl: Math.floor(pts / 50),
+                badges: [...new Set(badges)],
+                pfp: player.pfp || "https://i.imgur.com/8pw98K4.png",
+                cosmetics: player.cosmetics || {}
+            };
+        }
+
+        // 5. RENDERIZADO DE INTERFAZ
+        function renderLevels(n) {
+            const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1);
+            document.getElementById('main-list').innerHTML = n.map((l, i) => `
+                <div class="level-card" onclick="openDetails(${i})">
+                    <img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg">
+                    <div><h3 style="margin:0; font-size:0.85rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.6rem;">+${c(i)} XP</p></div>
+                    <div style="position:absolute; right:15px; opacity:0.1; font-weight:900; font-size:1.5rem;">#${i+1}</div>
+                </div>`).join("");
+        }
+
+        function renderThrone(lvls) {
+            if(!lvls || lvls.length === 0) return;
+            const t = lvls[0];
+            document.getElementById('throneDisplay').innerHTML = `
+                <div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95), rgba(0,0,0,0.4)), url('https://img.youtube.com/vi/${t.id}/maxresdefault.jpg');">
+                    <div class="throne-info">
+                        <div style="background:var(--accent); color:#000; padding:4px 12px; border-radius:50px; font-weight:800; font-size:0.6rem; display:inline-block; margin-bottom:10px;">FINAL BOSS - TOP #1</div>
+                        <h2>${t.name}</h2>
+                        <p style="font-size:0.8rem; color:#888;">FIRST VICTOR: <b style="color:#fff;">${t.first || 'Nadie'}</b></p>
+                        <button class="btn-scully" style="padding:10px 20px; font-size:0.6rem; margin-top:10px;" onclick="openDetails(0)">VER NIVEL</button>
+                    </div>
+                </div>`;
+        }
+
+        function updateTicker(l) {
+            const e = Object.values(l).reverse().slice(0,10);
+            document.getElementById('pulse-content').innerHTML = e.map(x => `<span class="log-item ${x.type==='accept'?'log-accept':x.type==='info'?'log-info':'log-reject'}">${x.msg}</span>`).join("");
+        }
+
+        function checkStatus() {
+            const nick = document.getElementById('checkInput').value.trim(); if(!nick) return;
+            const stats = calcUserStats(nick);
+            if(!stats.name) return document.getElementById('statusDisplay').innerHTML = "<p style='color:var(--red);'>Jugador no encontrado.</p>";
+            
+            const userRecords = [...Object.values(fullData.submissions || {}), ...Object.values(fullData.history || {})].filter(s => s.player.toLowerCase() === nick.toLowerCase());
+            let cos = stats.cosmetics?.aura_fire ? "cos-fire" : stats.cosmetics?.aura_electric ? "cos-electric" : "";
+            
+            let html = `
+                <div style="background:rgba(255,102,0,0.1); padding:30px; border-radius:30px; border:1px solid var(--accent); margin-bottom:20px;">
+                    <img src="${stats.pfp}" class="user-pfp-display ${cos}">
+                    <h3 class="${stats.cosmetics?.name_rainbow?'cos-rainbow':''}">${stats.name.toUpperCase()}</h3>
+                    <div style="margin:15px 0;"><span class="xp-tag">LVL ${stats.lvl} (${stats.pts} XP)</span></div>
+                    <div>${stats.badges.map(b => `<span class="badge-icon" style="font-size:1.5rem; margin:0 5px;">${b}</span>`).join("")}</div>
+                </div>`;
+            
+            html += userRecords.map(r => `
+                <div class="status-pill">
+                    <b>${r.level}</b> 
+                    <span style="color:var(--${r.status==='Aceptado'?'green':'yellow'}); font-weight:800;">${r.status.toUpperCase()}</span>
+                </div>`).join("");
+            
+            document.getElementById('statusDisplay').innerHTML = html;
+        }
+
+        // 6. FUNCIONES DE MODAL Y RULETA
+        function spinRoulette() {
+            const lvls = fullData.levels || []; if(lvls.length === 0) return;
+            document.getElementById('ruletaModal').style.display = "block";
+            const res = document.getElementById('ruletaText');
+            let count = 0;
+            const interval = setInterval(() => {
+                res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name;
+                count++;
+                if(count > 15) {
+                    clearInterval(interval);
+                    res.style.color = "var(--green)";
+                    setTimeout(() => { res.style.color = "#fff"; }, 1000);
+                }
+            }, 80);
+        }
         function closeRuleta() { document.getElementById('ruletaModal').style.display = "none"; }
-        function toggleAuth() { if(prompt("Acceso:") === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
+
         function openDetails(idx) { 
-            const l = fullData.levels[idx]; const victors = Object.values(fullData.players || {}).filter(p => p.completions?.some(c => c.level === l.name));
-            document.getElementById('modal-body').innerHTML = `<span onclick="closeM()" style="float:right; cursor:pointer; font-size:1.5rem;">&times;</span><h1>${l.name}</h1><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen></iframe><div style="margin-top:15px; text-align:left;"><small>VICTORS:</small>${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111;">${v.name}</div>`).join("")}</div>`;
+            const l = fullData.levels[idx];
+            const victors = Object.values(fullData.players || {}).filter(p => p.completions?.some(c => c.level === l.name));
+            document.getElementById('modal-body').innerHTML = `
+                <span onclick="closeM()" style="float:right; cursor:pointer; font-size:1.5rem;">&times;</span>
+                <h1 style="color:var(--accent); margin-top:0;">${l.name}</h1>
+                <p style="font-size:0.8rem; margin-bottom:15px;">FIRST VICTOR: <b>${l.first || 'Nadie'}</b></p>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:15px;"></iframe>
+                <div style="margin-top:20px; text-align:left;">
+                    <small style="color:#444; letter-spacing:2px; font-weight:800;">VICTORS REGISTRADOS:</small>
+                    <div style="margin-top:10px; max-height:150px; overflow-y:auto;">
+                        ${victors.map(v => `<div style="padding:10px; border-bottom:1px solid #111; font-size:0.8rem;">${v.name}</div>`).join("") || '<p>Nadie aún.</p>'}
+                    </div>
+                </div>`;
             document.getElementById('levelModal').style.display = "block";
         }
         function closeM() { document.getElementById('levelModal').style.display = "none"; }
+
+        // 7. AUTENTICACIÓN GHOST
+        function toggleAuth() { 
+            if(prompt("Acceso Codificador:") === TOKEN) { 
+                sessionStorage.setItem('scully_session', 'active'); 
+                location.reload(); 
+            } 
+        }
     </script>
 </body>
 </html>
