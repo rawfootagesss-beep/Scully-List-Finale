@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully Leaderboards | World Ranking</title>
+    <title>Scully Leaderboards | Ranking Global</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -14,42 +14,49 @@
             --gold: #ffd700; --silver: #c0c0c0; --bronze: #cd7f32;
         }
 
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
 
-        .staff-bar { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.5); font-size: 0.6rem; border-bottom: 1px solid var(--border); }
+        /* STAFF BAR SINCRONIZADA */
+        .staff-bar { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(255,255,255,0.02); font-size: 0.55rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
         .staff-item b { color: var(--accent); }
 
         header { padding: 60px 20px; text-align: center; }
-        h1 { font-size: 3rem; font-weight: 800; text-transform: uppercase; margin: 0; }
+        h1 { font-size: 3rem; font-weight: 800; text-transform: uppercase; margin: 0; letter-spacing: -1px; }
         h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .btn-back { display: inline-block; margin-top: 20px; color: var(--accent); text-decoration: none; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; border: 1px solid var(--accent); padding: 12px 25px; border-radius: 50px; transition: 0.3s; }
-        .btn-back:hover { background: var(--accent); color: #000; }
+        .btn-back { display: inline-block; margin-top: 25px; color: var(--accent); text-decoration: none; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; border: 1px solid var(--accent); padding: 12px 25px; border-radius: 50px; transition: 0.3s; letter-spacing: 1px; }
+        .btn-back:hover { background: var(--accent); color: #000; box-shadow: var(--glow); transform: translateY(-3px); }
 
+        /* TABLA DE RANKING */
         .wrapper { width: 95%; max-width: 900px; margin: 40px auto; }
         table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
         .rank-row { background: var(--card-bg); backdrop-filter: blur(10px); cursor: pointer; transition: 0.3s; border: 1px solid var(--border); }
-        .rank-row:hover { border-color: var(--accent); transform: scale(1.02); }
+        .rank-row:hover { border-color: var(--accent); transform: scale(1.02); background: rgba(255,102,0,0.05); }
         
+        /* PODIO DINÁMICO */
         .rank-row.top-0 { border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); }
-        .rank-row.top-0 td:first-child { color: var(--gold); text-shadow: 0 0 10px var(--gold); font-size: 1.5rem; }
+        .rank-row.top-0 td:first-child { color: var(--gold); text-shadow: 0 0 10px var(--gold); font-size: 1.4rem; }
         .rank-row.top-1 { border-color: var(--silver); }
+        .rank-row.top-1 td:first-child { color: var(--silver); }
         .rank-row.top-2 { border-color: var(--bronze); }
+        .rank-row.top-2 td:first-child { color: var(--bronze); }
 
         td { padding: 20px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
         td:first-child { border-left: 1px solid var(--border); border-radius: 15px 0 0 15px; font-weight: 800; text-align: center; width: 60px; }
-        td:last-child { border-right: 1px solid var(--border); border-radius: 0 15px 15px 0; font-weight: 800; color: var(--accent); }
+        td:last-child { border-right: 1px solid var(--border); border-radius: 0 15px 15px 0; color: var(--accent); font-weight: 800; }
 
-        /* ADMIN PANEL (FIX SELECTORES) */
-        #adminPanel { display: none; background: #000; border: 1px solid var(--accent); padding: 40px; width: 95%; max-width: 1000px; margin: 50px auto; border-radius: 30px; text-align: left; }
-        input, select { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #fff !important; padding: 15px; border-radius: 12px; margin-bottom: 15px; font-family: 'Lexend Deca'; box-sizing: border-box; }
-        option { background: #000; color: #fff; }
+        /* ADMIN PANEL (SELECTOR FIX) */
+        #adminPanel { display: none; background: #000; border: 1px solid var(--accent); padding: 40px; width: 95%; max-width: 1000px; margin: 50px auto; border-radius: 30px; box-shadow: var(--glow); text-align: left; }
+        input, select { width: 100%; background: #0a0a0a !important; border: 1px solid #222; color: #fff !important; padding: 15px; border-radius: 12px; margin-bottom: 15px; font-family: 'Lexend Deca'; box-sizing: border-box; }
+        option { background: #000 !important; color: #fff !important; }
 
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .modal-content { background: #0a0a0a; margin: 10vh auto; padding: 40px; width: 90%; max-width: 450px; border-radius: 30px; border: 1px solid var(--border); text-align: center; }
-        .u-lvl-btn { display: flex; justify-content: space-between; background: #111; padding: 12px; border-radius: 12px; margin-bottom: 8px; text-decoration: none; color: #fff; font-size: 0.8rem; border-left: 4px solid var(--accent); }
+        .u-lvl-btn { display: flex; justify-content: space-between; background: #111; padding: 14px; border-radius: 12px; margin-bottom: 8px; text-decoration: none; color: #fff; font-size: 0.8rem; border-left: 4px solid var(--accent); transition: 0.3s; }
+        .u-lvl-btn:hover { background: #181818; transform: translateX(5px); }
 
-        .admin-lock { padding: 60px 0; opacity: 0.05; cursor: pointer; text-align: center; }
+        .admin-lock { padding: 60px 0; opacity: 0.05; cursor: pointer; text-align: center; transition: 0.3s; }
+        .admin-lock:hover { opacity: 1; color: var(--accent); }
     </style>
 </head>
 <body>
@@ -59,38 +66,52 @@
         <div class="staff-item">ADMIN <b>Vegardo</b></div>
         <div class="staff-item">HELPER <b>Blitz</b></div>
         <div class="staff-item">HELPER <b>Sopa354</b></div>
+        <div class="staff-item">CODIFICADOR <b>score</b></div>
     </nav>
 
     <header>
         <h1>SCULLY <span>RANKING</span></h1>
-        <a href="index.html" class="btn-back">Regresar al Hub</a>
+        <a href="index.html" class="btn-back"><i class="fas fa-home"></i> Volver al Hub</a>
     </header>
 
-    <main class="wrapper"><table><tbody id="leaderboardBody"></tbody></table></main>
+    <main class="wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th style="text-align:left">Miembro</th>
+                    <th>Puntos</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboardBody"></tbody>
+        </table>
+    </main>
 
     <div class="admin-lock" onclick="toggleAuth()"><i class="fas fa-lock"></i></div>
     <div id="authBox" style="display:none; text-align:center; padding-bottom:100px;">
-        <input type="password" id="tokenInput" placeholder="Token" style="width:150px;"><button onclick="checkAuth()" style="background:var(--accent); border:none; padding:10px 20px; border-radius:50px; cursor:pointer; font-weight:bold;">ENTRAR</button>
+        <input type="password" id="tokenInput" placeholder="Token" style="width:150px;">
+        <button onclick="checkAuth()" style="background:var(--accent); border:none; padding:10px 20px; border-radius:50px; cursor:pointer; font-weight:bold;">ENTRAR</button>
     </div>
 
     <div id="adminPanel">
-        <h2 style="color:var(--accent); margin-top:0;">Gestión de Ranking Hispano</h2>
+        <h2 style="color:var(--accent); margin-top:0; text-transform:uppercase;">Moderación de Ranking</h2>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px;">
             <div>
-                <input type="text" id="targetUser" placeholder="Nombre Usuario">
+                <p style="font-size:0.6rem; color:#444;">1. DATOS JUGADOR</p>
+                <input type="text" id="targetUser" placeholder="Nombre exacto">
                 <select id="targetCountry">
-                    <option value="" disabled selected>-- País --</option>
                     <option value="es">España 🇪🇸</option><option value="mx">México 🇲🇽</option>
                     <option value="ar">Argentina 🇦🇷</option><option value="cl">Chile 🇨🇱</option>
                     <option value="co">Colombia 🇨🇴</option><option value="pe">Perú 🇵🇪</option>
                     <option value="ve">Venezuela 🇻🇪</option><option value="ec">Ecuador 🇪🇨</option>
                     <option value="uy">Uruguay 🇺🇾</option>
                 </select>
+                <p style="font-size:0.6rem; color:#444; margin-top:10px;">2. AÑADIR RÉCORD</p>
                 <select id="levelSelect"></select>
-                <input type="text" id="levelLink" placeholder="URL Video YouTube">
-                <button onclick="addCompletion()" style="width:100%; background:var(--accent); border:none; padding:15px; border-radius:12px; font-weight:800; cursor:pointer;">AÑADIR RÉCORD</button>
+                <input type="text" id="levelLink" placeholder="Link YouTube del Récord">
+                <button onclick="addCompletion()" style="width:100%; background:var(--accent); border:none; padding:15px; border-radius:12px; font-weight:800; cursor:pointer;">ACTUALIZAR PERFIL</button>
             </div>
-            <div id="adminUserList" style="max-height:300px; overflow-y:auto; background:#080808; padding:15px; border-radius:15px;"></div>
+            <div id="adminUserList" style="max-height:350px; overflow-y:auto; background:#080808; padding:15px; border-radius:15px; border:1px solid var(--border);"></div>
         </div>
     </div>
 
@@ -109,6 +130,7 @@
             fullData = s.val() || {};
             const lvls = fullData.levels || [];
             const bans = Object.values(fullData.bans || {});
+            // Filtro de baneo en tiempo real
             const players = Object.values(fullData.players || {}).filter(p => !bans.includes(p.name));
             
             renderLeaderboard(lvls, players);
@@ -131,44 +153,58 @@
             document.getElementById('leaderboardBody').innerHTML = players.map((u, i) => `
                 <tr class="rank-row top-${i}" onclick="openUserProfile('${u.name}')">
                     <td>${i+1}</td>
-                    <td style="text-align:left;"><img src="https://flagcdn.com/w20/${u.country}.png" style="margin-right:15px;">${u.name}</td>
+                    <td style="text-align:left;"><img src="https://flagcdn.com/w20/${u.country}.png" style="margin-right:15px; border-radius:2px;">${u.name}</td>
                     <td>${u.pts} PTS</td>
                 </tr>`).join("");
         }
 
-        function updateLevelSelect(lvls) { document.getElementById('levelSelect').innerHTML = '<option value="">-- Nivel --</option>' + lvls.map(l => `<option value="${l.name}">${l.name}</option>`).join(""); }
+        function updateLevelSelect(lvls) { 
+            document.getElementById('levelSelect').innerHTML = '<option value="">-- Seleccionar Nivel --</option>' + 
+            lvls.map(l => `<option value="${l.name}">${l.name}</option>`).join(""); 
+        }
         
         function addCompletion() {
             const name = document.getElementById('targetUser').value.trim();
             const level = document.getElementById('levelSelect').value;
             const link = document.getElementById('levelLink').value.trim();
             const country = document.getElementById('targetCountry').value;
+            if(!name || !level) return alert("Faltan datos");
+
             db.ref('players').once('value', s => {
                 let p = Object.values(s.val() || {});
                 let idx = p.findIndex(u => u.name === name);
                 if(idx > -1) {
                     if(!p[idx].completions) p[idx].completions = [];
                     p[idx].completions.push({ level, link });
-                } else { p.push({ name, country, completions: [{ level, link }] }); }
+                    p[idx].country = country;
+                } else { 
+                    p.push({ name, country, completions: [{ level, link }] }); 
+                }
                 db.ref('players').set(p);
-                alert("¡Perfil Actualizado!");
+                alert("¡Récord añadido!");
             });
         }
 
         function openUserProfile(n) {
             const u = Object.values(fullData.players).find(x => x.name === n);
             document.getElementById('uModalContent').innerHTML = `
-                <span onclick="closeM()" style="float:right; cursor:pointer;">&times;</span>
-                <img src="https://flagcdn.com/w80/${u.country}.png" style="width:60px; border-radius:10px; margin-bottom:15px;">
+                <span onclick="closeM()" style="float:right; cursor:pointer; font-size:1.5rem; color:var(--accent);">&times;</span>
+                <img src="https://flagcdn.com/w80/${u.country}.png" style="width:60px; border-radius:10px; margin-bottom:15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
                 <h2 style="color:var(--accent); margin:0;">${u.name}</h2>
-                <div style="margin-top:20px;">${(u.completions || []).map(c => `<a href="${c.link}" target="_blank" style="display:block; background:#111; padding:10px; border-radius:10px; text-decoration:none; color:#fff; margin-bottom:5px;"><span>${c.level}</span></a>`).join("")}</div>
-            `;
+                <div style="margin-top:25px; text-align:left; max-height:300px; overflow-y:auto;">
+                    ${(u.completions || []).map(c => `
+                        <a href="${c.link}" target="_blank" class="u-lvl-btn">
+                            <span>${c.level}</span>
+                            <i class="fab fa-youtube"></i>
+                        </a>`).join("") || '<p style="color:#444;">Sin récords</p>'}
+                </div>`;
             document.getElementById('uModal').style.display = "block";
         }
+
         function toggleAuth() { const b = document.getElementById('authBox'); b.style.display = b.style.display === "block" ? "none" : "block"; }
         function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
         function closeM() { document.getElementById('uModal').style.display = "none"; }
-        function updateAdminUserList(p) { document.getElementById('adminUserList').innerHTML = p.map((u, i) => `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #111;"><span onclick="document.getElementById('targetUser').value='${u.name}'" style="cursor:pointer; color:var(--accent);">${u.name}</span><i class="fas fa-trash" onclick="db.ref('players').once('value',s=>{let list=Object.values(s.val());list.splice(${i},1);db.ref('players').set(list);})"></i></div>`).join(""); }
+        function updateAdminUserList(p) { document.getElementById('adminUserList').innerHTML = p.map((u, i) => `<div style="display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid #111; font-size:0.75rem;"><span onclick="document.getElementById('targetUser').value='${u.name}'" style="cursor:pointer; color:var(--accent); font-weight:bold;">${u.name}</span><i class="fas fa-trash" onclick="db.ref('players').once('value',s=>{let list=Object.values(s.val());list.splice(${i},1);db.ref('players').set(list);})" style="color:#400; cursor:pointer;"></i></div>`).join(""); }
     </script>
 </body>
 </html>
