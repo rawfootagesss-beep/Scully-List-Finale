@@ -18,25 +18,14 @@
     </style>
 </head>
 <body>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; background:#080808; padding:15px; border-radius:15px; border:1px solid #111;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; background:#080808; padding:15px; border:1px solid #111; border-radius:15px;">
         <h1 style="font-size:1.2rem; margin:0;">SCULLY <span style="color:var(--accent);">MASTER CONSOLE</span></h1>
         <a href="index.html" style="color:#fff; text-decoration:none; font-size:0.8rem; background:#111; padding:8px 15px; border-radius:5px;">HUB</a>
     </div>
     <div class="admin-layout">
-        <div class="admin-col">
-            <h2>1. Editor Niveles</h2><div id="adminLevelsList" class="admin-list-scroll"></div>
-            <input type="hidden" id="editLvlIdx"><input type="text" id="lvlName" placeholder="Nombre"><input type="text" id="lvlYT" placeholder="ID YT"><input type="text" id="lvlFirst" placeholder="First Victor"><input type="number" id="lvlPos" placeholder="Posición"><button onclick="saveLevel()">GUARDAR</button>
-            <div id="lvlVictorsList" style="max-height:100px; overflow-y:auto; border-top:1px solid #111;"></div>
-        </div>
-        <div class="admin-col"><h2>2. Moderación</h2><div id="submissionsList" class="admin-list-scroll"></div></div>
-        <div class="admin-col">
-            <h2>3. Identidad Jugadores</h2><div id="adminUserList" class="admin-list-scroll"></div>
-            <div id="playerEditor" style="display:none; background:#000; padding:10px; border:1px solid var(--blue); border-radius:10px;">
-                <input type="hidden" id="editPIdx"><input type="text" id="editNick" placeholder="Nick"><select id="editCountry"><option value="ar">AR</option><option value="br">BR</option><option value="cl">CL</option><option value="co">CO</option><option value="es">ES</option><option value="mx">MX</option><option value="pe">PE</option><option value="ve">VE</option></select>
-                <label style="font-size:0.6rem;"><input type="checkbox" id="editHidden"> OCULTAR</label><button onclick="savePlayerEdits()">APLICAR</button>
-                <div id="playerLevelsInternal" style="max-height:80px; overflow-y:auto; margin-top:5px;"></div>
-            </div>
-        </div>
+        <div class="admin-col"><h2>1. Niveles</h2><div id="adminLevelsList" class="admin-list-scroll"></div><input type="hidden" id="editLvlIdx"><input type="text" id="lvlName" placeholder="Nombre"><input type="text" id="lvlYT" placeholder="ID YT"><input type="text" id="lvlFirst" placeholder="Verifier"><input type="number" id="lvlPos" placeholder="Posición"><button onclick="saveLevel()">GUARDAR</button><div id="lvlVictorsList" style="max-height:100px; overflow-y:auto; border-top:1px solid #111; padding-top:10px;"></div></div>
+        <div class="admin-col"><h2>2. Récords</h2><div id="submissionsList" class="admin-list-scroll"></div></div>
+        <div class="admin-col"><h2>3. Jugadores</h2><div id="adminUserList" class="admin-list-scroll"></div><div id="playerEditor" style="display:none; background:#000; padding:10px; border:1px solid var(--blue); border-radius:10px;"><input type="hidden" id="editPIdx"><input type="text" id="editNick" placeholder="Nick"><select id="editCountry"><option value="ar">AR</option><option value="br">BR</option><option value="es">ES</option><option value="mx">MX</option></select><label style="font-size:0.6rem;"><input type="checkbox" id="editHidden"> OCULTAR</label><button onclick="savePlayerEdits()">APLICAR</button><div id="playerLevelsInternal" style="max-height:80px; overflow-y:auto;"></div></div></div>
         <div class="admin-col"><h2>4. Mercado</h2><div id="marketSubList" class="admin-list-scroll"></div></div>
         <div class="admin-col"><h2>5. PFPs</h2><div id="pfpSubList" class="admin-list-scroll"></div></div>
         <div class="admin-col"><h2>6. Baneos</h2><div id="banListInteractive" class="admin-list-scroll"></div><input type="text" id="banUser" placeholder="Nick"><button onclick="db.ref('bans').push(document.getElementById('banUser').value)">BAN</button></div>
@@ -51,12 +40,12 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         let fullData = {};
-        db.ref('/').on('value', (s) => {
-            fullData = s.val() || {}; renderAdminLevelsList(fullData.levels || []); renderSubmissions(fullData.submissions || {}); renderAdminUserList(Object.values(fullData.players || {})); renderMarketModeration(fullData.market_requests || {}); renderPFPModeration(fullData.pfp_requests || {}); renderBanList(fullData.bans || {}); renderAdminLogs(fullData.logs || {}); renderAdminHistory(fullData.history || {});
+        db.ref('/').on('value', s => { 
+            fullData = s.val(); renderAdminLevelsList(fullData.levels || []); renderSubmissions(fullData.submissions || {}); renderAdminUserList(Object.values(fullData.players || {})); renderMarketModeration(fullData.market_requests || {}); renderPFPModeration(fullData.pfp_requests || {}); renderBanList(fullData.bans || {}); renderAdminLogs(fullData.logs || {}); renderAdminHistory(fullData.history || {});
         });
         function renderAdminLevelsList(l) { document.getElementById('adminLevelsList').innerHTML = l.map((x,i) => `<div class="manage-item"><span>#${i+1} ${x.name}</span><button onclick="loadLevelToEditor(${i})">EDIT</button></div>`).join(""); }
         function loadLevelToEditor(i) { const x = fullData.levels[i]; document.getElementById('editLvlIdx').value=i; document.getElementById('lvlName').value=x.name; document.getElementById('lvlYT').value=x.id; document.getElementById('lvlFirst').value=x.first||""; document.getElementById('lvlPos').value=i+1; const victors = Object.values(fullData.players || {}).filter(p => p.completions?.some(c => c.level === x.name)); document.getElementById('lvlVictorsList').innerHTML = victors.map(v => `<div class="manage-item"><span>${v.name}</span><i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="removeVictorFromLevel('${x.name}', '${v.name}')"></i></div>`).join(""); }
-        function removeVictorFromLevel(l, p) { db.ref('players').once('value', s => { let list = Object.values(s.val()); let i = list.findIndex(x => x.name === p); if(i > -1) { list[i].completions = list[i].completions.filter(c => c.level !== l); db.ref('players').set(list); } }); }
+        function removeVictorFromLevel(l, p) { if(confirm(`¿Quitar récord?`)) { db.ref('players').once('value', s => { let list = Object.values(s.val()); let i = list.findIndex(x => x.name === p); if(i > -1) { list[i].completions = list[i].completions.filter(c => c.level !== l); db.ref('players').set(list); } }); } }
         function renderAdminUserList(p) { document.getElementById('adminUserList').innerHTML = p.map((u, i) => `<div class="manage-item"><span>${u.name}</span><button onclick="loadPlayerToEditor(${i})">EDIT</button></div>`).join(""); }
         function loadPlayerToEditor(idx) { const u = Object.values(fullData.players)[idx]; document.getElementById('playerEditor').style.display = "block"; document.getElementById('editPIdx').value = idx; document.getElementById('editNick').value = u.name; document.getElementById('editCountry').value = u.country || 'es'; document.getElementById('editHidden').checked = u.hidden || false; document.getElementById('playerLevelsInternal').innerHTML = (u.completions || []).map((c, i) => `<div class="manage-item"><span>${c.level}</span><i class="fas fa-times" style="color:var(--red)" onclick="removeLevelFromUser(${idx}, ${i})"></i></div>`).join(""); }
         function savePlayerEdits() { const idx = document.getElementById('editPIdx').value; db.ref('players').once('value', s => { let list = Object.values(s.val()); list[idx].name = document.getElementById('editNick').value; list[idx].country = document.getElementById('editCountry').value; list[idx].hidden = document.getElementById('editHidden').checked; db.ref('players').set(list); }); }
