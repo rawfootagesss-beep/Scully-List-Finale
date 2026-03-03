@@ -1,56 +1,68 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully Ranking | Prestigio Global</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
+    <title>Scully List | Leaderboards</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
-            --accent: #ff6600; --bg: #030303; --card: rgba(15,15,15,0.8); 
-            --border: rgba(255,255,255,0.05); --blue: #00ccff; --glow: 0 0 25px rgba(255, 102, 0, 0.3);
+            --bg: #030303; --card: rgba(15,15,15,0.85); --border: rgba(255,255,255,0.05);
+            --accent: #ff6600; --blue: #00ccff; --green: #00ff66;
         }
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; text-align: center; }
-        
-        /* COSMÉTICOS */
-        @keyframes rainbow { 0% { color: #ff0000; } 20% { color: #ff9900; } 40% { color: #ffff00; } 60% { color: #00ff00; } 80% { color: #00ffff; } 100% { color: #cc00ff; } }
-        .cos-rainbow { animation: rainbow 3s linear infinite !important; font-weight: 800; }
-        .cos-fire { box-shadow: 0 0 15px #ff3300 !important; border: 2px solid #ff3300 !important; }
-        .cos-electric { box-shadow: 0 0 15px #00ccff !important; border: 2px solid #00ccff !important; }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; padding-bottom: 50px; }
 
-        header { padding: 60px 20px; }
-        h1 { font-size: 3rem; margin: 0; text-transform: uppercase; font-weight: 800; letter-spacing: -1px; }
-        .wrapper { width: 95%; max-width: 1100px; margin: 0 auto 40px; }
-        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-        .rank-row { background: var(--card); border: 1px solid var(--border); transition: 0.3s; cursor: pointer; }
-        .rank-row:hover { border-color: var(--accent); transform: scale(1.01); background: rgba(255,102,0,0.05); }
-        td { padding: 20px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-        .rank-pfp { width: 45px; height: 45px; border-radius: 50%; border: 1px solid var(--accent); object-fit: cover; margin-right: 15px; vertical-align: middle; }
-        .xp-badge { background: #000; color: var(--accent); padding: 3px 8px; border-radius: 5px; font-size: 0.65rem; font-weight: 800; border: 1px solid var(--accent); }
+        header { padding: 60px 20px 30px; text-align: center; }
+        h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin: 0; text-transform: uppercase; font-weight: 800; letter-spacing: -1px; }
+        h1 span { color: var(--accent); }
+        .btn-hub { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 10px 20px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; margin-top: 15px; transition: 0.3s; }
+        .btn-hub:hover { background: var(--accent); color: #000; }
+
+        .leaderboard-container { width: 95%; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
+
+        .player-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: flex; align-items: center; gap: 20px; position: relative; overflow: hidden; transition: 0.3s; }
+        .player-card:hover { border-color: var(--accent); transform: scale(1.01); }
+
+        .rank-number { font-size: 2.5rem; font-weight: 800; color: rgba(255,255,255,0.1); width: 50px; text-align: center; }
         
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
-        .modal-content { background: #0a0a0a; margin: 8vh auto; padding: 45px; width: 90%; max-width: 500px; border-radius: 35px; border: 1px solid var(--border); text-align: center; position: relative; }
-        .u-lvl-btn { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; margin-bottom: 10px; text-decoration: none; color: #fff; border-left: 4px solid var(--accent); transition: 0.3s; }
-        .u-lvl-btn:hover { background: rgba(255,255,255,0.08); }
-        .footer-credits { padding: 60px 20px; text-align: center; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); margin-top: 100px; }
+        .player-pfp { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); background: #111; }
+        
+        .player-info { flex-grow: 1; }
+        .player-info h3 { margin: 0 0 5px 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
+        .verifier-badge { font-size: 0.8rem; color: var(--blue); }
+        
+        .player-bio { font-size: 0.8rem; color: #aaa; margin: 0 0 10px 0; line-height: 1.4; max-width: 90%; }
+        
+        .social-links { display: flex; gap: 12px; font-size: 1.1rem; }
+        .social-links a, .social-links span { color: #666; transition: 0.3s; text-decoration: none; cursor: pointer; }
+        .social-links a.yt:hover { color: #ff3333; }
+        .social-links a.tw:hover { color: #1da1f2; }
+        .social-links span.dc:hover { color: #7289da; }
+
+        .player-stats { text-align: right; display: flex; flex-direction: column; gap: 8px; }
+        .stat-badge { background: #000; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--border); }
+        .xp-text { color: var(--accent); }
+
+        /* Efectos cosméticos */
+        @keyframes rainbow { 0% { color: #ff0000; } 20% { color: #ff9900; } 40% { color: #ffff00; } 60% { color: #00ff00; } 80% { color: #00ffff; } 100% { color: #cc00ff; } }
+        .cos-rainbow { animation: rainbow 3s linear infinite !important; }
+        .cos-fire { box-shadow: 0 0 15px #ff3300 !important; border-color: #ff3300 !important; }
+        .cos-electric { box-shadow: 0 0 15px #00ccff !important; border-color: #00ccff !important; }
     </style>
 </head>
 <body>
+
     <header>
-        <h1>SCULLY <span style="color:var(--accent);">RANKING</span></h1>
-        <a href="index.html" style="color:var(--accent); text-decoration:none; font-size:0.7rem; border:1px solid; padding:10px 25px; border-radius:50px; display:inline-block; margin-top:20px; font-weight:800;">VOLVER AL HUB</a>
+        <h1>RANKING <span>GLOBAL</span></h1>
+        <p style="color:#666; font-size:0.8rem; margin-top:5px;">El salón de la fama de la ingeniería</p>
+        <a href="index.html" class="btn-hub"><i class="fas fa-arrow-left"></i> VOLVER AL HUB</a>
+        <a href="perfil.html" class="btn-hub" style="border-color:var(--blue); color:var(--blue);"><i class="fas fa-user-circle"></i> MI PERFIL</a>
     </header>
-    
-    <main class="wrapper">
-        <table><tbody id="leaderboardBody"></tbody></table>
-    </main>
 
-    <footer class="footer-credits">
-        <p style="color:#444; font-size:0.75rem; text-transform:uppercase; letter-spacing: 2px;">The Scully List &copy; 2026 | score engineering</p>
-    </footer>
-
-    <div id="uModal" class="modal"><div class="modal-content" id="uModalContent"></div></div>
+    <div class="leaderboard-container" id="leaderboardList">
+        <p style="text-align:center; color:#555;"><i class="fas fa-spinner fa-spin"></i> Cargando leyendas...</p>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
@@ -58,80 +70,74 @@
         const firebaseConfig = { databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
-        document.documentElement.style.setProperty('--accent', savedColor);
 
-        window.rankData = [];
-
-        db.ref('/').on('value', s => {
-            const d = s.val(); const lvls = d.levels || []; const players = Object.values(d.players || {});
-            let allNicks = new Set([...players.map(p => p.name.toLowerCase()), ...lvls.map(l => l.first?.toLowerCase()).filter(Boolean)]);
+        db.ref('/').on('value', (s) => {
+            const data = s.val() || {};
+            const levels = data.levels || [];
+            let players = Object.values(data.players || {}).filter(p => !p.hidden);
             
-            let rank = Array.from(allNicks).map(nick => {
-                const p = players.find(x => x.name.toLowerCase() === nick);
-                let uniqueL = new Set(); let verifL = [];
+            // Lógica matemática oficial de XP
+            players.forEach(p => {
+                let uniqueLevels = new Set();
+                levels.forEach(l => { if(l.first?.toLowerCase() === p.name.toLowerCase()) uniqueLevels.add(l.name); });
+                (p.completions || []).forEach(c => uniqueLevels.add(c.level));
                 
-                lvls.forEach(l => { if(l.first?.toLowerCase() === nick) { uniqueL.add(l.name); verifL.push(l); } });
-                p?.completions?.forEach(c => uniqueL.add(c.level));
+                let pts = 0;
+                uniqueLevels.forEach(name => {
+                    let idx = levels.findIndex(l => l.name === name);
+                    if(idx > -1) pts += Math.max(100 - (idx * 0.6), 5);
+                });
                 
-                let pts = 0; 
-                uniqueL.forEach(n => { const i = lvls.findIndex(l => l.name === n); if(i > -1) pts += parseFloat(Math.max(100 - (i*0.6), 5)); });
-                
-                return { 
-                    name: p?.name || nick, pts: pts.toFixed(1), lvl: Math.floor(pts/50), 
-                    country: p?.country || 'es', pfp: p?.pfp || 'https://i.imgur.com/8pw98K4.png', 
-                    count: uniqueL.size, hidden: p?.hidden, isV: verifL.length > 0,
-                    verifL: verifL, manualL: p?.completions || [],
-                    cosmetics: p?.cosmetics || {} 
-                };
-            }).filter(p => !p.hidden).sort((a,b) => b.pts - a.pts);
+                p.pts = parseFloat(pts.toFixed(1));
+                p.lvl = Math.floor(p.pts / 50);
+                p.isVerifier = levels.some(l => l.first?.toLowerCase() === p.name.toLowerCase());
+            });
 
-            window.rankData = rank;
-
-            document.getElementById('leaderboardBody').innerHTML = rank.map((u, i) => {
-                let cosPfp = u.cosmetics.aura_fire ? "cos-fire" : (u.cosmetics.aura_electric ? "cos-electric" : "");
-                let cosName = u.cosmetics.name_rainbow ? "cos-rainbow" : "";
-
-                return `
-                <tr class="rank-row" onclick="window.openUserProfile('${u.name}')">
-                    <td style="font-weight:900; font-size:1.2rem; border-radius:15px 0 0 15px;">${i+1}</td>
-                    <td style="text-align:left;">
-                        <img src="${u.pfp}" class="rank-pfp ${cosPfp}">
-                        <b class="${cosName}">${u.name.toUpperCase()} ${u.isV?'<i class="fas fa-check-circle" style="color:var(--blue)" title="Verificador"></i>':''} <img src="https://flagcdn.com/w40/${u.country}.png" style="height:12px; border-radius:2px; margin-left:5px;"></b>
-                        <br><span class="xp-badge" style="margin-top:5px; display:inline-block;">LVL ${u.lvl}</span>
-                    </td>
-                    <td style="color:#888; font-size:0.8rem;"><b style="color:#fff; font-size:1rem;">${u.count}</b> RECORDS</td>
-                    <td style="color:var(--accent); font-weight:900; border-radius:0 15px 15px 0; font-size:1.1rem;">${u.pts} <span style="font-size:0.6rem; color:#666;">XP</span></td>
-                </tr>`;
-            }).join("");
+            // Ordenar por Puntos
+            players.sort((a,b) => b.pts - a.pts);
+            renderLeaderboard(players);
         });
 
-        window.openUserProfile = function(nick) {
-            const u = window.rankData.find(x => x.name.toLowerCase() === nick.toLowerCase());
-            if(!u) return;
-            
-            let cosPfp = u.cosmetics.aura_fire ? "cos-fire" : (u.cosmetics.aura_electric ? "cos-electric" : "");
-            let cosName = u.cosmetics.name_rainbow ? "cos-rainbow" : "";
-
-            let html = `<span onclick="window.closeM()" style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.5rem; color:#444;">&times;</span>
-                <img src="${u.pfp}" class="${cosPfp}" style="width:100px;height:100px;border-radius:50%;border:3px solid var(--accent);margin-bottom:15px;object-fit:cover;">
-                <h2 class="${cosName}" style="margin:0; color:var(--accent); text-transform:uppercase;">${u.name}</h2>
-                <div style="margin:15px 0;"><span class="xp-badge" style="font-size:0.8rem; padding:5px 15px;">LVL ${u.lvl} &bull; ${u.pts} XP</span></div>
-                <div style="margin-top:25px; text-align:left; max-height:300px; overflow-y:auto; padding-right:10px;">`;
-            
-            u.verifL.forEach(l => { html += `<a href="https://youtu.be/${l.id}" target="_blank" class="u-lvl-btn" style="border-color:var(--blue); background:rgba(0,204,255,0.03);"><span>${l.name}</span><small style="color:var(--blue); font-weight:800;">VERIFICADOR <i class="fas fa-external-link-alt"></i></small></a>`; });
-            u.manualL.forEach(c => { 
-                if(!u.verifL.some(v => v.name === c.level)) {
-                    html += `<a href="${c.link||'#'}" target="_blank" class="u-lvl-btn"><span>${c.level}</span><i class="fab fa-youtube" style="color:#f00;"></i></a>`;
+        function renderLeaderboard(players) {
+            let html = "";
+            players.forEach((p, index) => {
+                if(p.pts === 0) return; // Ocultar gente sin XP
+                
+                let pfpClass = "player-pfp";
+                if(p.cosmetics?.aura_fire) pfpClass += " cos-fire";
+                if(p.cosmetics?.aura_electric) pfpClass += " cos-electric";
+                
+                let nameClass = p.cosmetics?.name_rainbow ? "cos-rainbow" : "";
+                let verifierIcon = p.isVerifier ? `<i class="fas fa-check-circle verifier-badge" title="Verificador Original"></i>` : "";
+                
+                let bio = p.bio ? p.bio : "<i>Sin biografía establecida.</i>";
+                
+                let socialsHtml = "";
+                if(p.socials) {
+                    if(p.socials.yt) socialsHtml += `<a href="${p.socials.yt}" target="_blank" class="yt"><i class="fab fa-youtube"></i></a>`;
+                    if(p.socials.tw) socialsHtml += `<a href="${p.socials.tw}" target="_blank" class="tw"><i class="fab fa-twitter"></i></a>`;
+                    if(p.socials.dc) socialsHtml += `<span class="dc" title="${p.socials.dc} (Cópialo)"><i class="fab fa-discord"></i></span>`;
                 }
-            });
-            if(u.verifL.length === 0 && u.manualL.length === 0) html += `<p style="color:#444; text-align:center;">Sin registros activos.</p>`;
-            html += `</div>`;
-            document.getElementById('uModalContent').innerHTML = html;
-            document.getElementById('uModal').style.display = "block";
-        }
 
-        window.closeM = function() { document.getElementById('uModal').style.display = "none"; }
+                html += `
+                <div class="player-card">
+                    <div class="rank-number">#${index + 1}</div>
+                    <img src="${p.pfp || 'https://i.imgur.com/8pw98K4.png'}" class="${pfpClass}">
+                    
+                    <div class="player-info">
+                        <h3 class="${nameClass}">${p.name} ${verifierIcon}</h3>
+                        <p class="player-bio">${bio}</p>
+                        <div class="social-links">${socialsHtml}</div>
+                    </div>
+                    
+                    <div class="player-stats">
+                        <div class="stat-badge xp-text">${p.pts} XP</div>
+                        <div class="stat-badge">LVL ${p.lvl}</div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('leaderboardList').innerHTML = html;
+        }
     </script>
 </body>
 </html>
