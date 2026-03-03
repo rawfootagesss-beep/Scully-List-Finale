@@ -85,7 +85,7 @@
             <a href="market.html" class="btn-scully"><i class="fas fa-shopping-cart"></i> Mercado</a>
             <a href="submit.html" class="btn-scully"><i class="fas fa-upload"></i> Enviar</a>
             
-            <a href="rules.html" class="btn-scully" style="color:var(--blue); border-color:var(--blue);"><i class="fas fa-book"></i> Reglas</a>
+            <a href="rules.html" class="btn-scully" style="color:var(--blue); border-color:var(--blue);"><i class="fas fa-book"></i> Reglas y Orientación</a>
             <a href="changelog.html" class="btn-scully" style="color:var(--yellow); border-color:var(--yellow);"><i class="fas fa-file-code"></i> Changelog</a>
             <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully" style="color:#7289da; border-color:#7289da;"><i class="fab fa-discord"></i> Discord</a>
             
@@ -167,7 +167,6 @@
 
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {};
-            // Asegurar lectura de Array
             let lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels : Object.values(fullData.levels)) : [];
             lvls = lvls.filter(l => l && l.name);
             fullData.levels = lvls;
