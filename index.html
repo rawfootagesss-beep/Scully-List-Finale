@@ -10,8 +10,10 @@
         :root { --accent: #ff6600; --bg: #050505; --card: #0a0a0a; --glow: 0 0 15px rgba(255, 102, 0, 0.3); }
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; }
         
-        .top-credits { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.8); border-bottom: 1px solid #111; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; }
+        /* Barra de Créditos Actualizada */
+        .top-credits { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.8); border-bottom: 1px solid #111; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; flex-wrap: wrap; }
         .credit-box i { color: var(--accent); margin-right: 5px; }
+        .credit-box span { color: #888; }
 
         header { padding: 60px 20px; text-align: center; }
         h1 { font-size: 3rem; letter-spacing: 8px; margin: 0; text-transform: uppercase; font-weight: 700; }
@@ -21,6 +23,7 @@
         .btn-scully { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 12px 25px; text-decoration: none; font-size: 0.8rem; transition: 0.3s; cursor: pointer; display: inline-block; font-weight: bold; }
         .btn-scully:hover { background: var(--accent); color: #000; box-shadow: var(--glow); }
 
+        /* Estilos del Directorio */
         .section-title { color: var(--accent); letter-spacing: 4px; font-size: 0.8rem; margin: 50px 0 20px; text-transform: uppercase; text-align: center; }
         .wrapper { width: 95%; max-width: 1000px; margin: 0 auto 60px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         .level-card { background: var(--card); border: 1px solid #111; border-radius: 8px; overflow: hidden; display: flex; align-items: center; cursor: pointer; transition: 0.3s; position: relative; }
@@ -30,20 +33,23 @@
         .level-info { padding: 15px; }
         .rank-number { position: absolute; right: 15px; font-size: 1.2rem; font-weight: 700; color: rgba(255,255,255,0.05); }
 
-        /* Estilos Victors en el Modal */
+        /* Estilo Victors en el Perfil del Nivel */
         .victors-container { margin-top: 20px; text-align: left; border-top: 1px solid #111; padding-top: 15px; }
         .victor-link { display: flex; justify-content: space-between; align-items: center; background: #111; padding: 10px; border-radius: 4px; margin-bottom: 5px; text-decoration: none; color: #fff; font-size: 0.8rem; border-left: 3px solid #5865F2; transition: 0.2s; }
-        .victor-link:hover { background: #181818; border-left-color: var(--accent); }
-        .victor-link i { color: #f00; }
+        .victor-link:hover { background: #181818; border-left-color: var(--accent); transform: translateX(5px); }
 
+        /* Formulario de Envío */
         #form-section { background: #080808; border-top: 1px solid #111; padding: 60px 20px; margin-top: 50px; }
         .form-box { max-width: 500px; margin: 0 auto; text-align: left; }
-        input, select, textarea { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 12px; margin-bottom: 15px; font-family: 'Lexend Deca'; box-sizing: border-box; }
-        
+        input, select { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 12px; margin-bottom: 15px; font-family: 'Lexend Deca'; box-sizing: border-box; }
+        label { font-size: 0.65rem; color: #555; text-transform: uppercase; margin-bottom: 5px; display: block; }
+
+        /* Panel Admin */
         #adminPanel { display: none; background: #000; border: 2px solid var(--accent); padding: 30px; width: 95%; max-width: 1100px; margin: 50px auto; border-radius: 15px; text-align: left; }
         .admin-layout { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
         .admin-col { background: #080808; padding: 15px; border-radius: 8px; border: 1px solid #111; }
-        
+        .submission-item { background: #000; padding: 10px; margin-bottom: 10px; border-left: 3px solid var(--accent); font-size: 0.7rem; }
+
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
         .modal-content { background: #080808; margin: 2% auto; padding: 30px; width: 90%; max-width: 600px; border: 1px solid var(--accent); border-radius: 15px; position: relative; text-align: center; max-height: 90vh; overflow-y: auto; }
         .admin-access { margin: 100px 0 30px; text-align: center; opacity: 0.05; }
@@ -55,6 +61,7 @@
         <div class="credit-box"><i class="fas fa-crown"></i> OWNER <span>score</span></div>
         <div class="credit-box"><i class="fas fa-user-shield"></i> ADMIN <span>Vegardo</span></div>
         <div class="credit-box"><i class="fas fa-hands-helping"></i> HELPER <span>Blitz</span></div>
+        <div class="credit-box"><i class="fas fa-hands-helping"></i> HELPER <span>Sopa354</span></div>
         <div class="credit-box"><i class="fas fa-code"></i> CODIFICADOR <span>score</span></div>
     </nav>
 
@@ -62,7 +69,7 @@
         <h1>THE SCULLY <span>LIST</span></h1>
         <div class="btn-container">
             <a href="leaderboards.html" class="btn-scully">LEADERBOARDS</a>
-            <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully" style="border-color:#5865F2; color:#5865F2;">DISCORD</a>
+            <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully" style="border-color:#5865F2; color:#5865F2;">DISCORD OFICIAL</a>
             <a href="#form-section" class="btn-scully">SUBIR RÉCORD</a>
         </div>
     </header>
@@ -72,12 +79,19 @@
 
     <section id="form-section">
         <div class="form-box">
-            <h2 style="color:var(--accent); text-align:center; margin-bottom:10px;">ENVIAR RÉCORD</h2>
-            <input type="text" id="recPlayer" placeholder="Nombre de Usuario">
+            <h2 style="color:var(--accent); text-align:center; margin-bottom:20px;">ENVÍO DE RÉCORDS</h2>
+            <label>Nombre de Usuario</label>
+            <input type="text" id="recPlayer" placeholder="Tu Nick">
+            <label>Nivel</label>
             <select id="recLevel"><option value="">-- Selecciona el Nivel --</option></select>
-            <input type="text" id="recLink" placeholder="Link del Video">
-            <input type="text" id="recRaw" placeholder="Link del RAW (Google Drive)">
-            <select id="recCountry"><option value="cl">Chile</option><option value="ar">Argentina</option><option value="mx">México</option><option value="es">España</option></select>
+            <label>Link de YouTube</label>
+            <input type="text" id="recLink" placeholder="https://youtu.be/...">
+            <label>Link de RAW (Google Drive Obligatorio)</label>
+            <input type="text" id="recRaw" placeholder="https://drive.google.com/...">
+            <label>País</label>
+            <select id="recCountry">
+                <option value="cl">Chile</option><option value="ar">Argentina</option><option value="mx">México</option><option value="es">España</option>
+            </select>
             <button class="btn-scully" style="width:100%; background:var(--accent); color:#000;" onclick="submitRecord()">ENVIAR A REVISIÓN</button>
         </div>
     </section>
@@ -117,17 +131,17 @@
         const db = firebase.database();
         const TOKEN = "GdfuFCRy";
 
-        let fullData = {};
+        let currentData = {};
 
         db.ref('/').on('value', (snapshot) => {
-            fullData = snapshot.val() || {};
-            const niveles = fullData.levels || [];
+            currentData = snapshot.val() || {};
+            const niveles = currentData.levels || [];
             renderLevels(niveles);
             updateLevelSelect(niveles);
             if(sessionStorage.getItem('scully_session') === 'active') {
                 updateAdminList(niveles);
-                renderSubmissions(fullData.submissions || {});
-                document.getElementById('statsBox').innerHTML = `Niveles: ${niveles.length}<br>Jugadores: ${Object.keys(fullData.players || {}).length}`;
+                renderSubmissions(currentData.submissions || {});
+                document.getElementById('statsBox').innerHTML = `Niveles: ${niveles.length}<br>Jugadores: ${Object.keys(currentData.players || {}).length}`;
             }
         });
 
@@ -143,43 +157,27 @@
         }
 
         function openDetails(index) {
-            const l = fullData.levels[index];
-            const players = Object.values(fullData.players || {});
-            
-            // Buscar victors que tengan este nivel en sus completions
-            const victors = players.filter(p => {
-                const comps = p.completions || [];
-                return comps.some(c => c.level.toLowerCase() === l.name.toLowerCase());
-            });
+            const l = currentData.levels[index];
+            const players = Object.values(currentData.players || {});
+            const victors = players.filter(p => (p.completions || []).some(c => c.level.toLowerCase() === l.name.toLowerCase()));
 
             const victorsHTML = victors.map(v => {
                 const comp = v.completions.find(c => c.level.toLowerCase() === l.name.toLowerCase());
                 return `
                     <a href="${comp.link || '#'}" target="_blank" class="victor-link">
-                        <span><img src="https://flagcdn.com/w20/${v.country}.png" style="margin-right:8px; vertical-align:middle;">${v.name}</span>
+                        <span><img src="https://flagcdn.com/w20/${v.country}.png" style="margin-right:8px;">${v.name}</span>
                         <i class="fab fa-youtube"></i>
                     </a>`;
             }).join("");
 
             document.getElementById('modal-body').innerHTML = `
-                <h1 style="color:var(--accent); margin:0;">${l.name}</h1>
-                <p style="font-size:0.7rem; color:#444; margin-bottom:15px;">TOP #${index + 1} • ${calculatePoints(index)} PTS</p>
+                <h1 style="color:var(--accent);">${l.name}</h1>
                 <iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:8px;"></iframe>
-                
                 <div class="victors-container">
-                    <p style="font-size:0.7rem; color:var(--accent); font-weight:bold; margin-bottom:10px; text-transform:uppercase;">Lista de Victors (${victors.length})</p>
-                    ${victorsHTML || '<p style="font-size:0.8rem; color:#333;">Nadie se ha pasado este nivel aún.</p>'}
-                </div>
-            `;
+                    <p style="font-size:0.7rem; color:var(--accent); font-weight:bold; margin-bottom:10px;">LISTA DE VICTORS (${victors.length})</p>
+                    ${victorsHTML || '<p style="font-size:0.8rem; color:#333;">Sin victors aún.</p>'}
+                </div>`;
             document.getElementById('levelModal').style.display = "block";
-        }
-
-        // Resto de funciones (submitRecord, saveLevel, deleteSubmission, etc.)
-        function updateLevelSelect(niveles) {
-            const sel = document.getElementById('recLevel');
-            const current = sel.value;
-            sel.innerHTML = '<option value="">-- Selecciona el Nivel --</option>' + niveles.map(l => `<option value="${l.name}">${l.name}</option>`).join("");
-            sel.value = current;
         }
 
         function submitRecord() {
@@ -188,26 +186,31 @@
             const link = document.getElementById('recLink').value.trim();
             const raw = document.getElementById('recRaw').value.trim();
             const country = document.getElementById('recCountry').value;
-            if(!player || !level || !link || !raw) return alert("Completa todo.");
-            if(!raw.includes("drive.google.com")) return alert("RAW de Drive obligatorio.");
+            if(!player || !level || !link || !raw) return alert("Completa todos los campos.");
+            if(!raw.includes("drive.google.com")) return alert("El RAW debe ser un link de Google Drive.");
             db.ref('submissions').push({ player, level, link, raw, country, date: new Date().toLocaleDateString() });
-            alert("¡Enviado!");
+            alert("¡Récord enviado!");
             document.getElementById('recPlayer').value = ""; document.getElementById('recLink').value = ""; document.getElementById('recRaw').value = "";
         }
 
         function renderSubmissions(subms) {
             const cont = document.getElementById('submissionsList');
             const entries = Object.entries(subms);
-            if(entries.length === 0) { cont.innerHTML = "<small style='color:#333;'>Vacio.</small>"; return; }
             cont.innerHTML = entries.map(([key, s]) => `
-                <div style="background:#000; padding:10px; margin-bottom:10px; border-left:3px solid var(--accent); font-size:0.7rem;">
-                    <b>${s.player}</b> en <b>${s.level}</b><br>
+                <div class="submission-item">
+                    <b>${s.player}</b> -> ${s.level}<br>
                     <a href="${s.link}" target="_blank" style="color:#5865F2">Video</a> | <a href="${s.raw}" target="_blank" style="color:#0f0">RAW</a><br>
-                    <button onclick="deleteSubmission('${key}')" style="background:none; border:none; color:red; cursor:pointer; font-size:0.6rem; margin-top:5px;">ELIMINAR</button>
+                    <button onclick="deleteSubmission('${key}')" style="background:none; border:none; color:red; cursor:pointer; font-size:0.6rem;">BORRAR</button>
                 </div>`).join("");
         }
 
-        function deleteSubmission(key) { if(confirm("¿Borrar?")) db.ref('submissions/' + key).remove(); }
+        function updateLevelSelect(niveles) {
+            const sel = document.getElementById('recLevel');
+            const val = sel.value;
+            sel.innerHTML = '<option value="">-- Selecciona el Nivel --</option>' + niveles.map(l => `<option value="${l.name}">${l.name}</option>`).join("");
+            sel.value = val;
+        }
+
         function saveLevel() {
             const name = document.getElementById('lvlName').value.trim();
             const id = document.getElementById('lvlYT').value.trim();
@@ -220,6 +223,8 @@
                 db.ref('levels').set(lvls);
             });
         }
+
+        function deleteSubmission(key) { if(confirm("¿Borrar?")) db.ref('submissions/' + key).remove(); }
         function deleteLvl(index) { db.ref('levels').once('value', (s) => { let l = s.val() || []; l.splice(index, 1); db.ref('levels').set(l); }); }
         function updateAdminList(l) { document.getElementById('adminLvlList').innerHTML = l.map((lvl, i) => `<div style="display:flex; justify-content:space-between; font-size:0.6rem; padding:3px; border-bottom:1px solid #111;"><span>#${i+1} ${lvl.name}</span><i class="fas fa-trash" onclick="deleteLvl(${i})" style="color:red; cursor:pointer;"></i></div>`).join(""); }
         function toggleAuth() { const b = document.getElementById('authBox'); b.style.display = b.style.display === "block" ? "none" : "block"; }
