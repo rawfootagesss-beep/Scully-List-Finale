@@ -16,9 +16,9 @@
 
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
 
-        /* TABLA DE NOVEDADES (MARQUEE FIX) */
+        /* TABLA DE NOVEDADES FIX */
         .news-ticker { 
-            background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); 
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); 
             border-bottom: 1px solid var(--border); padding: 12px 0; 
             font-size: 0.65rem; position: sticky; top: 0; z-index: 1000;
             overflow: hidden; display: flex;
@@ -26,8 +26,8 @@
         .ticker-content { display: flex; white-space: nowrap; animation: ticker-scroll 45s linear infinite; }
         .log-item { margin-right: 100px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; gap: 8px; }
         .log-accept { color: var(--green); text-shadow: 0 0 10px rgba(0,255,102,0.3); }
-        .log-ban { color: var(--red); text-shadow: 0 0 10px rgba(255,51,51,0.3); }
-        @keyframes ticker-scroll { 0% { transform: translateX(50vw); } 100% { transform: translateX(-150%); } }
+        .log-reject, .log-ban { color: var(--red); text-shadow: 0 0 10px rgba(255,51,51,0.3); }
+        @keyframes ticker-scroll { 0% { transform: translateX(60vw); } 100% { transform: translateX(-200%); } }
 
         /* STAFF BAR */
         .staff-bar { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(255,255,255,0.02); font-size: 0.55rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
@@ -50,14 +50,13 @@
         .level-card:hover { border-color: var(--accent); transform: scale(1.03); background: rgba(255,102,0,0.05); }
         .level-card img { width: 120px; height: 75px; border-radius: 12px; object-fit: cover; margin-right: 20px; }
 
-        /* FORMULARIO (SELECTOR FIX) */
+        /* FORMULARIO */
         .form-section { background: rgba(10,10,10,0.5); padding: 100px 20px; border-top: 1px solid var(--border); }
         .glass-form { max-width: 550px; margin: 0 auto; background: var(--card-bg); padding: 45px; border-radius: 35px; border: 1px solid var(--border); box-shadow: var(--glow); }
         input, select { width: 100%; background: #0a0a0a !important; border: 1px solid #222; color: #fff !important; padding: 16px; border-radius: 15px; margin-bottom: 20px; font-family: 'Lexend Deca'; box-sizing: border-box; }
         option { background: #000 !important; color: #fff !important; }
 
         .checkbox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; font-size: 0.8rem; color: #666; cursor: pointer; }
-        .checkbox-row input { width: auto; margin: 0; }
 
         /* ADMIN PANEL */
         #adminPanel { display: none; background: #000; border: 2px solid var(--accent); padding: 40px; width: 95%; max-width: 1150px; margin: 50px auto; border-radius: 30px; box-shadow: var(--glow); }
@@ -75,7 +74,7 @@
 
     <div class="news-ticker">
         <div class="ticker-content" id="pulse-content">
-            <span class="log-item">🚀 Scully Network: Sincronización completa con la base de datos...</span>
+            <span class="log-item">🚀 Scully Network: Sincronizando base de datos central...</span>
         </div>
     </div>
 
@@ -106,36 +105,33 @@
     <section class="form-section" id="submit">
         <div class="glass-form">
             <h2 style="margin-top:0; color:var(--accent); letter-spacing: 2px; text-transform: uppercase;">Enviar Récord</h2>
-            <input type="text" id="recPlayer" placeholder="Nombre de Usuario">
+            <input type="text" id="recPlayer" placeholder="Tu Nombre">
             <select id="recLevel"><option value="">-- Seleccionar Nivel --</option></select>
-            <input type="text" id="recLink" placeholder="Link de YouTube del Récord">
-            
-            <input type="text" id="recRaw" placeholder="Link de RAW (Solo Google Drive)">
+            <input type="text" id="recLink" placeholder="YouTube URL del Récord">
+            <input type="text" id="recRaw" placeholder="Link del RAW (Google Drive)">
             <label class="checkbox-row">
-                <input type="checkbox" id="rawOptional"> El nivel no requiere RAW (Top 101+)
+                <input type="checkbox" id="rawOptional"> Nivel fuera del Top 100 (RAW Opcional)
             </label>
-
             <select id="recCountry">
                 <option value="" disabled selected>-- Tu País --</option>
                 <option value="es">España 🇪🇸</option><option value="mx">México 🇲🇽</option>
                 <option value="ar">Argentina 🇦🇷</option><option value="cl">Chile 🇨🇱</option>
                 <option value="co">Colombia 🇨🇴</option><option value="pe">Perú 🇵🇪</option>
-                <option value="ve">Venezuela 🇻🇪</option><option value="ec">Ecuador 🇪🇨</option>
-                <option value="gt">Guatemala 🇬🇹</option><option value="do">Rep. Dominicana 🇩🇴</option>
+                <option value="ve">Venezuela 🇻🇪</option><option value="uy">Uruguay 🇺🇾</option>
             </select>
-            <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; border:none;" onclick="submitRecord()">PUBLICAR EN REVISIÓN</button>
+            <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; border:none;" onclick="submitRecord()">ENVIAR A REVISIÓN</button>
         </div>
     </section>
 
     <div class="admin-lock" onclick="toggleAuth()"><i class="fas fa-lock"></i></div>
     <div id="authBox" style="display:none; text-align:center; padding-bottom:100px;">
-        <input type="password" id="tokenInput" placeholder="Token" style="width:150px;"><button class="btn-scully" onclick="checkAuth()">OK</button>
+        <input type="password" id="tokenInput" placeholder="Token Admin" style="width:150px;"><button class="btn-scully" onclick="checkAuth()">ENTRAR</button>
     </div>
 
     <div id="adminPanel">
         <div class="admin-layout">
             <div class="admin-col">
-                <p style="font-size:0.6rem; color:#444;">GESTIÓN NIVELES</p>
+                <p style="font-size:0.6rem; color:#444; font-weight:bold;">NIVELES</p>
                 <input type="text" id="lvlName" placeholder="Nombre">
                 <input type="text" id="lvlYT" placeholder="YouTube ID">
                 <input type="number" id="lvlPos" placeholder="Posición">
@@ -143,11 +139,11 @@
                 <div id="adminLvlList" style="margin-top:15px; max-height:150px; overflow-y:auto;"></div>
             </div>
             <div class="admin-col">
-                <p style="font-size:0.6rem; color:var(--green);">REVISIÓN RÉCORDS</p>
+                <p style="font-size:0.6rem; color:var(--green); font-weight:bold;">RÉCORDS ENTRANTES</p>
                 <div id="submissionsList" style="max-height:400px; overflow-y:auto;"></div>
             </div>
             <div class="admin-col">
-                <p style="font-size:0.6rem; color:var(--red);">MODERACIÓN (BANS)</p>
+                <p style="font-size:0.6rem; color:var(--red); font-weight:bold;">SANCIONES</p>
                 <input type="text" id="banUser" placeholder="Nick a Banear">
                 <button class="btn-scully" style="border-color:var(--red); color:var(--red); width:100%;" onclick="banPlayer()">BANEAR</button>
                 <div id="banList" style="margin-top:15px; font-size:0.6rem;"></div>
@@ -179,12 +175,12 @@
             }
         });
 
-        // MARQUESINA DE NOVEDADES CORREGIDA
+        // MARQUESINA DE NOVEDADES
         function updateTicker(logs) {
             const cont = document.getElementById('pulse-content');
             const entries = Object.values(logs).reverse().slice(0, 10);
-            if(entries.length === 0) { cont.innerHTML = `<span class="log-item">🚀 Scully List: Bienvenido score</span>`; return; }
-            cont.innerHTML = entries.map(l => `<span class="log-item ${l.type === 'accept' ? 'log-accept' : 'log-ban'}">${l.msg}</span>`).join("");
+            if(entries.length === 0) { cont.innerHTML = `<span class="log-item">🚀 bienvenido scully miembro</span>`; return; }
+            cont.innerHTML = entries.map(l => `<span class="log-item ${l.type === 'accept' ? 'log-accept' : 'log-reject'}">${l.msg}</span>`).join("");
         }
 
         function renderLevels(lvls) {
@@ -197,16 +193,38 @@
                 </div>`).join("");
         }
 
+        // ACCIONES DE MODERACIÓN
+        function acceptSubmission(key, player, level) {
+            const staff = prompt("¿Staff que aprueba?");
+            db.ref('logs').push({ type: 'accept', msg: `✅ RÉCORD DE ${player} EN ${level} APROBADO POR ${staff || 'ADMIN'}` });
+            db.ref('submissions/' + key).remove();
+        }
+
+        function rejectSubmission(key, player, level) {
+            const staff = prompt("¿Staff que rechaza?");
+            const reason = prompt("¿Razón del rechazo? (Hack, No Raw, etc.)");
+            db.ref('logs').push({ type: 'reject', msg: `❌ RÉCORD DE ${player} EN ${level} RECHAZADO POR ${staff || 'ADMIN'} (${reason})` });
+            db.ref('submissions/' + key).remove();
+        }
+
+        function banPlayer() {
+            const name = document.getElementById('banUser').value.trim();
+            if(!name) return;
+            const staff = prompt("¿Staff que banea?");
+            db.ref('bans').push(name);
+            db.ref('logs').push({ type: 'reject', msg: `⛔ ${name} BANEADO DEFINITIVAMENTE POR ${staff || 'ADMIN'}` });
+        }
+
         function submitRecord() {
             const lName = document.getElementById('recLevel').value;
             const raw = document.getElementById('recRaw').value;
             const opt = document.getElementById('rawOptional').checked;
             const idx = fullData.levels.findIndex(l => l.name === lName);
 
-            if (idx <= 99 && idx !== -1) { // Top 100
-                if (!raw.includes("drive.google.com")) return alert("ERROR: RAW de Drive OBLIGATORIO para el TOP 100.");
+            if (idx <= 99 && idx !== -1) {
+                if (!raw.includes("drive.google.com")) return alert("RAW OBLIGATORIO para el TOP 100.");
             } else if (!opt && !raw.includes("drive.google.com")) {
-                return alert("Pon el RAW o marca la casilla de 'Opcional' para niveles menores.");
+                return alert("Pon el RAW o marca 'Nivel fuera del Top 100'.");
             }
 
             db.ref('submissions').push({ 
@@ -217,44 +235,33 @@
             alert("¡Récord enviado!");
         }
 
-        function acceptSubmission(key, player, level) {
-            const staff = prompt("¿Staff que aprueba?");
-            db.ref('logs').push({ type: 'accept', msg: `✅ ${player} -> ${level} ACEPTADO POR ${staff || 'ADMIN'}` });
-            db.ref('submissions/' + key).remove();
+        // AUXILIARES
+        function renderSubmissions(s) {
+            document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k, x]) => `
+                <div class="sub-item">
+                    <b>${x.player}</b> -> ${x.level}<br>
+                    <a href="${x.raw}" target="_blank" style="color:var(--accent)">VER RAW</a><br>
+                    <button onclick="acceptSubmission('${k}','${x.player}','${x.level}')" style="color:var(--green); background:none; border:none; cursor:pointer; font-weight:bold;">ACEPTAR</button>
+                    <button onclick="rejectSubmission('${k}','${x.player}','${x.level}')" style="color:var(--red); background:none; border:none; cursor:pointer; margin-left:15px; font-weight:bold;">RECHAZAR</button>
+                </div>`).join("");
         }
-
-        function banPlayer() {
-            const name = document.getElementById('banUser').value.trim();
-            if(!name) return;
-            const staff = prompt("¿Staff?");
-            db.ref('bans').push(name);
-            db.ref('logs').push({ type: 'ban', msg: `⛔ ${name} BANEADO POR ${staff || 'ADMIN'}` });
-        }
-
         function openDetails(idx) {
             const l = fullData.levels[idx];
             const p = Object.values(fullData.players || {});
             const bans = Object.values(fullData.bans || {});
             const victors = p.filter(x => !bans.includes(x.name) && (x.completions || []).some(c => c.level === l.name));
-            document.getElementById('modal-body').innerHTML = `
-                <h1 style="color:var(--accent);">${l.name}</h1>
-                <iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:20px;"></iframe>
-                <div style="margin-top:20px; text-align:left; background:#000; padding:15px; border-radius:15px;">
-                    <p style="font-size:0.6rem; color:var(--accent);">VICTORS REGISTRADOS</p>
-                    ${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111; font-size:0.8rem;"><img src="https://flagcdn.com/w20/${v.country}.png" style="margin-right:10px;">${v.name}</div>`).join("") || 'Sin victors.'}
-                </div>`;
+            document.getElementById('modal-body').innerHTML = `<h1>${l.name}</h1><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:20px;"></iframe><div style="margin-top:20px; text-align:left;"><small>VICTORS REGISTRADOS:</small>${victors.map(v => `<div style="padding:10px; border-bottom:1px solid #111;"><img src="https://flagcdn.com/w20/${v.country}.png" style="margin-right:10px;">${v.name}</div>`).join("")}</div>`;
             document.getElementById('levelModal').style.display = "block";
         }
-
         function spin() { const lvls = fullData.levels || []; const res = document.getElementById('roulette-result'); let i = 0; const t = setInterval(() => { res.innerText = lvls[Math.floor(Math.random()*lvls.length)].name; i++; if(i>20) clearInterval(t); }, 50); }
         function saveLevel() { const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const p = parseInt(document.getElementById('lvlPos').value) - 1; db.ref('levels').once('value', s => { let l = s.val() || []; l = l.filter(x => x.name.toLowerCase() !== n.toLowerCase()); l.splice(p >= 0 ? p : l.length, 0, { name: n, id: y }); db.ref('levels').set(l); }); }
-        function renderSubmissions(s) { document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k, x]) => `<div class="sub-item"><b>${x.player}</b> -> ${x.level}<br><button onclick="acceptSubmission('${k}','${x.player}','${x.level}')" style="color:var(--green); background:none; border:none; cursor:pointer;">ACEPTAR</button></div>`).join(""); }
+        function renderBanList(b) { document.getElementById('banList').innerHTML = "Baneados: " + Object.values(b).join(", "); }
         function toggleAuth() { const b = document.getElementById('authBox'); b.style.display = b.style.display === "block" ? "none" : "block"; }
         function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
         function closeM() { document.getElementById('levelModal').style.display = "none"; }
         function updateLevelSelect(n) { document.getElementById('recLevel').innerHTML = '<option value="">-- Nivel --</option>' + n.map(l => `<option value="${l.name}">${l.name}</option>`).join(""); }
-        function updateAdminList(l) { document.getElementById('adminLvlList').innerHTML = l.map((x, i) => `<div style="font-size:0.6rem; display:flex; justify-content:space-between; padding:3px;"><span>#${i+1} ${x.name}</span><i class="fas fa-trash" onclick="db.ref('levels').once('value',s=>{let list=s.val();list.splice(${i},1);db.ref('levels').set(list);})" style="color:red; cursor:pointer;"></i></div>`).join(""); }
-        function renderBanList(b) { document.getElementById('banList').innerHTML = "Baneados: " + Object.values(b).join(", "); }
+        function updateAdminList(l) { document.getElementById('adminLvlList').innerHTML = l.map((x, i) => `<div style="font-size:0.6rem; display:flex; justify-content:space-between; padding:4px;"><span>#${i+1} ${x.name}</span><i class="fas fa-trash" onclick="db.ref('levels').once('value',s=>{let list=s.val();list.splice(${i},1);db.ref('levels').set(list);})" style="color:red; cursor:pointer;"></i></div>`).join(""); }
+        window.onload = () => { if(sessionStorage.getItem('scully_session') === 'active') document.getElementById('adminPanel').style.display = "block"; };
     </script>
 </body>
 </html>
