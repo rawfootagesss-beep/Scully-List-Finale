@@ -1,1 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scully List | Staff Comms</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --accent: #ff6600; 
+            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
+            --border: rgba(255, 255, 255, 0.05);
+            --admin-color: #ff6600; --helper-color: #66fcf1;
+        }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; display: none; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
 
+        .chat-container { width: 100%; max-width: 900px; height: 90vh; background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); display: flex; flex-direction: column; box-shadow: 0 15px 50px rgba(0,0,0,0.8); position: relative; overflow: hidden; }
+        
+        /* Efecto de línea brillante superior */
+        .chat-container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--admin-color), var(--helper-color)); z-index: 10; }
+
+        .chat-header { padding: 20px 30px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); }
+        .chat-header h1 { margin: 0; font-size: 1.2rem; font-weight: 800; display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .chat-header h1 i { color: var(--accent); }
+        
+        .btn-hub { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border); padding: 8px 15px; border-radius: 8px; text-decoration: none; font-size: 0.7rem; font-weight: 800; transition: 0.3s; }
+        .btn-hub:hover { background: #fff; color: #000; }
+
+        .chat-messages { flex-grow: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+
+        /* ESTILOS DE LOS MENSAJES */
+        .message-wrapper { display: flex; flex-direction: column; max-width: 75%; }
+        .message-wrapper.me { align-self: flex-end; align-items: flex-end; }
+        .message-wrapper.others { align-self: flex-start; align-items: flex-start; }
+
+        .msg-header { font-size: 0.7rem; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; font-weight: 800; }
+        .msg-time { color: #555; font-weight: 400; font-size: 0.6rem; }
+        
+        /* Insignias de Rango en el Chat */
+        .badge-admin { background: rgba(255,102,0,0.1); color: var(--admin-color); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--admin-color); }
+        .badge-helper { background: rgba(102,252,241,0.1); color: var(--helper-color); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--helper-color); }
+
+        .message-bubble { padding: 15px 20px; border-radius: 20px; font-size: 0.9rem; line-height: 1.5; position: relative; }
+        
+        .message-wrapper.me .message-bubble { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-bottom-right-radius: 5px; }
+        
+        .message-wrapper.others[data-role="admin"] .message-bubble { background: rgba(255,102,0,0.05); border: 1px solid rgba(255,102,0,0.3); border-bottom-left-radius: 5px; }
+        .message-wrapper.others[data-role="helper"] .message-bubble { background: rgba(102,252,241,0.05); border: 1px solid rgba(102,252,241,0.3); border-bottom-left-radius: 5px; }
+
+        /* ZONA DE INPUT */
+        .chat-input-area { padding: 20px; border-top: 1px solid var(--border); background: rgba(0,0,0,0.5); display: flex; gap: 15px; align-items: center; }
+        
+        .chat-input-area input { flex-grow: 1; background: #000; border: 1px solid #333; color: #fff; padding: 18px 25px; border-radius: 50px; font-family: 'Lexend Deca'; font-size: 0.9rem; outline: none; transition: 0.3s; }
+        .chat-input-area input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(255,102,0,0.2); }
+        
+        .btn-send { background: var(--accent); color: #000; border: none; width: 55px; height: 55px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; }
+        .btn-send:hover { transform: scale(1.1); box-shadow: 0 0 20px rgba(255,102,0,0.5); }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1><i class="fas fa-lock"></i> STAFF COMMS (ENCRIPTADO)</h1>
+            <a href="perfil.html" class="btn-hub"><i class="fas fa-arrow-left"></i> SALIR</a>
+        </div>
+        
+        <div class="chat-messages" id="chatBox">
+            <p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;"><i class="fas fa-shield-alt fa-2x"></i><br><br>Canal de comunicación seguro. Los mensajes aquí son permanentes y solo visibles para el equipo Staff.</p>
+            </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="msgInput" placeholder="Escribe un mensaje al equipo..." onkeypress="handleEnter(event)">
+            <button onclick="sendMessage()" class="btn-send"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",
+            authDomain: "scullylist.firebaseapp.com",
+            databaseURL: "https://scullylist-default-rtdb.firebaseio.com",
+            projectId: "scullylist",
+            storageBucket: "scullylist.firebasestorage.app",
+            messagingSenderId: "498548914021",
+            appId: "1:498548914021:web:59128b5e06b36a4e81938c",
+            measurementId: "G-X3JF2DVWYH"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+        
+        let myName = "";
+        let myRole = "";
+
+        // SEGURIDAD: COMPROBAR QUE ES STAFF ANTES DE MOSTRAR LA PÁGINA
+        auth.onAuthStateChanged(user => {
+            if(!user) return location.href = 'index.html';
+            
+            db.ref('players').once('value', snap => {
+                const players = Object.values(snap.val() || {});
+                const me = players.find(p => p.email === user.email);
+                
+                if(me && (me.role === 'admin' || me.role === 'helper')) {
+                    myName = me.name;
+                    myRole = me.role;
+                    document.body.style.display = "flex"; // Mostrar pantalla
+                    loadMessages();
+                } else {
+                    location.href = 'index.html'; // Expulsar intruso
+                }
+            });
+        });
+
+        const chatBox = document.getElementById('chatBox');
+
+        function loadMessages() {
+            db.ref('staff_chat').on('value', snap => {
+                const messages = snap.val() || {};
+                let html = "";
+                
+                Object.values(messages).forEach(msg => {
+                    const isMe = msg.sender === myName;
+                    const wrapperClass = isMe ? "message-wrapper me" : "message-wrapper others";
+                    const badgeClass = msg.role === 'admin' ? "badge-admin" : "badge-helper";
+                    const icon = msg.role === 'admin' ? "fa-crown" : "fa-shield-alt";
+                    
+                    // Formatear hora
+                    const date = new Date(msg.timestamp);
+                    const timeStr = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+                    let headerHtml = isMe 
+                        ? `<div class="msg-header"><span class="msg-time">${timeStr}</span> TÚ</div>`
+                        : `<div class="msg-header"><span class="${badgeClass}"><i class="fas ${icon}"></i> ${msg.role.toUpperCase()}</span> <span style="color:#fff;">${msg.sender}</span> <span class="msg-time">${timeStr}</span></div>`;
+
+                    html += `
+                        <div class="${wrapperClass}" data-role="${msg.role}">
+                            ${headerHtml}
+                            <div class="message-bubble">${msg.text}</div>
+                        </div>
+                    `;
+                });
+
+                // Mantener el div inicial si está vacío
+                if(html === "") html = `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;"><i class="fas fa-shield-alt fa-2x"></i><br><br>Canal de comunicación seguro. No hay mensajes aún.</p>`;
+                
+                chatBox.innerHTML = html;
+                chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll hacia abajo
+            });
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('msgInput');
+            const text = input.value.trim();
+            if(!text) return;
+
+            db.ref('staff_chat').push({
+                sender: myName,
+                role: myRole,
+                text: text,
+                timestamp: Date.now()
+            });
+
+            input.value = "";
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+</html>
