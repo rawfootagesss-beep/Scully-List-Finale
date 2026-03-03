@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Scully List | Hub de Moderación</title>
+    <title>The Scully List | Hub Pro & Tributo</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -16,55 +16,56 @@
 
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
 
-        /* TICKER DE NOVEDADES */
+        /* NOVEDADES EN TIEMPO REAL */
         .news-ticker { background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 0; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; overflow: hidden; display: flex; }
-        .ticker-content { display: flex; white-space: nowrap; animation: ticker-scroll 40s linear infinite; }
+        .ticker-content { display: flex; white-space: nowrap; animation: ticker-scroll 45s linear infinite; }
         .log-item { margin-right: 100px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-        .log-accept { color: var(--green); } .log-reject { color: var(--red); } .log-info { color: var(--blue); }
+        .log-accept { color: var(--green); } .log-reject, .log-ban { color: var(--red); } .log-info { color: var(--blue); }
         @keyframes ticker-scroll { 0% { transform: translateX(80vw); } 100% { transform: translateX(-250%); } }
 
-        /* STAFF BAR */
-        .staff-bar { display: flex; justify-content: center; gap: 25px; padding: 15px; background: rgba(255,255,255,0.02); font-size: 0.6rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+        /* STAFF BAR CON TRIBUTO E ICONOS */
+        .staff-bar { display: flex; justify-content: center; gap: 25px; padding: 15px; background: rgba(255,255,255,0.02); font-size: 0.6rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center; }
         .staff-item { display: flex; align-items: center; gap: 8px; color: #888; }
         .staff-item i { color: var(--accent); }
+        .staff-item b { color: #fff; }
+        .tribute-item { color: #fff; font-weight: 800; gap: 5px; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
 
         header { padding: 60px 20px 40px; text-align: center; }
         h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 800; margin: 0; letter-spacing: -2px; }
         h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
+        .main-nav { margin-top: 35px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 14px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-        .btn-scully:hover { background: var(--accent); color: #000; box-shadow: 0 0 15px var(--accent); }
+        .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: var(--glow); }
 
         /* STATUS TRACKER */
-        .status-tracker { max-width: 600px; margin: 40px auto; padding: 30px; background: var(--card-bg); border-radius: 30px; border: 1px solid var(--border); text-align: center; }
+        .status-tracker { max-width: 600px; margin: 40px auto; padding: 30px; background: var(--card-bg); border-radius: 30px; border: 1px solid var(--border); text-align: center; backdrop-filter: blur(10px); }
         .status-pill { padding: 15px; border-radius: 12px; margin-bottom: 10px; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); }
         .st-pendiente { border-left: 6px solid var(--yellow); }
         .st-enrevisión { border-left: 6px solid var(--blue); }
         .st-aceptado { border-left: 6px solid var(--green); }
         .st-rechazado { border-left: 6px solid var(--red); }
 
-        /* GRID */
+        /* GRID Y FORMS */
         .list-grid { width: 95%; max-width: 1200px; margin: 60px auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
         .level-card { background: var(--card-bg); border-radius: 20px; padding: 12px; display: flex; align-items: center; cursor: pointer; border: 1px solid var(--border); transition: 0.3s; position: relative; }
         .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
 
-        /* ADMIN PANEL - MEJORADO */
+        .glass-form { max-width: 550px; margin: 60px auto; background: var(--card-bg); padding: 45px; border-radius: 35px; border: 1px solid var(--border); box-shadow: var(--glow); }
+        input, select { width: 100%; background: #0a0a0a !important; border: 1px solid #222; color: #fff !important; padding: 16px; border-radius: 15px; margin-bottom: 20px; font-family: 'Lexend Deca'; box-sizing: border-box; }
+        option { background: #000; color: #fff; }
+
+        .checkbox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; font-size: 0.8rem; color: #666; cursor: pointer; }
+
+        /* ADMIN PANEL */
         #adminPanel { display: none; background: #000; border: 2px solid var(--accent); padding: 35px; width: 95%; max-width: 1150px; margin: 50px auto; border-radius: 25px; box-shadow: var(--glow); }
         .admin-layout { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; }
         .admin-col { background: #080808; padding: 20px; border-radius: 15px; border: 1px solid #111; }
-        .admin-sub-card { background: #000; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #222; font-size: 0.75rem; position: relative; border-left: 4px solid var(--accent); }
-        
+        .admin-sub-card { background: #000; padding: 15px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #222; font-size: 0.7rem; border-left: 4px solid var(--accent); }
         .proof-links { display: flex; gap: 15px; margin: 15px 0; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 10px; }
-        .proof-links a { color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .proof-links a:hover { color: var(--accent); transform: translateY(-2px); }
-        .proof-links .yt-link i { color: #ff0000; }
-        .proof-links .raw-link i { color: #00ccff; }
+        .proof-links a { color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 0.65rem; }
+        .yt-link i { color: #ff0000; } .raw-link i { color: #00ccff; }
 
-        .admin-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .admin-btns button { font-size: 0.65rem; padding: 10px; cursor: pointer; background: #111; color: #fff; border: 1px solid #333; border-radius: 8px; font-weight: bold; transition: 0.2s; }
-        .admin-btns button:hover { border-color: var(--accent); background: #181818; }
-        
-        input, select { width: 100%; background: #0a0a0a !important; border: 1px solid #222; color: #fff !important; padding: 14px; border-radius: 15px; margin-bottom: 20px; font-family: 'Lexend Deca'; box-sizing: border-box; }
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .modal-content { background: #0a0a0a; margin: 5vh auto; padding: 35px; width: 90%; max-width: 650px; border-radius: 30px; border: 1px solid var(--border); text-align: center; }
         .admin-lock { text-align: center; padding: 100px 0; opacity: 0.05; cursor: pointer; }
@@ -79,6 +80,7 @@
     </div>
 
     <nav class="staff-bar">
+        <div class="staff-item tribute-item"> Tributo a 2parx 🕊️</div>
         <div class="staff-item"><i class="fas fa-crown"></i> OWNER <b>score</b></div>
         <div class="staff-item"><i class="fas fa-user-shield"></i> ADMIN <b>Vegardo</b></div>
         <div class="staff-item"><i class="fas fa-hands-helping"></i> HELPER <b>Blitz</b></div>
@@ -90,32 +92,39 @@
         <h1>THE SCULLY <span>LIST</span></h1>
         <div class="main-nav">
             <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking</a>
+            <a href="#checker" class="btn-scully"><i class="fas fa-search"></i> Status</a>
             <a href="#submit" class="btn-scully"><i class="fas fa-upload"></i> Enviar Récord</a>
         </div>
     </header>
 
-    <section class="status-tracker">
-        <h2 style="color:var(--accent); font-size: 0.9rem; letter-spacing: 2px;">STATUS TRACKER</h2>
-        <input type="text" id="checkInput" placeholder="Busca tu Nickname...">
-        <button class="btn-scully" style="width:100%; justify-content:center; border-radius:15px;" onclick="checkStatus()">VER ESTADO</button>
-        <div id="statusDisplay" style="margin-top:25px;"></div>
+    <section class="status-tracker" id="checker">
+        <h2 style="color:var(--accent); letter-spacing: 2px; font-size: 0.9rem;">STATUS TRACKER</h2>
+        <input type="text" id="checkInput" placeholder="Nickname exacto...">
+        <button class="btn-scully" style="width:100%; justify-content:center; border-radius:15px;" onclick="checkStatus()">CONSULTAR</button>
+        <div id="statusDisplay" style="margin-top:20px;"></div>
     </section>
 
     <main class="list-grid" id="list-container"></main>
 
     <section class="form-section" id="submit">
         <div class="glass-form">
-            <h2 style="margin-top:0; color:var(--accent); text-align:center;">SUBIR RÉCORD</h2>
+            <h2 style="margin-top:0; color:var(--accent); text-align:center; letter-spacing:2px;">FORMULARIO</h2>
             <input type="text" id="recPlayer" placeholder="Nickname">
             <select id="recLevel"><option value="">-- Nivel --</option></select>
-            <input type="text" id="recLink" placeholder="Link YouTube">
-            <input type="text" id="recRaw" placeholder="Link RAW (Google Drive)">
+            <input type="text" id="recLink" placeholder="Link del Video">
+            <input type="text" id="recRaw" placeholder="Link del RAW (Drive)">
+            
+            <label class="checkbox-row">
+                <input type="checkbox" id="rawOptional"> El nivel es Top 101+ (RAW Opcional)
+            </label>
+
             <select id="recCountry">
                 <option value="es">España 🇪🇸</option><option value="mx">México 🇲🇽</option>
                 <option value="ar">Argentina 🇦🇷</option><option value="cl">Chile 🇨🇱</option>
                 <option value="co">Colombia 🇨🇴</option><option value="pe">Perú 🇵🇪</option>
+                <option value="ve">Venezuela 🇻🇪</option><option value="uy">Uruguay 🇺🇾</option>
             </select>
-            <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; border:none; justify-content:center; font-weight:800;" onclick="submitRecord()">ENVIAR RÉCORD</button>
+            <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; border:none; justify-content:center; font-weight:800;" onclick="submitRecord()">SUBIR RÉCORD</button>
         </div>
     </section>
 
@@ -124,23 +133,24 @@
     <div id="adminPanel">
         <div class="admin-layout">
             <div class="admin-col">
-                <p style="font-size:0.6rem; color:#444; font-weight:bold;">AÑADIR NIVEL</p>
-                <input type="text" id="lvlName" placeholder="Nombre"><input type="text" id="lvlYT" placeholder="ID YouTube"><input type="text" id="lvlFirst" placeholder="First Victor">
+                <p style="font-size:0.6rem; color:#444; font-weight:bold;">NIVELES</p>
+                <input type="text" id="lvlName" placeholder="Nombre"><input type="text" id="lvlYT" placeholder="YouTube ID"><input type="text" id="lvlFirst" placeholder="First Victor">
+                <input type="number" id="lvlPos" placeholder="Top Pos">
                 <button class="btn-scully" style="width:100%; justify-content:center;" onclick="saveLevel()">Publicar</button>
             </div>
             <div class="admin-col">
-                <p style="font-size:0.6rem; color:var(--green); font-weight:bold;">REVISIÓN DE PRUEBAS</p>
-                <div id="submissionsList" style="max-height:500px; overflow-y:auto;"></div>
+                <p style="font-size:0.6rem; color:var(--green); font-weight:bold;">MODERACIÓN</p>
+                <div id="submissionsList" style="max-height:480px; overflow-y:auto;"></div>
             </div>
             <div class="admin-col">
-                <p style="font-size:0.6rem; color:var(--red); font-weight:bold;">MODERACIÓN</p>
+                <p style="font-size:0.6rem; color:var(--red); font-weight:bold;">SANCIONES</p>
                 <input type="text" id="banUser" placeholder="Nick"><button class="btn-scully" style="width:100%; border-color:var(--red); color:var(--red); justify-content:center;" onclick="banPlayer()">Banear</button>
                 <div id="banList" style="font-size:0.6rem; margin-top:10px;"></div>
             </div>
         </div>
     </div>
 
-    <div id="levelModal" class="modal"><div class="modal-content"><span onclick="closeM()" style="float:right; cursor:pointer;">&times;</span><div id="modal-body"></div></div></div>
+    <div id="levelModal" class="modal"><div class="modal-content"><span onclick="closeM()" style="float:right; cursor:pointer; font-size:2rem;">&times;</span><div id="modal-body"></div></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
@@ -163,29 +173,40 @@
             }
         });
 
-        // --- RENDERIZAR SUBMISSIONS CON LINKS DE PRUEBA ---
-        function renderSubmissions(s) {
-            document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k, x]) => `
-                <div class="admin-sub-card">
-                    <div style="font-weight:800; color:var(--accent); font-size:0.85rem;">${x.player}</div>
-                    <div style="color:#666;">Nivel: <b>${x.level}</b></div>
-                    
-                    <div class="proof-links">
-                        <a href="${x.link}" target="_blank" class="yt-link"><i class="fab fa-youtube"></i> Video</a>
-                        <a href="${x.raw}" target="_blank" class="raw-link"><i class="fas fa-cloud-download-alt"></i> RAW</a>
-                    </div>
+        // LÓGICA DE ENVÍO CON RAW DINÁMICO
+        function submitRecord() {
+            const levelName = document.getElementById('recLevel').value;
+            const rawLink = document.getElementById('recRaw').value;
+            const isOptionalChecked = document.getElementById('rawOptional').checked;
+            
+            // Buscar la posición del nivel en la lista
+            const levelIndex = fullData.levels.findIndex(l => l.name === levelName);
+            
+            // REGLA: Si está en el Top 100 (0 a 99), el RAW es obligatorio pase lo que pase.
+            if (levelIndex <= 99 && levelIndex !== -1) {
+                if (!rawLink.includes("drive.google.com")) {
+                    return alert("¡ERROR! Para niveles del TOP 100 el RAW de Google Drive es OBLIGATORIO. No importa si marcaste la casilla.");
+                }
+            } else {
+                // Si es Top 101+, comprobamos si marcó la casilla
+                if (!isOptionalChecked && !rawLink.includes("drive.google.com")) {
+                    return alert("Por favor, pon el RAW o marca la casilla si el nivel es mayor al Top 100.");
+                }
+            }
 
-                    <div class="admin-btns">
-                        <button onclick="setStatus('${k}','En revisión')">REVISIÓN</button>
-                        <button onclick="setStatus('${k}','Aceptado')" style="background:var(--green); color:#000; border:none;">ACEPTAR</button>
-                        <button onclick="setStatus('${k}','Rechazado')" style="background:var(--red); color:#fff; border:none;">RECHAZAR</button>
-                    </div>
-                </div>`).join("");
+            db.ref('submissions').push({ 
+                player: document.getElementById('recPlayer').value,
+                level: levelName, link: document.getElementById('recLink').value,
+                raw: rawLink || "N/A", country: document.getElementById('recCountry').value,
+                status: "Pendiente" 
+            });
+            alert("¡Récord enviado!");
         }
 
+        // --- SISTEMA DE AUTOMATIZACIÓN ---
         function setStatus(key, newStatus) {
             const sub = fullData.submissions[key];
-            const staff = prompt("¿Staff activo?");
+            const staff = prompt("Staff encargado:");
             if(!staff) return;
 
             if(newStatus === 'Aceptado') {
@@ -213,22 +234,22 @@
             }
         }
 
-        // --- FUNCIONES HUB ---
+        // FUNCIONES HUB
         function checkStatus() {
             const nick = document.getElementById('checkInput').value.trim().toLowerCase();
             if(!nick) return;
             const all = [...Object.values(fullData.submissions || {}), ...Object.values(fullData.history || {})];
             const res = all.filter(s => s.player.toLowerCase() === nick);
-            document.getElementById('statusDisplay').innerHTML = res.length ? res.map(r => `<div class="status-pill st-${(r.status||'pendiente').toLowerCase().replace(/ /g, "")}"><b>${r.level}</b> <span>${(r.status||'PENDIENTE').toUpperCase()}</span></div>`).join("") : "<p style='color:#444;'>Sin registros.</p>";
+            document.getElementById('statusDisplay').innerHTML = res.length ? res.map(r => `<div class="status-pill st-${(r.status||'pendiente').toLowerCase().replace(/ /g, "")}"><b>${r.level}</b> <span style="font-weight:800;">${(r.status||'PENDIENTE').toUpperCase()}</span></div>`).join("") : "<p style='color:#444;'>Sin registros.</p>";
         }
-        function updateTicker(l) { const c = document.getElementById('pulse-content'); const e = Object.values(l).reverse().slice(0,10); if(e.length===0){c.innerHTML=`<span class="log-item">🚀 bienvenido scully miembro</span>`; return;} c.innerHTML = e.map(x => `<span class="log-item ${x.type==='accept'?'log-accept':x.type==='info'?'log-info':'log-reject'}">${x.msg}</span>`).join(""); }
+        function renderSubmissions(s) { document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k, x]) => `<div class="admin-sub-card"><b>${x.player}</b> -> ${x.level} <div class="proof-links"><a href="${x.link}" target="_blank" class="yt-link"><i class="fab fa-youtube"></i> Video</a><a href="${x.raw}" target="_blank" class="raw-link"><i class="fas fa-cloud-download-alt"></i> RAW</a></div><div class="admin-btns"><button onclick="setStatus('${k}','En revisión')">REVISIÓN</button><button onclick="setStatus('${k}','Aceptado')" style="color:var(--green)">ACEPTAR</button><button onclick="setStatus('${k}','Rechazado')" style="color:var(--red)">RECHAZAR</button></div></div>`).join(""); }
+        function updateTicker(l) { const c = document.getElementById('pulse-content'); const e = Object.values(l).reverse().slice(0, 12); if(e.length === 0) { c.innerHTML = `<span class="log-item">🚀 bienvenido scully miembro</span>`; return; } c.innerHTML = e.map(x => `<span class="log-item ${x.type==='accept'?'log-accept':x.type==='info'?'log-info':'log-reject'}">${x.msg}</span>`).join(""); }
         function renderLevels(n) { const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); document.getElementById('list-container').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0; font-size:0.9rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.7rem; margin:0;">+${c(i)} PTS</p></div><div style="position:absolute; right:15px; opacity:0.05; font-size:2rem; font-weight:900;">#${i+1}</div></div>`).join(""); }
-        function submitRecord() { const r = document.getElementById('recRaw').value; const l = document.getElementById('recLevel').value; db.ref('submissions').push({ player: document.getElementById('recPlayer').value, level: l, link: document.getElementById('recLink').value, raw: r || "N/A", country: document.getElementById('recCountry').value, status: "Pendiente" }); alert("¡Enviado!"); }
-        function saveLevel() { const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const f = document.getElementById('lvlFirst').value; const p = parseInt(document.getElementById('lvlPos').value)-1; db.ref('levels').once('value', s => { let l = s.val() || []; l = l.filter(x => x.name.toLowerCase() !== n.toLowerCase()); l.splice(p >= 0 ? p : l.length, 0, { name: n, id: y, first: f }); db.ref('levels').set(l); alert("Nivel Publicado!"); }); }
+        function saveLevel() { const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const f = document.getElementById('lvlFirst').value; const p = parseInt(document.getElementById('lvlPos').value)-1; db.ref('levels').once('value', s => { let l = s.val() || []; l = l.filter(x => x.name.toLowerCase() !== n.toLowerCase()); l.splice(p >= 0 ? p : l.length, 0, { name: n, id: y, first: f }); db.ref('levels').set(l); alert("¡Nivel Publicado!"); }); }
+        function openDetails(idx) { const l = fullData.levels[idx]; const p = Object.values(fullData.players || {}); const victors = p.filter(v => (v.completions || []).some(c => c.level === l.name)); document.getElementById('modal-body').innerHTML = `<h1>${l.name}</h1><p style="font-size:0.75rem;">FIRST VICTOR: <b style="color:#fff;">${l.first || 'Nadie'}</b></p><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:15px; margin-top:15px;"></iframe><div style="margin-top:15px; text-align:left;"><small>VICTORS REGISTRADOS:</small>${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111; font-size:0.8rem;">${v.name}</div>`).join("")}</div>`; document.getElementById('levelModal').style.display = "block"; }
         function banPlayer() { const n = document.getElementById('banUser').value.trim(); const s = prompt("Staff?"); db.ref('bans').push(n); db.ref('logs').push({ type: 'reject', msg: `⛔ ${n} BANEADO POR ${s || 'ADMIN'}` }); }
         function renderBanList(b) { document.getElementById('banList').innerHTML = "Baneados: " + Object.values(b).join(", "); }
         function toggleAuth() { const p = prompt("Acceso:"); if(p === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
-        function openDetails(idx) { const l = fullData.levels[idx]; const p = Object.values(fullData.players || {}); const victors = p.filter(v => (v.completions || []).some(c => c.level === l.name)); document.getElementById('modal-body').innerHTML = `<h1>${l.name}</h1><p style="font-size:0.75rem;">FIRST VICTOR: <b style="color:#fff;">${l.first || 'Nadie'}</b></p><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:15px; margin-top:15px;"></iframe><div style="margin-top:15px; text-align:left;"><small>VICTORS REGISTRADOS:</small>${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111; font-size:0.8rem;">${v.name}</div>`).join("")}</div>`; document.getElementById('levelModal').style.display = "block"; }
         function closeM() { document.getElementById('levelModal').style.display = "none"; }
         function updateLevelSelect(n) { document.getElementById('recLevel').innerHTML = '<option value="">-- Nivel --</option>' + n.map(l => `<option value="${l.name}">${l.name}</option>`).join(""); }
     </script>
