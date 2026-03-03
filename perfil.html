@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scully List | Mi Perfil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --bg: #0b0c10; --card: #1f2833; --border: rgba(255,255,255,0.05);
+            --text-main: #c5c6c7; --text-light: #ffffff;
+            --accent: #ff6600; --blue: #66fcf1; --green: #45a29e; --red: #f05454;
+        }
+        body { background: var(--bg); color: var(--text-main); font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        
+        .profile-container { width: 100%; max-width: 800px; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .header h1 { margin: 0; color: var(--text-light); font-size: 1.5rem; }
+        .header h1 span { color: var(--accent); }
+        .btn-logout { background: rgba(240,84,84,0.1); color: var(--red); border: 1px solid var(--red); padding: 8px 15px; border-radius: 8px; cursor: pointer; text-decoration: none; font-weight: 800; font-size: 0.75rem; transition: 0.3s; }
+        .btn-logout:hover { background: var(--red); color: #000; }
+        .btn-hub { background: transparent; color: var(--text-main); border: 1px solid var(--border); padding: 8px 15px; border-radius: 8px; cursor: pointer; text-decoration: none; font-weight: 800; font-size: 0.75rem; transition: 0.3s; margin-right: 10px; }
+        .btn-hub:hover { background: var(--border); color: var(--text-light); }
+
+        .panel { background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 30px; margin-bottom: 20px; }
+        .panel h2 { color: var(--text-light); margin-top: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .panel h2 i { color: var(--blue); }
+
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 0.75rem; color: var(--accent); font-weight: 800; margin-bottom: 5px; text-transform: uppercase; }
+        input, textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: var(--text-light); padding: 12px; border-radius: 10px; font-family: 'Lexend Deca'; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: 0.3s; resize: vertical; }
+        input:focus, textarea:focus { border-color: var(--blue); }
+        
+        .btn-save { background: var(--blue); color: #000; border: none; padding: 12px 25px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 100%; display: flex; justify-content: center; gap: 10px; align-items: center; }
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,252,241,0.3); }
+
+        .btn-pfp { background: rgba(69,162,158,0.1); border: 1px solid var(--green); color: var(--green); }
+        .btn-pfp:hover { background: var(--green); color: #000; }
+
+        .claim-box { text-align: center; padding: 40px 20px; }
+        .claim-box h3 { color: var(--accent); font-size: 1.5rem; margin-bottom: 10px; }
+        .claim-box p { color: #888; font-size: 0.85rem; margin-bottom: 20px; }
+
+        #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 10px; padding: 15px 20px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; transform: translate(-50%, 50px); opacity: 0; }
+        #scullyToast.show { visibility: visible; transform: translate(-50%, 0); opacity: 1; }
+    </style>
+</head>
+<body>
+    <div id="scullyToast"><i class="fas fa-check-circle"></i> Mensaje</div>
+
+    <div class="profile-container">
+        <div class="header">
+            <h1>Panel <span>Personal</span></h1>
+            <div>
+                <a href="index.html" class="btn-hub"><i class="fas fa-home"></i> HUB</a>
+                <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> SALIR</button>
+            </div>
+        </div>
+
+        <div id="viewClaim" class="panel" style="display:none;">
+            <div class="claim-box">
+                <h3><i class="fas fa-link"></i> Reclamar Identidad</h3>
+                <p>Parece que tu cuenta no está vinculada a ningún Nickname en la Scully List.<br>Escribe tu Nick de Geometry Dash y un link a tu canal de YouTube para que el Staff verifique que eres tú y fusione tus récords a esta cuenta.</p>
+                <input type="text" id="claimNick" placeholder="Tu Nick exacto en la lista">
+                <input type="text" id="claimProof" placeholder="Link de tu canal de YouTube o Twitter">
+                <button onclick="sendClaimRequest()" class="btn-save"><i class="fas fa-paper-plane"></i> ENVIAR SOLICITUD AL STAFF</button>
+            </div>
+        </div>
+
+        <div id="viewProfile" style="display:none;">
+            
+            <div class="panel">
+                <h2><i class="fas fa-id-card"></i> Configurar Biografía y Redes</h2>
+                <div class="input-group">
+                    <label>Biografía (Máx 150 caracteres)</label>
+                    <textarea id="bioInput" maxlength="150" rows="3" placeholder="Escribe algo sobre ti para que aparezca en el ranking..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label><i class="fab fa-youtube" style="color:#ff3333;"></i> Link de YouTube</label>
+                    <input type="text" id="ytInput" placeholder="https://youtube.com/c/tuCanal">
+                </div>
+                <div class="input-group">
+                    <label><i class="fab fa-twitter" style="color:#1da1f2;"></i> Link de Twitter (X)</label>
+                    <input type="text" id="twInput" placeholder="https://twitter.com/tuUsuario">
+                </div>
+                <div class="input-group">
+                    <label><i class="fab fa-discord" style="color:#7289da;"></i> Usuario de Discord</label>
+                    <input type="text" id="dcInput" placeholder="Ejemplo: score#1234">
+                </div>
+                <button onclick="saveProfile()" class="btn-save"><i class="fas fa-save"></i> GUARDAR CAMBIOS</button>
+            </div>
+
+            <div class="panel" style="border-color: rgba(69,162,158,0.3);">
+                <h2 style="color:var(--green);"><i class="fas fa-image" style="color:var(--green);"></i> Solicitud de Foto de Perfil</h2>
+                <p style="font-size:0.8rem; color:#888;">El Staff revisará tu imagen antes de aplicarla. Usa links directos (Imgur, Discord) terminados en .png o .jpg.</p>
+                <input type="text" id="pfpInput" placeholder="Link de la imagen...">
+                <button onclick="requestPFP()" class="btn-save btn-pfp"><i class="fas fa-upload"></i> SOLICITAR PFP AL STAFF</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = { databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+        
+        let currentUser = null;
+        let myProfileData = null;
+        let myPlayerIndex = -1;
+
+        function showToast(msg, isError=false) {
+            const t = document.getElementById("scullyToast");
+            t.innerHTML = isError ? `<i class="fas fa-times-circle"></i> ${msg}` : `<i class="fas fa-check-circle"></i> ${msg}`;
+            t.style.backgroundColor = isError ? "var(--red)" : "var(--green)";
+            t.className = "show"; setTimeout(() => { t.className = t.className.replace("show", ""); }, 3500);
+        }
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentUser = user;
+                loadPlayerData();
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        function logout() { auth.signOut(); }
+
+        function loadPlayerData() {
+            db.ref('players').on('value', snap => {
+                const players = Object.values(snap.val() || {});
+                // Buscar si algún jugador tiene este email vinculado
+                myPlayerIndex = players.findIndex(p => p.email === currentUser.email);
+                
+                if(myPlayerIndex > -1) {
+                    myProfileData = players[myPlayerIndex];
+                    document.getElementById('viewClaim').style.display = "none";
+                    document.getElementById('viewProfile').style.display = "block";
+                    
+                    // Rellenar campos
+                    document.getElementById('bioInput').value = myProfileData.bio || "";
+                    document.getElementById('ytInput').value = myProfileData.socials?.yt || "";
+                    document.getElementById('twInput').value = myProfileData.socials?.tw || "";
+                    document.getElementById('dcInput').value = myProfileData.socials?.dc || "";
+                } else {
+                    document.getElementById('viewClaim').style.display = "block";
+                    document.getElementById('viewProfile').style.display = "none";
+                }
+            });
+        }
+
+        function sendClaimRequest() {
+            const nick = document.getElementById('claimNick').value;
+            const proof = document.getElementById('claimProof').value;
+            if(!nick || !proof) return showToast("Llena ambos campos", true);
+            
+            db.ref('claim_requests').push({
+                email: currentUser.email,
+                nick: nick,
+                proof: proof
+            }).then(() => {
+                showToast("Solicitud enviada. Espera a que un Admin la apruebe.");
+                document.getElementById('claimNick').value = "";
+                document.getElementById('claimProof').value = "";
+            });
+        }
+
+        function saveProfile() {
+            if(myPlayerIndex === -1) return;
+            
+            const bio = document.getElementById('bioInput').value;
+            const yt = document.getElementById('ytInput').value;
+            const tw = document.getElementById('twInput').value;
+            const dc = document.getElementById('dcInput').value;
+
+            db.ref(`players/${myPlayerIndex}/bio`).set(bio);
+            db.ref(`players/${myPlayerIndex}/socials`).set({ yt: yt, tw: tw, dc: dc })
+            .then(() => {
+                showToast("Biografía y Redes Guardadas!");
+            });
+        }
+
+        function requestPFP() {
+            if(myPlayerIndex === -1) return;
+            const url = document.getElementById('pfpInput').value;
+            if(!url) return showToast("Ingresa un link válido", true);
+
+            // Esto se envía exactamente al mismo lugar que los admins ya leen
+            db.ref('pfp_requests').push({
+                nick: myProfileData.name,
+                url: url
+            }).then(() => {
+                showToast("Solicitud PFP enviada al Staff");
+                document.getElementById('pfpInput').value = "";
+            });
+        }
+    </script>
+</body>
+</html>
