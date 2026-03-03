@@ -1,62 +1,43 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully Ranking | Prestigio Global</title>
+    <title>Scully Ranking | Global</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --accent: #ff6600; --bg: #030303; --card: rgba(15,15,15,0.7); --border: rgba(255,255,255,0.05); --blue: #00ccff; }
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; }
-        header { text-align: center; padding: 60px 20px; }
-        .wrapper { width: 95%; max-width: 1200px; margin: 0 auto 40px; }
+        :root { --accent: #ff6600; --bg: #030303; --border: rgba(255,255,255,0.05); }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; text-align: center; }
+        .wrapper { width: 95%; max-width: 1000px; margin: 40px auto; }
         table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-        .rank-row { background: var(--card); border: 1px solid var(--border); cursor: pointer; transition: 0.3s; }
-        .rank-row:hover { border-color: var(--accent); transform: scale(1.01); }
-        td { padding: 20px; text-align: center; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-        .player-info { display: flex; align-items: center; gap: 15px; text-align: left; }
-        .rank-pfp { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
-        .xp-badge { background: #000; color: var(--accent); padding: 3px 8px; border-radius: 5px; font-size: 0.6rem; font-weight: 800; border: 1px solid var(--accent); }
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
-        .modal-content { background: #0a0a0a; margin: 8vh auto; padding: 40px; width: 90%; max-width: 500px; border-radius: 35px; border: 1px solid var(--border); text-align: center; position: relative; }
-        .u-lvl-btn { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; margin-bottom: 10px; text-decoration: none; color: #fff; border-left: 4px solid var(--accent); transition: 0.3s; }
+        .rank-row { background: rgba(15,15,15,0.8); border: 1px solid var(--border); }
+        td { padding: 20px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .xp-badge { background: #000; color: var(--accent); padding: 2px 8px; border-radius: 5px; font-size: 0.6rem; font-weight: 800; border: 1px solid var(--accent); }
     </style>
 </head>
 <body>
-    <header><h1>SCULLY <span>RANKING</span></h1><a href="index.html" style="color:var(--accent); text-decoration:none; font-size:0.7rem; border:1px solid; padding:10px 25px; border-radius:50px;">VOLVER AL HUB</a></header>
+    <header style="padding:50px 0;"><h1>SCULLY <span style="color:var(--accent);">RANKING</span></h1><a href="index.html" style="color:var(--accent); text-decoration:none; font-size:0.7rem; border:1px solid; padding:10px 20px; border-radius:50px;">VOLVER</a></header>
     <main class="wrapper"><table><tbody id="leaderboardBody"></tbody></table></main>
-    <div id="uModal" class="modal"><div class="modal-content" id="uModalContent"></div></div>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script>
         const firebaseConfig = { databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
-        document.documentElement.style.setProperty('--accent', savedColor);
         db.ref('/').on('value', s => {
             const d = s.val(); const lvls = d.levels || []; const players = Object.values(d.players || {});
             let uniqueNicks = new Set([...players.map(p => p.name.toLowerCase()), ...lvls.map(l => l.first?.toLowerCase()).filter(Boolean)]);
             let rankList = Array.from(uniqueNicks).map(nick => {
-                const p = players.find(x => x.name.toLowerCase() === nick); const pName = p ? p.name : nick;
-                let pts = 0; let recordCount = 0; const inherited = lvls.filter(l => l.first?.toLowerCase() === nick);
-                p?.completions?.forEach(c => { const idx = lvls.findIndex(l => l.name.toLowerCase() === c.level.toLowerCase()); if(idx > -1) { pts += parseFloat(Math.max(100 - (idx * 0.6), 5)); recordCount++; } });
-                inherited.forEach(il => { const alreadyHas = p?.completions?.some(c => c.level.toLowerCase() === il.name.toLowerCase()); if(!alreadyHas) { const idx = lvls.findIndex(l => l.name.toLowerCase() === il.name.toLowerCase()); if(idx > -1) { pts += parseFloat(Math.max(100 - (idx * 0.6), 5)); recordCount++; } } });
-                return { name: pName, pts: pts.toFixed(1), lvl: Math.floor(pts / 50), pfp: p?.pfp || 'https://i.imgur.com/8pw98K4.png', country: p?.country || 'es', recs: recordCount, hidden: p?.hidden || false, isVerifier: inherited.length > 0, inherited: inherited, completions: p?.completions || [] };
-            }).filter(p => !p.hidden);
-            rankList.sort((a,b) => b.pts - a.pts);
-            window.fullRankList = rankList;
-            document.getElementById('leaderboardBody').innerHTML = rankList.map((u, i) => `<tr class="rank-row" onclick="openUserProfile('${u.name}')"><td style="font-weight:900; border-radius:15px 0 0 15px;">${i+1}</td><td><div class="player-info"><img src="${u.pfp}" class="rank-pfp"><div><b>${u.name.toUpperCase()} ${u.isVerifier?'<i class="fas fa-check-circle" style="color:var(--blue)"></i>':''} <img src="https://flagcdn.com/w40/${u.country}.png" style="height:12px; border-radius:2px;"></b><br><span class="xp-badge">LVL ${u.lvl}</span></div></div></td><td>${u.recs} RECORDS</td><td style="color:var(--accent); font-weight:900; border-radius:0 15px 15px 0;">${u.pts} XP</td></tr>`).join("");
+                const p = players.find(x => x.name.toLowerCase() === nick);
+                let uniqueLevels = new Set();
+                lvls.filter(l => l.first?.toLowerCase() === nick).forEach(l => uniqueLevels.add(l.name));
+                p?.completions?.forEach(c => uniqueLevels.add(c.level));
+                let pts = 0;
+                uniqueLevels.forEach(lvlName => { const idx = lvls.findIndex(l => l.name === lvlName); if(idx > -1) pts += parseFloat(Math.max(100 - (idx * 0.6), 5)); });
+                return { name: p?.name || nick, pts: pts.toFixed(1), lvl: Math.floor(pts / 50), country: p?.country || 'es', pfp: p?.pfp || 'https://i.imgur.com/8pw98K4.png', count: uniqueLevels.size, hidden: p?.hidden };
+            }).filter(p => !p.hidden).sort((a,b) => b.pts - a.pts);
+            document.getElementById('leaderboardBody').innerHTML = rankList.map((u, i) => `<tr class="rank-row"><td style="font-weight:900;">${i+1}</td><td style="text-align:left;"><img src="${u.pfp}" style="width:40px;height:40px;border-radius:50%;margin-right:15px;vertical-align:middle;"><b>${u.name.toUpperCase()} <img src="https://flagcdn.com/w40/${u.country}.png" style="height:10px;"></b><br><span class="xp-badge">LVL ${u.lvl}</span></td><td>${u.count} COMPLETADOS</td><td style="color:var(--accent); font-weight:900;">${u.pts} XP</td></tr>`).join("");
         });
-        function openUserProfile(nick) {
-            const u = window.fullRankList.find(x => x.name.toLowerCase() === nick.toLowerCase()); if(!u) return;
-            let html = `<span onclick="closeM()" style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.5rem; color:#444;">&times;</span><img src="${u.pfp}" style="width:100px;height:100px;border-radius:50%;border:3px solid var(--accent);margin-bottom:15px;object-fit:cover;"><h2>${u.name.toUpperCase()}</h2><div style="margin:15px 0;"><span class="xp-badge" style="font-size:0.8rem; padding:5px 15px;">LVL ${u.lvl} &bull; ${u.pts} XP</span></div><div style="margin-top:25px; text-align:left; max-height:300px; overflow-y:auto; padding-right:10px;">`;
-            u.inherited.forEach(l => { html += `<a href="https://youtu.be/${l.id}" target="_blank" class="u-lvl-btn" style="border-color:var(--blue); background:rgba(0,204,255,0.03);"><span>${l.name}</span><small style="color:var(--blue); font-weight:800;">VERIFICADOR <i class="fas fa-external-link-alt"></i></small></a>`; });
-            u.completions.forEach(c => { html += `<a href="${c.link||'#'}" target="_blank" class="u-lvl-btn"><span>${c.level}</span><i class="fab fa-youtube" style="color:#f00;"></i></a>`; });
-            html += `</div>`; document.getElementById('uModalContent').innerHTML = html; document.getElementById('uModal').style.display = "block";
-        }
-        function closeM() { document.getElementById('uModal').style.display = "none"; }
     </script>
 </body>
 </html>
