@@ -31,6 +31,7 @@
         .rank-row { background: var(--card-bg); backdrop-filter: blur(10px); cursor: pointer; transition: 0.3s; border: 1px solid var(--border); }
         .rank-row:hover { border-color: var(--accent); transform: scale(1.02); }
         
+        /* PODIO */
         .rank-row.top-0 { border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); }
         .rank-row.top-0 td:first-child { color: var(--gold); text-shadow: 0 0 10px var(--gold); font-size: 1.5rem; }
         .rank-row.top-1 { border-color: var(--silver); }
@@ -40,13 +41,15 @@
         td:first-child { border-left: 1px solid var(--border); border-radius: 15px 0 0 15px; font-weight: 800; text-align: center; width: 60px; }
         td:last-child { border-right: 1px solid var(--border); border-radius: 0 15px 15px 0; font-weight: 800; color: var(--accent); }
 
-        /* ADMIN PANEL */
+        /* ADMIN PANEL (FIX SELECTORES) */
         #adminPanel { display: none; background: #000; border: 1px solid var(--accent); padding: 40px; width: 95%; max-width: 1000px; margin: 50px auto; border-radius: 30px; text-align: left; }
-        input, select { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #fff !important; padding: 15px; border-radius: 12px; margin-bottom: 15px; box-sizing: border-box; }
+        input, select { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #fff !important; padding: 15px; border-radius: 12px; margin-bottom: 15px; font-family: 'Lexend Deca'; box-sizing: border-box; }
         option { background: #000; color: #fff; }
 
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .modal-content { background: #0a0a0a; margin: 10vh auto; padding: 40px; width: 90%; max-width: 450px; border-radius: 30px; border: 1px solid var(--border); text-align: center; }
+        .u-lvl-btn { display: flex; justify-content: space-between; background: #111; padding: 12px; border-radius: 12px; margin-bottom: 8px; text-decoration: none; color: #fff; font-size: 0.8rem; border-left: 4px solid var(--accent); }
+
         .admin-lock { padding: 60px 0; opacity: 0.05; cursor: pointer; text-align: center; }
     </style>
 </head>
@@ -57,6 +60,7 @@
         <div class="staff-item">ADMIN <b>Vegardo</b></div>
         <div class="staff-item">HELPER <b>Blitz</b></div>
         <div class="staff-item">HELPER <b>Sopa354</b></div>
+        <div class="staff-item">CODIFICADOR <b>score</b></div>
     </nav>
 
     <header>
@@ -77,6 +81,7 @@
             <div>
                 <input type="text" id="targetUser" placeholder="Nombre Usuario">
                 <select id="targetCountry">
+                    <option value="" disabled selected>-- País --</option>
                     <option value="es">España 🇪🇸</option><option value="mx">México 🇲🇽</option>
                     <option value="ar">Argentina 🇦🇷</option><option value="cl">Chile 🇨🇱</option>
                     <option value="co">Colombia 🇨🇴</option><option value="pe">Perú 🇵🇪</option>
@@ -84,7 +89,7 @@
                 </select>
                 <select id="levelSelect"></select>
                 <input type="text" id="levelLink" placeholder="URL Video YouTube">
-                <button onclick="addCompletion()" style="width:100%; background:var(--accent); border:none; padding:15px; border-radius:12px; font-weight:800; cursor:pointer;">AÑADIR RÁCORD</button>
+                <button onclick="addCompletion()" style="width:100%; background:var(--accent); border:none; padding:15px; border-radius:12px; font-weight:800; cursor:pointer;">AÑADIR RÉCORD</button>
             </div>
             <div id="adminUserList" style="max-height:300px; overflow-y:auto; background:#080808; padding:15px; border-radius:15px;"></div>
         </div>
