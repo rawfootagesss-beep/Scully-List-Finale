@@ -3,107 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully Admin | Control Total</title>
+    <title>Scully Admin | Master Console</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --accent: #ff6600; --bg: #000; --card: #080808; --border: #111; --green: #00ff66; --red: #ff3333; --blue: #00ccff; }
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; padding: 20px; overflow-x: auto; }
-        
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--card); padding: 15px 25px; border-radius: 15px; border: 1px solid var(--border); position: sticky; left: 0; }
-        
-        .admin-layout { display: flex; gap: 15px; min-width: 2400px; height: 82vh; }
-        .admin-col { flex: 1; background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 15px; display: flex; flex-direction: column; min-width: 300px; }
-        .admin-list-scroll { flex-grow: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 10px; }
-        
-        h2 { font-size: 0.6rem; text-transform: uppercase; color: #555; border-bottom: 1px solid #111; padding-bottom: 10px; margin-top: 0; letter-spacing: 1px; }
+        .admin-layout { display: flex; gap: 15px; min-width: 2600px; height: 85vh; }
+        .admin-col { flex: 1; background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 15px; display: flex; flex-direction: column; min-width: 310px; }
+        .admin-list-scroll { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
+        h2 { font-size: 0.6rem; text-transform: uppercase; color: #555; border-bottom: 1px solid #111; padding-bottom: 10px; margin-top: 0; }
         input, select, button { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 8px; font-family: 'Lexend Deca'; font-size: 0.7rem; }
-        
-        .sub-card { background: #000; padding: 12px; border-radius: 10px; margin-bottom: 10px; border-left: 3px solid var(--accent); font-size: 0.65rem; border-top: 1px solid #111; }
         .manage-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #111; font-size: 0.6rem; }
-
-        .btn-green { border-color: var(--green); color: var(--green); }
-        .btn-red { border-color: var(--red); color: var(--red); }
-        .btn-blue { border-color: var(--blue); color: var(--blue); }
-        
         .proof-box { display: flex; gap: 5px; margin: 8px 0; }
-        .btn-proof { flex: 1; text-decoration: none; text-align: center; font-size: 0.5rem; font-weight: 800; padding: 5px; border-radius: 4px; border: 1px solid #222; }
-        
-        /* EDITOR DE JUGADOR */
-        .player-edit-box { background: rgba(0,0,0,0.8); padding: 10px; border-radius: 10px; border: 1px solid var(--blue); margin-top: 10px; }
+        .btn-proof { flex: 1; text-decoration: none; text-align: center; font-size: 0.5rem; font-weight: 800; padding: 5px; border-radius: 4px; border: 1px solid #222; color: #fff; }
     </style>
 </head>
 <body>
-
-    <div class="admin-header">
-        <h1 style="font-size:1rem; margin:0;"><i class="fas fa-database" style="color:var(--accent); margin-right:10px;"></i>SCULLY <span style="color:var(--accent);">MASTER CONSOLE</span></h1>
-        <a href="index.html" style="color:#fff; text-decoration:none; font-size:0.7rem; background:#111; padding:8px 15px; border-radius:5px; border:1px solid #222;">VOLVER AL HUB</a>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; background:#080808; padding:15px; border-radius:15px; border:1px solid #111;">
+        <h1 style="font-size:1.2rem; margin:0;">SCULLY <span style="color:var(--accent);">MASTER CONSOLE</span></h1>
+        <a href="index.html" style="color:#fff; text-decoration:none; font-size:0.8rem; background:#111; padding:8px 15px; border-radius:5px;">HUB</a>
     </div>
-
     <div class="admin-layout">
         <div class="admin-col">
-            <h2>1. Editor de Niveles</h2>
-            <div id="adminLevelsList" class="admin-list-scroll"></div>
-            <input type="hidden" id="editLvlIdx">
-            <input type="text" id="lvlName" placeholder="Nombre"><input type="text" id="lvlYT" placeholder="ID YT"><input type="text" id="lvlFirst" placeholder="Verifier">
-            <input type="number" id="lvlPos" placeholder="Posición">
-            <button onclick="saveLevel()" style="background:var(--accent); color:#000; font-weight:800;">GUARDAR NIVEL</button>
-            <div id="lvlVictorsList" style="max-height:100px; overflow-y:auto; border-top:1px solid #111; padding-top:10px;"></div>
+            <h2>1. Editor Niveles</h2><div id="adminLevelsList" class="admin-list-scroll"></div>
+            <input type="hidden" id="editLvlIdx"><input type="text" id="lvlName" placeholder="Nombre"><input type="text" id="lvlYT" placeholder="ID YT"><input type="text" id="lvlFirst" placeholder="First Victor"><input type="number" id="lvlPos" placeholder="Posición"><button onclick="saveLevel()">GUARDAR</button>
+            <div id="lvlVictorsList" style="max-height:100px; overflow-y:auto; border-top:1px solid #111;"></div>
         </div>
-
+        <div class="admin-col"><h2>2. Moderación</h2><div id="submissionsList" class="admin-list-scroll"></div></div>
         <div class="admin-col">
-            <h2>2. Moderación (YT & DRIVE)</h2>
-            <div id="submissionsList" class="admin-list-scroll"></div>
-        </div>
-
-        <div class="admin-col">
-            <h2>3. Identidad & Ranking</h2>
-            <div id="adminUserList" class="admin-list-scroll"></div>
-            <div id="playerEditor" class="player-edit-box" style="display:none;">
-                <p style="font-size:0.5rem; color:var(--blue); margin:0 0 10px;">EDITANDO ATRIBUTOS:</p>
-                <input type="hidden" id="editPlayerIdx">
-                <input type="text" id="editNick" placeholder="Nuevo Nick">
-                <select id="editCountry">
-                    <option value="es">España 🇪🇸</option><option value="mx">México 🇲🇽</option>
-                    <option value="ar">Argentina 🇦🇷</option><option value="br">Brasil 🇧🇷</option>
-                    <option value="cl">Chile 🇨🇱</option><option value="co">Colombia 🇨🇴</option>
-                    <option value="pe">Perú 🇵🇪</option><option value="ve">Venezuela 🇻🇪</option>
-                    <option value="uy">Uruguay 🇺🇾</option><option value="bo">Bolivia 🇧🇴</option>
-                </select>
-                <label style="font-size:0.6rem; display:block; margin-bottom:10px;"><input type="checkbox" id="editHidden"> OCULTAR DEL RANKING</label>
-                <button onclick="savePlayerEdits()" class="btn-blue" style="background:none; border:1px solid; font-weight:800;">APLICAR CAMBIOS</button>
-                <p style="font-size:0.5rem; color:var(--red); margin:10px 0 5px;">QUITAR NIVELES AL USUARIO:</p>
-                <div id="playerLevelsInternal" style="max-height:100px; overflow-y:auto;"></div>
+            <h2>3. Identidad Jugadores</h2><div id="adminUserList" class="admin-list-scroll"></div>
+            <div id="playerEditor" style="display:none; background:#000; padding:10px; border:1px solid var(--blue); border-radius:10px;">
+                <input type="hidden" id="editPIdx"><input type="text" id="editNick" placeholder="Nick"><select id="editCountry"><option value="ar">AR</option><option value="br">BR</option><option value="cl">CL</option><option value="co">CO</option><option value="es">ES</option><option value="mx">MX</option><option value="pe">PE</option><option value="ve">VE</option></select>
+                <label style="font-size:0.6rem;"><input type="checkbox" id="editHidden"> OCULTAR</label><button onclick="savePlayerEdits()">APLICAR</button>
+                <div id="playerLevelsInternal" style="max-height:80px; overflow-y:auto; margin-top:5px;"></div>
             </div>
         </div>
-
-        <div class="admin-col">
-            <h2>4. Mercado Prestigio</h2>
-            <div id="marketSubList" class="admin-list-scroll"></div>
-        </div>
-
-        <div class="admin-col">
-            <h2>5. Fotos de Perfil</h2>
-            <div id="pfpSubList" class="admin-list-scroll"></div>
-        </div>
-
-        <div class="admin-col">
-            <h2>6. Lista Negra</h2>
-            <div id="banListInteractive" class="admin-list-scroll"></div>
-            <input type="text" id="banUser" placeholder="Nick"><button onclick="banPlayer()" class="btn-red">BANEAR</button>
-        </div>
-
-        <div class="admin-col">
-            <h2>7. Marquesina Logs</h2>
-            <div id="adminLogList" class="admin-list-scroll"></div>
-        </div>
-
-        <div class="admin-col">
-            <h2>8. Historial Récords</h2>
-            <div id="adminHistoryList" class="admin-list-scroll"></div>
-        </div>
+        <div class="admin-col"><h2>4. Mercado</h2><div id="marketSubList" class="admin-list-scroll"></div></div>
+        <div class="admin-col"><h2>5. PFPs</h2><div id="pfpSubList" class="admin-list-scroll"></div></div>
+        <div class="admin-col"><h2>6. Baneos</h2><div id="banListInteractive" class="admin-list-scroll"></div><input type="text" id="banUser" placeholder="Nick"><button onclick="db.ref('bans').push(document.getElementById('banUser').value)">BAN</button></div>
+        <div class="admin-col"><h2>7. Logs</h2><div id="adminLogList" class="admin-list-scroll"></div></div>
+        <div class="admin-col"><h2>8. Historial</h2><div id="adminHistoryList" class="admin-list-scroll"></div></div>
     </div>
-
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script>
@@ -112,110 +53,20 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         let fullData = {};
-
         db.ref('/').on('value', (s) => {
-            fullData = s.val() || {};
-            renderAdminLevelsList(fullData.levels || []);
-            renderSubmissions(fullData.submissions || {});
-            renderAdminUserList(Object.values(fullData.players || {}));
-            renderMarketModeration(fullData.market_requests || {});
-            renderPFPModeration(fullData.pfp_requests || {});
-            renderBanList(fullData.bans || {});
-            renderAdminLogs(fullData.logs || {});
-            renderAdminHistory(fullData.history || {});
+            fullData = s.val() || {}; renderAdminLevelsList(fullData.levels || []); renderSubmissions(fullData.submissions || {}); renderAdminUserList(Object.values(fullData.players || {})); renderMarketModeration(fullData.market_requests || {}); renderPFPModeration(fullData.pfp_requests || {}); renderBanList(fullData.bans || {}); renderAdminLogs(fullData.logs || {}); renderAdminHistory(fullData.history || {});
         });
-
-        // --- GESTIÓN DE JUGADORES (EL PANEL QUE REGRESÓ) ---
-        function renderAdminUserList(players) {
-            document.getElementById('adminUserList').innerHTML = players.map((u, i) => `
-                <div class="manage-item">
-                    <span style="${u.hidden?'text-decoration:line-through; opacity:0.4':''}">${u.name}</span>
-                    <button onclick="loadPlayerToEditor(${i})" style="width:auto; padding:2px 8px; font-size:0.5rem; border-color:var(--blue); color:var(--blue); background:none;">EDIT</button>
-                </div>`).join("");
-        }
-
-        function loadPlayerToEditor(idx) {
-            const players = Object.values(fullData.players || {});
-            const u = players[idx];
-            document.getElementById('playerEditor').style.display = "block";
-            document.getElementById('editPlayerIdx').value = idx;
-            document.getElementById('editNick').value = u.name;
-            document.getElementById('editCountry').value = u.country || 'es';
-            document.getElementById('editHidden').checked = u.hidden || false;
-            
-            document.getElementById('playerLevelsInternal').innerHTML = (u.completions || []).map((c, i) => `
-                <div class="manage-item">
-                    <span>${c.level}</span>
-                    <i class="fas fa-times" style="color:var(--red); cursor:pointer;" onclick="removeLevelFromUser(${idx}, ${i})"></i>
-                </div>`).join("") || "Sin niveles.";
-        }
-
-        function savePlayerEdits() {
-            const idx = document.getElementById('editPlayerIdx').value;
-            db.ref('players').once('value', s => {
-                let list = Object.values(s.val());
-                list[idx].name = document.getElementById('editNick').value;
-                list[idx].country = document.getElementById('editCountry').value;
-                list[idx].hidden = document.getElementById('editHidden').checked;
-                db.ref('players').set(list); alert("Jugador actualizado.");
-            });
-        }
-
-        function removeLevelFromUser(pIdx, lIdx) {
-            if(!confirm("¿Quitar este nivel del perfil del jugador?")) return;
-            db.ref('players').once('value', s => {
-                let list = Object.values(s.val());
-                list[pIdx].completions.splice(lIdx, 1);
-                db.ref('players').set(list);
-                loadPlayerToEditor(pIdx);
-            });
-        }
-
-        // --- MODERACIÓN RECORDS (CON LINKS) ---
-        function renderSubmissions(s) {
-            document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k,x]) => `
-                <div class="sub-card">
-                    <b>${x.player}</b> -> ${x.level}
-                    <div class="proof-box">
-                        <a href="${x.link}" target="_blank" class="btn-proof" style="color:#f00; border-color:#f00;">YT</a>
-                        <a href="${x.raw}" target="_blank" class="btn-proof" style="color:var(--blue); border-color:var(--blue);">DRIVE</a>
-                    </div>
-                    <div style="display:flex; gap:5px;">
-                        <button onclick="setStatus('${k}','Aceptado')" class="btn-green">OK</button>
-                        <button onclick="setStatus('${k}','Rechazado')" class="btn-red">X</button>
-                    </div>
-                </div>`).join("") || "Limpio.";
-        }
-
-        // --- FUNCIONES CORE ---
-        function setStatus(k, s) {
-            const sub = fullData.submissions[k]; const staff = prompt("Staff:");
-            if(s === 'Aceptado') {
-                db.ref('players').once('value', v => {
-                    let p = Object.values(v.val() || {}); let i = p.findIndex(u => u.name.toLowerCase() === sub.player.toLowerCase());
-                    let rec = { level: sub.level, link: sub.link };
-                    if(i > -1) { if(!p[i].completions) p[i].completions = []; p[i].completions.push(rec); }
-                    else { p.push({ name: sub.player, country: sub.country || 'es', completions: [rec] }); }
-                    db.ref('players').set(p);
-                });
-                db.ref('history').push({...sub, status: 'Aceptado'});
-                db.ref('logs').push({type:'accept', msg:`✅ ${sub.player} -> ${sub.level} (${staff})`});
-                db.ref('submissions/'+k).remove();
-            } else {
-                db.ref('history').push({...sub, status: 'Rechazado'});
-                db.ref('logs').push({type:'reject', msg:`❌ ${sub.player} RECHAZADO`});
-                db.ref('submissions/'+k).remove();
-            }
-        }
-
-        function saveLevel() {
-            const idx = document.getElementById('editLvlIdx').value; const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const p = parseInt(document.getElementById('lvlPos').value) - 1;
-            db.ref('levels').once('value', s => { let lvls = s.val() || []; const newL = { name:n, id:y, first:document.getElementById('lvlFirst').value }; if(idx!=="") lvls.splice(idx,1); lvls.splice(p>=0?p:lvls.length, 0, newL); db.ref('levels').set(lvls); });
-        }
         function renderAdminLevelsList(l) { document.getElementById('adminLevelsList').innerHTML = l.map((x,i) => `<div class="manage-item"><span>#${i+1} ${x.name}</span><button onclick="loadLevelToEditor(${i})">EDIT</button></div>`).join(""); }
-        function loadLevelToEditor(i) { const x = fullData.levels[i]; document.getElementById('editLvlIdx').value=i; document.getElementById('lvlName').value=x.name; document.getElementById('lvlYT').value=x.id; document.getElementById('lvlFirst').value=x.first||""; document.getElementById('lvlPos').value=i+1; }
+        function loadLevelToEditor(i) { const x = fullData.levels[i]; document.getElementById('editLvlIdx').value=i; document.getElementById('lvlName').value=x.name; document.getElementById('lvlYT').value=x.id; document.getElementById('lvlFirst').value=x.first||""; document.getElementById('lvlPos').value=i+1; const victors = Object.values(fullData.players || {}).filter(p => p.completions?.some(c => c.level === x.name)); document.getElementById('lvlVictorsList').innerHTML = victors.map(v => `<div class="manage-item"><span>${v.name}</span><i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="removeVictorFromLevel('${x.name}', '${v.name}')"></i></div>`).join(""); }
+        function removeVictorFromLevel(l, p) { if(confirm(`¿Borrar récord?`)) { db.ref('players').once('value', s => { let list = Object.values(s.val()); let i = list.findIndex(x => x.name === p); if(i > -1) { list[i].completions = list[i].completions.filter(c => c.level !== l); db.ref('players').set(list); } }); } }
+        function renderAdminUserList(p) { document.getElementById('adminUserList').innerHTML = p.map((u, i) => `<div class="manage-item"><span style="${u.hidden?'text-decoration:line-through':''}">${u.name}</span><button onclick="loadPlayerToEditor(${i})">EDIT</button></div>`).join(""); }
+        function loadPlayerToEditor(idx) { const u = Object.values(fullData.players)[idx]; document.getElementById('playerEditor').style.display = "block"; document.getElementById('editPIdx').value = idx; document.getElementById('editNick').value = u.name; document.getElementById('editCountry').value = u.country || 'es'; document.getElementById('editHidden').checked = u.hidden || false; document.getElementById('playerLevelsInternal').innerHTML = (u.completions || []).map((c, i) => `<div class="manage-item"><span>${c.level}</span><i class="fas fa-times" style="color:var(--red)" onclick="removeLevelFromUser(${idx}, ${i})"></i></div>`).join(""); }
+        function savePlayerEdits() { const idx = document.getElementById('editPIdx').value; db.ref('players').once('value', s => { let list = Object.values(s.val()); list[idx].name = document.getElementById('editNick').value; list[idx].country = document.getElementById('editCountry').value; list[idx].hidden = document.getElementById('editHidden').checked; db.ref('players').set(list); }); }
+        function removeLevelFromUser(pI, lI) { db.ref('players').once('value', s => { let list = Object.values(s.val()); list[pI].completions.splice(lI, 1); db.ref('players').set(list); }); }
+        function renderSubmissions(s) { document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k,x]) => `<div class="sub-card"><b>${x.player}</b>->${x.level}<div class="proof-box"><a href="${x.link}" target="_blank" class="btn-proof" style="color:red">YT</a><a href="${x.raw}" target="_blank" class="btn-proof" style="color:var(--blue)">DRIVE</a></div><button onclick="setStatus('${k}','Aceptado')" class="btn-green">OK</button></div>`).join(""); }
+        function setStatus(k, s) { const sub = fullData.submissions[k]; const staff = prompt("Staff:"); if(s === 'Aceptado') { db.ref('players').once('value', v => { let p = Object.values(v.val() || {}); let i = p.findIndex(u => u.name.toLowerCase() === sub.player.toLowerCase()); if(i > -1) { if(!p[i].completions) p[i].completions = []; p[i].completions.push({level:sub.level, link:sub.link}); } else { p.push({ name: sub.player, country: sub.country || 'es', completions: [{level:sub.level, link:sub.link}] }); } db.ref('players').set(p); }); db.ref('history').push({...sub, status: 'Aceptado'}); db.ref('logs').push({type:'accept', msg:`✅ ${sub.player} -> ${sub.level} (${staff})`}); db.ref('submissions/'+k).remove(); } }
+        function saveLevel() { const idx = document.getElementById('editLvlIdx').value; const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const p = parseInt(document.getElementById('lvlPos').value) - 1; db.ref('levels').once('value', s => { let lvls = s.val() || []; const newL = { name:n, id:y, first:document.getElementById('lvlFirst').value }; if(idx!=="") lvls.splice(idx,1); lvls.splice(p>=0?p:lvls.length, 0, newL); db.ref('levels').set(lvls); }); }
         function renderBanList(b) { document.getElementById('banListInteractive').innerHTML = Object.entries(b).map(([k,v]) => `<div class="manage-item"><span>${v}</span><i class="fas fa-trash" onclick="db.ref('bans/${k}').remove()"></i></div>`).join(""); }
-        function banPlayer() { db.ref('bans').push(document.getElementById('banUser').value); }
         function renderAdminLogs(l) { document.getElementById('adminLogList').innerHTML = Object.entries(l).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.msg}</span></div>`).join(""); }
         function renderAdminHistory(h) { document.getElementById('adminHistoryList').innerHTML = Object.entries(h).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.player} (${v.status})</span></div>`).join(""); }
         function renderMarketModeration(m) { document.getElementById('marketSubList').innerHTML = Object.entries(m).map(([k,v]) => `<div class="sub-card">${v.nick}: ${v.item}<button onclick="approveCosmetic('${k}')" class="btn-green">OK</button></div>`).join(""); }
