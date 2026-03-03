@@ -7,11 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --accent: #ff6600; --bg: #030303; --card: rgba(15,15,15,0.9); --border: rgba(255,255,255,0.05); }
+        :root { --accent: #ff6600; --bg: #030303; --card: rgba(15,15,15,0.9); --border: rgba(255,255,255,0.05); --blue: #00ccff; }
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; text-align: center; }
-        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 12px 24px; text-decoration: none; font-size: 0.7rem; border-radius: 50px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; margin: 40px 10px; }
+        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 12px 24px; text-decoration: none; font-size: 0.7rem; border-radius: 50px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; margin: 40px 10px; cursor: pointer; transition: 0.3s; }
+        .btn-scully:hover { background: var(--accent); color: #000; }
         .glass-form { background: var(--card); border: 1px solid var(--border); padding: 45px; border-radius: 35px; width: 90%; max-width: 500px; margin: 0 auto 40px; }
         input, select { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-family: 'Lexend Deca'; box-sizing: border-box; }
+        option { background: #000; }
     </style>
 </head>
 <body>
@@ -21,6 +23,32 @@
     <div class="glass-form">
         <h2 style="color:var(--accent); margin-top:0;">SUBIR RÉCORD</h2>
         <input type="text" id="recPlayer" placeholder="Nickname">
+        
+        <select id="recCountry">
+            <option value="ar">Argentina 🇦🇷</option>
+            <option value="bo">Bolivia 🇧🇴</option>
+            <option value="br">Brasil 🇧🇷</option>
+            <option value="cl">Chile 🇨🇱</option>
+            <option value="co">Colombia 🇨🇴</option>
+            <option value="cr">Costa Rica 🇨🇷</option>
+            <option value="cu">Cuba 🇨🇺</option>
+            <option value="ec">Ecuador 🇪🇨</option>
+            <option value="sv">El Salvador 🇸🇻</option>
+            <option value="es">España 🇪🇸</option>
+            <option value="gt">Guatemala 🇬🇹</option>
+            <option value="gq">Guinea Ecuatorial 🇬🇶</option>
+            <option value="hn">Honduras 🇭🇳</option>
+            <option value="mx">México 🇲🇽</option>
+            <option value="ni">Nicaragua 🇳🇮</option>
+            <option value="pa">Panamá 🇵🇦</option>
+            <option value="py">Paraguay 🇵🇾</option>
+            <option value="pe">Perú 🇵🇪</option>
+            <option value="pr">Puerto Rico 🇵🇷</option>
+            <option value="do">República Dominicana 🇩🇴</option>
+            <option value="uy">Uruguay 🇺🇾</option>
+            <option value="ve">Venezuela 🇻🇪</option>
+        </select>
+
         <select id="recLevel"><option value="">-- Nivel --</option></select>
         <input type="text" id="recLink" placeholder="Link YouTube">
         <input type="text" id="recRaw" placeholder="Link RAW Drive">
@@ -42,15 +70,27 @@
         const db = firebase.database();
         const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
         document.documentElement.style.setProperty('--accent', savedColor);
+
         let lvls = [];
         db.ref('levels').on('value', s => {
             lvls = s.val() || [];
             document.getElementById('recLevel').innerHTML = lvls.map(l => `<option value="${l.name}">${l.name}</option>`).join("");
         });
+
         function submitRecord() {
-            const l = document.getElementById('recLevel').value; const r = document.getElementById('recRaw').value; const idx = lvls.findIndex(lvl => lvl.name === l);
-            if (idx <= 99 && idx !== -1 && !r.includes("drive.google.com")) return alert("RAW OBLIGATORIO.");
-            db.ref('submissions').push({ player: document.getElementById('recPlayer').value, level: l, link: document.getElementById('recLink').value, raw: r || "N/A", status: "Pendiente" });
+            const l = document.getElementById('recLevel').value; 
+            const r = document.getElementById('recRaw').value; 
+            const c = document.getElementById('recCountry').value;
+            const idx = lvls.findIndex(lvl => lvl.name === l);
+            if (idx <= 99 && idx !== -1 && !r.includes("drive.google.com")) return alert("RAW OBLIGATORIO PARA TOP 100.");
+            db.ref('submissions').push({ 
+                player: document.getElementById('recPlayer').value, 
+                level: l, 
+                link: document.getElementById('recLink').value, 
+                raw: r || "N/A", 
+                country: c,
+                status: "Pendiente" 
+            });
             alert("¡Récord enviado!");
         }
         function submitPFP() { db.ref('pfp_requests').push({ nick: document.getElementById('pfpNick').value, url: document.getElementById('pfpUrl').value }); alert("¡Foto enviada!"); }
