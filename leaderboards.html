@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully Leaderboards | Ranking & Tributo</title>
+    <title>Scully Leaderboards | Ranking Global & Prestigio</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
-            --accent: #ff6600; 
-            --accent-grad: linear-gradient(135deg, #ff6600 0%, #ff9900 100%);
-            --bg: #030303; 
-            --card-bg: rgba(15, 15, 15, 0.7);
+            --accent: #ff6600; --accent-grad: linear-gradient(135deg, #ff6600 0%, #ff9900 100%);
+            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.7);
             --border: rgba(255, 255, 255, 0.05);
             --glow: 0 0 20px rgba(255, 102, 0, 0.2);
             --gold: #ffd700; --silver: #c0c0c0; --bronze: #cd7f32;
@@ -25,7 +23,7 @@
             overflow-x: hidden; 
         }
 
-        /* BARRA DE STAFF CON TRIBUTO */
+        /* 1. STAFF BAR CON TRIBUTO */
         .staff-bar { 
             display: flex; justify-content: center; gap: 25px; padding: 15px; 
             background: rgba(255,255,255,0.02); font-size: 0.6rem; 
@@ -34,7 +32,7 @@
         .staff-item { display: flex; align-items: center; gap: 8px; color: #888; }
         .staff-item i { color: var(--accent); }
         .staff-item b { color: #fff; }
-        .tribute-item { color: #fff; font-weight: 800; gap: 5px; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .tribute-item { color: #fff; font-weight: 800; gap: 5px; text-shadow: 0 0 10px rgba(255,255,255,0.4); }
 
         header { padding: 60px 20px; text-align: center; }
         h1 { font-size: 3rem; font-weight: 800; text-transform: uppercase; margin: 0; letter-spacing: -1px; }
@@ -48,10 +46,10 @@
         }
         .btn-back:hover { background: var(--accent); color: #000; box-shadow: var(--glow); transform: translateY(-3px); }
 
-        /* TABLA DE RANKING */
-        .wrapper { width: 95%; max-width: 1000px; margin: 40px auto; }
-        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-        th { text-transform: uppercase; font-size: 0.65rem; color: #444; letter-spacing: 2px; padding: 15px; text-align: center; }
+        /* 2. TABLA DE RANKING MEJORADA */
+        .wrapper { width: 95%; max-width: 1100px; margin: 40px auto; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 12px; }
+        th { text-transform: uppercase; font-size: 0.65rem; color: #444; letter-spacing: 2px; padding: 10px; text-align: center; }
         
         .rank-row { 
             background: var(--card-bg); backdrop-filter: blur(10px); 
@@ -59,21 +57,29 @@
         }
         .rank-row:hover { border-color: var(--accent); transform: scale(1.01); background: rgba(255,102,0,0.05); }
         
-        /* ESTILOS DE PODIO */
-        .rank-row.top-0 { border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); }
-        .rank-row.top-0 td:first-child { color: var(--gold); text-shadow: 0 0 10px var(--gold); font-size: 1.5rem; }
-        
+        /* PODIO */
+        .rank-row.top-0 { border-color: var(--gold); box-shadow: 0 0 20px rgba(255, 215, 0, 0.15); }
+        .rank-row.top-0 td:first-child { color: var(--gold); text-shadow: 0 0 10px var(--gold); font-size: 1.6rem; }
         .rank-row.top-1 { border-color: var(--silver); }
-        .rank-row.top-1 td:first-child { color: var(--silver); }
-        
         .rank-row.top-2 { border-color: var(--bronze); }
-        .rank-row.top-2 td:first-child { color: var(--bronze); }
 
         td { padding: 20px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); text-align: center; }
-        td:first-child { border-left: 1px solid var(--border); border-radius: 15px 0 0 15px; font-weight: 800; width: 70px; }
-        td:last-child { border-right: 1px solid var(--border); border-radius: 0 15px 15px 0; color: var(--accent); font-weight: 800; }
+        td:first-child { border-left: 1px solid var(--border); border-radius: 15px 0 0 15px; font-weight: 800; width: 80px; }
+        td:last-child { border-right: 1px solid var(--border); border-radius: 0 15px 15px 0; color: var(--accent); font-weight: 800; font-size: 1.1rem; }
 
-        /* PANEL ADMIN (HIDDEN BY DEFAULT) */
+        /* 3. ELEMENTOS DE PRESTIGIO (XP & BADGES) */
+        .player-info-cell { display: flex; align-items: center; gap: 15px; text-align: left; }
+        .player-meta { display: flex; flex-direction: column; gap: 4px; }
+        .xp-pill { 
+            background: #111; color: var(--accent); padding: 2px 8px; 
+            border-radius: 5px; font-size: 0.6rem; font-weight: 800; 
+            border: 1px solid var(--accent); width: fit-content;
+        }
+        .rank-title { font-size: 0.6rem; color: #666; text-transform: uppercase; font-weight: bold; }
+        .badges-container { display: flex; gap: 5px; margin-top: 5px; }
+        .badge-mini { font-size: 0.9rem; filter: drop-shadow(0 0 3px rgba(255,102,0,0.5)); }
+
+        /* 4. ADMIN PANEL */
         #adminPanel { 
             display: none; background: #000; border: 1px solid var(--accent); 
             padding: 40px; width: 95%; max-width: 1000px; margin: 50px auto; 
@@ -85,16 +91,15 @@
             color: #fff !important; padding: 15px; border-radius: 12px; 
             margin-bottom: 15px; font-family: 'Lexend Deca'; box-sizing: border-box; 
         }
-        option { background: #000 !important; color: #fff !important; }
+        option { background: #000; color: #fff; }
 
-        /* MODALES */
+        /* 5. MODAL */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
-        .modal-content { background: #0a0a0a; margin: 5vh auto; padding: 40px; width: 90%; max-width: 500px; border-radius: 30px; border: 1px solid var(--border); text-align: center; }
+        .modal-content { background: #0a0a0a; margin: 8vh auto; padding: 40px; width: 90%; max-width: 450px; border-radius: 30px; border: 1px solid var(--border); text-align: center; }
         .u-lvl-btn { 
-            display: flex; justify-content: space-between; background: #111; 
-            padding: 15px; border-radius: 12px; margin-bottom: 10px; 
-            text-decoration: none; color: #fff; font-size: 0.85rem; 
-            border-left: 4px solid var(--accent); transition: 0.3s; align-items: center; 
+            display: flex; justify-content: space-between; background: #111; padding: 15px; 
+            border-radius: 12px; margin-bottom: 8px; text-decoration: none; color: #fff; 
+            font-size: 0.8rem; border-left: 4px solid var(--accent); transition: 0.3s; 
         }
         .u-lvl-btn:hover { background: #181818; transform: translateX(5px); }
 
@@ -123,13 +128,13 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th style="text-align:left">Jugador</th>
-                    <th>Récords</th>
-                    <th>Puntos Totales</th>
+                    <th style="text-align:left">Jugador de Prestigio</th>
+                    <th>Records</th>
+                    <th>Puntos</th>
                 </tr>
             </thead>
             <tbody id="leaderboardBody">
-                <tr><td colspan="4" style="color:#444; padding:50px;">Sincronizando con Scully Network...</td></tr>
+                <tr><td colspan="4" style="color:#444; padding:80px;">Sincronizando Ranking de Prestigio...</td></tr>
             </tbody>
         </table>
     </main>
@@ -137,31 +142,25 @@
     <div class="admin-lock" onclick="toggleAuth()"><i class="fas fa-lock"></i></div>
     <div id="authBox" style="display:none; text-align:center; padding-bottom:100px;">
         <input type="password" id="tokenInput" placeholder="Token Codificador" style="width:200px;">
-        <button onclick="checkAuth()" style="background:var(--accent); border:none; padding:12px 30px; border-radius:50px; cursor:pointer; font-weight:800; color:#000;">ENTRAR</button>
+        <button onclick="checkAuth()" style="background:var(--accent); border:none; padding:12px 30px; border-radius:50px; cursor:pointer; font-weight:800;">ENTRAR</button>
     </div>
 
     <div id="adminPanel">
-        <h2 style="color:var(--accent); margin-top:0; text-transform:uppercase; letter-spacing:2px;">Gestión de Jugadores</h2>
+        <h2 style="color:var(--accent); margin-top:0;">Gestión de Ranking</h2>
         <div class="admin-grid">
             <div class="admin-col">
-                <p style="font-size:0.6rem; color:#444; font-weight:bold;">1. DATOS BÁSICOS</p>
-                <input type="text" id="targetUser" placeholder="Nickname exacto">
+                <p style="font-size:0.6rem; color:#444;">ASIGNAR RÉCORD MANUAL</p>
+                <input type="text" id="targetUser" placeholder="Nickname">
                 <select id="targetCountry">
                     <option value="es">España 🇪🇸</option><option value="mx">México 🇲🇽</option>
                     <option value="ar">Argentina 🇦🇷</option><option value="cl">Chile 🇨🇱</option>
                     <option value="co">Colombia 🇨🇴</option><option value="pe">Perú 🇵🇪</option>
-                    <option value="ve">Venezuela 🇻🇪</option><option value="ec">Ecuador 🇪🇨</option>
-                    <option value="gt">Guatemala 🇬🇹</option><option value="uy">Uruguay 🇺🇾</option>
                 </select>
-                <p style="font-size:0.6rem; color:#444; font-weight:bold; margin-top:15px;">2. ASIGNAR NIVEL</p>
                 <select id="levelSelect"></select>
-                <input type="text" id="levelLink" placeholder="Link del video (YouTube)">
-                <button onclick="addCompletionManually()" style="width:100%; background:var(--accent); border:none; padding:15px; border-radius:12px; font-weight:800; cursor:pointer; color:#000;">ACTUALIZAR RANKING</button>
+                <input type="text" id="levelLink" placeholder="YouTube Link">
+                <button onclick="addManualRecord()" style="width:100%; background:var(--accent); border:none; padding:15px; border-radius:12px; font-weight:800; cursor:pointer;">ACTUALIZAR</button>
             </div>
-            <div class="admin-col">
-                <p style="font-size:0.6rem; color:#444; font-weight:bold;">LISTA DE MIEMBROS</p>
-                <div id="adminUserList" style="max-height:350px; overflow-y:auto; background:#080808; padding:15px; border-radius:15px; border:1px solid var(--border);"></div>
-            </div>
+            <div id="adminUserList" style="max-height:350px; overflow-y:auto; background:#080808; padding:15px; border-radius:15px;"></div>
         </div>
     </div>
 
@@ -176,133 +175,123 @@
         const TOKEN = "GdfuFCRy";
         let fullData = {};
 
-        // ESCUCHA EN TIEMPO REAL
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {};
             const lvls = fullData.levels || [];
             const bans = Object.values(fullData.bans || {});
-            
-            // FILTRAR JUGADORES BANEADOS
             const players = Object.values(fullData.players || {}).filter(p => !bans.includes(p.name));
             
             renderLeaderboard(lvls, players);
             updateLevelSelect(lvls);
-            
             if(sessionStorage.getItem('scully_session') === 'active') {
                 document.getElementById('adminPanel').style.display = "block";
                 updateAdminUserList(players);
             }
         });
 
-        // LÓGICA DE RENDERIZADO
+        // --- LÓGICA DE PRESTIGIO (XP, RANGOS, MEDALLAS) ---
         function renderLeaderboard(lvls, players) {
             const body = document.getElementById('leaderboardBody');
-            if(players.length === 0) {
-                body.innerHTML = '<tr><td colspan="4" style="color:#444; padding:50px;">No hay jugadores en el ranking.</td></tr>';
-                return;
-            }
+            if(players.length === 0) { body.innerHTML = '<tr><td colspan="4">No hay jugadores.</td></tr>'; return; }
 
-            // Calcular puntos para cada jugador
             players.forEach(u => {
-                let totalPts = 0; 
+                let totalPts = 0; let badges = [];
                 if(u.completions) {
                     u.completions.forEach(c => {
                         const idx = lvls.findIndex(l => l.name.toLowerCase() === c.level.toLowerCase());
-                        if(idx > -1) totalPts += parseFloat(Math.max(100 - (idx * 0.6), 5));
+                        if(idx > -1) {
+                            totalPts += parseFloat(Math.max(100 - (idx * 0.6), 5));
+                            if(idx <= 9) badges.push('🔥'); // Medalla Hardcore (Top 10)
+                            if(lvls[idx].first?.toLowerCase() === u.name.toLowerCase()) badges.push('🥇'); // First Victor
+                        }
                     });
                 }
+                if(u.completions?.length >= 5) badges.push('🛡️'); // Veterano
                 u.pts = totalPts.toFixed(1);
+                u.lvl = Math.floor(totalPts / 10);
+                u.rank = u.lvl > 50 ? "Scully Legend" : u.lvl > 20 ? "Demon Slayer" : "Novato";
+                u.badges = [...new Set(badges)];
             });
 
-            // Ordenar de mayor a menor puntuación
             players.sort((a,b) => b.pts - a.pts);
 
             body.innerHTML = players.map((u, i) => `
                 <tr class="rank-row top-${i}" onclick="openUserProfile('${u.name}')">
                     <td>${i+1}</td>
                     <td style="text-align:left;">
-                        <img src="https://flagcdn.com/w20/${u.country || 'es'}.png" style="margin-right:15px; border-radius:2px;">
-                        ${u.name}
+                        <div class="player-info-cell">
+                            <img src="https://flagcdn.com/w20/${u.country || 'es'}.png" style="border-radius:2px;">
+                            <div class="player-meta">
+                                <b>${u.name}</b>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span class="xp-pill">LVL ${u.lvl}</span>
+                                    <span class="rank-title">${u.rank}</span>
+                                </div>
+                                <div class="badges-container">${u.badges.map(b => `<span class="badge-mini">${b}</span>`).join("")}</div>
+                            </div>
+                        </div>
                     </td>
                     <td>${(u.completions || []).length}</td>
                     <td>${u.pts} PTS</td>
                 </tr>`).join("");
         }
 
-        // FUNCIONES ADMIN
-        function updateLevelSelect(lvls) { 
-            const sel = document.getElementById('levelSelect');
-            sel.innerHTML = '<option value="">-- Nivel a asignar --</option>' + 
-            lvls.map(l => `<option value="${l.name}">${l.name}</option>`).join(""); 
-        }
-
-        function addCompletionManually() {
+        // --- FUNCIONES ADMIN ---
+        function addManualRecord() {
             const name = document.getElementById('targetUser').value.trim();
             const level = document.getElementById('levelSelect').value;
             const link = document.getElementById('levelLink').value.trim();
             const country = document.getElementById('targetCountry').value;
-            if(!name || !level) return alert("Faltan datos obligatorios.");
+            if(!name || !level) return alert("Nickname y Nivel requeridos.");
 
             db.ref('players').once('value', s => {
-                let pList = Object.values(s.val() || {});
-                let idx = pList.findIndex(u => u.name.toLowerCase() === name.toLowerCase());
-                let record = { level: level, link: link };
-
+                let list = Object.values(s.val() || {});
+                let idx = list.findIndex(u => u.name.toLowerCase() === name.toLowerCase());
+                let rec = { level: level, link: link };
                 if(idx > -1) {
-                    if(!pList[idx].completions) pList[idx].completions = [];
-                    // Evitar duplicar el mismo nivel en un jugador
-                    if(!pList[idx].completions.find(c => c.level === level)) {
-                        pList[idx].completions.push(record);
-                        pList[idx].country = country;
-                    } else { return alert("Este jugador ya tiene este nivel registrado."); }
-                } else { 
-                    pList.push({ name: name, country: country, completions: [record] }); 
-                }
-                db.ref('players').set(pList);
-                alert("¡Ranking actualizado con éxito!");
+                    if(!list[idx].completions) list[idx].completions = [];
+                    if(!list[idx].completions.find(c => c.level === level)) {
+                        list[idx].completions.push(rec);
+                        list[idx].country = country;
+                    } else { return alert("Ya tiene este récord."); }
+                } else { list.push({ name: name, country: country, completions: [rec] }); }
+                db.ref('players').set(list);
+                alert("Ranking actualizado.");
             });
         }
 
-        function updateAdminUserList(players) {
-            document.getElementById('adminUserList').innerHTML = players.map((u, i) => `
+        function updateAdminUserList(p) {
+            document.getElementById('adminUserList').innerHTML = p.map((u, i) => `
                 <div style="display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid #111; font-size:0.75rem;">
-                    <span onclick="document.getElementById('targetUser').value='${u.name}'" style="cursor:pointer; color:var(--accent); font-weight:bold;">${u.name}</span>
-                    <i class="fas fa-trash-alt" onclick="deleteUser(${i})" style="color:#400; cursor:pointer;"></i>
+                    <span onclick="document.getElementById('targetUser').value='${u.name}'" style="cursor:pointer; color:var(--accent); font-weight:800;">${u.name}</span>
+                    <i class="fas fa-trash-alt" style="color:#400; cursor:pointer;" onclick="deleteUser(${i})"></i>
                 </div>`).join("");
         }
 
-        function deleteUser(i) {
-            if(confirm("¿Eliminar este jugador de la base de datos?")) {
-                db.ref('players').once('value', s => {
-                    let list = Object.values(s.val());
-                    list.splice(i, 1);
-                    db.ref('players').set(list);
-                });
-            }
-        }
+        function deleteUser(i) { if(confirm("¿Eliminar jugador?")) db.ref('players').once('value', s => { let list = Object.values(s.val()); list.splice(i, 1); db.ref('players').set(list); }); }
 
-        // PERFIL PÚBLICO (MODAL)
+        // --- MODAL PERFIL ---
         function openUserProfile(n) {
             const u = Object.values(fullData.players || {}).find(x => x.name === n);
             if(!u) return;
             document.getElementById('uModalContent').innerHTML = `
                 <span onclick="closeM()" style="float:right; cursor:pointer; font-size:1.5rem; color:var(--accent);">&times;</span>
                 <img src="https://flagcdn.com/w80/${u.country || 'es'}.png" style="width:60px; border-radius:10px; margin-bottom:15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
-                <h2 style="color:var(--accent); margin:0;">${u.name}</h2>
-                <div style="margin-top:25px; text-align:left; max-height:300px; overflow-y:auto;">
-                    ${(u.completions || []).map(c => `
-                        <a href="${c.link || '#'}" target="_blank" class="u-lvl-btn">
-                            <span>${c.level}</span>
-                            <i class="fab fa-youtube"></i>
-                        </a>`).join("") || '<p style="color:#444;">Sin récords registrados.</p>'}
+                <h2 style="margin:0; color:var(--accent);">${u.name}</h2>
+                <div style="margin:15px 0; display:flex; justify-content:center; gap:10px;">
+                    <span class="xp-pill" style="font-size:0.8rem; padding:5px 15px;">LVL ${Math.floor(u.pts / 10)}</span>
+                </div>
+                <div style="margin-top:20px; text-align:left; max-height:300px; overflow-y:auto;">
+                    ${(u.completions || []).map(c => `<a href="${c.link || '#'}" target="_blank" class="u-lvl-btn"><span>${c.level}</span><i class="fab fa-youtube"></i></a>`).join("") || '<p>Sin récords.</p>'}
                 </div>`;
             document.getElementById('uModal').style.display = "block";
         }
 
-        // AUTH & AUXILIARES
+        // --- AUTH & MISC ---
         function toggleAuth() { const b = document.getElementById('authBox'); b.style.display = (b.style.display === "block" ? "none" : "block"); }
         function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
         function closeM() { document.getElementById('uModal').style.display = "none"; }
+        function updateLevelSelect(lvls) { document.getElementById('levelSelect').innerHTML = '<option value="">-- Nivel a asignar --</option>' + lvls.map(l => `<option value="${l.name}">${l.name}</option>`).join(""); }
     </script>
 </body>
 </html>
