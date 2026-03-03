@@ -5,40 +5,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scully Ranking | Prestigio Global</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --accent: #ff6600; --bg: #030303; --border: rgba(255,255,255,0.05); --blue: #00ccff; }
+        :root { --accent: #ff6600; --bg: #030303; --card: rgba(15,15,15,0.8); --border: rgba(255,255,255,0.05); --blue: #00ccff; }
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; text-align: center; }
-        .wrapper { width: 95%; max-width: 1100px; margin: 40px auto; }
+        header { padding: 60px 20px; }
+        h1 { font-size: 3rem; margin: 0; text-transform: uppercase; font-weight: 800; letter-spacing: -1px; }
+        .wrapper { width: 95%; max-width: 1100px; margin: 0 auto 40px; }
         table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-        .rank-row { background: rgba(15,15,15,0.8); border: 1px solid var(--border); transition: 0.3s; cursor: pointer; }
-        .rank-row:hover { border-color: var(--accent); transform: scale(1.01); }
+        .rank-row { background: var(--card); border: 1px solid var(--border); transition: 0.3s; cursor: pointer; }
+        .rank-row:hover { border-color: var(--accent); transform: scale(1.01); background: rgba(255,102,0,0.05); }
         td { padding: 20px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .rank-pfp { width: 45px; height: 45px; border-radius: 50%; border: 1px solid var(--accent); object-fit: cover; margin-right: 15px; vertical-align: middle; }
         .xp-badge { background: #000; color: var(--accent); padding: 3px 8px; border-radius: 5px; font-size: 0.65rem; font-weight: 800; border: 1px solid var(--accent); }
+        
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
+        .modal-content { background: #0a0a0a; margin: 8vh auto; padding: 45px; width: 90%; max-width: 500px; border-radius: 35px; border: 1px solid var(--border); text-align: center; position: relative; }
+        .u-lvl-btn { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; margin-bottom: 10px; text-decoration: none; color: #fff; border-left: 4px solid var(--accent); transition: 0.3s; }
+        .u-lvl-btn:hover { background: rgba(255,255,255,0.08); }
     </style>
 </head>
 <body>
-    <header style="padding:60px 0;"><h1>SCULLY <span style="color:var(--accent);">RANKING</span></h1><a href="index.html" style="color:var(--accent); text-decoration:none; font-size:0.7rem; border:1px solid; padding:10px 25px; border-radius:50px;">VOLVER AL HUB</a></header>
+    <header>
+        <h1>SCULLY <span style="color:var(--accent);">RANKING</span></h1>
+        <a href="index.html" style="color:var(--accent); text-decoration:none; font-size:0.7rem; border:1px solid; padding:10px 25px; border-radius:50px; display:inline-block; margin-top:20px; font-weight:800;">VOLVER AL HUB</a>
+    </header>
     <main class="wrapper"><table><tbody id="leaderboardBody"></tbody></table></main>
+    <div id="uModal" class="modal"><div class="modal-content" id="uModalContent"></div></div>
+
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script>
         const firebaseConfig = { databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
+        document.documentElement.style.setProperty('--accent', savedColor);
+
+        // DEFINIMOS LA VARIABLE GLOBAL FUERA DE LA PROMESA PARA QUE EL MODAL LA ENCUENTRE SIEMPRE
+        window.rankData = [];
+
         db.ref('/').on('value', s => {
             const d = s.val(); const lvls = d.levels || []; const players = Object.values(d.players || {});
             let allNicks = new Set([...players.map(p => p.name.toLowerCase()), ...lvls.map(l => l.first?.toLowerCase()).filter(Boolean)]);
+            
             let rank = Array.from(allNicks).map(nick => {
                 const p = players.find(x => x.name.toLowerCase() === nick);
-                let uniqueL = new Set();
-                lvls.filter(l => l.first?.toLowerCase() === nick).forEach(l => uniqueL.add(l.name));
+                let uniqueL = new Set(); let verifL = [];
+                lvls.forEach(l => { if(l.first?.toLowerCase() === nick) { uniqueL.add(l.name); verifL.push(l); } });
                 p?.completions?.forEach(c => uniqueL.add(c.level));
-                let pts = 0;
-                uniqueL.forEach(n => { const i = lvls.findIndex(l => l.name === n); if(i > -1) pts += parseFloat(Math.max(100 - (i*0.6), 5)); });
-                return { name: p?.name || nick, pts: pts.toFixed(1), lvl: Math.floor(pts/50), country: p?.country || 'es', pfp: p?.pfp || 'https://i.imgur.com/8pw98K4.png', count: uniqueL.size, hidden: p?.hidden, isV: lvls.some(l => l.first?.toLowerCase() === nick) };
+                let pts = 0; uniqueL.forEach(n => { const i = lvls.findIndex(l => l.name === n); if(i > -1) pts += parseFloat(Math.max(100 - (i*0.6), 5)); });
+                
+                return { 
+                    name: p?.name || nick, pts: pts.toFixed(1), lvl: Math.floor(pts/50), 
+                    country: p?.country || 'es', pfp: p?.pfp || 'https://i.imgur.com/8pw98K4.png', 
+                    count: uniqueL.size, hidden: p?.hidden, isV: verifL.length > 0,
+                    verifL: verifL, manualL: p?.completions || []
+                };
             }).filter(p => !p.hidden).sort((a,b) => b.pts - a.pts);
-            document.getElementById('leaderboardBody').innerHTML = rank.map((u, i) => `<tr class="rank-row"><td>${i+1}</td><td style="text-align:left;"><img src="${u.pfp}" style="width:45px;height:45px;border-radius:50%;margin-right:15px;vertical-align:middle;border:1px solid var(--accent);"><b>${u.name.toUpperCase()} ${u.isV?'<i class="fas fa-check-circle" style="color:var(--blue)"></i>':''} <img src="https://flagcdn.com/w40/${u.country}.png" style="height:10px;"></b><br><span class="xp-badge">LVL ${u.lvl}</span></td><td>${u.count} RECORDS</td><td style="color:var(--accent); font-weight:800;">${u.pts} XP</td></tr>`).join("");
+
+            // ACTUALIZAMOS LA VARIABLE GLOBAL
+            window.rankData = rank;
+
+            document.getElementById('leaderboardBody').innerHTML = rank.map((u, i) => `
+                <tr class="rank-row" onclick="window.openUserProfile('${u.name}')">
+                    <td style="font-weight:900; font-size:1.2rem; border-radius:15px 0 0 15px;">${i+1}</td>
+                    <td style="text-align:left;">
+                        <img src="${u.pfp}" class="rank-pfp">
+                        <b>${u.name.toUpperCase()} ${u.isV?'<i class="fas fa-check-circle" style="color:var(--blue)" title="Verificador"></i>':''} <img src="https://flagcdn.com/w40/${u.country}.png" style="height:12px; border-radius:2px; margin-left:5px;"></b>
+                        <br><span class="xp-badge" style="margin-top:5px; display:inline-block;">LVL ${u.lvl}</span>
+                    </td>
+                    <td style="color:#888; font-size:0.8rem;"><b style="color:#fff; font-size:1rem;">${u.count}</b> RECORDS</td>
+                    <td style="color:var(--accent); font-weight:900; border-radius:0 15px 15px 0; font-size:1.1rem;">${u.pts} <span style="font-size:0.6rem; color:#666;">XP</span></td>
+                </tr>`).join("");
         });
+
+        // FUNCIONES GLOBALES DEL MODAL
+        window.openUserProfile = function(nick) {
+            const u = window.rankData.find(x => x.name.toLowerCase() === nick.toLowerCase());
+            if(!u) return;
+            let html = `<span onclick="window.closeM()" style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.5rem; color:#444;">&times;</span>
+                <img src="${u.pfp}" style="width:100px;height:100px;border-radius:50%;border:3px solid var(--accent);margin-bottom:15px;object-fit:cover;">
+                <h2 style="margin:0; color:var(--accent); text-transform:uppercase;">${u.name}</h2>
+                <div style="margin:15px 0;"><span class="xp-badge" style="font-size:0.8rem; padding:5px 15px;">LVL ${u.lvl} &bull; ${u.pts} XP</span></div>
+                <div style="margin-top:25px; text-align:left; max-height:300px; overflow-y:auto; padding-right:10px;">`;
+            
+            u.verifL.forEach(l => { html += `<a href="https://youtu.be/${l.id}" target="_blank" class="u-lvl-btn" style="border-color:var(--blue); background:rgba(0,204,255,0.03);"><span>${l.name}</span><small style="color:var(--blue); font-weight:800;">VERIFICADOR <i class="fas fa-external-link-alt"></i></small></a>`; });
+            u.manualL.forEach(c => { 
+                if(!u.verifL.some(v => v.name === c.level)) {
+                    html += `<a href="${c.link||'#'}" target="_blank" class="u-lvl-btn"><span>${c.level}</span><i class="fab fa-youtube" style="color:#f00;"></i></a>`;
+                }
+            });
+            if(u.verifL.length === 0 && u.manualL.length === 0) html += `<p style="color:#444; text-align:center;">Sin registros activos.</p>`;
+            html += `</div>`;
+            document.getElementById('uModalContent').innerHTML = html;
+            document.getElementById('uModal').style.display = "block";
+        }
+
+        window.closeM = function() { 
+            document.getElementById('uModal').style.display = "none"; 
+        }
     </script>
 </body>
 </html>
