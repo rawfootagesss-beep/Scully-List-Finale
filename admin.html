@@ -17,16 +17,16 @@
         .manage-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #111; font-size: 0.6rem; }
         .sub-card { background: #000; padding: 12px; border-radius: 10px; margin-bottom: 10px; border-left: 3px solid var(--accent); font-size: 0.65rem; border-top: 1px solid #111; }
         .proof-box { display: flex; gap: 5px; margin: 8px 0; }
-        .btn-proof { flex: 1; text-decoration: none; text-align: center; font-size: 0.5rem; font-weight: 800; padding: 5px; border-radius: 4px; border: 1px solid #222; color: #fff; }
-        .btn-green { border-color: var(--green); color: var(--green); background: none; cursor: pointer; font-weight: 800; }
-        .btn-red { border-color: var(--red); color: var(--red); background: none; cursor: pointer; font-weight: 800; }
+        .btn-proof { flex: 1; text-decoration: none; text-align: center; font-size: 0.5rem; font-weight: 800; padding: 5px; border-radius: 4px; border: 1px solid #222; color: #fff; transition: 0.3s; }
+        .btn-proof:hover { background: #222; }
     </style>
 </head>
 <body>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; background:#080808; padding:15px; border-radius:15px; border:1px solid #111;">
         <h1 style="font-size:1.2rem; margin:0;">SCULLY <span style="color:var(--accent);">MASTER CONSOLE</span></h1>
-        <a href="index.html" style="color:#fff; text-decoration:none; font-size:0.8rem; background:#111; padding:8px 15px; border-radius:5px;">VOLVER AL HUB</a>
+        <a href="index.html" style="color:#fff; text-decoration:none; font-size:0.8rem; background:#111; padding:8px 15px; border-radius:5px;">IR AL HUB</a>
     </div>
+    
     <div class="admin-layout">
         <div class="admin-col">
             <h2>1. Editor Niveles</h2><div id="adminLevelsList" class="admin-list-scroll"></div>
@@ -35,16 +35,17 @@
         </div>
         <div class="admin-col"><h2>2. Moderación Récords</h2><div id="submissionsList" class="admin-list-scroll"></div></div>
         <div class="admin-col">
-            <h2>3. Identidad de Jugadores</h2><div id="adminUserList" class="admin-list-scroll"></div>
+            <h2>3. Identidad Jugadores</h2><div id="adminUserList" class="admin-list-scroll"></div>
             <div id="playerEditor" style="display:none; background:#000; padding:10px; border:1px solid var(--blue); border-radius:10px;">
                 <input type="hidden" id="editPIdx"><input type="text" id="editNick" placeholder="Nick"><select id="editCountry"><option value="ar">Argentina</option><option value="br">Brasil</option><option value="cl">Chile</option><option value="co">Colombia</option><option value="es">España</option><option value="mx">México</option><option value="pe">Perú</option><option value="ve">Venezuela</option></select>
-                <label style="font-size:0.6rem;"><input type="checkbox" id="editHidden"> OCULTAR DEL RANKING</label><button onclick="savePlayerEdits()" style="border-color:var(--blue); color:var(--blue); background:none; font-weight:800; margin-top:10px;">APLICAR CAMBIOS</button>
+                <label style="font-size:0.6rem; color:var(--red); font-weight:800;"><input type="checkbox" id="editHidden"> OCULTAR (RANKING Y NIVELES)</label>
+                <button onclick="savePlayerEdits()" style="border-color:var(--blue); color:var(--blue); background:none; font-weight:800; margin-top:10px;">APLICAR CAMBIOS</button>
                 <div id="playerLevelsInternal" style="max-height:80px; overflow-y:auto; margin-top:10px;"></div>
             </div>
         </div>
         <div class="admin-col"><h2>4. Mercado</h2><div id="marketSubList" class="admin-list-scroll"></div></div>
         <div class="admin-col"><h2>5. PFPs</h2><div id="pfpSubList" class="admin-list-scroll"></div></div>
-        <div class="admin-col"><h2>6. Baneos</h2><div id="banListInteractive" class="admin-list-scroll"></div><input type="text" id="banUser" placeholder="Nick a banear"><button onclick="db.ref('bans').push(document.getElementById('banUser').value)" class="btn-red">BANEAR USUARIO</button></div>
+        <div class="admin-col"><h2>6. Baneos</h2><div id="banListInteractive" class="admin-list-scroll"></div><input type="text" id="banUser" placeholder="Nick a banear"><button onclick="db.ref('bans').push(document.getElementById('banUser').value)" style="border-color:var(--red); color:var(--red); background:none; font-weight:800;">BANEAR USUARIO</button></div>
         <div class="admin-col"><h2>7. Logs</h2><div id="adminLogList" class="admin-list-scroll"></div></div>
         <div class="admin-col"><h2>8. Historial</h2><div id="adminHistoryList" class="admin-list-scroll"></div></div>
     </div>
@@ -91,7 +92,7 @@
         function removeLevelFromUser(pI, lI) { if(!confirm("Borrar de este jugador?")) return; db.ref('players').once('value', s => { let list = Object.values(s.val()); list[pI].completions.splice(lI, 1); db.ref('players').set(list); loadPlayerToEditor(pI); }); }
         
         function renderSubmissions(s) { 
-            document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k,x]) => `<div class="sub-card"><b>${x.player}</b> -> ${x.level}<div class="proof-box"><a href="${x.link}" target="_blank" class="btn-proof" style="color:#ff3333; border-color:#ff3333;"><i class="fab fa-youtube"></i> YT</a><a href="${x.raw}" target="_blank" class="btn-proof" style="color:var(--blue); border-color:var(--blue);"><i class="fab fa-google-drive"></i> RAW</a></div><div style="display:flex; gap:5px; margin-top:8px;"><button onclick="setStatus('${k}','Aceptado')" class="btn-green">ACEPTAR</button><button onclick="setStatus('${k}','Rechazado')" class="btn-red">RECHAZAR</button></div></div>`).join(""); 
+            document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k,x]) => `<div class="sub-card"><b>${x.player}</b> -> ${x.level}<div class="proof-box"><a href="${x.link}" target="_blank" class="btn-proof" style="color:#ff3333; border-color:#ff3333;"><i class="fab fa-youtube"></i> YT</a><a href="${x.raw}" target="_blank" class="btn-proof" style="color:var(--blue); border-color:var(--blue);"><i class="fab fa-google-drive"></i> RAW</a></div><div style="display:flex; gap:5px; margin-top:8px;"><button onclick="setStatus('${k}','Aceptado')" style="border-color:var(--green); color:var(--green); background:none; font-weight:800; cursor:pointer;">ACEPTAR</button><button onclick="setStatus('${k}','Rechazado')" style="border-color:var(--red); color:var(--red); background:none; font-weight:800; cursor:pointer;">RECHAZAR</button></div></div>`).join(""); 
         }
 
         function setStatus(k, s) { 
@@ -111,10 +112,10 @@
 
         function saveLevel() { const idx = document.getElementById('editLvlIdx').value; const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const p = parseInt(document.getElementById('lvlPos').value) - 1; db.ref('levels').once('value', s => { let lvls = s.val() || []; const newL = { name:n, id:y, first:document.getElementById('lvlFirst').value }; if(idx!=="") lvls.splice(idx,1); lvls.splice(p>=0?p:lvls.length, 0, newL); db.ref('levels').set(lvls); alert("Nivel Guardado"); document.getElementById('editLvlIdx').value=""; document.getElementById('lvlName').value=""; document.getElementById('lvlYT').value=""; document.getElementById('lvlFirst').value=""; }); }
         
-        function renderMarketModeration(m) { document.getElementById('marketSubList').innerHTML = Object.entries(m).map(([k,v]) => `<div class="sub-card">${v.nick}: <b>${v.item}</b><br><button onclick="approveCosmetic('${k}')" class="btn-green" style="margin-top:5px;">APROBAR</button></div>`).join(""); }
+        function renderMarketModeration(m) { document.getElementById('marketSubList').innerHTML = Object.entries(m).map(([k,v]) => `<div class="sub-card">${v.nick}: <b>${v.item}</b><br><button onclick="approveCosmetic('${k}')" style="border-color:var(--green); color:var(--green); background:none; font-weight:800; cursor:pointer; margin-top:5px;">APROBAR</button></div>`).join(""); }
         function approveCosmetic(k) { const r = fullData.market_requests[k]; db.ref('players').once('value', s => { let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick); if(i>-1) { if(!p[i].cosmetics) p[i].cosmetics={}; p[i].cosmetics[r.item]=true; db.ref('players').set(p); db.ref('market_requests/'+k).remove(); } }); }
         
-        function renderPFPModeration(p) { document.getElementById('pfpSubList').innerHTML = Object.entries(p).map(([k,v]) => `<div class="sub-card">${v.nick}<br><img src="${v.url}" style="width:40px;height:40px;border-radius:50%; margin:5px 0; object-fit:cover;"><br><button onclick="approvePFP('${k}')" class="btn-green">APROBAR</button></div>`).join(""); }
+        function renderPFPModeration(p) { document.getElementById('pfpSubList').innerHTML = Object.entries(p).map(([k,v]) => `<div class="sub-card">${v.nick}<br><img src="${v.url}" style="width:40px;height:40px;border-radius:50%; margin:5px 0; object-fit:cover;"><br><button onclick="approvePFP('${k}')" style="border-color:var(--green); color:var(--green); background:none; font-weight:800; cursor:pointer;">APROBAR</button></div>`).join(""); }
         function approvePFP(k) { const r = fullData.pfp_requests[k]; db.ref('players').once('value', s => { let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick); if(i>-1) { p[i].pfp=r.url; db.ref('players').set(p); db.ref('pfp_requests/'+k).remove(); } }); }
         
         function renderBanList(b) { document.getElementById('banListInteractive').innerHTML = Object.entries(b).map(([k,v]) => `<div class="manage-item"><span>${v}</span><i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="db.ref('bans/${k}').remove()"></i></div>`).join(""); }
