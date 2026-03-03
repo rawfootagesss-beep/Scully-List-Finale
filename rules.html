@@ -25,6 +25,7 @@
         .rule-card li strong { color: #fff; }
         
         .highlight { background: rgba(255,102,0,0.1); padding: 2px 8px; border-radius: 5px; color: var(--accent); font-weight: 800; }
+        .highlight-yellow { background: rgba(255,255,0,0.1); padding: 2px 8px; border-radius: 5px; color: #ffcc00; font-weight: 800; }
         .ban-escalation { background: #0a0a0a; padding: 20px; border-radius: 15px; border: 1px solid #222; margin-top: 15px; }
     </style>
 </head>
@@ -39,50 +40,52 @@
     <div class="rules-container">
         
         <div class="rule-card">
-            <h2><i class="fas fa-upload"></i> 1. Subida de Récords</h2>
-            <p>El sistema de evaluación y subida de récords de <b>The Scully List</b> funciona bajo los mismos principios estrictos que listas como <i>AREDL</i> y <i>Pointercrate</i>, pero con un enfoque más simplificado para el usuario:</p>
+            <h2><i class="fas fa-upload"></i> 1. Pruebas, LDM y Mods</h2>
+            <p>El sistema de evaluación y subida de récords de <b>The Scully List</b> funciona bajo los mismos principios estrictos que listas como <i>AREDL</i> y <i>Pointercrate</i>, pero con un enfoque simplificado:</p>
             <ul>
-                <li><strong>Vídeo de YouTube Obligatorio:</strong> Todo jugador debe subir su récord a YouTube. El vídeo debe tener una calidad decente (mínimo 720p) y el audio del juego debe ser claramente audible. Los clics del ratón o teclado son altamente recomendados para facilitar la verificación.</li>
-                <li><strong>Evidencia en RAW (Drive):</strong> Para niveles que se encuentren dentro del <b>Top 100</b>, será obligatorio proporcionar un enlace a Google Drive con el archivo de vídeo RAW original (sin cortes ni edición).</li>
-                <li><strong>Modificaciones Permitidas:</strong> Solo se permiten texturas cosméticas y mods de optimización visual (LVM, No Particles). Queda estrictamente prohibido usar físicas alteradas o hitboxes visibles.</li>
+                <li><strong>Vídeo de YouTube Obligatorio:</strong> Todo jugador debe subir su récord a YouTube en calidad aceptable (mínimo 720p). El audio del juego debe ser audible. Los clics del ratón/teclado son altamente recomendados.</li>
+                <li><strong>Evidencia en RAW (Drive):</strong> Para niveles dentro del <b>Top 100</b>, es obligatorio adjuntar un enlace a Google Drive con el vídeo RAW original (directo de la grabadora, sin cortes ni compresión).</li>
+                <li><strong>Políticas de Mods (AREDL/Pointercrate Estándar):</strong> Permitimos modificaciones de "Quality of Life". Están permitidos el FPS Bypass, CBF (Click Between Frames) y mods de Geode estéticos o informativos. <b>Están estrictamente prohibidos:</b> Noclip, Speedhack, Hitbox Multiplier, Macros, Botting, o cualquier mod que altere las físicas del nivel o te dé una ventaja injusta.</li>
+                <li><strong>Uso de LDM / ULDM:</strong> Los modos de bajo detalle oficiales del nivel están siempre permitidos. Los LDM o ULDM personalizados (copias del servidor) están permitidos <b>solo si no alteran el gameplay</b>. No puedes eliminar obstáculos letales (spikes, sierras), alterar hitboxes, ni quitar decoraciones que sirvan como referencias visuales clave (visual cues).</li>
             </ul>
         </div>
 
         <div class="rule-card" style="border-color: var(--red);">
-            <h2 style="color: var(--red);"><i class="fas fa-gavel"></i> 2. Rechazos y Sistema de Baneos</h2>
-            <p>Entendemos que a veces las grabaciones fallan. <b>Si tu récord es rechazado</b> (por ejemplo, por falta de clics audibles, lagazos visuales o falta de pruebas RAW), <span style="color:var(--red); font-weight:800;">ESTO NO DESEMBOCA EN UN BANEO</span>. Simplemente se rechaza la solicitud y puedes volver a intentarlo cuando tengas las pruebas correctas.</p>
+            <h2 style="color: var(--red);"><i class="fas fa-gavel"></i> 2. Modo Apelable y Sanciones</h2>
+            <p>Entendemos que a veces las grabaciones fallan, un archivo se corrompe o hay malentendidos con una copia LDM. Por eso, hemos implementado el sistema de consideración.</p>
             
-            <p>Sin embargo, si a través del escrutinio del Staff se te encuentra <b>haciendo trampas de forma intencionada y continua</b> (uso de Noclip, Speedhack, Macros o Botting), se aplicará el siguiente sistema escalonado de sanciones:</p>
+            <p><b><span class="highlight-yellow">EL MODO APELABLE:</span></b> Si tu récord no cumple alguna de las especificaciones mencionadas (falta de clics audibles, un LDM dudoso, o pruebas RAW incompletas), <b>el récord no provocará un baneo ni un rechazo inmediato</b>. En su lugar, entrará en un "Modo Apelable". Se te recomienda ingresar a nuestro servidor de Discord y abrir un ticket o hablar con un miembro del Staff para revisar tu caso detalladamente y poder llegar a un acuerdo de consideración.</p>
+            
+            <p>Sin embargo, si a través de la investigación se descubre que estás <b>haciendo trampas de forma intencionada y continua</b>, se aplicará el siguiente sistema escalonado de baneos:</p>
             
             <div class="ban-escalation">
                 <ul>
-                    <li><strong style="color:#ffcc00;">Primera Ofensa:</strong> Baneo temporal de <b>6 meses</b> de la lista y pérdida de todos los puntos actuales.</li>
+                    <li><strong style="color:#ffcc00;">Primera Ofensa:</strong> Baneo de <b>6 meses</b> de la lista y suspensión de récords.</li>
                     <li><strong style="color:#ff6600;">Segunda Ofensa:</strong> Baneo temporal de <b>1 Año</b> sin posibilidad de apelación temprana.</li>
-                    <li><strong style="color:#ff3333;">Tercera Ofensa:</strong> <span class="highlight" style="color:#ff3333; background:rgba(255,51,51,0.1);">Baneo Permanente (Blacklist)</span>. Nunca más podrás volver a registrar un récord en la Scully List.</li>
+                    <li><strong style="color:#ff3333;">Tercera Ofensa:</strong> <span class="highlight" style="color:#ff3333; background:rgba(255,51,51,0.1);">Baneo Permanente (Blacklist)</span>. Cero tolerancia, no podrás volver a registrar récords.</li>
                 </ul>
             </div>
         </div>
 
         <div class="rule-card" style="border-color: var(--blue);">
             <h2 style="color: var(--blue);"><i class="fas fa-user-circle"></i> 3. Sistema de Fotos de Perfil</h2>
-            <p>Cada jugador en la Leaderboard tiene derecho a personalizar su perfil con una Foto de Perfil (PFP) única para destacar en la clasificación y en la página de Duelos.</p>
+            <p>Cada jugador en la Leaderboard tiene derecho a personalizar su perfil con una Foto de Perfil (PFP) única.</p>
             <ul>
-                <li><strong>Proceso de Solicitud:</strong> Las PFPs se solicitan desde la página de "Enviar". Deberás ingresar tu Nick y la URL directa de la imagen (debe terminar en .jpg o .png, preferiblemente subida a Imgur).</li>
-                <li><strong>Aprobación Manual:</strong> Para mantener la estética y el orden, <span class="highlight">las PFPs no se actualizan automáticamente</span>. Deben ser revisadas y aprobadas manualmente por un miembro del Staff desde la consola de administración.</li>
-                <li><strong>Contenido:</strong> Cualquier imagen con contenido NSFW, gore, o que incite al odio será denegada de inmediato.</li>
+                <li><strong>Proceso de Solicitud:</strong> Las PFPs se solicitan desde la página de "Enviar". Deberás ingresar tu Nick y la URL directa de la imagen (debe terminar en .jpg o .png, se recomienda usar Imgur).</li>
+                <li><strong>Aprobación Manual:</strong> Las PFPs no se actualizan instantáneamente. Deben ser revisadas y aprobadas manualmente por el Staff para evitar contenido inapropiado y mantener la estética de la lista.</li>
             </ul>
         </div>
 
         <div class="rule-card" style="border-color: var(--green);">
-            <h2 style="color: var(--green);"><i class="fas fa-map-signs"></i> 4. Guía del Sitio Web</h2>
-            <p>La Scully List está dividida en varias herramientas diseñadas para la comunidad. Aquí tienes la explicación detallada de cada opción del menú de navegación:</p>
+            <h2 style="color: var(--green);"><i class="fas fa-map-signs"></i> 4. Guía de la Plataforma</h2>
+            <p>La Scully List está dividida en varias herramientas interconectadas. Aquí tienes la explicación detallada de cada opción:</p>
             <ul>
-                <li><strong><i class="fas fa-list-ol"></i> Lista:</strong> Es el Hub principal. Aquí verás todos los niveles ordenados por dificultad. Arriba siempre estará expuesto el "Top #1 Boss" actual. Al hacer clic en un nivel, verás su vídeo en YouTube y a todos los jugadores que han logrado pasárselo.</li>
-                <li><strong><i class="fas fa-trophy"></i> Ranking:</strong> La Leaderboard Global. Aquí compiten todos los jugadores según la Cantidad de XP que poseen. Si fuiste el verificador de un nivel de la lista (First Victor), recibirás un <b>Check Azul de Verificación</b> al lado de tu nombre.</li>
-                <li><strong><i class="fas fa-bolt"></i> Versus:</strong> La arena de Duelos. Ingresa el Nickname de dos jugadores distintos y el sistema calculará automáticamente quién tiene mejores estadísticas, nivel y XP.</li>
-                <li><strong><i class="fas fa-shopping-cart"></i> Mercado:</strong> Nuestra tienda de cosméticos. A medida que pases niveles ganarás XP. Puedes usar ese XP para solicitar "Auras" para tu Foto de Perfil o un "Nick Rainbow" brillante. Estas solicitudes también las aprueba el Staff.</li>
-                <li><strong><i class="fas fa-upload"></i> Enviar:</strong> El formulario central donde debes enviar los enlaces de tus récords de YouTube y Drive, además de ser la terminal para actualizar tu Foto de Perfil.</li>
-                <li><strong><i class="fas fa-dice"></i> Botón Ruleta:</strong> Si no sabes qué demonio jugar hoy, presiona el dado en el menú y el sistema seleccionará aleatoriamente un nivel de la lista para ti.</li>
+                <li><strong><i class="fas fa-list-ol"></i> Lista:</strong> El Hub principal. Muestra los niveles por dificultad y expone al "Top #1 Boss". Al hacer clic en un nivel, verás su vídeo y a todos los jugadores aprobados.</li>
+                <li><strong><i class="fas fa-trophy"></i> Ranking:</strong> La Leaderboard Global. Competición basada en XP. Si fuiste el creador/verificador original de un nivel (First Victor), recibirás un <b>Check Azul</b> en tu nombre.</li>
+                <li><strong><i class="fas fa-bolt"></i> Versus:</strong> La arena de Duelos. Compara las estadísticas exactas, nivel y XP de dos jugadores cara a cara.</li>
+                <li><strong><i class="fas fa-shopping-cart"></i> Mercado:</strong> Tienda de prestigio. Puedes gastar tu XP acumulado en "Auras" para tu Foto de Perfil o efectos especiales para tu Nickname. Estas compras son aprobadas por el Staff.</li>
+                <li><strong><i class="fas fa-upload"></i> Enviar:</strong> Terminal para enviar tus formularios de récord (YT/Drive) y para subir nuevas PFPs.</li>
+                <li><strong><i class="fas fa-dice"></i> Ruleta:</strong> Un selector aleatorio para cuando no sepas qué nivel jugar.</li>
             </ul>
         </div>
 
