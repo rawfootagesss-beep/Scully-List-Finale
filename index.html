@@ -14,21 +14,29 @@
             --green: #00ff66; --red: #ff3333; --blue: #00ccff; --yellow: #ffff00;
         }
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
+        
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
         @keyframes rainbow { 0% { color: #ff0000; } 20% { color: #ff9900; } 40% { color: #ffff00; } 60% { color: #00ff00; } 80% { color: #00ffff; } 100% { color: #cc00ff; } }
         .cos-rainbow { animation: rainbow 3s linear infinite !important; font-weight: 800; }
-        .cos-fire { box-shadow: 0 0 20px #ff3300 !important; border: 2px solid #ff3300 !important; }
-        .cos-electric { box-shadow: 0 0 20px #00ccff !important; border: 2px solid #00ccff !important; }
+        
         .news-ticker { background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 0; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; overflow: hidden; display: flex; }
         .ticker-content { display: flex; white-space: nowrap; animation: ticker-scroll 45s linear infinite; }
         .log-item { margin-right: 100px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; gap: 8px; }
         @keyframes ticker-scroll { 0% { transform: translateX(80vw); } 100% { transform: translateX(-250%); } }
+        
         .staff-bar { display: flex; justify-content: center; gap: 25px; padding: 15px; background: rgba(255,255,255,0.02); font-size: 0.6rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center; }
         .staff-item i { color: var(--accent); margin-right: 5px; }
+        
         header { padding: 60px 20px 20px; text-align: center; }
         h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 800; margin: 0; letter-spacing: -2px; }
         h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
         .main-nav { margin-top: 35px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center; }
-        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 14px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; text-transform: uppercase; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 14px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; text-transform: uppercase; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
         .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: var(--glow); }
         
         .throne-section { width: 90%; max-width: 850px; margin: 40px auto; }
@@ -41,20 +49,17 @@
         .level-card:hover { border-color: var(--accent); transform: scale(1.02); }
         .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
         
-        .status-tracker { max-width: 600px; margin: 60px auto; padding: 45px; background: var(--card-bg); border-radius: 40px; border: 1px solid var(--border); text-align: center; }
-        .user-pfp-display { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--accent); margin: 0 auto 20px; object-fit: cover; background: #111; display: block; }
-        .xp-tag { background: #000; color: var(--accent); padding: 8px 18px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--accent); display: inline-block; margin-bottom: 20px; }
-        
-        .status-pill { padding: 15px; border-radius: 12px; margin-bottom: 10px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.3s; }
-        .status-pill:hover { background: rgba(255,255,255,0.05); }
-        .st-label { font-weight: 800; text-transform: uppercase; font-size: 0.6rem; padding: 5px 10px; border-radius: 6px; }
+        /* NUEVA SECCIÓN DE IDENTIDAD */
+        .status-tracker { max-width: 600px; margin: 60px auto; padding: 45px 30px; background: var(--card-bg); border-radius: 40px; border: 1px solid var(--border); text-align: center; }
         
         .footer-credits { padding: 60px 20px; text-align: center; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); margin-top: 100px; }
         .color-trigger { display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: var(--accent); color: #000; border-radius: 50%; cursor: pointer; font-size: 1.2rem; box-shadow: var(--glow); transition: 0.3s; margin-top: 20px; }
         #themeColor { opacity: 0; position: absolute; pointer-events: none; }
         .admin-lock { text-align: center; padding: 100px 0; opacity: 0.03; cursor: pointer; }
+        
+        /* MODALES */
         .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
-        .modal-content { background: #0a0a0a; margin: 5vh auto; padding: 35px; width: 90%; max-width: 650px; border-radius: 35px; border: 1px solid var(--border); text-align: center; position: relative; }
+        .modal-content { background: #0a0a0a; margin: 5vh auto; padding: 35px; width: 90%; max-width: 650px; border-radius: 35px; border: 1px solid var(--border); text-align: center; position: relative; max-height: 85vh; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -72,7 +77,7 @@
     
     <header>
         <h1>THE SCULLY <span>LIST</span></h1>
-        <p class="version-note" style="font-size:0.7rem; color:#444; margin-top:10px; font-style:italic;">Versión 1.0 | Muchos niveles por agregar, atentos ;)</p>
+        <p class="version-note" style="font-size:0.7rem; color:#444; margin-top:10px; font-style:italic;">Versión 1.1 | The Identity Update</p>
         <div class="main-nav">
             <a href="index.html" class="btn-scully" style="color:var(--green); border-color:var(--green);"><i class="fas fa-list-ol"></i> Lista</a>
             <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking</a>
@@ -81,6 +86,7 @@
             <a href="submit.html" class="btn-scully"><i class="fas fa-upload"></i> Enviar</a>
             
             <a href="rules.html" class="btn-scully" style="color:var(--blue); border-color:var(--blue);"><i class="fas fa-book"></i> Reglas</a>
+            <a href="changelog.html" class="btn-scully" style="color:var(--yellow); border-color:var(--yellow);"><i class="fas fa-file-code"></i> Changelog</a>
             <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully" style="color:#7289da; border-color:#7289da;"><i class="fab fa-discord"></i> Discord</a>
             
             <button class="btn-scully" onclick="spinRoulette()" title="Ruleta"><i class="fas fa-dice"></i></button>
@@ -89,13 +95,16 @@
     </header>
 
     <section class="throne-section" id="throneDisplay"></section>
+    
     <main class="list-grid" id="main-list"></main>
 
     <section class="status-tracker">
-        <h2 style="color:var(--accent); font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase;">Identidad Scully</h2>
-        <div id="statusDisplay" style="margin-bottom:20px;"><p style="color:#444;">Escribe tu Nickname para ver tu perfil.</p></div>
-        <input type="text" id="checkInput" placeholder="Tu Nick..." style="background:#000; border:1px solid #222; color:#fff; padding:15px; width:100%; border-radius:15px; margin-bottom:20px; box-sizing:border-box; text-align:center;">
-        <button class="btn-scully" style="width:100%; justify-content:center; border-radius:15px;" onclick="checkStatus()">VER MI PERFIL</button>
+        <h2 style="color:var(--accent); font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; margin-top:0;"><i class="fas fa-id-card"></i> Identidad Scully</h2>
+        <p style="color:#888; font-size:0.9rem; margin-bottom:25px;">El nuevo ecosistema ha llegado. Crea una cuenta, personaliza tu biografía, vincula tus redes y reclama tu perfil en el ranking oficial.</p>
+        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <a href="login.html" class="btn-scully" style="background:var(--accent); color:#000; border:none; padding:15px 30px;"><i class="fas fa-user-circle"></i> INICIAR SESIÓN / REGISTRO</a>
+            <a href="leaderboards.html" class="btn-scully" style="padding:15px 30px;"><i class="fas fa-search"></i> EXPLORAR JUGADORES</a>
+        </div>
     </section>
 
     <footer class="footer-credits">
@@ -108,13 +117,25 @@
     </footer>
 
     <div class="admin-lock" onclick="toggleAuth()"><i class="fas fa-lock"></i></div>
-    <div id="ruletaModal" class="modal"><div class="modal-content"><h2 style="color:var(--accent);">RULETA</h2><div id="ruletaText" style="font-size:2rem; font-weight:800; margin:20px 0;">---</div><button class="btn-scully" onclick="spinRoulette()" style="width:100%; justify-content:center;">GIRAR</button><button class="btn-scully" onclick="closeRuleta()" style="width:100%; justify-content:center; background:transparent; border:none; color:#444;">CERRAR</button></div></div>
+    
+    <div id="ruletaModal" class="modal"><div class="modal-content"><h2 style="color:var(--accent);">RULETA</h2><div id="ruletaText" style="font-size:2rem; font-weight:800; margin:20px 0;">---</div><button class="btn-scully" onclick="spinRoulette()" style="width:100%; justify-content:center; margin-bottom:10px;">GIRAR</button><button class="btn-scully" onclick="closeRuleta()" style="width:100%; justify-content:center; background:transparent; border:none; color:#444;">CERRAR</button></div></div>
+    
     <div id="levelModal" class="modal"><div class="modal-content" id="modal-body"></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script>
-        const firebaseConfig = { databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" };
+        // CONFIGURACIÓN EXACTA
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",
+            authDomain: "scullylist.firebaseapp.com",
+            databaseURL: "https://scullylist-default-rtdb.firebaseio.com",
+            projectId: "scullylist",
+            storageBucket: "scullylist.firebasestorage.app",
+            messagingSenderId: "498548914021",
+            appId: "1:498548914021:web:59128b5e06b36a4e81938c",
+            measurementId: "G-X3JF2DVWYH"
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         let fullData = {};
@@ -127,25 +148,32 @@
         updateThemeColor(savedColor);
         document.getElementById('themeColor').value = savedColor;
         
-        // MOSTRAR BOTÓN CORRECTO SEGÚN ROL
+        // MOSTRAR BOTÓN DE STAFF
         const role = sessionStorage.getItem('scully_session');
         if(role === 'admin') {
-            document.getElementById('adminHubBtn').style.display = "flex";
+            document.getElementById('adminHubBtn').style.display = "inline-flex";
             document.getElementById('adminHubBtn').href = "admin.html";
-            document.getElementById('adminHubBtn').innerHTML = '<i class="fas fa-user-cog"></i> MASTER ADMIN';
+            document.getElementById('adminHubBtn').innerHTML = '<i class="fas fa-user-cog"></i> ADMIN';
         } else if(role === 'helper') {
-            document.getElementById('adminHubBtn').style.display = "flex";
+            document.getElementById('adminHubBtn').style.display = "inline-flex";
             document.getElementById('adminHubBtn').href = "helper.html";
-            document.getElementById('adminHubBtn').innerHTML = '<i class="fas fa-shield-alt"></i> MODERACIÓN';
+            document.getElementById('adminHubBtn').innerHTML = '<i class="fas fa-shield-alt"></i> HELPER';
             document.getElementById('adminHubBtn').style.background = "var(--blue)";
+            document.getElementById('adminHubBtn').style.borderColor = "var(--blue)";
+            document.getElementById('adminHubBtn').style.color = "#000";
         }
 
         function updateThemeColor(v) { document.documentElement.style.setProperty('--accent', v); localStorage.setItem('scully-theme-color', v); }
 
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {};
-            renderLevels(fullData.levels || []);
-            renderThrone(fullData.levels || []);
+            // Asegurar lectura de Array
+            let lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels : Object.values(fullData.levels)) : [];
+            lvls = lvls.filter(l => l && l.name);
+            fullData.levels = lvls;
+            
+            renderLevels(lvls);
+            renderThrone(lvls);
             updateTicker(fullData.logs || {});
         });
 
@@ -154,7 +182,11 @@
         function openDetails(idx) { 
             const l = fullData.levels[idx]; 
             const players = Object.values(fullData.players || {});
-            const approved = players.filter(p => p.completions?.some(c => c.level === l.name) && !p.hidden);
+            const approved = players.filter(p => {
+                let compsArray = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : [];
+                return compsArray.some(c => c.level === l.name) && !p.hidden;
+            });
+            
             const isVerifierHidden = players.some(p => p.name.toLowerCase() === (l.first || '').toLowerCase() && p.hidden);
 
             let victorsHTML = "";
@@ -167,7 +199,8 @@
 
             approved.forEach(p => { 
                 if(p.name.toLowerCase() !== (l.first || '').toLowerCase()) {
-                    const comp = p.completions.find(c => c.level === l.name);
+                    let compsArray = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : [];
+                    const comp = compsArray.find(c => c.level === l.name);
                     const linkBtn = (comp && comp.link) ? 
                         `<a href="${comp.link}" target="_blank" style="color:#ff3333; font-weight:800; text-decoration:none; font-size:0.65rem; background:rgba(255,51,51,0.1); padding:5px 10px; border-radius:5px; transition:0.3s;"><i class="fab fa-youtube"></i> VIDEO</a>` : 
                         `<span style="font-size:0.6rem; color:#555;">SIN PRUEBA VISIBLE</span>`;
@@ -194,32 +227,10 @@
             document.getElementById('levelModal').style.display = "block";
         }
 
-        function calcUserStats(nick) {
-            const nickL = nick.toLowerCase();
-            const p = Object.values(fullData.players || {}).find(x => x.name.toLowerCase() === nickL);
-            const lvls = fullData.levels || [];
-            let uniqueLevels = new Set(); let verifObjs = [];
-            
-            lvls.forEach(l => { if(l.first?.toLowerCase() === nickL) { uniqueLevels.add(l.name); verifObjs.push(l); } });
-            p?.completions?.forEach(c => uniqueLevels.add(c.level));
-            
-            let pts = 0; 
-            uniqueLevels.forEach(name => { const idx = lvls.findIndex(l => l.name === name); if(idx > -1) pts += parseFloat(Math.max(100 - (idx * 0.6), 5)); });
-            return { name: p?.name || nick, pts: pts.toFixed(1), lvl: Math.floor(pts / 50), pfp: p?.pfp || "https://i.imgur.com/8pw98K4.png", verifLevels: verifObjs, cosmetics: p?.cosmetics || {} };
+        function renderLevels(n) { 
+            const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); 
+            document.getElementById('main-list').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0; font-size:0.85rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.6rem;">+${c(i)} XP</p></div><div style="position:absolute; right:15px; opacity:0.1; font-weight:900; font-size:1.5rem;">#${i+1}</div></div>`).join(""); 
         }
-
-        function checkStatus() {
-            const nick = document.getElementById('checkInput').value.trim(); if(!nick) return;
-            const s = calcUserStats(nick); if(!s.pts || s.pts == 0) return document.getElementById('statusDisplay').innerHTML = "<p style='color:var(--red)'>Jugador no encontrado.</p>";
-            const recs = [...Object.values(fullData.submissions || {}), ...Object.values(fullData.history || {})].filter(x => x.player.toLowerCase() === nick.toLowerCase());
-            let cos = s.cosmetics?.aura_fire ? "cos-fire" : s.cosmetics?.aura_electric ? "cos-electric" : "";
-            let html = `<div style="background:rgba(255,102,0,0.05); padding:30px; border-radius:30px; border:1px solid var(--accent); margin-bottom:20px;"><img src="${s.pfp}" class="user-pfp-display ${cos}"><h3 class="${s.cosmetics?.name_rainbow?'cos-rainbow':''}">${s.name.toUpperCase()}</h3><div style="margin:15px 0;"><span class="xp-tag">LVL ${s.lvl} (${s.pts} XP)</span></div></div>`;
-            s.verifLevels.forEach(l => { html += `<a href="https://youtu.be/${l.id}" target="_blank" class="status-pill" style="border-color:var(--blue); color:var(--blue); background:rgba(0,204,255,0.05);"><b>${l.name}</b> <span class="st-label" style="background:var(--blue); color:#000;">VERIFICADOR <i class="fas fa-external-link-alt"></i></span></a>`; });
-            html += recs.map(r => { if(s.verifLevels.some(v => v.name === r.level)) return ""; return `<div class="status-pill"><b>${r.level}</b> <span class="st-label" style="color:var(--${r.status.toLowerCase()==='aceptado'?'green':'yellow'})">${r.status.toUpperCase()}</span></div>`; }).join("");
-            document.getElementById('statusDisplay').innerHTML = html;
-        }
-
-        function renderLevels(n) { const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); document.getElementById('main-list').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0; font-size:0.85rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.6rem;">+${c(i)} XP</p></div><div style="position:absolute; right:15px; opacity:0.1; font-weight:900; font-size:1.5rem;">#${i+1}</div></div>`).join(""); }
         
         function renderThrone(lvls) { 
             if(!lvls || lvls.length === 0) return; const t = lvls[0]; 
@@ -236,7 +247,7 @@
 
         function updateTicker(l) { const e = Object.values(l).reverse().slice(0,10); document.getElementById('pulse-content').innerHTML = e.map(x => `<span class="log-item">${x.msg}</span>`).join(""); }
         
-        // LÓGICA DE LOGIN
+        // LÓGICA DE LOGIN STAFF
         function toggleAuth() { 
             let key = prompt("Ingrese credencial de acceso Staff:"); 
             if(key === TOKEN_ADMIN) { 
@@ -250,6 +261,11 @@
         
         function spinRoulette() { const lvls = fullData.levels || []; if(lvls.length === 0) return; document.getElementById('ruletaModal').style.display = "block"; const res = document.getElementById('ruletaText'); let count = 0; const interval = setInterval(() => { res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name; count++; if(count > 15) { clearInterval(interval); res.style.color = "var(--green)"; } }, 80); }
         function closeRuleta() { document.getElementById('ruletaModal').style.display = "none"; }
+        
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('levelModal')) closeM();
+            if (event.target == document.getElementById('ruletaModal')) closeRuleta();
+        }
     </script>
 </body>
 </html>
