@@ -34,18 +34,25 @@
             <div id="lvlVictorsList" style="max-height:100px; overflow-y:auto; border-top:1px solid #111; padding-top:10px; margin-top:5px;"></div>
         </div>
         <div class="admin-col"><h2>2. Moderación Récords</h2><div id="submissionsList" class="admin-list-scroll"></div></div>
+        
         <div class="admin-col">
             <h2>3. Identidad Jugadores</h2><div id="adminUserList" class="admin-list-scroll"></div>
             <div id="playerEditor" style="display:none; background:#000; padding:10px; border:1px solid var(--blue); border-radius:10px;">
                 <input type="hidden" id="editPIdx"><input type="text" id="editNick" placeholder="Nick"><select id="editCountry"><option value="ar">Argentina</option><option value="br">Brasil</option><option value="cl">Chile</option><option value="co">Colombia</option><option value="es">España</option><option value="mx">México</option><option value="pe">Perú</option><option value="ve">Venezuela</option></select>
-                <label style="font-size:0.6rem; color:var(--red); font-weight:800;"><input type="checkbox" id="editHidden"> OCULTAR (RANKING Y NIVELES)</label>
-                <button onclick="savePlayerEdits()" style="border-color:var(--blue); color:var(--blue); background:none; font-weight:800; margin-top:10px;">APLICAR CAMBIOS</button>
-                <div id="playerLevelsInternal" style="max-height:80px; overflow-y:auto; margin-top:10px;"></div>
+                <label style="font-size:0.6rem; color:var(--red); font-weight:800;"><input type="checkbox" id="editHidden"> OCULTAR (SHADOWBAN)</label>
+                <button onclick="savePlayerEdits()" style="border-color:var(--blue); color:var(--blue); background:none; font-weight:800; margin-top:10px; cursor:pointer;">APLICAR CAMBIOS</button>
+                
+                <p style="font-size:0.5rem; color:var(--accent); margin:15px 0 5px;">COSMÉTICOS DEL JUGADOR:</p>
+                <div id="playerCosmeticsInternal" style="max-height:60px; overflow-y:auto; margin-bottom:10px; border-bottom:1px solid #111; padding-bottom:5px;"></div>
+
+                <p style="font-size:0.5rem; color:var(--red); margin:10px 0 5px;">RÉCORDS DEL JUGADOR:</p>
+                <div id="playerLevelsInternal" style="max-height:80px; overflow-y:auto;"></div>
             </div>
         </div>
+        
         <div class="admin-col"><h2>4. Mercado</h2><div id="marketSubList" class="admin-list-scroll"></div></div>
         <div class="admin-col"><h2>5. PFPs</h2><div id="pfpSubList" class="admin-list-scroll"></div></div>
-        <div class="admin-col"><h2>6. Baneos</h2><div id="banListInteractive" class="admin-list-scroll"></div><input type="text" id="banUser" placeholder="Nick a banear"><button onclick="db.ref('bans').push(document.getElementById('banUser').value)" style="border-color:var(--red); color:var(--red); background:none; font-weight:800;">BANEAR USUARIO</button></div>
+        <div class="admin-col"><h2>6. Baneos</h2><div id="banListInteractive" class="admin-list-scroll"></div><input type="text" id="banUser" placeholder="Nick a banear"><button onclick="db.ref('bans').push(document.getElementById('banUser').value)" style="border-color:var(--red); color:var(--red); background:none; font-weight:800; cursor:pointer;">BANEAR USUARIO</button></div>
         <div class="admin-col"><h2>7. Logs</h2><div id="adminLogList" class="admin-list-scroll"></div></div>
         <div class="admin-col"><h2>8. Historial</h2><div id="adminHistoryList" class="admin-list-scroll"></div></div>
     </div>
@@ -84,12 +91,39 @@
         function renderAdminUserList(p) { document.getElementById('adminUserList').innerHTML = p.map((u, i) => `<div class="manage-item"><span style="${u.hidden?'text-decoration:line-through; opacity:0.5':''}">${u.name}</span><button onclick="loadPlayerToEditor(${i})" style="width:auto; padding:3px 8px; border-color:var(--blue); color:var(--blue); background:none; font-size:0.5rem; cursor:pointer;">EDIT</button></div>`).join(""); }
         
         function loadPlayerToEditor(idx) { 
-            const u = Object.values(fullData.players)[idx]; document.getElementById('playerEditor').style.display = "block"; document.getElementById('editPIdx').value = idx; document.getElementById('editNick').value = u.name; document.getElementById('editCountry').value = u.country || 'es'; document.getElementById('editHidden').checked = u.hidden || false; 
+            const u = Object.values(fullData.players)[idx]; 
+            document.getElementById('playerEditor').style.display = "block"; 
+            document.getElementById('editPIdx').value = idx; 
+            document.getElementById('editNick').value = u.name; 
+            document.getElementById('editCountry').value = u.country || 'es'; 
+            document.getElementById('editHidden').checked = u.hidden || false; 
+            
+            // RENDER DE COSMÉTICOS
+            const cosHTML = Object.entries(u.cosmetics || {}).filter(([k,v]) => v).map(([k,v]) => `
+                <div class="manage-item"><span>${k}</span><i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="removeCosmeticFromUser(${idx}, '${k}')"></i></div>
+            `).join("") || "<span style='font-size:0.5rem; color:#555;'>Sin cosméticos activos.</span>";
+            document.getElementById('playerCosmeticsInternal').innerHTML = cosHTML;
+
+            // RENDER DE NIVELES
             document.getElementById('playerLevelsInternal').innerHTML = (u.completions || []).map((c, i) => `<div class="manage-item"><span>${c.level}</span><i class="fas fa-times" style="color:var(--red); cursor:pointer;" onclick="removeLevelFromUser(${idx}, ${i})"></i></div>`).join(""); 
         }
 
+        // FUNCIÓN NUEVA: ELIMINAR COSMÉTICOS
+        function removeCosmeticFromUser(pIdx, cosKey) {
+            if(!confirm("¿Quitar este cosmético del jugador?")) return;
+            db.ref('players').once('value', s => {
+                let list = Object.values(s.val());
+                if(list[pIdx].cosmetics) {
+                    list[pIdx].cosmetics[cosKey] = false; // Se marca como false
+                    db.ref('players').set(list);
+                    alert("Cosmético removido con éxito.");
+                    loadPlayerToEditor(pIdx);
+                }
+            });
+        }
+
         function savePlayerEdits() { const idx = document.getElementById('editPIdx').value; db.ref('players').once('value', s => { let list = Object.values(s.val()); list[idx].name = document.getElementById('editNick').value; list[idx].country = document.getElementById('editCountry').value; list[idx].hidden = document.getElementById('editHidden').checked; db.ref('players').set(list); alert("Perfil Actualizado"); }); }
-        function removeLevelFromUser(pI, lI) { if(!confirm("Borrar de este jugador?")) return; db.ref('players').once('value', s => { let list = Object.values(s.val()); list[pI].completions.splice(lI, 1); db.ref('players').set(list); loadPlayerToEditor(pI); }); }
+        function removeLevelFromUser(pI, lI) { if(!confirm("¿Borrar nivel de este jugador?")) return; db.ref('players').once('value', s => { let list = Object.values(s.val()); list[pI].completions.splice(lI, 1); db.ref('players').set(list); loadPlayerToEditor(pI); }); }
         
         function renderSubmissions(s) { 
             document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k,x]) => `<div class="sub-card"><b>${x.player}</b> -> ${x.level}<div class="proof-box"><a href="${x.link}" target="_blank" class="btn-proof" style="color:#ff3333; border-color:#ff3333;"><i class="fab fa-youtube"></i> YT</a><a href="${x.raw}" target="_blank" class="btn-proof" style="color:var(--blue); border-color:var(--blue);"><i class="fab fa-google-drive"></i> RAW</a></div><div style="display:flex; gap:5px; margin-top:8px;"><button onclick="setStatus('${k}','Aceptado')" style="border-color:var(--green); color:var(--green); background:none; font-weight:800; cursor:pointer;">ACEPTAR</button><button onclick="setStatus('${k}','Rechazado')" style="border-color:var(--red); color:var(--red); background:none; font-weight:800; cursor:pointer;">RECHAZAR</button></div></div>`).join(""); 
