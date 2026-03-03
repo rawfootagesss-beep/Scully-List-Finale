@@ -8,42 +8,54 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
-            --bg: #0b0c10; --card: #1f2833; --border: rgba(255,255,255,0.05);
-            --text-main: #c5c6c7; --text-light: #ffffff;
-            --accent: #ff6600; --blue: #66fcf1; --green: #45a29e; --red: #f05454;
+            --accent: #ff6600; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
+            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
+            --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
+            --green: #00ff66; --red: #ff3333; --blue: #00ccff; --yellow: #ffff00;
         }
-        body { background: var(--bg); color: var(--text-main); font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; overflow-x: hidden; }
         
-        .profile-container { width: 100%; max-width: 800px; }
-        
-        .header { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
-        .header h1 { margin: 0; color: var(--text-light); font-size: 1.5rem; }
-        .header h1 span { color: var(--accent); }
-        .btn-logout { background: rgba(240,84,84,0.1); color: var(--red); border: 1px solid var(--red); padding: 8px 15px; border-radius: 8px; cursor: pointer; text-decoration: none; font-weight: 800; font-size: 0.75rem; transition: 0.3s; }
-        .btn-logout:hover { background: var(--red); color: #000; }
-        .btn-hub { background: transparent; color: var(--text-main); border: 1px solid var(--border); padding: 8px 15px; border-radius: 8px; cursor: pointer; text-decoration: none; font-weight: 800; font-size: 0.75rem; transition: 0.3s; margin-right: 10px; }
-        .btn-hub:hover { background: var(--border); color: var(--text-light); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
-        .panel { background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 30px; margin-bottom: 20px; }
-        .panel h2 { color: var(--text-light); margin-top: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .profile-container { width: 100%; max-width: 800px; margin-top: 40px; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 25px 30px; border-radius: 25px; border: 1px solid var(--border); margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); flex-wrap: wrap; gap: 15px; }
+        .header h1 { margin: 0; font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; text-transform: uppercase; }
+        .header h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .header-btns { display: flex; gap: 10px; }
+        .btn-hub { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 10px 20px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-hub:hover { background: var(--border); }
+        .btn-logout { background: rgba(255,51,51,0.1); color: var(--red); border: 1px solid var(--red); padding: 10px 20px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-logout:hover { background: var(--red); color: #000; box-shadow: 0 0 15px rgba(255,51,51,0.3); }
+
+        .panel { background: var(--card-bg); border-radius: 25px; border: 1px solid var(--border); padding: 35px; margin-bottom: 25px; }
+        .panel h2 { margin-top: 0; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 15px; text-transform: uppercase; }
         .panel h2 i { color: var(--blue); }
 
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 0.75rem; color: var(--accent); font-weight: 800; margin-bottom: 5px; text-transform: uppercase; }
-        input, textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: var(--text-light); padding: 12px; border-radius: 10px; font-family: 'Lexend Deca'; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: 0.3s; resize: vertical; }
-        input:focus, textarea:focus { border-color: var(--blue); }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 0.75rem; color: var(--accent); font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
         
-        .btn-save { background: var(--blue); color: #000; border: none; padding: 12px 25px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 100%; display: flex; justify-content: center; gap: 10px; align-items: center; }
-        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,252,241,0.3); }
+        /* ESTILO DE INPUTS SUAVES (COMO EN EL INDEX) */
+        input, textarea { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 15px; font-family: 'Lexend Deca'; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: 0.3s; resize: vertical; }
+        input:focus, textarea:focus { border-color: var(--blue); box-shadow: 0 0 15px rgba(0,204,255,0.1); }
+        
+        .btn-save { background: var(--blue); color: #000; border: none; padding: 15px 30px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 100%; display: flex; justify-content: center; gap: 10px; align-items: center; text-transform: uppercase; margin-top: 10px; }
+        .btn-save:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0,204,255,0.4); }
 
-        .btn-pfp { background: rgba(69,162,158,0.1); border: 1px solid var(--green); color: var(--green); }
-        .btn-pfp:hover { background: var(--green); color: #000; }
+        .btn-pfp { background: transparent; border: 1px solid var(--green); color: var(--green); }
+        .btn-pfp:hover { background: var(--green); color: #000; box-shadow: 0 5px 20px rgba(0,255,102,0.3); }
+        .btn-claim { background: var(--accent); color: #000; border: none; }
+        .btn-claim:hover { box-shadow: var(--glow); transform: translateY(-3px); }
 
-        .claim-box { text-align: center; padding: 40px 20px; }
-        .claim-box h3 { color: var(--accent); font-size: 1.5rem; margin-bottom: 10px; }
-        .claim-box p { color: #888; font-size: 0.85rem; margin-bottom: 20px; }
+        .claim-box { text-align: center; padding: 20px; }
+        .claim-box h3 { color: #fff; font-size: 1.8rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: -1px; }
+        .claim-box h3 i { color: var(--accent); }
+        .claim-box p { color: #888; font-size: 0.9rem; margin-bottom: 30px; line-height: 1.6; }
 
-        #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 10px; padding: 15px 20px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; transform: translate(-50%, 50px); opacity: 0; }
+        #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 15px; padding: 15px 20px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; transform: translate(-50%, 50px); opacity: 0; }
         #scullyToast.show { visibility: visible; transform: translate(-50%, 0); opacity: 1; }
     </style>
 </head>
@@ -52,32 +64,32 @@
 
     <div class="profile-container">
         <div class="header">
-            <h1>Panel <span>Personal</span></h1>
-            <div>
+            <h1>IDENTIDAD <span>SCULLY</span></h1>
+            <div class="header-btns">
                 <a href="index.html" class="btn-hub"><i class="fas fa-home"></i> HUB</a>
                 <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> SALIR</button>
             </div>
         </div>
 
-        <div id="viewClaim" class="panel" style="display:none;">
+        <div id="viewClaim" class="panel" style="display:none; border-color: rgba(255,102,0,0.3);">
             <div class="claim-box">
-                <h3><i class="fas fa-link"></i> Reclamar Identidad</h3>
-                <p>Parece que tu cuenta no está vinculada a ningún Nickname en la Scully List.<br>Escribe tu Nick de Geometry Dash y un link a tu canal de YouTube para que el Staff verifique que eres tú y fusione tus récords a esta cuenta.</p>
-                <input type="text" id="claimNick" placeholder="Tu Nick exacto en la lista">
-                <input type="text" id="claimProof" placeholder="Link de tu canal de YouTube o Twitter">
-                <button onclick="sendClaimRequest()" class="btn-save"><i class="fas fa-paper-plane"></i> ENVIAR SOLICITUD AL STAFF</button>
+                <h3><i class="fas fa-link"></i> Reclamar Perfil</h3>
+                <p>Tu cuenta actual no está vinculada a ningún jugador de la lista.<br>Escribe tu Nickname de Geometry Dash y proporciona una prueba para que el Staff asocie tu XP a este correo.</p>
+                <input type="text" id="claimNick" placeholder="Tu Nick exacto en la lista..." style="margin-bottom:15px; text-align:center;">
+                <input type="text" id="claimProof" placeholder="Link de tu YouTube o Twitter..." style="margin-bottom:20px; text-align:center;">
+                <button onclick="sendClaimRequest()" class="btn-save btn-claim"><i class="fas fa-paper-plane"></i> ENVIAR SOLICITUD DE FUSIÓN</button>
             </div>
         </div>
 
         <div id="viewProfile" style="display:none;">
             <div class="panel">
-                <h2><i class="fas fa-id-card"></i> Configurar Biografía y Redes</h2>
+                <h2><i class="fas fa-id-badge"></i> Biografía y Redes Sociales</h2>
                 <div class="input-group">
-                    <label>Biografía (Máx 150 caracteres)</label>
+                    <label>Tu Biografía (Máx 150 caracteres)</label>
                     <textarea id="bioInput" maxlength="150" rows="3" placeholder="Escribe algo sobre ti para que aparezca en el ranking..."></textarea>
                 </div>
                 <div class="input-group">
-                    <label><i class="fab fa-youtube" style="color:#ff3333;"></i> Link de YouTube</label>
+                    <label><i class="fab fa-youtube" style="color:var(--red);"></i> Link de YouTube</label>
                     <input type="text" id="ytInput" placeholder="https://youtube.com/c/tuCanal">
                 </div>
                 <div class="input-group">
@@ -91,10 +103,10 @@
                 <button onclick="saveProfile()" class="btn-save"><i class="fas fa-save"></i> GUARDAR CAMBIOS</button>
             </div>
 
-            <div class="panel" style="border-color: rgba(69,162,158,0.3);">
-                <h2 style="color:var(--green);"><i class="fas fa-image" style="color:var(--green);"></i> Solicitud de Foto de Perfil</h2>
-                <p style="font-size:0.8rem; color:#888;">El Staff revisará tu imagen antes de aplicarla. Usa links directos (Imgur, Discord) terminados en .png o .jpg.</p>
-                <input type="text" id="pfpInput" placeholder="Link de la imagen...">
+            <div class="panel" style="border-color: rgba(0,255,102,0.2);">
+                <h2 style="color:var(--green);"><i class="fas fa-image" style="color:var(--green);"></i> Foto de Perfil</h2>
+                <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">El Staff revisará tu imagen antes de aplicarla. Usa links directos (Imgur, Discord) terminados en .png o .jpg.</p>
+                <input type="text" id="pfpInput" placeholder="Pega el link de la imagen aquí..." style="margin-bottom:15px;">
                 <button onclick="requestPFP()" class="btn-save btn-pfp"><i class="fas fa-upload"></i> SOLICITAR PFP AL STAFF</button>
             </div>
         </div>
@@ -105,7 +117,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     
     <script>
-        // CONFIGURACIÓN EXACTA DE SCORE
         const firebaseConfig = {
             apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",
             authDomain: "scullylist.firebaseapp.com",
@@ -132,12 +143,8 @@
         }
 
         auth.onAuthStateChanged(user => {
-            if (user) {
-                currentUser = user;
-                loadPlayerData();
-            } else {
-                window.location.href = "login.html";
-            }
+            if (user) { currentUser = user; loadPlayerData(); } 
+            else { window.location.href = "login.html"; }
         });
 
         function logout() { auth.signOut(); }
@@ -168,20 +175,14 @@
             const proof = document.getElementById('claimProof').value.trim();
             if(!nick || !proof) return showToast("Llena ambos campos", true);
             
-            db.ref('claim_requests').push({
-                email: currentUser.email,
-                nick: nick,
-                proof: proof
-            }).then(() => {
-                showToast("Solicitud enviada. Espera a que un Admin la apruebe.");
-                document.getElementById('claimNick').value = "";
-                document.getElementById('claimProof').value = "";
+            db.ref('claim_requests').push({ email: currentUser.email, nick: nick, proof: proof }).then(() => {
+                showToast("Solicitud enviada al Staff.");
+                document.getElementById('claimNick').value = ""; document.getElementById('claimProof').value = "";
             });
         }
 
         function saveProfile() {
             if(myPlayerIndex === -1) return;
-            
             const bio = document.getElementById('bioInput').value;
             const yt = document.getElementById('ytInput').value;
             const tw = document.getElementById('twInput').value;
@@ -197,10 +198,7 @@
             const url = document.getElementById('pfpInput').value;
             if(!url) return showToast("Ingresa un link válido", true);
 
-            db.ref('pfp_requests').push({
-                nick: myProfileData.name,
-                url: url
-            }).then(() => {
+            db.ref('pfp_requests').push({ nick: myProfileData.name, url: url }).then(() => {
                 showToast("Solicitud PFP enviada al Staff");
                 document.getElementById('pfpInput').value = "";
             });
