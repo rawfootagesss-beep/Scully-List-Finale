@@ -13,8 +13,7 @@
             --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
             --green: #00ff66; --red: #ff3333; --blue: #00ccff; --yellow: #ffff00;
         }
-        
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; overflow-x: hidden; }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; overflow-x: hidden; display: none; /* Se oculta hasta validar DB */ }
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
@@ -23,12 +22,9 @@
         .admin-header { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 25px 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border); margin-bottom: 35px; flex-wrap: wrap; gap: 15px; }
         .admin-header h1 { font-size: 1.8rem; margin: 0; color: #fff; font-weight: 800; letter-spacing: -1px; text-transform: uppercase; }
         .admin-header h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
         .header-controls { display: flex; align-items: center; gap: 15px; }
-        
         .btn-return { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 12px 25px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; text-transform: uppercase; }
         .btn-return:hover { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: var(--glow); transform: translateY(-2px); }
-
         .search-bar { background: #000 !important; border: 1px solid var(--accent) !important; color: #fff !important; padding: 15px 20px !important; border-radius: 50px !important; width: 100%; margin-bottom: 20px; font-size: 0.8rem; box-sizing: border-box; }
         .search-bar:focus { box-shadow: var(--glow); outline: none; }
 
@@ -36,19 +32,15 @@
         #scullyToast.show { visibility: visible; transform: translate(-50%, 0); opacity: 1; }
 
         .admin-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 25px; align-items: start; }
-        
         .admin-panel { background: var(--card-bg); border-radius: 25px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.3); display: flex; flex-direction: column; max-height: 650px; overflow: hidden; transition: 0.3s; scroll-behavior: smooth; }
         .admin-panel:hover { border-color: var(--border); box-shadow: 0 10px 35px rgba(255,102,0,0.1); }
-        
         .panel-header { background: rgba(0,0,0,0.4); padding: 20px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .panel-header h2 { font-size: 0.9rem; text-transform: uppercase; color: #fff; margin: 0; font-weight: 800; display: flex; align-items: center; gap: 10px; letter-spacing: 0.5px; }
         .panel-header h2 i { color: var(--accent); }
         .panel-content { padding: 25px; overflow-y: auto; flex-grow: 1; scroll-behavior: smooth; }
         
-        /* ESTILOS SUAVES DE INPUT Y BOTONES */
         input, select { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 15px; margin-bottom: 15px; font-family: 'Lexend Deca'; font-size: 0.8rem; transition: 0.3s; outline: none; box-sizing: border-box; }
         input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(255,102,0,0.2); }
-        
         button { width: 100%; font-family: 'Lexend Deca'; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; border: none; padding: 15px; border-radius: 15px; margin-bottom: 12px; transition: 0.3s; font-size: 0.75rem; }
         button:hover { transform: translateY(-2px); filter: brightness(1.15); }
         
@@ -71,7 +63,6 @@
         .proof-yt:hover { background: var(--red); color: #000; }
         .proof-raw { background: transparent; color: var(--blue); border: 1px solid var(--blue); }
         .proof-raw:hover { background: var(--blue); color: #000; }
-        
         .flex-row { display: flex; gap: 12px; }
         .flex-row button { margin-bottom: 0; }
     </style>
@@ -82,17 +73,14 @@
     <header class="admin-header">
         <h1>SCULLY <span>MASTER CONSOLE</span></h1>
         <div class="header-controls">
-            <input type="text" id="globalStaffSign" placeholder="Tu Firma de Staff (Ej: score)" style="margin:0; width: 220px; border-color:var(--accent); background:#000;">
+            <input type="text" id="globalStaffSign" placeholder="Tu Firma de Staff (Ej: score)" style="margin:0; width: 220px; border-color:var(--accent); background:#000;" readonly>
             <a href="index.html" class="btn-return"><i class="fas fa-arrow-left"></i> Volver al Hub</a>
         </div>
     </header>
     
     <div class="admin-dashboard">
-        
         <div class="admin-panel" style="border-color: rgba(255,255,0,0.3);">
-            <div class="panel-header" style="background: rgba(255,255,0,0.05);">
-                <h2 style="color:var(--yellow);"><i class="fas fa-id-badge"></i> 1. Reclamos Identidad</h2>
-            </div>
+            <div class="panel-header" style="background: rgba(255,255,0,0.05);"><h2 style="color:var(--yellow);"><i class="fas fa-id-badge"></i> 1. Reclamos Identidad</h2></div>
             <div class="panel-content" id="claimRequestsList"></div>
         </div>
 
@@ -104,13 +92,11 @@
                 <input type="text" id="lvlYT" placeholder="ID Video YT">
                 <input type="text" id="lvlFirst" placeholder="Verificador (First Victor)">
                 <input type="number" id="lvlPos" placeholder="Top # (Vacío = Al final)">
-                
                 <button onclick="saveLevel()" class="btn-primary"><i class="fas fa-save"></i> GUARDAR NIVEL</button>
                 <div class="flex-row" style="margin-bottom: 20px;">
                     <button id="syncBtn" onclick="syncWithAREDL()" class="btn-blue"><i class="fas fa-sync-alt"></i> SYNC AREDL</button>
                     <button id="revertBtn" onclick="revertAREDL()" class="btn-red"><i class="fas fa-history"></i> REVERTIR</button>
                 </div>
-
                 <div style="border-top: 1px solid var(--border); padding-top: 20px;">
                     <input type="text" id="searchLevels" class="search-bar" placeholder="🔍 Buscar nivel..." onkeyup="filterList('searchLevels', 'adminLevelsList')">
                     <div id="adminLevelsList" style="max-height: 250px; overflow-y: auto; padding-right: 5px;"></div>
@@ -119,10 +105,7 @@
             </div>
         </div>
 
-        <div class="admin-panel">
-            <div class="panel-header"><h2><i class="fas fa-shield-alt"></i> 3. Moderación Récords</h2></div>
-            <div class="panel-content" id="submissionsList"></div>
-        </div>
+        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-shield-alt"></i> 3. Moderación Récords</h2></div><div class="panel-content" id="submissionsList"></div></div>
         
         <div class="admin-panel">
             <div class="panel-header"><h2><i class="fas fa-users-cog"></i> 4. Identidad Jugadores</h2></div>
@@ -139,19 +122,10 @@
                         <option value="py">Paraguay</option><option value="pe">Perú</option><option value="pr">Puerto Rico</option>
                         <option value="do">Rep. Dominicana</option><option value="uy">Uruguay</option><option value="ve">Venezuela</option>
                     </select>
-                    <label style="font-size:0.8rem; color:var(--red); font-weight:800; display:flex; align-items:center; gap:10px; margin-bottom:20px; padding: 10px; background: rgba(255,51,51,0.1); border-radius: 12px;">
-                        <input type="checkbox" id="editHidden" style="width:auto; margin:0;"> OCULTAR (SHADOWBAN)
-                    </label>
+                    <label style="font-size:0.8rem; color:var(--red); font-weight:800; display:flex; align-items:center; gap:10px; margin-bottom:20px; padding: 10px; background: rgba(255,51,51,0.1); border-radius: 12px;"><input type="checkbox" id="editHidden" style="width:auto; margin:0;"> OCULTAR (SHADOWBAN)</label>
                     <button onclick="savePlayerEdits()" class="btn-blue" style="background:var(--blue); color:#000;"><i class="fas fa-check"></i> APLICAR CAMBIOS</button>
-                    
-                    <div style="margin-top:20px; border-top: 1px solid #222; padding-top: 15px;">
-                        <p style="font-size:0.7rem; color:var(--accent); text-transform:uppercase; margin-bottom:10px; font-weight:800;">Cosméticos Activos</p>
-                        <div id="playerCosmeticsInternal" style="margin-bottom:15px;"></div>
-                        <p style="font-size:0.7rem; color:#fff; text-transform:uppercase; margin-bottom:10px; font-weight:800;">Récords Completados</p>
-                        <div id="playerLevelsInternal" style="max-height:120px; overflow-y:auto; padding-right:5px;"></div>
-                    </div>
+                    <div style="margin-top:20px; border-top: 1px solid #222; padding-top: 15px;"><p style="font-size:0.7rem; color:var(--accent); text-transform:uppercase; margin-bottom:10px; font-weight:800;">Cosméticos Activos</p><div id="playerCosmeticsInternal" style="margin-bottom:15px;"></div><p style="font-size:0.7rem; color:#fff; text-transform:uppercase; margin-bottom:10px; font-weight:800;">Récords Completados</p><div id="playerLevelsInternal" style="max-height:120px; overflow-y:auto; padding-right:5px;"></div></div>
                 </div>
-                
                 <input type="text" id="searchPlayers" class="search-bar" placeholder="🔍 Buscar jugador..." onkeyup="filterList('searchPlayers', 'adminUserList')">
                 <div id="adminUserList"></div>
             </div>
@@ -162,10 +136,7 @@
         <div class="admin-panel">
             <div class="panel-header"><h2><i class="fas fa-gavel"></i> 7. Blacklist</h2></div>
             <div class="panel-content">
-                <div class="flex-row" style="margin-bottom: 25px;">
-                    <input type="text" id="banUser" placeholder="Nick a banear..." style="margin:0;">
-                    <button onclick="banPlayer()" class="btn-red" style="margin:0; width:auto; padding:0 25px;"><i class="fas fa-ban"></i></button>
-                </div>
+                <div class="flex-row" style="margin-bottom: 25px;"><input type="text" id="banUser" placeholder="Nick a banear..." style="margin:0;"><button onclick="banPlayer()" class="btn-red" style="margin:0; width:auto; padding:0 25px;"><i class="fas fa-ban"></i></button></div>
                 <div id="banListInteractive"></div>
             </div>
         </div>
@@ -173,216 +144,71 @@
         <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-folder-open"></i> 9. Historial Récords</h2></div><div class="panel-content" id="adminHistoryList"></div></div>
 
         <div class="admin-panel" style="border-color: rgba(0,204,255,0.3);">
-            <div class="panel-header" style="background: rgba(0,204,255,0.05);">
-                <h2 style="color:var(--blue);"><i class="fab fa-youtube"></i> 10. Auditoría YT Manual</h2>
-            </div>
+            <div class="panel-header" style="background: rgba(0,204,255,0.05);"><h2 style="color:var(--blue);"><i class="fab fa-youtube"></i> 10. Auditoría YT Manual</h2></div>
             <div class="panel-content">
                 <p style="font-size:0.8rem; color:#888; margin-top:0; margin-bottom:20px; line-height:1.5;">Pega dos links de YouTube para analizar exactamente cuál se subió primero en los servidores de Google.</p>
                 <input type="text" id="audit1" placeholder="Link YT del Jugador A">
                 <input type="text" id="audit2" placeholder="Link YT del Jugador B">
                 <button onclick="analyzeYT()" class="btn-blue"><i class="fas fa-search"></i> ANALIZAR FECHAS</button>
-                <div id="auditResult" style="margin-top:20px; font-size:0.8rem; padding:20px; background:#000; border:1px solid #222; border-radius:15px; line-height:1.6;">
-                    Esperando links para auditar...
-                </div>
+                <div id="auditResult" style="margin-top:20px; font-size:0.8rem; padding:20px; background:#000; border:1px solid #222; border-radius:15px; line-height:1.6;">Esperando links para auditar...</div>
             </div>
         </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-    
     <script>
-        if(sessionStorage.getItem('scully_session') !== 'admin') location.href = 'index.html';
-        
-        // LA CONFIGURACIÓN CORRECTA
-        const firebaseConfig = {
-            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",
-            authDomain: "scullylist.firebaseapp.com",
-            databaseURL: "https://scullylist-default-rtdb.firebaseio.com",
-            projectId: "scullylist",
-            storageBucket: "scullylist.firebasestorage.app",
-            messagingSenderId: "498548914021",
-            appId: "1:498548914021:web:59128b5e06b36a4e81938c",
-            measurementId: "G-X3JF2DVWYH"
-        };
+        const firebaseConfig = { apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", authDomain: "scullylist.firebaseapp.com", databaseURL: "https://scullylist-default-rtdb.firebaseio.com", projectId: "scullylist", storageBucket: "scullylist.firebasestorage.app", messagingSenderId: "498548914021", appId: "1:498548914021:web:59128b5e06b36a4e81938c", measurementId: "G-X3JF2DVWYH" };
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.database();
         let fullData = {};
-
         const YT_API_KEY = "AIzaSyCLeUZ_mJxJHuCCLr-GMkMdy0q-JHTUi7w";
 
-        function showToast(message, isError = false) {
-            const toast = document.getElementById("scullyToast");
-            toast.innerHTML = isError ? `<i class="fas fa-times-circle"></i> ${message}` : `<i class="fas fa-check-circle"></i> ${message}`;
-            toast.style.backgroundColor = isError ? "var(--red)" : "var(--green)";
-            toast.style.color = "#000";
-            toast.className = "show";
-            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3500);
-        }
+        // NUEVA SEGURIDAD TOTAL POR FIREBASE AUTH
+        auth.onAuthStateChanged(user => {
+            if(!user) return location.href = 'index.html';
+            db.ref('players').once('value', snap => {
+                const players = Object.values(snap.val() || {});
+                const me = players.find(p => p.email === user.email);
+                if(me && me.role === 'admin') {
+                    document.body.style.display = "block"; // Mostrar UI si es admin
+                    document.getElementById('globalStaffSign').value = me.name; // Pone su nombre automáticamente
+                } else {
+                    location.href = 'index.html';
+                }
+            });
+        });
 
-        function filterList(inputId, listId) {
-            let input = document.getElementById(inputId).value.toLowerCase();
-            let items = document.getElementById(listId).getElementsByClassName('list-item');
-            for (let i = 0; i < items.length; i++) {
-                let txtValue = items[i].textContent || items[i].innerText;
-                items[i].style.display = txtValue.toLowerCase().indexOf(input) > -1 ? "" : "none";
-            }
-        }
+        function showToast(message, isError = false) { const toast = document.getElementById("scullyToast"); toast.innerHTML = isError ? `<i class="fas fa-times-circle"></i> ${message}` : `<i class="fas fa-check-circle"></i> ${message}`; toast.style.backgroundColor = isError ? "var(--red)" : "var(--green)"; toast.className = "show"; setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3500); }
+        function filterList(inputId, listId) { let input = document.getElementById(inputId).value.toLowerCase(); let items = document.getElementById(listId).getElementsByClassName('list-item'); for (let i = 0; i < items.length; i++) { let txtValue = items[i].textContent || items[i].innerText; items[i].style.display = txtValue.toLowerCase().indexOf(input) > -1 ? "" : "none"; } }
 
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {}; 
-            let lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels : Object.values(fullData.levels)) : [];
-            lvls = lvls.filter(l => l && l.name);
-            fullData.levels = lvls;
-
-            renderClaimRequests(fullData.claim_requests || {});
-            renderAdminLevelsList(lvls); 
-            renderSubmissions(fullData.submissions || {}); 
-            renderAdminUserList(Object.values(fullData.players || {})); 
-            renderMarketModeration(fullData.market_requests || {}); 
-            renderPFPModeration(fullData.pfp_requests || {}); 
-            renderBanList(fullData.bans || {}); 
-            renderAdminLogs(fullData.logs || {}); 
-            renderAdminHistory(fullData.history || {});
+            let lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels : Object.values(fullData.levels)) : []; lvls = lvls.filter(l => l && l.name); fullData.levels = lvls;
+            renderClaimRequests(fullData.claim_requests || {}); renderAdminLevelsList(lvls); renderSubmissions(fullData.submissions || {}); renderAdminUserList(Object.values(fullData.players || {})); renderMarketModeration(fullData.market_requests || {}); renderPFPModeration(fullData.pfp_requests || {}); renderBanList(fullData.bans || {}); renderAdminLogs(fullData.logs || {}); renderAdminHistory(fullData.history || {});
         });
 
-        function renderClaimRequests(claims) {
-            let html = "";
-            Object.entries(claims).forEach(([k,v]) => {
-                html += `
-                <div class="sub-card" style="border-left-color: var(--yellow);">
-                    <span style="color:var(--yellow); font-weight:800; font-size:1rem;">${v.nick}</span>
-                    <div style="font-size:0.75rem; color:#aaa; margin:8px 0;">Email: <b style="color:#fff">${v.email}</b></div>
-                    <a href="${v.proof}" target="_blank" class="btn-proof" style="background:rgba(255,255,0,0.1); color:var(--yellow); border:1px solid var(--yellow); display:block; margin-bottom:15px;"><i class="fas fa-external-link-alt"></i> VER PRUEBA</a>
-                    <div class="flex-row">
-                        <button onclick="approveClaim('${k}')" class="btn-green" style="background:var(--green); color:#000;"><i class="fas fa-check"></i> VINCULAR</button>
-                        <button onclick="rejectClaim('${k}')" class="btn-red" style="width:auto; padding:15px 25px;"><i class="fas fa-times"></i></button>
-                    </div>
-                </div>`;
-            });
-            document.getElementById('claimRequestsList').innerHTML = html || `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">Sin solicitudes pendientes.</p>`;
-        }
-
-        function approveClaim(key) {
-            const req = fullData.claim_requests[key];
-            db.ref('players').once('value', s => {
-                let p = Object.values(s.val() || {});
-                let i = p.findIndex(x => x.name.toLowerCase() === req.nick.toLowerCase());
-                if(i > -1) { p[i].email = req.email; } else { p.push({ name: req.nick, email: req.email, country: 'es' }); }
-                db.ref('players').set(p);
-                db.ref('claim_requests/' + key).remove();
-                showToast(`Perfil vinculado a ${req.email}`);
-            });
-        }
-        
+        function renderClaimRequests(claims) { let html = ""; Object.entries(claims).forEach(([k,v]) => { html += `<div class="sub-card" style="border-left-color: var(--yellow);"><span style="color:var(--yellow); font-weight:800; font-size:1rem;">${v.nick}</span><div style="font-size:0.75rem; color:#aaa; margin:8px 0;">Email: <b style="color:#fff">${v.email}</b></div><a href="${v.proof}" target="_blank" class="btn-proof" style="background:rgba(255,255,0,0.1); color:var(--yellow); border:1px solid var(--yellow); display:block; margin-bottom:15px;"><i class="fas fa-external-link-alt"></i> VER PRUEBA</a><div class="flex-row"><button onclick="approveClaim('${k}')" class="btn-green" style="background:var(--green); color:#000;"><i class="fas fa-check"></i> VINCULAR</button><button onclick="rejectClaim('${k}')" class="btn-red" style="width:auto; padding:15px 25px;"><i class="fas fa-times"></i></button></div></div>`; }); document.getElementById('claimRequestsList').innerHTML = html || `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">Sin solicitudes pendientes.</p>`; }
+        function approveClaim(key) { const req = fullData.claim_requests[key]; db.ref('players').once('value', s => { let p = Object.values(s.val() || {}); let i = p.findIndex(x => x.name.toLowerCase() === req.nick.toLowerCase()); if(i > -1) { p[i].email = req.email; } else { p.push({ name: req.nick, email: req.email, country: 'es' }); } db.ref('players').set(p); db.ref('claim_requests/' + key).remove(); showToast(`Perfil vinculado a ${req.email}`); }); }
         function rejectClaim(key) { if(confirm("¿Rechazar esta solicitud?")) { db.ref('claim_requests/' + key).remove(); showToast("Solicitud rechazada", true); } }
 
-        function extractYTId(url) {
-            if(!url) return null;
-            let match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?\n]+)/);
-            return match ? match[1] : (url.length === 11 ? url : null);
-        }
+        function extractYTId(url) { let match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?\n]+)/); return match ? match[1] : (url.length === 11 ? url : null); }
+        async function getYTDate(id) { if(!id) return null; try { const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${id}&key=${YT_API_KEY}`); const data = await res.json(); if(data.items && data.items.length > 0) return data.items[0].snippet.publishedAt; } catch(e) { console.error("Error YT API:", e); } return null; }
+        async function analyzeYT() { const v1 = extractYTId(document.getElementById('audit1').value); const v2 = extractYTId(document.getElementById('audit2').value); const resBox = document.getElementById('auditResult'); if(!v1 || !v2) return showToast("Faltan links para comparar", true); resBox.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analizando...'; const d1Str = await getYTDate(v1); const d2Str = await getYTDate(v2); if(!d1Str || !d2Str) { resBox.innerHTML = "<span style='color:var(--red)'><i class='fas fa-exclamation-triangle'></i> Video no existe o es privado.</span>"; return; } const d1 = new Date(d1Str); const d2 = new Date(d2Str); let winner = d1 < d2 ? "Video Jugador A" : (d2 < d1 ? "Video Jugador B" : "Empate"); resBox.innerHTML = `<div style="margin-bottom:8px;"><b>Jugador A:</b> <span style="color:#ccc">${d1.toLocaleString()}</span></div><div style="margin-bottom:12px;"><b>Jugador B:</b> <span style="color:#ccc">${d2.toLocaleString()}</span></div><div style="color:var(--blue); font-weight:800; border-top:1px solid #222; padding-top:10px;"><i class="fas fa-trophy"></i> Antiguo: ${winner}</div>`; }
 
-        async function getYTDate(id) {
-            if(!id) return null;
-            try {
-                const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${id}&key=${YT_API_KEY}`);
-                const data = await res.json();
-                if(data.items && data.items.length > 0) return data.items[0].snippet.publishedAt;
-            } catch(e) { console.error("Error YT API:", e); }
-            return null;
-        }
-
-        async function analyzeYT() {
-            const v1 = extractYTId(document.getElementById('audit1').value);
-            const v2 = extractYTId(document.getElementById('audit2').value);
-            const resBox = document.getElementById('auditResult');
-            if(!v1 || !v2) return showToast("Faltan links para comparar", true);
-            resBox.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analizando...';
-            const d1Str = await getYTDate(v1); const d2Str = await getYTDate(v2);
-            if(!d1Str || !d2Str) { resBox.innerHTML = "<span style='color:var(--red)'><i class='fas fa-exclamation-triangle'></i> Video no existe o es privado.</span>"; return; }
-            const d1 = new Date(d1Str); const d2 = new Date(d2Str);
-            let winner = d1 < d2 ? "Video Jugador A" : (d2 < d1 ? "Video Jugador B" : "Empate");
-            resBox.innerHTML = `<div style="margin-bottom:8px;"><b>Jugador A:</b> <span style="color:#ccc">${d1.toLocaleString()}</span></div><div style="margin-bottom:12px;"><b>Jugador B:</b> <span style="color:#ccc">${d2.toLocaleString()}</span></div><div style="color:var(--blue); font-weight:800; border-top:1px solid #222; padding-top:10px;"><i class="fas fa-trophy"></i> Antiguo: ${winner}</div>`;
-        }
-
-        function renderAdminLevelsList(levelsArray) { 
-            let html = "";
-            for(let i = 0; i < levelsArray.length; i++) {
-                html += `<div class="list-item"><span><b style="color:var(--accent);">#${i+1}</b> ${levelsArray[i].name}</span><button onclick="loadLevelToEditor(${i})" class="btn-blue" style="width:auto; padding:8px 12px; margin:0;"><i class="fas fa-pen"></i></button></div>`;
-            }
-            document.getElementById('adminLevelsList').innerHTML = html;
-        }
-        
-        function loadLevelToEditor(index) { 
-            const levelObj = fullData.levels[index]; 
-            document.getElementById('editLvlIdx').value = index; document.getElementById('lvlName').value = levelObj.name; document.getElementById('lvlYT').value = levelObj.id; document.getElementById('lvlFirst').value = levelObj.first || ""; document.getElementById('lvlPos').value = index + 1; 
-            const victors = Object.values(fullData.players || {}).filter(p => { let cArr = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : []; return cArr.some(c => c.level === levelObj.name); }); 
-            let victorsHtml = `<p style="font-size:0.7rem; color:var(--accent); margin:0 0 10px 0; text-transform:uppercase; font-weight:800;">Victors Registrados</p>`;
-            for(let i = 0; i < victors.length; i++) { victorsHtml += `<div class="list-item"><span>${victors[i].name}</span><i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="removeVictorFromLevel('${levelObj.name}', '${victors[i].name}')"></i></div>`; }
-            document.getElementById('lvlVictorsList').innerHTML = victorsHtml;
-            document.getElementById('panelNivelesContent').scrollTo(0,0);
-        }
-
-        function saveLevel() { 
-            const idx = document.getElementById('editLvlIdx').value; const nameVal = document.getElementById('lvlName').value; const ytVal = document.getElementById('lvlYT').value; const firstVal = document.getElementById('lvlFirst').value; const posVal = document.getElementById('lvlPos').value;
-            if(!nameVal || !ytVal) return showToast("Nombre e ID son obligatorios", true);
-            let lvls = [...fullData.levels]; const newLevelObj = { name: nameVal, id: ytVal, first: firstVal }; 
-            if(idx !== "") lvls.splice(idx, 1); const position = posVal ? parseInt(posVal) - 1 : lvls.length; lvls.splice(position >= 0 ? position : lvls.length, 0, newLevelObj); 
-            db.ref('levels').set(lvls).then(() => { showToast(`Nivel Top #${position + 1} Guardado`); document.getElementById('editLvlIdx').value = ""; document.getElementById('lvlName').value = ""; document.getElementById('lvlYT').value = ""; document.getElementById('lvlFirst').value = ""; document.getElementById('lvlPos').value = ""; document.getElementById('lvlVictorsList').innerHTML = ""; });
-        }
-
-        async function syncWithAREDL() {
-            if(!confirm("¿Auto-sincronizar con AREDL? Se creará respaldo.")) return;
-            const btn = document.getElementById('syncBtn'); const originalText = btn.innerHTML;
-            try {
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SYNC...';
-                const res = await fetch('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent('https://api.aredl.net/api/aredl/levels'));
-                if(!res.ok) throw new Error("Error API"); const dataArray = (await res.json()).data || await res.json();
-                const aredlMap = new Map(); dataArray.forEach((lvl, idx) => aredlMap.set(lvl.name.toLowerCase().trim(), lvl.position || (idx + 1)));
-                let lvls = [...fullData.levels]; if(lvls.length === 0) { btn.innerHTML = originalText; return showToast("Lista vacía", true); }
-                db.ref('levels_backup').set(lvls); lvls.sort((a, b) => { let posA = aredlMap.has(a.name.toLowerCase().trim()) ? aredlMap.get(a.name.toLowerCase().trim()) : 999999; let posB = aredlMap.has(b.name.toLowerCase().trim()) ? aredlMap.get(b.name.toLowerCase().trim()) : 999999; return posA - posB; });
-                db.ref('levels').set(lvls).then(() => { showToast("Sincronización AREDL Exitosa"); btn.innerHTML = originalText; });
-            } catch (error) { console.error(error); showToast("Error de conexión AREDL", true); btn.innerHTML = originalText; }
-        }
-
+        function renderAdminLevelsList(levelsArray) { let html = ""; for(let i = 0; i < levelsArray.length; i++) { html += `<div class="list-item"><span><b style="color:var(--accent);">#${i+1}</b> ${levelsArray[i].name}</span><button onclick="loadLevelToEditor(${i})" class="btn-blue" style="width:auto; padding:8px 12px; margin:0;"><i class="fas fa-pen"></i></button></div>`; } document.getElementById('adminLevelsList').innerHTML = html; }
+        function loadLevelToEditor(index) { const levelObj = fullData.levels[index]; document.getElementById('editLvlIdx').value = index; document.getElementById('lvlName').value = levelObj.name; document.getElementById('lvlYT').value = levelObj.id; document.getElementById('lvlFirst').value = levelObj.first || ""; document.getElementById('lvlPos').value = index + 1; const victors = Object.values(fullData.players || {}).filter(p => { let cArr = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : []; return cArr.some(c => c.level === levelObj.name); }); let victorsHtml = `<p style="font-size:0.7rem; color:var(--accent); margin:0 0 10px 0; text-transform:uppercase; font-weight:800;">Victors Registrados</p>`; for(let i = 0; i < victors.length; i++) { victorsHtml += `<div class="list-item"><span>${victors[i].name}</span><i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="removeVictorFromLevel('${levelObj.name}', '${victors[i].name}')"></i></div>`; } document.getElementById('lvlVictorsList').innerHTML = victorsHtml; document.getElementById('panelNivelesContent').scrollTo(0,0); }
+        function saveLevel() { const idx = document.getElementById('editLvlIdx').value; const nameVal = document.getElementById('lvlName').value; const ytVal = document.getElementById('lvlYT').value; const firstVal = document.getElementById('lvlFirst').value; const posVal = document.getElementById('lvlPos').value; if(!nameVal || !ytVal) return showToast("Nombre e ID son obligatorios", true); let lvls = [...fullData.levels]; const newLevelObj = { name: nameVal, id: ytVal, first: firstVal }; if(idx !== "") lvls.splice(idx, 1); const position = posVal ? parseInt(posVal) - 1 : lvls.length; lvls.splice(position >= 0 ? position : lvls.length, 0, newLevelObj); db.ref('levels').set(lvls).then(() => { showToast(`Nivel Top #${position + 1} Guardado`); document.getElementById('editLvlIdx').value = ""; document.getElementById('lvlName').value = ""; document.getElementById('lvlYT').value = ""; document.getElementById('lvlFirst').value = ""; document.getElementById('lvlPos').value = ""; document.getElementById('lvlVictorsList').innerHTML = ""; }); }
+        async function syncWithAREDL() { if(!confirm("¿Auto-sincronizar con AREDL? Se creará respaldo.")) return; const btn = document.getElementById('syncBtn'); const originalText = btn.innerHTML; try { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SYNC...'; const res = await fetch('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent('https://api.aredl.net/api/aredl/levels')); if(!res.ok) throw new Error("Error API"); const dataArray = (await res.json()).data || await res.json(); const aredlMap = new Map(); dataArray.forEach((lvl, idx) => aredlMap.set(lvl.name.toLowerCase().trim(), lvl.position || (idx + 1))); let lvls = [...fullData.levels]; if(lvls.length === 0) { btn.innerHTML = originalText; return showToast("Lista vacía", true); } db.ref('levels_backup').set(lvls); lvls.sort((a, b) => { let posA = aredlMap.has(a.name.toLowerCase().trim()) ? aredlMap.get(a.name.toLowerCase().trim()) : 999999; let posB = aredlMap.has(b.name.toLowerCase().trim()) ? aredlMap.get(b.name.toLowerCase().trim()) : 999999; return posA - posB; }); db.ref('levels').set(lvls).then(() => { showToast("Sincronización AREDL Exitosa"); btn.innerHTML = originalText; }); } catch (error) { console.error(error); showToast("Error de conexión AREDL", true); btn.innerHTML = originalText; } }
         function revertAREDL() { if(!confirm("¿REVERTIR al último respaldo?")) return; const btn = document.getElementById('revertBtn'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; db.ref('levels_backup').once('value', s => { let backup = s.val(); if(!backup) { btn.innerHTML = '<i class="fas fa-history"></i> REVERTIR'; return showToast("No hay respaldos", true); } let lvls = Array.isArray(backup) ? backup : Object.values(backup); db.ref('levels').set(lvls.filter(x => x && x.name)).then(() => { showToast("Lista Restaurada"); btn.innerHTML = '<i class="fas fa-history"></i> REVERTIR'; }); }); }
 
-        function renderSubmissions(submissionsObj) { 
-            let html = ""; const entries = Object.entries(submissionsObj);
-            if(entries.length === 0) { document.getElementById('submissionsList').innerHTML = `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:40px;"><i class="fas fa-glass-cheers fa-2x"></i><br><br>No hay récords pendientes.</p>`; return; }
-            for(let i = 0; i < entries.length; i++) { const sub = entries[i][1]; html += `<div class="sub-card"><span style="color:#fff; font-weight:800; font-size:0.9rem;">${sub.player}</span> <i class="fas fa-caret-right" style="color:var(--accent); margin:0 5px;"></i> ${sub.level}<div class="proof-box"><a href="${sub.link}" target="_blank" class="btn-proof proof-yt"><i class="fab fa-youtube"></i> VER YT</a><a href="${sub.raw}" target="_blank" class="btn-proof proof-raw"><i class="fab fa-google-drive"></i> RAW</a></div><div class="flex-row"><button id="btn-ok-${entries[i][0]}" onclick="setStatus('${entries[i][0]}','Aceptado')" class="btn-green" style="background:var(--green); color:#000;"><i class="fas fa-check"></i></button><button onclick="setStatus('${entries[i][0]}','Rechazado')" class="btn-red"><i class="fas fa-times"></i></button></div></div>`; }
-            document.getElementById('submissionsList').innerHTML = html; 
-        }
+        function renderSubmissions(submissionsObj) { let html = ""; const entries = Object.entries(submissionsObj); if(entries.length === 0) { document.getElementById('submissionsList').innerHTML = `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:40px;"><i class="fas fa-glass-cheers fa-2x"></i><br><br>No hay récords pendientes.</p>`; return; } for(let i = 0; i < entries.length; i++) { const sub = entries[i][1]; html += `<div class="sub-card"><span style="color:#fff; font-weight:800; font-size:0.9rem;">${sub.player}</span> <i class="fas fa-caret-right" style="color:var(--accent); margin:0 5px;"></i> ${sub.level}<div class="proof-box"><a href="${sub.link}" target="_blank" class="btn-proof proof-yt"><i class="fab fa-youtube"></i> VER YT</a><a href="${sub.raw}" target="_blank" class="btn-proof proof-raw"><i class="fab fa-google-drive"></i> RAW</a></div><div class="flex-row"><button id="btn-ok-${entries[i][0]}" onclick="setStatus('${entries[i][0]}','Aceptado')" class="btn-green" style="background:var(--green); color:#000;"><i class="fas fa-check"></i></button><button onclick="setStatus('${entries[i][0]}','Rechazado')" class="btn-red"><i class="fas fa-times"></i></button></div></div>`; } document.getElementById('submissionsList').innerHTML = html; }
+        async function setStatus(key, status) { const staff = document.getElementById('globalStaffSign').value; if(!staff) return; const sub = fullData.submissions[key]; if(status === 'Aceptado') { const btnOk = document.getElementById(`btn-ok-${key}`); if(btnOk) { btnOk.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btnOk.disabled = true; } try { const subVid = extractYTId(sub.link); const lvlIdx = fullData.levels.findIndex(l => l.name === sub.level); if (lvlIdx > -1 && subVid) { const lvlVid = fullData.levels[lvlIdx].id; if(lvlVid && subVid !== lvlVid) { const subDateStr = await getYTDate(subVid); const lvlDateStr = await getYTDate(lvlVid); if (subDateStr && lvlDateStr && (new Date(subDateStr) < new Date(lvlDateStr))) { if(confirm(`⚠️ ¡NUEVO FIRST VICTOR DETECTADO!\nEl video de ${sub.player} es más antiguo que el actual.\n¿Coronar automáticamente?`)) { db.ref(`levels/${lvlIdx}/first`).set(sub.player); db.ref(`levels/${lvlIdx}/id`).set(subVid); showToast(`${sub.player} es el nuevo First Victor`); } } } } } catch(e) { console.log("Auditoría auto fallida", e); } db.ref('players').once('value', v => { let p = Object.values(v.val() || {}); let i = p.findIndex(u => u.name.toLowerCase() === sub.player.toLowerCase()); if(i > -1) { let cArr = p[i].completions ? (Array.isArray(p[i].completions) ? p[i].completions : Object.values(p[i].completions)) : []; cArr.push({level: sub.level, link: sub.link}); p[i].completions = cArr; } else { p.push({ name: sub.player, country: sub.country || 'es', completions: [{level: sub.level, link: sub.link}] }); } db.ref('players').set(p); }); db.ref('history').push({...sub, status: 'Aceptado'}); db.ref('logs').push({type: 'accept', msg: `✅ ${sub.player} -> ${sub.level} (${staff})`}); showToast("Récord Aceptado"); } else { db.ref('history').push({...sub, status: 'Rechazado'}); db.ref('logs').push({type: 'reject', msg: `❌ ${sub.player} RECHAZADO`}); showToast("Récord Rechazado", true); } db.ref('submissions/' + key).remove(); }
 
-        async function setStatus(key, status) { 
-            const staff = document.getElementById('globalStaffSign').value; if(!staff) { showToast("Pon tu firma de Staff en la cabecera primero", true); document.getElementById('globalStaffSign').focus(); return; }
-            const sub = fullData.submissions[key]; 
-            if(status === 'Aceptado') { 
-                const btnOk = document.getElementById(`btn-ok-${key}`); if(btnOk) { btnOk.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btnOk.disabled = true; }
-                try {
-                    const subVid = extractYTId(sub.link); const lvlIdx = fullData.levels.findIndex(l => l.name === sub.level);
-                    if (lvlIdx > -1 && subVid) { const lvlVid = fullData.levels[lvlIdx].id; if(lvlVid && subVid !== lvlVid) { const subDateStr = await getYTDate(subVid); const lvlDateStr = await getYTDate(lvlVid); if (subDateStr && lvlDateStr && (new Date(subDateStr) < new Date(lvlDateStr))) { if(confirm(`⚠️ ¡NUEVO FIRST VICTOR DETECTADO!\nEl video de ${sub.player} es más antiguo que el actual.\n¿Coronar automáticamente?`)) { db.ref(`levels/${lvlIdx}/first`).set(sub.player); db.ref(`levels/${lvlIdx}/id`).set(subVid); showToast(`${sub.player} es el nuevo First Victor`); } } } }
-                } catch(e) { console.log("Auditoría auto fallida", e); }
-                db.ref('players').once('value', v => { let p = Object.values(v.val() || {}); let i = p.findIndex(u => u.name.toLowerCase() === sub.player.toLowerCase()); if(i > -1) { let cArr = p[i].completions ? (Array.isArray(p[i].completions) ? p[i].completions : Object.values(p[i].completions)) : []; cArr.push({level: sub.level, link: sub.link}); p[i].completions = cArr; } else { p.push({ name: sub.player, country: sub.country || 'es', completions: [{level: sub.level, link: sub.link}] }); } db.ref('players').set(p); }); 
-                db.ref('history').push({...sub, status: 'Aceptado'}); db.ref('logs').push({type: 'accept', msg: `✅ ${sub.player} -> ${sub.level} (${staff})`}); showToast("Récord Aceptado");
-            } else { db.ref('history').push({...sub, status: 'Rechazado'}); db.ref('logs').push({type: 'reject', msg: `❌ ${sub.player} RECHAZADO`}); showToast("Récord Rechazado", true); }
-            db.ref('submissions/' + key).remove();
-        }
-
-        function renderAdminUserList(p) { 
-            let html = ""; for(let i = 0; i < p.length; i++) { let style = p[i].hidden ? 'text-decoration:line-through; color:var(--red);' : 'color:#fff; font-weight:800;'; html += `<div class="list-item"><span style="${style}">${p[i].name}</span><button onclick="loadPlayerToEditor(${i})" class="btn-blue" style="width:auto; padding:8px 12px; margin:0;"><i class="fas fa-user-edit"></i></button></div>`; }
-            document.getElementById('adminUserList').innerHTML = html;
-        }
-
-        function loadPlayerToEditor(idx) { 
-            const u = Object.values(fullData.players)[idx]; 
-            document.getElementById('playerEditor').style.display = "block"; document.getElementById('editPIdx').value = idx; document.getElementById('editNick').value = u.name; document.getElementById('editCountry').value = u.country || 'es'; document.getElementById('editHidden').checked = u.hidden || false; 
-            let cosHTML = ""; if (u.cosmetics) Object.entries(u.cosmetics).filter(x => x[1]).forEach(x => cosHTML += `<div class="list-item"><span>${x[0]}</span><i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="removeCosmeticFromUser(${idx}, '${x[0]}')"></i></div>`); document.getElementById('playerCosmeticsInternal').innerHTML = cosHTML || "<span style='font-size:0.75rem; color:#666;'>Sin cosméticos.</span>"; 
-            let recHTML = ""; let cArr = u.completions ? (Array.isArray(u.completions) ? u.completions : Object.values(u.completions)) : []; cArr.forEach((c, i) => recHTML += `<div class="list-item"><span>${c.level}</span><i class="fas fa-times" style="color:var(--red); cursor:pointer;" onclick="removeLevelFromUser(${idx}, ${i})"></i></div>`); document.getElementById('playerLevelsInternal').innerHTML = recHTML || "<span style='font-size:0.75rem; color:#666;'>Sin récords.</span>"; 
-            document.getElementById('panelPlayersContent').scrollTo(0,0);
-        }
-
+        function renderAdminUserList(p) { let html = ""; for(let i = 0; i < p.length; i++) { let style = p[i].hidden ? 'text-decoration:line-through; color:var(--red);' : 'color:#fff; font-weight:800;'; html += `<div class="list-item"><span style="${style}">${p[i].name}</span><button onclick="loadPlayerToEditor(${i})" class="btn-blue" style="width:auto; padding:8px 12px; margin:0;"><i class="fas fa-user-edit"></i></button></div>`; } document.getElementById('adminUserList').innerHTML = html; }
+        function loadPlayerToEditor(idx) { const u = Object.values(fullData.players)[idx]; document.getElementById('playerEditor').style.display = "block"; document.getElementById('editPIdx').value = idx; document.getElementById('editNick').value = u.name; document.getElementById('editCountry').value = u.country || 'es'; document.getElementById('editHidden').checked = u.hidden || false; let cosHTML = ""; if (u.cosmetics) Object.entries(u.cosmetics).filter(x => x[1]).forEach(x => cosHTML += `<div class="list-item"><span>${x[0]}</span><i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="removeCosmeticFromUser(${idx}, '${x[0]}')"></i></div>`); document.getElementById('playerCosmeticsInternal').innerHTML = cosHTML || "<span style='font-size:0.75rem; color:#666;'>Sin cosméticos.</span>"; let recHTML = ""; let cArr = u.completions ? (Array.isArray(u.completions) ? u.completions : Object.values(u.completions)) : []; cArr.forEach((c, i) => recHTML += `<div class="list-item"><span>${c.level}</span><i class="fas fa-times" style="color:var(--red); cursor:pointer;" onclick="removeLevelFromUser(${idx}, ${i})"></i></div>`); document.getElementById('playerLevelsInternal').innerHTML = recHTML || "<span style='font-size:0.75rem; color:#666;'>Sin récords.</span>"; document.getElementById('panelPlayersContent').scrollTo(0,0); }
         function removeVictorFromLevel(l, p) { if(confirm(`¿Quitar récord de ${p} en ${l}?`)) { db.ref('players').once('value', s => { let list = Object.values(s.val()); let i = list.findIndex(x => x.name === p); if(i > -1) { let cArr = list[i].completions ? (Array.isArray(list[i].completions) ? list[i].completions : Object.values(list[i].completions)) : []; list[i].completions = cArr.filter(c => c.level !== l); db.ref('players').set(list); loadLevelToEditor(document.getElementById('editLvlIdx').value); showToast("Récord quitado"); } }); } }
         function removeCosmeticFromUser(pI, cK) { if(confirm("¿Quitar cosmético?")) { db.ref('players').once('value', s => { let list = Object.values(s.val()); list[pI].cosmetics[cK] = false; db.ref('players').set(list); loadPlayerToEditor(pI); showToast("Cosmético removido"); }); } }
         function savePlayerEdits() { const idx = document.getElementById('editPIdx').value; db.ref('players').once('value', s => { let list = Object.values(s.val()); list[idx].name = document.getElementById('editNick').value; list[idx].country = document.getElementById('editCountry').value; list[idx].hidden = document.getElementById('editHidden').checked; db.ref('players').set(list); showToast("Perfil actualizado"); }); }
@@ -398,7 +224,6 @@
         function renderBanList(b) { let html = ""; Object.entries(b).forEach(([k,v]) => html += `<div class="list-item"><span style="color:var(--red); font-weight:800;">${v}</span><i class="fas fa-trash-alt" style="color:#888; cursor:pointer;" onclick="db.ref('bans/${k}').remove(); showToast('Desbaneado');"></i></div>`); document.getElementById('banListInteractive').innerHTML = html || `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">Nadie en la Blacklist.</p>`; }
 
         function renderAdminLogs(l) { let html = ""; Object.entries(l).reverse().forEach(([k,v]) => html += `<div class="list-item" style="font-size:0.7rem; padding:10px 15px;"><span>${v.msg}</span><i class="fas fa-times" style="cursor:pointer; color:#555;" onclick="db.ref('logs/${k}').remove()"></i></div>`); document.getElementById('adminLogList').innerHTML = html; }
-
         function renderAdminHistory(h) { let html = ""; Object.entries(h).reverse().forEach(([k,v]) => { let color = v.status === 'Aceptado' ? 'var(--green)' : 'var(--red)'; html += `<div class="list-item" style="font-size:0.7rem; padding:10px 15px;"><span><b style="color:#fff">${v.player}</b> <span style="color:${color}; font-weight:800; margin-left:8px;">${v.status.toUpperCase()}</span></span><i class="fas fa-times" style="cursor:pointer; color:#555;" onclick="db.ref('history/${k}').remove()"></i></div>`; }); document.getElementById('adminHistoryList').innerHTML = html; }
     </script>
 </body>
