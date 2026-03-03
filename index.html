@@ -25,7 +25,7 @@
 
         /* DISCORD SUTIL SUPERIOR DERECHA */
         .top-subtle-links { position: absolute; top: 80px; right: 30px; z-index: 100; }
-        .discord-subtle { color: rgba(255,255,255,0.2); text-decoration: none; font-size: 0.65rem; font-weight: 800; display: flex; align-items: center; gap: 8px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.03); padding: 6px 15px; border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; }
+        .discord-subtle { color: rgba(255,255,255,0.2); text-decoration: none; font-size: 0.7rem; font-weight: 800; display: flex; align-items: center; gap: 8px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.03); padding: 8px 18px; border-radius: 50px; text-transform: uppercase; letter-spacing: 2px; }
         .discord-subtle:hover { color: #7289da; border-color: #7289da; background: rgba(114, 137, 218, 0.05); transform: translateY(-2px); }
 
         .news-ticker { background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 0; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; overflow: hidden; display: flex; }
@@ -75,7 +75,6 @@
         .victor-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #111; font-size: 0.85rem; transition: 0.2s; }
         .victor-row:hover { background: rgba(255,255,255,0.02); }
         .btn-video { color: var(--red); text-decoration: none; font-weight: 800; font-size: 0.65rem; background: rgba(255,51,51,0.1); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,51,51,0.2); transition: 0.3s; }
-        .btn-video:hover { background: var(--red); color: #000; }
     </style>
 </head>
 <body>
@@ -83,17 +82,17 @@
     
     <nav class="staff-bar">
         <div class="staff-item tribute-item" style="color:#fff; font-weight:800;">Tributo a 2parx 🕊️</div>
-        <div class="staff-item"><i class="fas fa-crown"></i> OWNER <b>score</b></div>
-        <div class="staff-item"><i class="fas fa-user-shield"></i> ADMIN <b>awrqsdt</b></div>
-        <div class="staff-item"><i class="fas fa-user-shield"></i> ADMIN <b>mek</b></div>
-        <div class="staff-item"><i class="fas fa-hands-helping"></i> HELPER <b>Blitz</b></div>
-        <div class="staff-item"><i class="fas fa-hands-helping"></i> HELPER <b>nico</b></div>
+        <div class="staff-item">OWNER <b>score</b></div>
+        <div class="staff-item">ADMIN <b>awrqsdt</b></div>
+        <div class="staff-item">ADMIN <b>mek</b></div>
+        <div class="staff-item">HELPER <b>Blitz</b></div>
+        <div class="staff-item">HELPER <b>nico</b></div>
     </nav>
     
     <header>
         <div class="top-subtle-links">
             <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="discord-subtle">
-                <i class="fab fa-discord"></i> COMUNIDAD HDGzCVazwT
+                <i class="fab fa-discord"></i> COMUNIDAD
             </a>
         </div>
 
@@ -104,7 +103,7 @@
             <a href="index.html" class="btn-scully" style="color:var(--green); border-color:var(--green);"><i class="fas fa-list-ol"></i> Lista</a>
             <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking</a>
             <a href="submit.html" class="btn-scully"><i class="fas fa-upload"></i> Enviar</a>
-            <a href="suggest.html" class="btn-scully" style="color:var(--purple); border-color:var(--purple);"><i class="fas fa-lightbulb"></i> Sugerir</a>
+            <a href="suggest.html" class="btn-scully" style="color:var(--purple); border-color:var(--purple);"><i class="fas fa-lightbulb"></i> Sugerir Nivel</a>
             <a href="rules.html" class="btn-scully" style="color:var(--blue); border-color:var(--blue);"><i class="fas fa-book"></i> Reglas y Orientación</a>
             <a href="changelog.html" class="btn-scully" style="color:var(--yellow); border-color:var(--yellow);">
                 <i class="fas fa-file-code"></i> Changelog <span class="badge-new">NUEVO</span>
@@ -121,15 +120,15 @@
             <i class="fas fa-comments"></i> Propuestas de la Comunidad
         </h2>
         <div class="sug-grid" id="communitySuggestions">
-            <p style="text-align:center; color:#333; font-size:0.7rem; grid-column: 1/-1;">Escaneando base de datos...</p>
+            <p style="text-align:center; color:#333; font-size:0.7rem; grid-column: 1/-1;">Sincronizando propuestas...</p>
         </div>
     </section>
     
     <main class="list-grid" id="main-list"></main>
 
     <section class="status-tracker">
-        <h2 style="color:var(--accent); text-transform: uppercase; font-size: 1.2rem; letter-spacing: 1px;"><i class="fas fa-id-card"></i> Identidad Scully</h2>
-        <p style="color:#888; font-size:0.9rem; margin-bottom:25px;">Personaliza tu perfil, vincula redes y rastrea tus récords en tiempo real.</p>
+        <h2 style="color:var(--accent); text-transform: uppercase; font-size: 1.2rem;"><i class="fas fa-id-card"></i> Identidad Scully</h2>
+        <p style="color:#888; font-size:0.9rem; margin-bottom:25px;">Crea una cuenta para personalizar tu perfil y rastrear tus récords.</p>
         <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
             <a href="login.html" class="btn-scully" style="background:var(--accent); color:#000; border:none; padding:15px 35px;">INICIAR SESIÓN / REGISTRO</a>
             <a href="leaderboards.html" class="btn-scully" style="padding:15px 35px;">EXPLORAR RANKING</a>
@@ -146,8 +145,8 @@
         <div class="modal-content">
             <h2 style="color:var(--accent); text-transform:uppercase; letter-spacing:1px;">Ruleta de Desafío</h2>
             <div id="ruletaText" style="font-size:2.2rem; font-weight:800; margin:40px 0; color:#fff; min-height:60px;">---</div>
-            <button class="btn-scully" onclick="spinRoulette()" style="width:100%; justify-content:center; margin-bottom:15px; background:var(--accent); color:#000; border:none;">GIRAR RULETA</button>
-            <button class="btn-scully" onclick="closeRuleta()" style="width:100%; justify-content:center; background:transparent; border:none; color:#444;">CERRAR VENTANA</button>
+            <button class="btn-scully" onclick="spinRoulette()" style="width:100%; justify-content:center; margin-bottom:15px; background:var(--accent); color:#000; border:none;">GIRAR</button>
+            <button class="btn-scully" onclick="closeRuleta()" style="width:100%; justify-content:center; background:transparent; border:none; color:#444;">CERRAR</button>
         </div>
     </div>
     
@@ -160,28 +159,17 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     
     <script>
-        const firebaseConfig = { 
-            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
-            authDomain: "scullylist.firebaseapp.com", 
-            databaseURL: "https://scullylist-default-rtdb.firebaseio.com", 
-            projectId: "scullylist", 
-            storageBucket: "scullylist.firebasestorage.app", 
-            messagingSenderId: "498548914021", 
-            appId: "1:498548914021:web:59128b5e06b36a4e81938c", 
-            measurementId: "G-X3JF2DVWYH" 
-        };
+        const firebaseConfig = { apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", authDomain: "scullylist.firebaseapp.com", databaseURL: "https://scullylist-default-rtdb.firebaseio.com", projectId: "scullylist", storageBucket: "scullylist.firebasestorage.app", messagingSenderId: "498548914021", appId: "1:498548914021:web:59128b5e06b36a4e81938c", measurementId: "G-X3JF2DVWYH" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
         let fullData = {};
 
-        // GESTIÓN DE TEMA PERSONALIZADO
         const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
         updateThemeColor(savedColor);
         document.getElementById('themeColor').value = savedColor;
         function updateThemeColor(v) { document.documentElement.style.setProperty('--accent', v); localStorage.setItem('scully-theme-color', v); }
 
-        // DETECCIÓN AUTOMÁTICA DE RANGO STAFF
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.ref('players').once('value', snap => {
@@ -192,151 +180,58 @@
                         btn.style.display = "inline-flex";
                         btn.href = me.role === 'admin' ? "admin.html" : "helper.html";
                         btn.innerHTML = me.role === 'admin' ? '<i class="fas fa-user-cog"></i> ADMIN' : '<i class="fas fa-shield-alt"></i> HELPER';
-                        if(me.role === 'helper') { 
-                            btn.style.background = "rgba(102,252,241,0.1)"; 
-                            btn.style.borderColor = "var(--blue)"; 
-                            btn.style.color = "var(--blue)"; 
-                        }
+                        if(me.role === 'helper') { btn.style.background = "var(--blue)"; btn.style.color = "#000"; btn.style.borderColor = "var(--blue)"; }
                     }
                 });
             }
         });
 
-        // CARGA MAESTRA DE DATOS (NIVELES, LOGS, SUGERENCIAS)
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {};
             let lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels : Object.values(fullData.levels)) : [];
             lvls = lvls.filter(l => l && l.name);
             fullData.levels = lvls;
-            
-            renderLevels(lvls); 
-            renderThrone(lvls); 
-            updateTicker(fullData.logs || {});
-            renderSuggestions(fullData.level_suggestions || {});
+            renderLevels(lvls); renderThrone(lvls); updateTicker(fullData.logs || {}); renderSuggestions(fullData.level_suggestions || {});
         });
 
         function renderSuggestions(sugs) {
             let html = "";
             const list = Object.values(sugs).reverse().slice(0, 4);
-            list.forEach(s => {
-                html += `
-                <div class="sug-card">
-                    <span>SUGERENCIA:</span> <b>${s.level}</b><br>
-                    Propuesto por <b>${s.player}</b>
-                </div>`;
-            });
-            document.getElementById('communitySuggestions').innerHTML = html || "<p style='text-align:center; color:#333; grid-column:1/-1; font-size:0.7rem;'>No hay propuestas nuevas en este momento.</p>";
+            list.forEach(s => { html += `<div class="sug-card"><span>PROPUESTA:</span> <b>${s.level}</b><br>Por: <b>${s.player}</b></div>`; });
+            document.getElementById('communitySuggestions').innerHTML = html || "<p style='text-align:center; color:#333; grid-column:1/-1; font-size:0.7rem;'>No hay propuestas nuevas.</p>";
         }
 
         function renderLevels(n) { 
             const calcXP = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); 
-            document.getElementById('main-list').innerHTML = n.map((l, i) => `
-                <div class="level-card" onclick="openDetails(${i})">
-                    <img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg">
-                    <div>
-                        <h3 style="font-size:0.9rem; margin:0; text-transform:uppercase;">${l.name}</h3>
-                        <p style="color:var(--accent); font-size:0.65rem; margin:3px 0 0 0; font-weight:800;">+${calcXP(i)} XP</p>
-                    </div>
-                    <div style="position:absolute; right:15px; opacity:0.05; font-weight:900; font-size:2rem;">#${i+1}</div>
-                </div>`).join(""); 
+            document.getElementById('main-list').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="font-size:0.9rem; margin:0; text-transform:uppercase;">${l.name}</h3><p style="color:var(--accent); font-size:0.65rem; font-weight:800; margin-top:3px;">+${calcXP(i)} XP</p></div><div style="position:absolute; right:15px; opacity:0.05; font-weight:900; font-size:2rem;">#${i+1}</div></div>`).join(""); 
         }
 
         function renderThrone(lvls) { 
             if(!lvls || lvls.length === 0) return; 
             const t = lvls[0]; 
-            document.getElementById('throneDisplay').innerHTML = `
-                <div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.9) 45%, transparent), url('https://i.ytimg.com/vi/${t.id}/maxresdefault.jpg');">
-                    <div class="throne-info">
-                        <div style="background:var(--accent); color:#000; padding:6px 15px; border-radius:50px; font-size:0.6rem; font-weight:900; margin-bottom:15px; display:inline-block; box-shadow: 0 0 15px var(--accent);">TOP #1 BOSS</div>
-                        <h2 style="font-size:clamp(1.8rem, 5vw, 3rem); margin:0; text-transform:uppercase; letter-spacing:-1px;">${t.name}</h2>
-                        <p style="color:#ccc; margin:8px 0 25px 0; font-size:0.9rem;">FIRST VICTOR: <b style="color:var(--accent); text-transform:uppercase;">${t.first || 'Desconocido'}</b></p>
-                        <button class="btn-scully" style="border-color:var(--accent); color:var(--accent); padding:10px 25px;" onclick="openDetails(0)">REVISAR RÉCORDS</button>
-                    </div>
-                </div>`; 
+            document.getElementById('throneDisplay').innerHTML = `<div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.9) 45%, transparent), url('https://i.ytimg.com/vi/${t.id}/maxresdefault.jpg');"><div class="throne-info"><div style="background:var(--accent); color:#000; padding:6px 15px; border-radius:50px; font-size:0.6rem; font-weight:900; margin-bottom:15px; display:inline-block;">TOP #1 BOSS</div><h2 style="font-size:clamp(2rem, 5vw, 3rem); margin:0; text-transform:uppercase; letter-spacing:-1px;">${t.name}</h2><p style="color:#ccc; margin:8px 0 25px 0;">FIRST VICTOR: <b style="color:var(--accent);">${t.first || 'Nadie'}</b></p><button class="btn-scully" style="border-color:var(--accent); color:var(--accent);" onclick="openDetails(0)">REVISAR RÉCORDS</button></div></div>`; 
         }
 
-        function updateTicker(l) { 
-            const entries = Object.values(l).reverse().slice(0, 10); 
-            document.getElementById('pulse-content').innerHTML = entries.map(x => `<span class="log-item"><i class="fas fa-terminal" style="color:var(--accent);"></i> ${x.msg}</span>`).join(""); 
-        }
+        function updateTicker(l) { const entries = Object.values(l).reverse().slice(0, 10); document.getElementById('pulse-content').innerHTML = entries.map(x => `<span class="log-item"><i class="fas fa-terminal" style="color:var(--accent);"></i> ${x.msg}</span>`).join(""); }
 
         function openDetails(idx) { 
-            const l = fullData.levels[idx]; 
-            const players = Object.values(fullData.players || {});
-            
-            // Filtrar victors que se pasaron este nivel y no están baneados (hidden)
-            const approved = players.filter(p => {
-                let cArr = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : [];
-                return cArr.some(c => c.level === l.name) && !p.hidden;
-            });
-
-            let victorsHTML = "";
-            // Primero el verificador
-            if(l.first) {
-                victorsHTML += `
-                <div class="victor-row" style="color:var(--blue); font-weight:800; background:rgba(0,204,255,0.03);">
-                    <span>🥇 ${l.first}</span> 
-                    <small style="text-transform:uppercase; font-size:0.6rem; opacity:0.8;">VERIFICADOR</small>
-                </div>`;
-            }
-
-            // Luego el resto de la lista
-            approved.forEach(p => {
-                if(p.name.toLowerCase() !== (l.first || "").toLowerCase()) {
-                    let cArr = Array.isArray(p.completions) ? p.completions : Object.values(p.completions);
-                    let record = cArr.find(x => x.level === l.name);
-                    if(record) {
-                        victorsHTML += `
-                        <div class="victor-row">
-                            <span>${p.name}</span> 
-                            <a href="${record.link}" target="_blank" class="btn-video"><i class="fab fa-youtube"></i> VIDEO</a>
-                        </div>`;
-                    }
-                }
-            });
-
-            document.getElementById('modal-body').innerHTML = `
-                <span onclick="closeM()" style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.5rem; color:#444; transition:0.3s;">&times;</span>
-                <h1 style="color:var(--accent); text-transform:uppercase; margin:0 0 20px 0; font-size:1.8rem; letter-spacing:-1px;">${l.name}</h1>
-                <iframe width="100%" height="320" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:20px; border:1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5);"></iframe>
-                
-                <div style="text-align:left; margin-top:30px;">
-                    <p style="font-size:0.7rem; color:#444; font-weight:800; letter-spacing:1px; text-transform:uppercase; margin-bottom:15px; border-bottom:1px solid #111; padding-bottom:8px;">Liga de Victorias Oficial</p>
-                    <div style="background:rgba(0,0,0,0.4); border-radius:15px; border:1px solid var(--border); max-height:220px; overflow-y:auto;">
-                        ${victorsHTML || '<p style="padding:30px; text-align:center; color:#333; font-style:italic; font-size:0.8rem;">No hay registros aprobados para este nivel todavía.</p>'}
-                    </div>
-                </div>`;
+            const l = fullData.levels[idx]; const players = Object.values(fullData.players || {});
+            const approved = players.filter(p => { let cArr = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : []; return cArr.some(c => c.level === l.name) && !p.hidden; });
+            let victorsHTML = ""; if(l.first) victorsHTML += `<div class="victor-row" style="color:var(--blue); font-weight:800; background:rgba(0,204,255,0.03);"><span>🥇 ${l.first}</span> <small style="text-transform:uppercase; font-size:0.6rem; opacity:0.8;">VERIFICADOR</small></div>`;
+            approved.forEach(p => { if(p.name.toLowerCase() !== (l.first || "").toLowerCase()) { let cArr = Array.isArray(p.completions) ? p.completions : Object.values(p.completions); let record = cArr.find(x => x.level === l.name); if(record) victorsHTML += `<div class="victor-row"><span>${p.name}</span> <a href="${record.link}" target="_blank" class="btn-video">VIDEO</a></div>`; } });
+            document.getElementById('modal-body').innerHTML = `<span onclick="closeM()" style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.5rem; color:#444;">&times;</span><h1 style="color:var(--accent); text-transform:uppercase; font-size:1.8rem;">${l.name}</h1><iframe width="100%" height="320" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:20px; border:1px solid var(--border);"></iframe><div style="text-align:left; margin-top:30px;"><p style="font-size:0.7rem; color:#444; font-weight:800; letter-spacing:1px; text-transform:uppercase; margin-bottom:15px; border-bottom:1px solid #111; padding-bottom:8px;">Liga de Victorias</p><div style="background:rgba(0,0,0,0.4); border-radius:15px; border:1px solid var(--border); max-height:220px; overflow-y:auto;">${victorsHTML || '<p style="padding:30px; text-align:center; color:#333; font-size:0.8rem;">Sin registros.</p>'}</div></div>`;
             document.getElementById('levelModal').style.display = "block";
         }
 
         function closeM() { document.getElementById('levelModal').style.display = "none"; document.getElementById('modal-body').innerHTML = ""; }
-
         function spinRoulette() { 
-            const lvls = fullData.levels || []; 
-            if(lvls.length === 0) return; 
+            const lvls = fullData.levels || []; if(lvls.length === 0) return; 
             document.getElementById('ruletaModal').style.display = "block"; 
-            const res = document.getElementById('ruletaText'); 
-            let count = 0; 
-            const interval = setInterval(() => { 
-                res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name; 
-                count++; 
-                if(count > 15) { 
-                    clearInterval(interval); 
-                    res.style.color = "var(--green)"; 
-                } 
-            }, 80); 
+            const res = document.getElementById('ruletaText'); let count = 0; 
+            const interval = setInterval(() => { res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name; count++; if(count > 15) { clearInterval(interval); res.style.color = "var(--green)"; } }, 80); 
         }
-
-        function closeRuleta() { 
-            document.getElementById('ruletaModal').style.display = "none"; 
-            document.getElementById('ruletaText').style.color = "#fff"; 
-        }
-
-        // CERRAR MODALES AL TOCAR FUERA
-        window.onclick = function(e) { 
-            if(e.target == document.getElementById('levelModal')) closeM(); 
-            if(e.target == document.getElementById('ruletaModal')) closeRuleta(); 
-        }
+        function closeRuleta() { document.getElementById('ruletaModal').style.display = "none"; document.getElementById('ruletaText').style.color = "#fff"; }
+        window.onclick = function(e) { if(e.target == document.getElementById('levelModal')) closeM(); if(e.target == document.getElementById('ruletaModal')) closeRuleta(); }
     </script>
 </body>
 </html>
