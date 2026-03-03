@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Scully List | Hub de Ingeniería & Personalización</title>
+    <title>The Scully List | Ingeniería de Niveles</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -46,10 +46,6 @@
         .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 14px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 10px; }
         .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: var(--glow); }
 
-        /* COLOR PICKER SUTIL */
-        .color-picker-wrapper { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 8px 15px; border-radius: 50px; border: 1px solid var(--border); }
-        #themeColor { cursor: pointer; border: none; background: none; width: 25px; height: 25px; }
-
         /* 4. EL TRONO */
         .throne-section { width: 90%; max-width: 800px; margin: 40px auto; }
         .throne-card { background: linear-gradient(to right, rgba(0,0,0,0.95), rgba(255, 102, 0, 0.1)); background-size: cover; border-radius: 30px; padding: 40px; border: 2px solid var(--accent); box-shadow: var(--glow); display: flex; align-items: center; }
@@ -65,7 +61,7 @@
         .versus-section, .recent-section, .market-section { width: 95%; max-width: 850px; margin: 60px auto; }
         .versus-card { background: var(--card-bg); border: 2px solid var(--accent); border-radius: 30px; display: grid; grid-template-columns: 1fr 0.2fr 1fr; padding: 30px; align-items: center; }
         .v-player { text-align: center; }
-        .v-pfp { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--accent); object-fit: cover; margin-bottom: 10px; }
+        .v-pfp { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; margin-bottom: 10px; }
         .v-stat { font-size: 0.6rem; color: #777; text-transform: uppercase; margin: 4px 0; }
         .v-stat b { color: #fff; font-size: 0.8rem; }
         .v-winner { color: var(--green) !important; text-shadow: 0 0 10px var(--green); }
@@ -78,7 +74,12 @@
         .user-pfp-display { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--accent); margin: 0 auto 20px; object-fit: cover; background: #111; }
         .xp-tag { background: #000; color: var(--accent); padding: 8px 18px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--accent); display: inline-block; }
 
-        /* 8. ADMIN PANEL (7 COLUMNAS) */
+        /* 8. SECCIÓN CRÉDITOS & COLOR */
+        .footer-credits { padding: 60px 20px; text-align: center; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); margin-top: 100px; }
+        .color-picker-wrapper { display: inline-flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.5); padding: 12px 25px; border-radius: 50px; border: 1px solid var(--accent); margin-top: 20px; }
+        #themeColor { cursor: pointer; border: none; background: none; width: 30px; height: 30px; }
+
+        /* 9. ADMIN PANEL (7 COLUMNAS REALES) */
         #adminPanel { display: none; background: #000; border: 2px solid var(--accent); padding: 35px; width: 98%; max-width: 1900px; margin: 50px auto; border-radius: 25px; overflow-x: auto; box-shadow: var(--glow); }
         .admin-layout { display: flex; gap: 15px; min-width: 1800px; }
         .admin-col { flex: 1; background: #080808; padding: 15px; border-radius: 15px; border: 1px solid #111; min-width: 250px; }
@@ -111,14 +112,11 @@
         <h1>THE SCULLY <span>LIST</span></h1>
         <p class="slogan">Tanta diversión que es ilegal, sin limites para la diversión</p>
         <div class="main-nav">
+            <a href="#main-list" class="btn-scully" style="color:var(--green); border-color:var(--green);"><i class="fas fa-list-ol"></i> Lista Principal</a>
             <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking</a>
-            <a href="#main-list" class="btn-scully"><i class="fas fa-list-ol"></i> Lista</a>
             <a href="#versus" class="btn-scully"><i class="fas fa-bolt"></i> Versus</a>
             <a href="#market" class="btn-scully"><i class="fas fa-shopping-cart"></i> Mercado</a>
-            <div class="color-picker-wrapper">
-                <i class="fas fa-palette" style="font-size:0.7rem; color:var(--accent);"></i>
-                <input type="color" id="themeColor" value="#ff6600" oninput="updateThemeColor(this.value)">
-            </div>
+            <a href="#submit" class="btn-scully"><i class="fas fa-upload"></i> Enviar</a>
             <button class="btn-scully" onclick="spinRoulette()"><i class="fas fa-dice"></i></button>
         </div>
     </header>
@@ -185,6 +183,15 @@
             <button class="btn-scully" style="width:100%; border-color:var(--blue); color:var(--blue);" onclick="submitPFP()">SOLICITAR PFP</button>
         </div>
     </section>
+
+    <footer class="footer-credits">
+        <p style="color:#444; font-size:0.7rem; letter-spacing:2px; text-transform:uppercase;">The Scully List &copy; 2026</p>
+        <p style="font-size:0.6rem; color:#666;">Diseñado por <b>score</b> | Staff: Vegardo, Blitz, Sopa354</p>
+        <div class="color-picker-wrapper">
+            <span style="font-size:0.6rem; font-weight:800; color:var(--accent);">MODO COLOR PERSONALIZADO:</span>
+            <input type="color" id="themeColor" value="#ff6600" oninput="updateThemeColor(this.value)">
+        </div>
+    </footer>
 
     <div class="admin-lock" onclick="toggleAuth()"><i class="fas fa-lock"></i></div>
 
@@ -257,20 +264,13 @@
             return { name: player.name, pts: pts.toFixed(1), lvl: Math.floor(pts / 50), recordCount: player.completions?.length || 0, badges: [...new Set(badges)], pfp: player.pfp || "https://i.imgur.com/8pw98K4.png", cosmetics: player.cosmetics || {} };
         }
 
-        // 2. VERSUS REAL
+        // 2. VERSUS
         function comparePlayers() {
             const p1 = calcUserStats(document.getElementById('vNick1').value.trim());
             const p2 = calcUserStats(document.getElementById('vNick2').value.trim());
             if(!p1.name || !p2.name) return alert("Jugador no encontrado.");
             const winXP = parseFloat(p1.pts) > parseFloat(p2.pts);
-            const winRec = p1.recordCount > p2.recordCount;
-
-            document.getElementById('versusResult').innerHTML = `
-                <div class="versus-card">
-                    <div class="v-player"><img src="${p1.pfp}" class="v-pfp"><h3>${p1.name}</h3><div class="v-stat">XP: <b class="${winXP?'v-winner':''}">${p1.pts}</b></div><div class="v-stat">REC: <b class="${winRec?'v-winner':''}">${p1.recordCount}</b></div></div>
-                    <div style="font-weight:900; color:var(--accent); font-size:1.2rem;">VS</div>
-                    <div class="v-player"><img src="${p2.pfp}" class="v-pfp"><h3>${p2.name}</h3><div class="v-stat">XP: <b class="${!winXP?'v-winner':''}">${p2.pts}</b></div><div class="v-stat">REC: <b class="${!winRec?'v-winner':''}">${p2.recordCount}</b></div></div>
-                </div>`;
+            document.getElementById('versusResult').innerHTML = `<div class="versus-card"><div class="v-player"><img src="${p1.pfp}" class="v-pfp"><h3>${p1.name}</h3><div class="v-stat">XP: <b class="${winXP?'v-winner':''}">${p1.pts}</b></div><div class="v-stat">LVL: <b>${p1.lvl}</b></div></div><div style="font-weight:900; color:var(--accent);">VS</div><div class="v-player"><img src="${p2.pfp}" class="v-pfp"><h3>${p2.name}</h3><div class="v-stat">XP: <b class="${!winXP?'v-winner':''}">${p2.pts}</b></div><div class="v-stat">LVL: <b>${p2.lvl}</b></div></div></div>`;
         }
 
         // 3. FUNCIONES CORE
@@ -296,7 +296,7 @@
             }
         }
 
-        // MODERADORES Y RENDERERS
+        // RENDERERS & MODERADORES
         function renderSubmissions(s) { document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k, x]) => `<div class="admin-sub-card"><b>${x.player}</b> -> ${x.level}<div class="admin-btns"><button onclick="setStatus('${k}','Aceptado')" style="color:var(--green)">ACEP</button><button onclick="setStatus('${k}','Rechazado')" style="color:var(--red)">RECH</button></div></div>`).join(""); }
         function renderBanList(b) { document.getElementById('banListInteractive').innerHTML = Object.entries(b).map(([k,v]) => `<div class="manage-item"><span>${v}</span><i class="fas fa-trash-alt" onclick="db.ref('bans/${k}').remove()"></i></div>`).join(""); }
         function renderAdminLogs(l) { document.getElementById('adminLogList').innerHTML = Object.entries(l).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.msg}</span><i class="fas fa-trash" onclick="db.ref('logs/${k}').remove()"></i></div>`).join(""); }
@@ -321,16 +321,16 @@
         function closeRuleta() { document.getElementById('ruletaModal').style.display = "none"; }
         function toggleAuth() { if(prompt("Acceso:") === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
         function saveLevel() { const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const f = document.getElementById('lvlFirst').value; const p = parseInt(document.getElementById('lvlPos').value)-1; db.ref('levels').once('value', s => { let l = s.val() || []; l.splice(p >= 0 ? p : l.length, 0, { name: n, id: y, first: f }); db.ref('levels').set(l); alert("Hecho!"); }); }
+        function updateLevelSelect(n) { document.getElementById('recLevel').innerHTML = n.map(l => `<option value="${l.name}">${l.name}</option>`).join(""); }
         function openDetails(idx) { const l = fullData.levels[idx]; const p = Object.values(fullData.players || {}); const victors = p.filter(v => (v.completions || []).some(c => c.level === l.name)); document.getElementById('modal-body').innerHTML = `<h1>${l.name}</h1><p>FIRST VICTOR: <b>${l.first || 'Nadie'}</b></p><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen></iframe><div style="margin-top:15px; text-align:left;"><small>VICTORS:</small>${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111;">${v.name}</div>`).join("")}</div>`; document.getElementById('levelModal').style.display = "block"; }
         function closeM() { document.getElementById('levelModal').style.display = "none"; }
-        function updateLevelSelect(n) { document.getElementById('recLevel').innerHTML = n.map(l => `<option value="${l.name}">${l.name}</option>`).join(""); }
-        function banPlayer() { const n = document.getElementById('banUser').value.trim(); db.ref('bans').push(n); db.ref('logs').push({ type: 'reject', msg: `⛔ ${n} BANEADO` }); }
-        function approveCosmetic(key) { const r = fullData.market_requests[key]; db.ref('players').once('value', s => { let p = Object.values(s.val() || {}); let i = p.findIndex(x => x.name.toLowerCase() === r.nick.toLowerCase()); if(i > -1) { if(!p[i].cosmetics) p[i].cosmetics = {}; p[i].cosmetics[r.item] = true; db.ref('players').set(p); db.ref('market_requests/'+key).remove(); } }); }
+        function submitPFP() { const n = document.getElementById('pfpNick').value.trim(); const u = document.getElementById('pfpUrl').value.trim(); db.ref('pfp_requests').push({ nick: n, url: u }); alert("Enviada."); }
         function approvePFP(key) { const r = fullData.pfp_requests[key]; db.ref('players').once('value', s => { let p = Object.values(s.val() || {}); let i = p.findIndex(x => x.name.toLowerCase() === r.nick.toLowerCase()); if(i > -1) { p[i].pfp = r.url; db.ref('players').set(p); db.ref('pfp_requests/' + key).remove(); } }); }
         function buyItem(item, cost) { const n = prompt("Tu Nick:"); if(!n) return; const s = calcUserStats(n); if(parseFloat(s.pts) < cost) return alert("XP insuficiente."); db.ref('market_requests').push({ nick: s.name, item: item, cost: cost }); alert("Solicitud enviada."); }
-        function submitRecord() { const l = document.getElementById('recLevel').value; const r = document.getElementById('recRaw').value; const idx = fullData.levels.findIndex(lvl => lvl.name === l); if (idx <= 99 && idx !== -1 && !r.includes("drive.google.com")) return alert("RAW OBLIGATORIO TOP 100."); db.ref('submissions').push({ player: document.getElementById('recPlayer').value, level: l, link: document.getElementById('recLink').value, raw: r || "N/A", status: "Pendiente" }); alert("Enviado!"); }
-        function submitPFP() { const n = document.getElementById('pfpNick').value.trim(); const u = document.getElementById('pfpUrl').value.trim(); db.ref('pfp_requests').push({ nick: n, url: u }); alert("Enviada."); }
+        function approveCosmetic(key) { const r = fullData.market_requests[key]; db.ref('players').once('value', s => { let p = Object.values(s.val() || {}); let i = p.findIndex(x => x.name.toLowerCase() === r.nick.toLowerCase()); if(i > -1) { if(!p[i].cosmetics) p[i].cosmetics = {}; p[i].cosmetics[r.item] = true; db.ref('players').set(p); db.ref('market_requests/'+key).remove(); } }); }
         function updateTicker(l) { const e = Object.values(l).reverse().slice(0,10); document.getElementById('pulse-content').innerHTML = e.map(x => `<span class="log-item ${x.type==='accept'?'log-accept':x.type==='info'?'log-info':'log-reject'}">${x.msg}</span>`).join(""); }
+        function submitRecord() { const l = document.getElementById('recLevel').value; const r = document.getElementById('recRaw').value; const idx = fullData.levels.findIndex(lvl => lvl.name === l); if (idx <= 99 && idx !== -1 && !r.includes("drive.google.com")) return alert("RAW OBLIGATORIO TOP 100."); db.ref('submissions').push({ player: document.getElementById('recPlayer').value, level: l, link: document.getElementById('recLink').value, raw: r || "N/A", status: "Pendiente" }); alert("Enviado!"); }
+        function banPlayer() { const n = document.getElementById('banUser').value.trim(); db.ref('bans').push(n); db.ref('logs').push({ type: 'reject', msg: `⛔ ${n} BANEADO` }); }
     </script>
 </body>
 </html>
