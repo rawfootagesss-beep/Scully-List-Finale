@@ -3,127 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully List | Reglas y Guía</title>
+    <title>Scully List | Reglas y Orientación</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
-            --bg: #0b0c10; --card: #1f2833; --border: rgba(255,255,255,0.05);
-            --text-main: #c5c6c7; --text-light: #ffffff;
-            --accent: #ff6600; --accent-hover: #ff8533;
-            --blue: #66fcf1; --green: #45a29e; --red: #f05454;
+            --accent: #ff6600; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
+            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
+            --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
+            --green: #00ff66; --red: #ff3333; --blue: #00ccff; --yellow: #ffff00;
         }
-        body { background: var(--bg); color: var(--text-main); font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; line-height: 1.6; }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; line-height: 1.6; overflow-x: hidden; }
         
-        /* SCROLLBAR */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
-        header { padding: 50px 20px 30px; text-align: center; background: var(--card); border-bottom: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin: 0; text-transform: uppercase; font-weight: 800; letter-spacing: -1px; color: var(--text-light); }
-        h1 span { color: var(--accent); }
+        header { padding: 60px 20px 30px; text-align: center; }
+        h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 800; margin: 0; letter-spacing: -2px; }
+        h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         p.subtitle { color: #888; font-size: 0.9rem; max-width: 600px; margin: 10px auto 20px auto; }
         
-        .btn-hub { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-light); padding: 10px 20px; text-decoration: none; font-size: 0.8rem; border-radius: 50px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; }
-        .btn-hub:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+        .btn-hub { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 12px 25px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; text-transform: uppercase; }
+        .btn-hub:hover { background: var(--accent); color: #000; box-shadow: var(--glow); transform: translateY(-3px); border-color: var(--accent); }
 
-        .container { width: 90%; max-width: 900px; margin: 40px auto; display: flex; flex-direction: column; gap: 30px; }
+        .container { width: 90%; max-width: 900px; margin: 20px auto 60px auto; display: flex; flex-direction: column; gap: 20px; }
 
-        .section-title { font-size: 1.5rem; color: var(--text-light); border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-title { font-size: 1.5rem; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 30px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
         .section-title i { color: var(--accent); }
 
-        .rule-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 25px; transition: 0.3s; }
-        .rule-card:hover { border-color: rgba(255,102,0,0.3); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+        .rule-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 25px; padding: 30px; transition: 0.3s; position: relative; overflow: hidden; }
+        .rule-card:hover { border-color: var(--accent); transform: scale(1.01); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         
-        .rule-card h3 { margin-top: 0; color: var(--text-light); font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        .rule-card h3 { margin-top: 0; color: #fff; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: -0.5px; }
         .rule-card h3 i { color: var(--blue); }
-        .rule-card p { margin-bottom: 0; font-size: 0.9rem; }
-        .rule-card ul { margin-top: 10px; padding-left: 20px; font-size: 0.9rem; }
+        .rule-card p { margin-bottom: 0; font-size: 0.9rem; color: #ccc; }
+        .rule-card ul { margin-top: 15px; padding-left: 20px; font-size: 0.9rem; color: #ccc; }
         .rule-card li { margin-bottom: 8px; }
 
         .highlight { color: var(--accent); font-weight: 800; }
-        .badge-new { background: var(--green); color: #000; padding: 3px 8px; border-radius: 5px; font-size: 0.6rem; font-weight: 800; vertical-align: middle; margin-left: 10px; }
+        .badge-new { background: var(--green); color: #000; padding: 4px 10px; border-radius: 8px; font-size: 0.6rem; font-weight: 800; vertical-align: middle; margin-left: 10px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>MANUAL DE <span>REGLAS</span></h1>
-        <p class="subtitle">Todo lo que necesitas saber para mandar tus récords, reclamar tu identidad y subir de nivel en la Scully List.</p>
+        <h1>REGLAS Y <span>ORIENTACIÓN</span></h1>
+        <p class="subtitle">La guía definitiva para sobrevivir y destacar en el ecosistema de The Scully List.</p>
         <a href="index.html" class="btn-hub"><i class="fas fa-arrow-left"></i> VOLVER AL HUB</a>
     </header>
 
     <div class="container">
 
         <div>
-            <h2 class="section-title"><i class="fas fa-globe"></i> Guía del Ecosistema Scully</h2>
+            <h2 class="section-title"><i class="fas fa-globe"></i> El Nuevo Ecosistema Scully</h2>
             
             <div class="rule-card">
                 <h3><i class="fas fa-user-circle"></i> 1. Sistema de Cuentas <span class="badge-new">NUEVO</span></h3>
-                <p>La Scully List ahora funciona como una red social. Puedes crear una cuenta usando tu correo y una contraseña desde el panel de <b class="highlight">Identidad (Login)</b>. Al tener una cuenta, desbloqueas tu panel privado para personalizar tu presencia en el Ranking.</p>
+                <p>La Scully List ha evolucionado. Ahora puedes crear una cuenta usando tu correo y una contraseña desde el portal de <b class="highlight">Identidad (Login)</b>. Esto desbloquea un panel privado para personalizar tu presencia pública en el Ranking.</p>
             </div>
 
-            <div class="rule-card" style="margin-top: 15px;">
+            <div class="rule-card" style="margin-top: 20px;">
                 <h3><i class="fas fa-link"></i> 2. ¿Cómo Reclamar tu Perfil? <span class="badge-new">NUEVO</span></h3>
-                <p>Para evitar robos de identidad, las cuentas nuevas nacen "vacías". Para asociar tus récords y XP a tu cuenta, sigue estos pasos:</p>
+                <p>Las cuentas nuevas nacen "vacías" por seguridad. Para fusionar tus récords previos con tu cuenta:</p>
                 <ul>
                     <li>Inicia sesión y ve a <b>"Mi Perfil"</b>.</li>
-                    <li>Usa la opción <b>Reclamar Identidad</b>. Escribe tu Nickname exacto de Geometry Dash.</li>
-                    <li>Proporciona un link a tu canal de YouTube o Twitter para verificar que realmente eres tú.</li>
-                    <li>El Staff revisará la solicitud. Una vez aprobada, todo tu historial y XP se fusionarán mágicamente con tu cuenta.</li>
+                    <li>Usa la opción <b>Reclamar Identidad</b>. Escribe tu Nickname exacto de GD.</li>
+                    <li>Proporciona un link a tu YouTube o Twitter para verificar tu identidad.</li>
+                    <li>El Staff aprobará la fusión y tu XP aparecerá automáticamente.</li>
                 </ul>
             </div>
 
-            <div class="rule-card" style="margin-top: 15px;">
-                <h3><i class="fas fa-id-card"></i> 3. Personalización y Ranking <span class="badge-new">NUEVO</span></h3>
-                <p>Una vez que el Staff haya aprobado tu perfil, podrás editarlo a tu gusto desde tu panel privado. Podrás:</p>
+            <div class="rule-card" style="margin-top: 20px;">
+                <h3><i class="fas fa-id-card"></i> 3. Personalización <span class="badge-new">NUEVO</span></h3>
+                <p>Desde tu panel privado puedes moldear cómo te ven los demás en el Leaderboard:</p>
                 <ul>
-                    <li>Escribir una <b>Biografía</b> corta que todos verán.</li>
-                    <li>Vincular tus redes sociales (YouTube, Twitter y Discord) para que otros jugadores puedan hacer clic y seguirte.</li>
-                    <li>Enviar un link para cambiar tu <b>Foto de Perfil (PFP)</b>. El Staff revisará la imagen antes de hacerla pública.</li>
+                    <li>Escribe una <b>Biografía</b> corta.</li>
+                    <li>Vincula tus redes (YouTube, Twitter, Discord) con botones interactivos.</li>
+                    <li>Solicita al Staff una <b>Foto de Perfil (PFP)</b> personalizada usando links de Imgur o Discord.</li>
                 </ul>
             </div>
 
-            <div class="rule-card" style="margin-top: 15px;">
-                <h3><i class="fas fa-star"></i> 4. Puntos de Experiencia (XP) y Niveles</h3>
-                <p>Tu nivel en la Scully List se basa en la dificultad de lo que te pasas. La fórmula oficial funciona así:</p>
+            <div class="rule-card" style="margin-top: 20px;">
+                <h3><i class="fas fa-star"></i> 4. Experiencia (XP) y Niveles</h3>
+                <p>Tu posición depende del esfuerzo matemático:</p>
                 <ul>
-                    <li>Se otorgan más puntos por los niveles en el tope de la lista. <span class="highlight">Fórmula: 100 - (Posición * 0.6)</span>.</li>
-                    <li>El XP mínimo garantizado por pasarse cualquier nivel de la lista es de <b>5 XP</b>.</li>
-                    <li><b>Verificadores:</b> Si eres el First Victor/Verificador de un nivel, automáticamente recibes la XP de ese nivel en tu perfil.</li>
-                    <li>Cada <b>50 XP</b> subes de nivel (LVL) de jugador.</li>
+                    <li><span class="highlight">Fórmula: 100 - (Posición * 0.6)</span>. Ganas más XP en el Top.</li>
+                    <li>Mínimo garantizado: <b>5 XP</b> por nivel completado.</li>
+                    <li><b>Verificadores / First Victors:</b> Reciben el XP de su nivel automáticamente sin tener que enviar récord.</li>
+                    <li>Subes de <b>Nivel (LVL)</b> cada 50 XP.</li>
                 </ul>
             </div>
         </div>
 
-        <div style="margin-top: 20px;">
-            <h2 class="section-title"><i class="fas fa-video"></i> Reglas de Aprobación de Récords</h2>
+        <div>
+            <h2 class="section-title"><i class="fas fa-video"></i> Reglas de Aprobación</h2>
             
             <div class="rule-card">
-                <h3><i class="fas fa-clipboard-check"></i> Pruebas Obligatorias (Videos)</h3>
-                <p>Para que un récord sea aceptado en la lista, debes cumplir con lo siguiente:</p>
+                <h3><i class="fas fa-clipboard-check"></i> Pruebas (Videos)</h3>
+                <p>Para mantener la legitimidad de la lista:</p>
                 <ul>
-                    <li>El video debe estar subido a <b class="highlight">YouTube</b> y ser público o no listado (No privados).</li>
-                    <li>Se deben escuchar claramente los <b>clicks/taps</b>. El nivel del sonido del juego no debe tapar los clicks.</li>
-                    <li>Para niveles extremos o posiciones muy altas, el Staff puede requerir que envíes el <b>video RAW</b> (sin cortes, con la pantalla de muerte previa) subido a Google Drive o similar. Tienes un espacio en el formulario de envío para este link.</li>
+                    <li>El video debe estar en <b class="highlight">YouTube</b> (Público o No Listado).</li>
+                    <li>Los <b>clicks/taps</b> deben escucharse claramente por encima de la música.</li>
+                    <li>El Staff puede exigirte el <b>video RAW</b> (sin cortes y con intentos previos) a través de Google Drive para niveles del Top.</li>
                 </ul>
             </div>
 
-            <div class="rule-card" style="margin-top: 15px;">
-                <h3><i class="fas fa-ban"></i> Juego Limpio y Hacks</h3>
-                <p>Mantenemos la integridad de la lista por encima de todo:</p>
+            <div class="rule-card" style="margin-top: 20px;">
+                <h3><i class="fas fa-ban"></i> Juego Limpio</h3>
                 <ul>
-                    <li>Está estrictamente prohibido el uso de <b>Speedhacks, Bots (Botting), Hitboxes alteradas</b> o cualquier macro.</li>
-                    <li>El uso de Megahack u otros mods está permitido <b>SÓLO</b> para herramientas visuales (FPS Bypass, TPS, Practice Music Hack). Modificar físicas del juego resultará en baneo inmediato.</li>
-                    <li>Si eres atrapado falsificando un récord o robando un video de otra persona, tu perfil será enviado a la <b>Blacklist</b> y no podrás volver a enviar récords.</li>
+                    <li>Prohibido el uso de <b>Speedhacks, Bots, Hitboxes alteradas</b> o macros.</li>
+                    <li>Megahack permitido SÓLO para utilidades visuales (FPS Bypass, Practice Music). Alterar físicas = Baneo.</li>
+                    <li>Robar videos ajenos te enviará directo a la <b>Blacklist</b> global.</li>
                 </ul>
             </div>
 
-            <div class="rule-card" style="margin-top: 15px;">
-                <h3><i class="fas fa-trophy"></i> First Victors (Reclamar el Trono)</h3>
-                <p>Si envías un récord de un nivel que ya tenía un verificador o First Victor, pero resulta que <b class="highlight">tu video se subió a YouTube ANTES</b> que el video de la persona que tiene el puesto actualmente, nuestro sistema lo detectará.</p>
-                <p>El panel del Staff incluye una Auditoría de Fechas en los servidores de Google. Si se comprueba que tú te lo pasaste primero, el sistema te coronará como el nuevo First Victor automáticamente.</p>
+            <div class="rule-card" style="margin-top: 20px;">
+                <h3><i class="fas fa-trophy"></i> Reclamar un First Victor</h3>
+                <p>Si envías un récord y nuestro sistema detecta que <b class="highlight">tu video fue subido a YouTube ANTES</b> que el del verificador actual, la Master Console auditará las fechas de los servidores de Google y te coronará a ti como el verdadero First Victor.</p>
             </div>
         </div>
 
