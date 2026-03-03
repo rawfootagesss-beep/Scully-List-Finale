@@ -12,9 +12,9 @@
         .admin-layout { display: flex; gap: 15px; min-width: 2600px; height: 85vh; }
         .admin-col { flex: 1; background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 15px; display: flex; flex-direction: column; min-width: 310px; }
         .admin-list-scroll { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
-        h2 { font-size: 0.6rem; text-transform: uppercase; color: #555; border-bottom: 1px solid #111; padding-bottom: 10px; margin-top: 0; }
+        h2 { font-size: 0.6rem; text-transform: uppercase; color: #555; border-bottom: 1px solid #111; padding-bottom: 10px; margin-top: 0; display: flex; justify-content: space-between; align-items: center; }
         input, select, button { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 8px; font-family: 'Lexend Deca'; font-size: 0.7rem; cursor: pointer; transition: 0.3s; }
-        button:hover { filter: brightness(1.2); }
+        button:hover { filter: brightness(1.2); transform: scale(1.02); }
         .manage-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #111; font-size: 0.6rem; }
         .sub-card { background: #000; padding: 12px; border-radius: 10px; margin-bottom: 10px; border-left: 3px solid var(--accent); font-size: 0.65rem; border-top: 1px solid #111; }
         .proof-box { display: flex; gap: 5px; margin: 8px 0; }
@@ -39,10 +39,10 @@
             <input type="text" id="lvlFirst" placeholder="First Victor (Verificador)">
             <input type="number" id="lvlPos" placeholder="Posición en lista (Vacío = Al final)">
             
-            <button onclick="saveLevel()" style="background:var(--accent); color:#000; font-weight:800;">GUARDAR / ACTUALIZAR</button>
+            <button onclick="saveLevel()" style="background:var(--accent); color:#000; font-weight:800;">GUARDAR / MOVER MANUAL</button>
             <div style="display:flex; gap:5px;">
                 <button id="syncBtn" onclick="syncWithAREDL()" style="background:var(--blue); color:#000; font-weight:800; font-size:0.6rem;"><i class="fas fa-sync-alt"></i> SYNC AREDL</button>
-                <button onclick="revertAREDL()" style="background:var(--red); color:#000; font-weight:800; font-size:0.6rem;"><i class="fas fa-undo"></i> REVERTIR</button>
+                <button id="revertBtn" onclick="revertAREDL()" style="background:var(--red); color:#000; font-weight:800; font-size:0.6rem;"><i class="fas fa-undo"></i> REVERTIR</button>
             </div>
 
             <div id="lvlVictorsList" style="max-height:100px; overflow-y:auto; border-top:1px solid #111; padding-top:10px; margin-top:5px;"></div>
@@ -95,7 +95,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script>
-        // Verificación de Sesión Activa
         if(sessionStorage.getItem('scully_session') !== 'active') location.href = 'index.html';
         
         const firebaseConfig = { databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" };
@@ -105,7 +104,12 @@
 
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {}; 
-            renderAdminLevelsList(fullData.levels || []); 
+            // Fuerza la conversión de niveles a Array por si Firebase lo guardó como Objeto
+            let lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels : Object.values(fullData.levels)) : [];
+            lvls = lvls.filter(l => l && l.name); // Limpiar nulos
+            fullData.levels = lvls;
+
+            renderAdminLevelsList(lvls); 
             renderSubmissions(fullData.submissions || {}); 
             renderAdminUserList(Object.values(fullData.players || {})); 
             renderMarketModeration(fullData.market_requests || {}); 
@@ -121,7 +125,7 @@
         function renderAdminLevelsList(l) { 
             document.getElementById('adminLevelsList').innerHTML = l.map((x,i) => `
                 <div class="manage-item">
-                    <span>#${i+1} ${x.name}</span>
+                    <span><b>#${i+1}</b> ${x.name}</span>
                     <button onclick="loadLevelToEditor(${i})" style="width:auto; padding:3px 8px; border-color:var(--accent); color:var(--accent); background:none; font-size:0.5rem; margin:0;">EDIT</button>
                 </div>
             `).join(""); 
@@ -149,82 +153,100 @@
             const n = document.getElementById('lvlName').value; 
             const y = document.getElementById('lvlYT').value; 
             const pVal = document.getElementById('lvlPos').value;
-            const p = pVal ? parseInt(pVal) - 1 : -1;
             
-            db.ref('levels').once('value', s => { 
-                let lvls = s.val() || []; 
-                const newL = { name:n, id:y, first:document.getElementById('lvlFirst').value }; 
-                if(idx !== "") lvls.splice(idx,1); 
-                lvls.splice(p >= 0 ? p : lvls.length, 0, newL); 
-                
-                db.ref('levels').set(lvls); 
-                alert("Nivel Guardado"); 
-                
-                // Limpiar campos
+            if(!n || !y) return alert("Faltan datos del nivel.");
+
+            let lvls = [...fullData.levels]; 
+            const newL = { name:n, id:y, first:document.getElementById('lvlFirst').value }; 
+            
+            if(idx !== "") lvls.splice(idx, 1); // Remover del puesto antiguo
+            
+            const p = pVal ? parseInt(pVal) - 1 : lvls.length;
+            lvls.splice(p >= 0 ? p : lvls.length, 0, newL); // Insertar en nuevo puesto
+            
+            db.ref('levels').set(lvls).then(() => {
+                alert(`Nivel Guardado Manualmente en Top #${p + 1}`);
                 document.getElementById('editLvlIdx').value=""; 
                 document.getElementById('lvlName').value=""; 
                 document.getElementById('lvlYT').value=""; 
                 document.getElementById('lvlFirst').value="";
                 document.getElementById('lvlPos').value="";
-            }); 
+            });
         }
 
-        // --- LÓGICA DE API AREDL Y RESPALDO ---
+        // --- LÓGICA DE API AREDL BLINDADA ---
         async function syncWithAREDL() {
-            if(!confirm("¿Sincronizar las posiciones con la AREDL oficial?\nSe hará un respaldo automático por si quieres revertirlo.")) return;
+            if(!confirm("¿Sincronizar las posiciones con la AREDL oficial?\n(Se creará un respaldo de seguridad).")) return;
+            const btn = document.getElementById('syncBtn');
+            const originalText = btn.innerHTML;
+            
             try {
-                const btn = document.getElementById('syncBtn');
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SYNC...';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SINCRONIZANDO...';
                 
-                // Fetch a la API pública usando un proxy cors genérico para seguridad
-                const res = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.aredl.net/api/aredl/levels'));
-                if(!res.ok) throw new Error("Error API AREDL");
+                // Proxy de Codetabs es más confiable para evitar bloqueos
+                const res = await fetch('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent('https://api.aredl.net/api/aredl/levels'));
+                if(!res.ok) throw new Error("Error conectando a API AREDL");
                 
                 const aredlData = await res.json();
                 
-                // Mapear posiciones: { "tartarus": 5, "the golden": 10 }
+                // Detectar si los datos están directos o envueltos en "data"
+                const dataArray = Array.isArray(aredlData) ? aredlData : (aredlData.data || []);
+                if(dataArray.length === 0) throw new Error("AREDL Devolvió 0 niveles.");
+
+                // Mapeo Inteligente
                 const aredlMap = new Map();
-                aredlData.forEach((lvl, idx) => {
-                    aredlMap.set(lvl.name.toLowerCase().trim(), idx + 1);
+                dataArray.forEach((lvl, idx) => {
+                    let position = lvl.position ? lvl.position : (idx + 1);
+                    aredlMap.set(lvl.name.toLowerCase().trim(), position);
                 });
 
-                db.ref('levels').once('value', s => {
-                    let lvls = s.val() || [];
-                    if(lvls.length === 0) {
-                        btn.innerHTML = '<i class="fas fa-sync-alt"></i> SYNC AREDL';
-                        return alert("No hay niveles para ordenar.");
-                    }
+                let lvls = [...fullData.levels];
+                if(lvls.length === 0) {
+                    btn.innerHTML = originalText;
+                    return alert("No hay niveles registrados en tu base de datos para ordenar.");
+                }
 
-                    // 1. CREAR RESPALDO DE SEGURIDAD
-                    db.ref('levels_backup').set(lvls);
+                // 1. RESPALDO
+                db.ref('levels_backup').set(lvls);
 
-                    // 2. ORDENAR LISTA
-                    lvls.sort((a, b) => {
-                        let posA = aredlMap.has(a.name.toLowerCase().trim()) ? aredlMap.get(a.name.toLowerCase().trim()) : 999999;
-                        let posB = aredlMap.has(b.name.toLowerCase().trim()) ? aredlMap.get(b.name.toLowerCase().trim()) : 999999;
-                        return posA - posB; // 999999 manda los no encontrados al fondo
-                    });
-
-                    // 3. GUARDAR LISTA ORDENADA
-                    db.ref('levels').set(lvls).then(() => {
-                        alert("¡Sincronización exitosa! Los niveles están ordenados según la AREDL.");
-                        btn.innerHTML = '<i class="fas fa-sync-alt"></i> SYNC AREDL';
-                    });
+                // 2. ORDENAMIENTO (Los que no están en AREDL se van al puesto 9999)
+                lvls.sort((a, b) => {
+                    let posA = aredlMap.has(a.name.toLowerCase().trim()) ? aredlMap.get(a.name.toLowerCase().trim()) : 999999;
+                    let posB = aredlMap.has(b.name.toLowerCase().trim()) ? aredlMap.get(b.name.toLowerCase().trim()) : 999999;
+                    return posA - posB;
                 });
+
+                // 3. GUARDAR
+                db.ref('levels').set(lvls).then(() => {
+                    alert("¡ÉXITO! Niveles reordenados de forma idéntica a la AREDL.");
+                    btn.innerHTML = originalText;
+                });
+
             } catch (error) {
                 console.error(error);
-                alert("Hubo un error al conectar con la API de la AREDL. Intenta más tarde.");
-                document.getElementById('syncBtn').innerHTML = '<i class="fas fa-sync-alt"></i> SYNC AREDL';
+                alert("Error de conexión con la AREDL. \n1. Revisa tu internet.\n2. La API de AREDL puede estar en mantenimiento.");
+                btn.innerHTML = originalText;
             }
         }
 
         function revertAREDL() {
-            if(!confirm("¿Estás súper seguro de REVERTIR la lista al estado de tu último respaldo?")) return;
+            if(!confirm("¿Estás súper seguro de REVERTIR la lista a tu último respaldo?")) return;
+            const btn = document.getElementById('revertBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> REVIRTIENDO...';
+
             db.ref('levels_backup').once('value', s => {
                 let backup = s.val();
-                if(!backup) return alert("No hay ningún respaldo guardado en la base de datos.");
-                db.ref('levels').set(backup).then(() => {
-                    alert("¡Lista revertida con éxito al estado anterior!");
+                if(!backup) {
+                    btn.innerHTML = '<i class="fas fa-undo"></i> REVERTIR';
+                    return alert("No existe ningún respaldo guardado.");
+                }
+                
+                let lvls = Array.isArray(backup) ? backup : Object.values(backup);
+                lvls = lvls.filter(x => x && x.name);
+
+                db.ref('levels').set(lvls).then(() => {
+                    alert("¡Lista restaurada al estado anterior con éxito!");
+                    btn.innerHTML = '<i class="fas fa-undo"></i> REVERTIR';
                 });
             });
         }
@@ -235,7 +257,7 @@
         function renderAdminUserList(p) { 
             document.getElementById('adminUserList').innerHTML = p.map((u, i) => `
                 <div class="manage-item">
-                    <span style="${u.hidden?'text-decoration:line-through; opacity:0.5':''}">${u.name}</span>
+                    <span style="${u.hidden?'text-decoration:line-through; color:#ff3333; opacity:0.8':'font-weight:800;'}">${u.name}</span>
                     <button onclick="loadPlayerToEditor(${i})" style="width:auto; padding:3px 8px; border-color:var(--blue); color:var(--blue); background:none; font-size:0.5rem; margin:0;">EDIT</button>
                 </div>
             `).join(""); 
