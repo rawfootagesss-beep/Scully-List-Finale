@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully Leaderboards | Ranking & Identidad</title>
+    <title>Scully Leaderboards | Ranking & Identidad Global</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -24,7 +24,13 @@
             overflow-x: hidden; 
         }
 
-        /* 1. STAFF BAR CON TRIBUTO */
+        /* ANIMACIONES DE COSMÉTICOS */
+        @keyframes rainbow { 0% { color: #ff0000; } 20% { color: #ff9900; } 40% { color: #ffff00; } 60% { color: #00ff00; } 80% { color: #00ffff; } 100% { color: #cc00ff; } }
+        .cos-rainbow { animation: rainbow 3s linear infinite !important; font-weight: 800; }
+        .cos-fire { box-shadow: 0 0 15px #ff3300 !important; border: 2px solid #ff3300 !important; }
+        .cos-electric { box-shadow: 0 0 15px #00ccff !important; border: 2px solid #00ccff !important; }
+
+        /* 1. BARRA DE STAFF CON TRIBUTO */
         .staff-bar { 
             display: flex; justify-content: center; gap: 25px; padding: 15px; 
             background: rgba(255,255,255,0.02); font-size: 0.6rem; 
@@ -58,7 +64,7 @@
         }
         .rank-row:hover { border-color: var(--accent); transform: scale(1.01); background: rgba(255,102,0,0.05); }
         
-        /* PODIO */
+        /* ESTILO PODIO */
         .rank-row.top-0 { border-color: var(--gold); box-shadow: 0 0 20px rgba(255, 215, 0, 0.15); }
         .rank-row.top-0 td:first-child { color: var(--gold); text-shadow: 0 0 10px var(--gold); font-size: 1.6rem; }
 
@@ -66,16 +72,16 @@
         td:first-child { border-left: 1px solid var(--border); border-radius: 15px 0 0 15px; font-weight: 800; width: 80px; }
         td:last-child { border-right: 1px solid var(--border); border-radius: 0 15px 15px 0; color: var(--accent); font-weight: 800; font-size: 1.1rem; }
 
-        /* 3. PERFIL EN TABLA (PFP + INFO) */
+        /* 3. INFO DE JUGADOR (PFP + META) */
         .player-info-cell { display: flex; align-items: center; gap: 15px; text-align: left; }
-        .rank-pfp { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; background: #111; }
+        .rank-pfp { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; background: #111; }
         .player-meta { display: flex; flex-direction: column; gap: 4px; }
         .xp-pill { 
             background: #111; color: var(--accent); padding: 2px 8px; 
             border-radius: 5px; font-size: 0.6rem; font-weight: 800; 
             border: 1px solid var(--accent); width: fit-content;
         }
-        .badges-container { display: flex; gap: 5px; }
+        .badges-container { display: flex; gap: 5px; margin-top: 2px; }
         .badge-mini { font-size: 0.9rem; }
 
         /* 4. ADMIN PANEL */
@@ -95,19 +101,25 @@
             margin-bottom: 10px; border: 1px solid #111;
             display: flex; justify-content: space-between; align-items: center;
         }
-        .admin-ctrl-btns { display: flex; gap: 5px; }
+        .admin-ctrl-btns { display: flex; gap: 8px; }
         .admin-ctrl-btns button { 
-            padding: 6px 10px; font-size: 0.55rem; font-weight: 800; 
-            border-radius: 5px; cursor: pointer; border: 1px solid #222; background: #000; color: #fff;
+            padding: 6px 12px; font-size: 0.55rem; font-weight: 800; 
+            border-radius: 6px; cursor: pointer; border: 1px solid #222; background: #000; color: #fff;
         }
         .btn-rev { border-color: var(--blue) !important; color: var(--blue) !important; }
         .btn-acc { border-color: var(--green) !important; color: var(--green) !important; }
         .btn-rej { border-color: var(--red) !important; color: var(--red) !important; }
 
-        /* 5. MODALES */
+        /* 5. MODAL PERFIL */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .modal-content { background: #0a0a0a; margin: 5vh auto; padding: 40px; width: 90%; max-width: 500px; border-radius: 30px; border: 1px solid var(--border); text-align: center; }
-        .u-lvl-btn { display: flex; justify-content: space-between; background: #111; padding: 15px; border-radius: 12px; margin-bottom: 10px; text-decoration: none; color: #fff; border-left: 4px solid var(--accent); align-items: center; }
+        .u-lvl-btn { 
+            display: flex; justify-content: space-between; background: #111; 
+            padding: 15px; border-radius: 12px; margin-bottom: 10px; 
+            text-decoration: none; color: #fff; border-left: 4px solid var(--accent); 
+            align-items: center; font-size: 0.85rem; transition: 0.3s;
+        }
+        .u-lvl-btn:hover { background: #181818; transform: translateX(5px); }
 
         .admin-lock { padding: 60px 0; opacity: 0.05; cursor: pointer; text-align: center; }
     </style>
@@ -118,7 +130,6 @@
         <div class="staff-item tribute-item">Tributo a 2parx 🕊️</div>
         <div class="staff-item"><i class="fas fa-crown"></i> OWNER <b>score</b></div>
         <div class="staff-item"><i class="fas fa-user-shield"></i> ADMIN <b>Vegardo</b></div>
-        <div class="staff-item"><i class="fas fa-hands-helping"></i> HELPER <b>Blitz</b></div>
         <div class="staff-item"><i class="fas fa-hands-helping"></i> HELPER <b>Sopa354</b></div>
         <div class="staff-item"><i class="fas fa-code"></i> CODIFICADOR <b>score</b></div>
     </nav>
@@ -139,7 +150,7 @@
                 </tr>
             </thead>
             <tbody id="leaderboardBody">
-                <tr><td colspan="4" style="color:#444; padding:80px;">Sincronizando Ranking...</td></tr>
+                <tr><td colspan="4" style="color:#444; padding:80px;">Sincronizando Ranking Global...</td></tr>
             </tbody>
         </table>
     </main>
@@ -147,11 +158,11 @@
     <div class="admin-lock" onclick="toggleAuth()"><i class="fas fa-lock"></i></div>
     <div id="authBox" style="display:none; text-align:center; padding-bottom:100px;">
         <input type="password" id="tokenInput" placeholder="Token Codificador" style="width:200px;">
-        <button onclick="checkAuth()" style="background:var(--accent); border:none; padding:12px 30px; border-radius:50px; cursor:pointer; font-weight:800;">ENTRAR</button>
+        <button onclick="checkAuth()" style="background:var(--accent); border:none; padding:12px 30px; border-radius:50px; cursor:pointer; font-weight:800; color:#000;">ENTRAR</button>
     </div>
 
     <div id="adminPanel">
-        <h2 style="color:var(--accent); margin-top:0;">Gestión de Prestigio</h2>
+        <h2 style="color:var(--accent); margin-top:0; letter-spacing:2px; text-transform:uppercase;">Gestión de Prestigio</h2>
         <div class="admin-grid">
             <div class="admin-col">
                 <p style="font-size:0.6rem; color:#444; font-weight:bold;">AÑADIR RÉCORD MANUAL</p>
@@ -163,10 +174,10 @@
                 </select>
                 <select id="levelSelect"></select>
                 <input type="text" id="levelLink" placeholder="YouTube Link">
-                <button onclick="addManualRecord()" style="width:100%; background:var(--accent); border:none; padding:15px; border-radius:12px; font-weight:800; cursor:pointer;">ACTUALIZAR</button>
+                <button onclick="addManualRecord()" style="width:100%; background:var(--accent); border:none; padding:15px; border-radius:12px; font-weight:800; cursor:pointer; color:#000;">ACTUALIZAR</button>
             </div>
             <div class="admin-col">
-                <p style="font-size:0.6rem; color:#444; font-weight:bold;">CONTROL DE MIEMBROS</p>
+                <p style="font-size:0.6rem; color:#444; font-weight:bold;">CONTROL DE MIEMBROS (REV/ACEP/RECH)</p>
                 <div id="adminUserList" style="max-height:450px; overflow-y:auto; padding-right:5px;"></div>
             </div>
         </div>
@@ -183,6 +194,7 @@
         const TOKEN = "GdfuFCRy";
         let fullData = {};
 
+        // Escucha en tiempo real
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {};
             const lvls = fullData.levels || [];
@@ -197,10 +209,10 @@
             }
         });
 
-        // 1. RENDERIZAR RANKING CON PFPs
+        // 1. RENDERIZADO DE RANKING CON PFPs Y COSMÉTICOS
         function renderLeaderboard(lvls, players) {
             const body = document.getElementById('leaderboardBody');
-            if(players.length === 0) { body.innerHTML = '<tr><td colspan="4">No hay datos.</td></tr>'; return; }
+            if(players.length === 0) { body.innerHTML = '<tr><td colspan="4">No hay datos en la Scully Network.</td></tr>'; return; }
 
             players.forEach(u => {
                 let totalPts = 0; let badges = [];
@@ -222,15 +234,21 @@
 
             players.sort((a,b) => b.pts - a.pts);
 
-            body.innerHTML = players.map((u, i) => `
+            body.innerHTML = players.map((u, i) => {
+                let cosPfp = ""; let cosName = ""; let title = "";
+                if(u.cosmetics?.aura_fire) cosPfp = "cos-fire";
+                if(u.cosmetics?.aura_electric) cosPfp = "cos-electric";
+                if(u.cosmetics?.name_rainbow) cosName = "cos-rainbow";
+                if(u.cosmetics?.title_legend) title = " <span style='color:var(--gold); font-size:0.5rem; letter-spacing:1px;'>[LEYENDA]</span>";
+
+                return `
                 <tr class="rank-row top-${i}" onclick="openUserProfile('${u.name}')">
                     <td>${i+1}</td>
                     <td style="text-align:left;">
                         <div class="player-info-cell">
-                            <img src="${u.pfp || 'https://i.imgur.com/8pw98K4.png'}" class="rank-pfp">
-                            <img src="https://flagcdn.com/w20/${u.country || 'es'}.png" style="border-radius:2px; height:12px;">
+                            <img src="${u.pfp || 'https://i.imgur.com/8pw98K4.png'}" class="rank-pfp ${cosPfp}">
                             <div class="player-meta">
-                                <b>${u.name}</b>
+                                <b class="${cosName}">${u.name}${title} <img src="https://flagcdn.com/w20/${u.country || 'es'}.png" style="height:10px; margin-left:5px;"></b>
                                 <div style="display:flex; align-items:center; gap:8px;">
                                     <span class="xp-pill">XP LVL ${u.lvl}</span>
                                     <div class="badges-container">${u.badges.map(b => `<span class="badge-mini">${b}</span>`).join("")}</div>
@@ -240,51 +258,56 @@
                     </td>
                     <td>${(u.completions || []).length}</td>
                     <td>${u.pts} PTS</td>
-                </tr>`).join("");
+                </tr>`;
+            }).join("");
         }
 
-        // 2. PANEL ADMIN POTENCIADO
+        // 2. PANEL ADMIN POTENCIADO (CONTROL DE MIEMBROS)
         function updateAdminUserList(p) {
             document.getElementById('adminUserList').innerHTML = p.map((u, i) => `
                 <div class="admin-user-card">
                     <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="${u.pfp || 'https://i.imgur.com/8pw98K4.png'}" style="width:25px; height:25px; border-radius:50%; object-fit:cover;">
-                        <span style="font-weight:800; font-size:0.7rem;">${u.name}</span>
+                        <img src="${u.pfp || 'https://i.imgur.com/8pw98K4.png'}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+                        <span style="font-weight:800; font-size:0.75rem;">${u.name}</span>
                     </div>
                     <div class="admin-ctrl-btns">
                         <button class="btn-rev" onclick="statusAction('${u.name}', 'En revisión')">REV</button>
                         <button class="btn-acc" onclick="statusAction('${u.name}', 'Aceptado')">ACEP</button>
-                        <button class="btn-rej" onclick="deleteUser(${i})">RECH</button>
+                        <button class="btn-rej" onclick="deleteUser(${i})">BORRAR</button>
                     </div>
                 </div>`).join("");
         }
 
         function statusAction(name, status) {
-            const staff = prompt("Staff encargado:");
+            const staff = prompt("Nombre Staff:");
             if(!staff) return;
-            db.ref('logs').push({ type: (status === 'Aceptado' ? 'accept' : 'info'), msg: `👤 JUGADOR ${name} MARCADO COMO ${status.toUpperCase()} POR ${staff}` });
-            alert("Acción registrada en la marquesina.");
+            db.ref('logs').push({ 
+                type: (status === 'Aceptado' ? 'accept' : 'info'), 
+                msg: `👤 JUGADOR ${name.toUpperCase()} MARCADO COMO ${status.toUpperCase()} POR ${staff}` 
+            });
+            alert("Acción registrada.");
         }
 
         function deleteUser(i) {
-            if(confirm("¿ELIMINAR COMPLETAMENTE A ESTE JUGADOR DEL RANKING?")) {
+            if(confirm("¿Deseas eliminar permanentemente a este jugador del ranking?")) {
                 db.ref('players').once('value', s => {
                     let list = Object.values(s.val());
                     const name = list[i].name;
                     list.splice(i, 1);
                     db.ref('players').set(list);
-                    db.ref('logs').push({ type: 'reject', msg: `❌ JUGADOR ${name} ELIMINADO DEL RANKING` });
+                    db.ref('logs').push({ type: 'reject', msg: `❌ JUGADOR ${name} ELIMINADO DEL RANKING POR ADMIN` });
                 });
             }
         }
 
-        // 3. FUNCIONES AUXILIARES
+        // 3. AUXILIARES Y MODAL
         function addManualRecord() {
             const name = document.getElementById('targetUser').value.trim();
             const level = document.getElementById('levelSelect').value;
             const link = document.getElementById('levelLink').value.trim();
             const country = document.getElementById('targetCountry').value;
-            if(!name || !level) return alert("Faltan datos.");
+            if(!name || !level) return alert("Nickname y Nivel obligatorios.");
+
             db.ref('players').once('value', s => {
                 let list = Object.values(s.val() || {});
                 let idx = list.findIndex(u => u.name.toLowerCase() === name.toLowerCase());
@@ -294,7 +317,7 @@
                     if(!list[idx].completions.find(c => c.level === level)) {
                         list[idx].completions.push(rec);
                         list[idx].country = country;
-                    } else { return alert("Ya tiene este nivel."); }
+                    } else { return alert("Récord ya registrado."); }
                 } else { list.push({ name: name, country: country, completions: [rec] }); }
                 db.ref('players').set(list);
                 alert("Ranking actualizado.");
@@ -306,10 +329,15 @@
             if(!u) return;
             document.getElementById('uModalContent').innerHTML = `
                 <span onclick="closeM()" style="float:right; cursor:pointer; font-size:1.5rem; color:var(--accent);">&times;</span>
-                <img src="${u.pfp || 'https://i.imgur.com/8pw98K4.png'}" style="width:80px; height:80px; border-radius:50%; margin-bottom:15px; object-fit:cover; border:3px solid var(--accent); box-shadow: var(--glow);">
-                <h2 style="margin:0; color:var(--accent);">${u.name}</h2>
+                <img src="${u.pfp || 'https://i.imgur.com/8pw98K4.png'}" style="width:90px; height:90px; border-radius:50%; margin-bottom:15px; object-fit:cover; border:3px solid var(--accent); box-shadow: var(--glow);">
+                <h2 style="margin:0; color:var(--accent); letter-spacing:1px;">${u.name}</h2>
+                <div style="margin:15px 0;"><span class="xp-pill" style="font-size:0.8rem; padding:5px 15px;">XP LVL ${Math.floor(u.pts / 10)}</span></div>
                 <div style="margin-top:20px; text-align:left; max-height:300px; overflow-y:auto;">
-                    ${(u.completions || []).map(c => `<a href="${c.link || '#'}" target="_blank" class="u-lvl-btn"><span>${c.level}</span><i class="fab fa-youtube"></i></a>`).join("") || '<p>Sin récords.</p>'}
+                    ${(u.completions || []).map(c => `
+                        <a href="${c.link || '#'}" target="_blank" class="u-lvl-btn">
+                            <span>${c.level}</span>
+                            <i class="fab fa-youtube" style="color:#ff0000;"></i>
+                        </a>`).join("") || '<p style="text-align:center; color:#444;">Sin récords.</p>'}
                 </div>`;
             document.getElementById('uModal').style.display = "block";
         }
@@ -321,3 +349,4 @@
     </script>
 </body>
 </html>
+
