@@ -15,6 +15,7 @@
         }
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
         
+        /* SCROLLBAR */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
@@ -48,12 +49,14 @@
         .level-card:hover { border-color: var(--accent); transform: scale(1.02); }
         .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
         
+        /* SECCIÓN DE IDENTIDAD */
         .status-tracker { max-width: 600px; margin: 60px auto; padding: 45px 30px; background: var(--card-bg); border-radius: 40px; border: 1px solid var(--border); text-align: center; }
         
         .footer-credits { padding: 60px 20px; text-align: center; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); margin-top: 100px; }
         .color-trigger { display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: var(--accent); color: #000; border-radius: 50%; cursor: pointer; font-size: 1.2rem; box-shadow: var(--glow); transition: 0.3s; margin-top: 20px; }
         #themeColor { opacity: 0; position: absolute; pointer-events: none; }
         
+        /* MODALES */
         .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .modal-content { background: #0a0a0a; margin: 5vh auto; padding: 35px; width: 90%; max-width: 650px; border-radius: 35px; border: 1px solid var(--border); text-align: center; position: relative; max-height: 85vh; overflow-y: auto; }
     </style>
@@ -73,13 +76,15 @@
     
     <header>
         <h1>THE SCULLY <span>LIST</span></h1>
-        <p class="version-note" style="font-size:0.7rem; color:#444; margin-top:10px; font-style:italic;">Versión 1.1 | The Identity Update</p>
+        <p class="version-note" style="font-size:0.7rem; color:#444; margin-top:10px; font-style:italic;">Versión 1.2 | Staff QoL Update</p>
         <div class="main-nav">
             <a href="index.html" class="btn-scully" style="color:var(--green); border-color:var(--green);"><i class="fas fa-list-ol"></i> Lista</a>
             <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking</a>
             <a href="versus.html" class="btn-scully"><i class="fas fa-bolt"></i> Versus</a>
             <a href="market.html" class="btn-scully"><i class="fas fa-shopping-cart"></i> Mercado</a>
+            
             <a href="submit.html" class="btn-scully"><i class="fas fa-upload"></i> Enviar</a>
+            <a href="suggest.html" class="btn-scully" style="color:#cc00ff; border-color:#cc00ff;"><i class="fas fa-lightbulb"></i> Sugerir Nivel</a>
             
             <a href="rules.html" class="btn-scully" style="color:var(--blue); border-color:var(--blue);"><i class="fas fa-book"></i> Reglas y Orientación</a>
             <a href="changelog.html" class="btn-scully" style="color:var(--yellow); border-color:var(--yellow);"><i class="fas fa-file-code"></i> Changelog</a>
@@ -106,11 +111,14 @@
     <footer class="footer-credits">
         <p style="color:#444; font-size:0.75rem; text-transform:uppercase; letter-spacing: 2px;">The Scully List &copy; 2026 | score engineering</p>
         <p style="font-size:0.65rem; color:#666; margin-bottom: 20px;">Diseñado por <b style="color:var(--accent)">score</b> | Staff: awrqsdt &bull; mek &bull; Blitz &bull; Sopa354 &bull; nico</p>
-        <label for="themeColor" class="color-trigger" title="Cambiar color del sitio"><i class="fas fa-palette"></i></label>
+        <label for="themeColor" class="color-trigger" title="Cambiar color del sitio">
+            <i class="fas fa-palette"></i>
+        </label>
         <input type="color" id="themeColor" oninput="updateThemeColor(this.value)">
     </footer>
-
+    
     <div id="ruletaModal" class="modal"><div class="modal-content"><h2 style="color:var(--accent);">RULETA</h2><div id="ruletaText" style="font-size:2rem; font-weight:800; margin:20px 0;">---</div><button class="btn-scully" onclick="spinRoulette()" style="width:100%; justify-content:center; margin-bottom:10px;">GIRAR</button><button class="btn-scully" onclick="closeRuleta()" style="width:100%; justify-content:center; background:transparent; border:none; color:#444;">CERRAR</button></div></div>
+    
     <div id="levelModal" class="modal"><div class="modal-content" id="modal-body"></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
