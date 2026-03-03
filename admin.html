@@ -11,10 +11,9 @@
             --accent: #ff6600; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
             --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
             --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
-            --green: #00ff66; --red: #ff3333; --blue: #00ccff; --yellow: #ffff00;
+            --green: #00ff66; --red: #ff3333; --blue: #00ccff; --yellow: #ffff00; --purple: #cc00ff;
         }
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; overflow-x: hidden; display: none; /* Se oculta hasta validar DB */ }
-        
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; overflow-x: hidden; display: none; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
@@ -51,6 +50,8 @@
         .btn-red:hover { background: var(--red); color: #000; box-shadow: 0 5px 15px rgba(255,51,51,0.3); }
         .btn-green { background: transparent; color: var(--green); border: 1px solid var(--green); }
         .btn-green:hover { background: var(--green); color: #000; box-shadow: 0 5px 15px rgba(0,255,102,0.3); }
+        .btn-purple { background: rgba(204,0,255,0.1); color: var(--purple); border: 1px solid var(--purple); }
+        .btn-purple:hover { background: var(--purple); color: #000; box-shadow: 0 5px 15px rgba(204,0,255,0.3); }
 
         .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-radius: 15px; background: rgba(0,0,0,0.4); margin-bottom: 10px; font-size: 0.8rem; border: 1px solid transparent; transition: 0.2s; }
         .list-item:hover { border-color: var(--border); background: #000; }
@@ -73,19 +74,27 @@
     <header class="admin-header">
         <h1>SCULLY <span>MASTER CONSOLE</span></h1>
         <div class="header-controls">
-            <input type="text" id="globalStaffSign" placeholder="Tu Firma de Staff (Ej: score)" style="margin:0; width: 220px; border-color:var(--accent); background:#000;" readonly>
+            <input type="text" id="globalStaffSign" placeholder="Tu Firma de Staff" style="margin:0; width: 220px; border-color:var(--accent); background:#000;" readonly>
             <a href="index.html" class="btn-return"><i class="fas fa-arrow-left"></i> Volver al Hub</a>
         </div>
     </header>
     
     <div class="admin-dashboard">
+
+        <div class="admin-panel" style="border-color: rgba(204,0,255,0.3); grid-column: span 2;">
+            <div class="panel-header" style="background: rgba(204,0,255,0.05);">
+                <h2 style="color:var(--purple);"><i class="fas fa-lightbulb"></i> 1. Sugerencias de Niveles (First Victors)</h2>
+            </div>
+            <div class="panel-content" id="levelSuggestionsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px;"></div>
+        </div>
+        
         <div class="admin-panel" style="border-color: rgba(255,255,0,0.3);">
-            <div class="panel-header" style="background: rgba(255,255,0,0.05);"><h2 style="color:var(--yellow);"><i class="fas fa-id-badge"></i> 1. Reclamos Identidad</h2></div>
+            <div class="panel-header" style="background: rgba(255,255,0,0.05);"><h2 style="color:var(--yellow);"><i class="fas fa-id-badge"></i> 2. Reclamos Identidad</h2></div>
             <div class="panel-content" id="claimRequestsList"></div>
         </div>
 
-        <div class="admin-panel">
-            <div class="panel-header"><h2><i class="fas fa-layer-group"></i> 2. Base de Niveles</h2></div>
+        <div class="admin-panel" id="editorPanel">
+            <div class="panel-header"><h2><i class="fas fa-layer-group"></i> 3. Base de Niveles</h2></div>
             <div class="panel-content" id="panelNivelesContent">
                 <input type="hidden" id="editLvlIdx">
                 <input type="text" id="lvlName" placeholder="Nombre Nivel">
@@ -105,10 +114,10 @@
             </div>
         </div>
 
-        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-shield-alt"></i> 3. Moderación Récords</h2></div><div class="panel-content" id="submissionsList"></div></div>
+        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-shield-alt"></i> 4. Moderación Récords</h2></div><div class="panel-content" id="submissionsList"></div></div>
         
         <div class="admin-panel">
-            <div class="panel-header"><h2><i class="fas fa-users-cog"></i> 4. Identidad Jugadores</h2></div>
+            <div class="panel-header"><h2><i class="fas fa-users-cog"></i> 5. Identidad Jugadores</h2></div>
             <div class="panel-content" id="panelPlayersContent">
                 <div id="playerEditor" style="display:none; background: #000; padding: 25px; border: 1px solid var(--blue); border-radius: 20px; margin-bottom: 25px; box-shadow: 0 0 20px rgba(0,204,255,0.1);">
                     <input type="hidden" id="editPIdx">
@@ -131,20 +140,20 @@
             </div>
         </div>
         
-        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-shopping-cart"></i> 5. Tienda (Mercado)</h2></div><div class="panel-content" id="marketSubList"></div></div>
-        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-image"></i> 6. Solicitudes PFP</h2></div><div class="panel-content" id="pfpSubList"></div></div>
+        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-shopping-cart"></i> 6. Tienda (Mercado)</h2></div><div class="panel-content" id="marketSubList"></div></div>
+        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-image"></i> 7. Solicitudes PFP</h2></div><div class="panel-content" id="pfpSubList"></div></div>
         <div class="admin-panel">
-            <div class="panel-header"><h2><i class="fas fa-gavel"></i> 7. Blacklist</h2></div>
+            <div class="panel-header"><h2><i class="fas fa-gavel"></i> 8. Blacklist</h2></div>
             <div class="panel-content">
                 <div class="flex-row" style="margin-bottom: 25px;"><input type="text" id="banUser" placeholder="Nick a banear..." style="margin:0;"><button onclick="banPlayer()" class="btn-red" style="margin:0; width:auto; padding:0 25px;"><i class="fas fa-ban"></i></button></div>
                 <div id="banListInteractive"></div>
             </div>
         </div>
-        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-terminal"></i> 8. Logs de Sistema</h2></div><div class="panel-content" id="adminLogList"></div></div>
-        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-folder-open"></i> 9. Historial Récords</h2></div><div class="panel-content" id="adminHistoryList"></div></div>
+        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-terminal"></i> 9. Logs de Sistema</h2></div><div class="panel-content" id="adminLogList"></div></div>
+        <div class="admin-panel"><div class="panel-header"><h2><i class="fas fa-folder-open"></i> 10. Historial Récords</h2></div><div class="panel-content" id="adminHistoryList"></div></div>
 
         <div class="admin-panel" style="border-color: rgba(0,204,255,0.3);">
-            <div class="panel-header" style="background: rgba(0,204,255,0.05);"><h2 style="color:var(--blue);"><i class="fab fa-youtube"></i> 10. Auditoría YT Manual</h2></div>
+            <div class="panel-header" style="background: rgba(0,204,255,0.05);"><h2 style="color:var(--blue);"><i class="fab fa-youtube"></i> 11. Auditoría YT Manual</h2></div>
             <div class="panel-content">
                 <p style="font-size:0.8rem; color:#888; margin-top:0; margin-bottom:20px; line-height:1.5;">Pega dos links de YouTube para analizar exactamente cuál se subió primero en los servidores de Google.</p>
                 <input type="text" id="audit1" placeholder="Link YT del Jugador A">
@@ -166,18 +175,15 @@
         let fullData = {};
         const YT_API_KEY = "AIzaSyCLeUZ_mJxJHuCCLr-GMkMdy0q-JHTUi7w";
 
-        // NUEVA SEGURIDAD TOTAL POR FIREBASE AUTH
         auth.onAuthStateChanged(user => {
             if(!user) return location.href = 'index.html';
             db.ref('players').once('value', snap => {
                 const players = Object.values(snap.val() || {});
                 const me = players.find(p => p.email === user.email);
                 if(me && me.role === 'admin') {
-                    document.body.style.display = "block"; // Mostrar UI si es admin
-                    document.getElementById('globalStaffSign').value = me.name; // Pone su nombre automáticamente
-                } else {
-                    location.href = 'index.html';
-                }
+                    document.body.style.display = "block"; 
+                    document.getElementById('globalStaffSign').value = me.name; 
+                } else { location.href = 'index.html'; }
             });
         });
 
@@ -187,9 +193,75 @@
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {}; 
             let lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels : Object.values(fullData.levels)) : []; lvls = lvls.filter(l => l && l.name); fullData.levels = lvls;
-            renderClaimRequests(fullData.claim_requests || {}); renderAdminLevelsList(lvls); renderSubmissions(fullData.submissions || {}); renderAdminUserList(Object.values(fullData.players || {})); renderMarketModeration(fullData.market_requests || {}); renderPFPModeration(fullData.pfp_requests || {}); renderBanList(fullData.bans || {}); renderAdminLogs(fullData.logs || {}); renderAdminHistory(fullData.history || {});
+            
+            renderLevelSuggestions(fullData.level_suggestions || {});
+            renderClaimRequests(fullData.claim_requests || {}); 
+            renderAdminLevelsList(lvls); 
+            renderSubmissions(fullData.submissions || {}); 
+            renderAdminUserList(Object.values(fullData.players || {})); 
+            renderMarketModeration(fullData.market_requests || {}); 
+            renderPFPModeration(fullData.pfp_requests || {}); 
+            renderBanList(fullData.bans || {}); 
+            renderAdminLogs(fullData.logs || {}); 
+            renderAdminHistory(fullData.history || {});
         });
 
+        // NUEVO: RENDER DE SUGERENCIAS DE NIVELES
+        function renderLevelSuggestions(sugs) {
+            let html = "";
+            Object.entries(sugs).forEach(([k,v]) => {
+                html += `
+                <div class="sub-card" style="border-left-color: var(--purple); margin-bottom: 0;">
+                    <div style="font-size:1.1rem; color:#fff; font-weight:800; margin-bottom:5px;">${v.level}</div>
+                    <div style="font-size:0.75rem; color:#aaa; margin-bottom:8px;">First Victor: <b style="color:var(--purple);">${v.player}</b></div>
+                    
+                    <div style="background:rgba(0,0,0,0.5); padding:10px; border-radius:8px; font-size:0.7rem; color:#888; margin-bottom:15px; border:1px solid #222;">
+                        ⬆️ Arriba de: <span style="color:#fff;">${v.above}</span><br>
+                        ⬇️ Abajo de: <span style="color:#fff;">${v.below}</span>
+                    </div>
+
+                    <div class="proof-box" style="margin-top:0;">
+                        <a href="${v.yt}" target="_blank" class="btn-proof proof-yt"><i class="fab fa-youtube"></i> PRUEBA YT</a>
+                        <a href="${v.raw !== 'Sin RAW' ? v.raw : '#'}" target="_blank" class="btn-proof proof-raw" style="${v.raw === 'Sin RAW' ? 'opacity:0.3; pointer-events:none;' : ''}"><i class="fas fa-video"></i> RAW</a>
+                    </div>
+
+                    <div class="flex-row">
+                        <button onclick="prepSuggestion('${k}')" class="btn-purple"><i class="fas fa-clipboard-list"></i> PREPARAR EN EDITOR</button>
+                        <button onclick="rejectSuggestion('${k}')" class="btn-red" style="width:auto; padding:15px 20px;"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('levelSuggestionsList').innerHTML = html || `<p style="grid-column: span 2; text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">No hay sugerencias de niveles.</p>`;
+        }
+
+        // EL BOTÓN MÁGICO
+        function prepSuggestion(key) {
+            const data = fullData.level_suggestions[key];
+            const ytID = extractYTId(data.yt);
+            
+            // Llenar el editor automáticamente
+            document.getElementById('editLvlIdx').value = ""; // Es un nivel nuevo
+            document.getElementById('lvlName').value = data.level;
+            document.getElementById('lvlFirst').value = data.player;
+            document.getElementById('lvlYT').value = ytID || "";
+            document.getElementById('lvlPos').value = ""; // Lo dejas vacío para que el Admin decida el número
+            
+            // Hacer scroll hasta el editor
+            document.getElementById('editorPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Borrar la sugerencia de la cola (opcional, o la puedes borrar a mano con el basurero)
+            db.ref('level_suggestions/' + key).remove();
+            showToast("Nivel preparado en el Editor. ¡Pon el Top y Guarda!");
+        }
+
+        function rejectSuggestion(key) {
+            if(confirm("¿Eliminar esta sugerencia?")) {
+                db.ref('level_suggestions/' + key).remove();
+                showToast("Sugerencia descartada", true);
+            }
+        }
+
+        // (Resto de funciones inalteradas del admin panel)
         function renderClaimRequests(claims) { let html = ""; Object.entries(claims).forEach(([k,v]) => { html += `<div class="sub-card" style="border-left-color: var(--yellow);"><span style="color:var(--yellow); font-weight:800; font-size:1rem;">${v.nick}</span><div style="font-size:0.75rem; color:#aaa; margin:8px 0;">Email: <b style="color:#fff">${v.email}</b></div><a href="${v.proof}" target="_blank" class="btn-proof" style="background:rgba(255,255,0,0.1); color:var(--yellow); border:1px solid var(--yellow); display:block; margin-bottom:15px;"><i class="fas fa-external-link-alt"></i> VER PRUEBA</a><div class="flex-row"><button onclick="approveClaim('${k}')" class="btn-green" style="background:var(--green); color:#000;"><i class="fas fa-check"></i> VINCULAR</button><button onclick="rejectClaim('${k}')" class="btn-red" style="width:auto; padding:15px 25px;"><i class="fas fa-times"></i></button></div></div>`; }); document.getElementById('claimRequestsList').innerHTML = html || `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">Sin solicitudes pendientes.</p>`; }
         function approveClaim(key) { const req = fullData.claim_requests[key]; db.ref('players').once('value', s => { let p = Object.values(s.val() || {}); let i = p.findIndex(x => x.name.toLowerCase() === req.nick.toLowerCase()); if(i > -1) { p[i].email = req.email; } else { p.push({ name: req.nick, email: req.email, country: 'es' }); } db.ref('players').set(p); db.ref('claim_requests/' + key).remove(); showToast(`Perfil vinculado a ${req.email}`); }); }
         function rejectClaim(key) { if(confirm("¿Rechazar esta solicitud?")) { db.ref('claim_requests/' + key).remove(); showToast("Solicitud rechazada", true); } }
@@ -205,7 +277,7 @@
         function revertAREDL() { if(!confirm("¿REVERTIR al último respaldo?")) return; const btn = document.getElementById('revertBtn'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; db.ref('levels_backup').once('value', s => { let backup = s.val(); if(!backup) { btn.innerHTML = '<i class="fas fa-history"></i> REVERTIR'; return showToast("No hay respaldos", true); } let lvls = Array.isArray(backup) ? backup : Object.values(backup); db.ref('levels').set(lvls.filter(x => x && x.name)).then(() => { showToast("Lista Restaurada"); btn.innerHTML = '<i class="fas fa-history"></i> REVERTIR'; }); }); }
 
         function renderSubmissions(submissionsObj) { let html = ""; const entries = Object.entries(submissionsObj); if(entries.length === 0) { document.getElementById('submissionsList').innerHTML = `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:40px;"><i class="fas fa-glass-cheers fa-2x"></i><br><br>No hay récords pendientes.</p>`; return; } for(let i = 0; i < entries.length; i++) { const sub = entries[i][1]; html += `<div class="sub-card"><span style="color:#fff; font-weight:800; font-size:0.9rem;">${sub.player}</span> <i class="fas fa-caret-right" style="color:var(--accent); margin:0 5px;"></i> ${sub.level}<div class="proof-box"><a href="${sub.link}" target="_blank" class="btn-proof proof-yt"><i class="fab fa-youtube"></i> VER YT</a><a href="${sub.raw}" target="_blank" class="btn-proof proof-raw"><i class="fab fa-google-drive"></i> RAW</a></div><div class="flex-row"><button id="btn-ok-${entries[i][0]}" onclick="setStatus('${entries[i][0]}','Aceptado')" class="btn-green" style="background:var(--green); color:#000;"><i class="fas fa-check"></i></button><button onclick="setStatus('${entries[i][0]}','Rechazado')" class="btn-red"><i class="fas fa-times"></i></button></div></div>`; } document.getElementById('submissionsList').innerHTML = html; }
-        async function setStatus(key, status) { const staff = document.getElementById('globalStaffSign').value; if(!staff) return; const sub = fullData.submissions[key]; if(status === 'Aceptado') { const btnOk = document.getElementById(`btn-ok-${key}`); if(btnOk) { btnOk.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btnOk.disabled = true; } try { const subVid = extractYTId(sub.link); const lvlIdx = fullData.levels.findIndex(l => l.name === sub.level); if (lvlIdx > -1 && subVid) { const lvlVid = fullData.levels[lvlIdx].id; if(lvlVid && subVid !== lvlVid) { const subDateStr = await getYTDate(subVid); const lvlDateStr = await getYTDate(lvlVid); if (subDateStr && lvlDateStr && (new Date(subDateStr) < new Date(lvlDateStr))) { if(confirm(`⚠️ ¡NUEVO FIRST VICTOR DETECTADO!\nEl video de ${sub.player} es más antiguo que el actual.\n¿Coronar automáticamente?`)) { db.ref(`levels/${lvlIdx}/first`).set(sub.player); db.ref(`levels/${lvlIdx}/id`).set(subVid); showToast(`${sub.player} es el nuevo First Victor`); } } } } } catch(e) { console.log("Auditoría auto fallida", e); } db.ref('players').once('value', v => { let p = Object.values(v.val() || {}); let i = p.findIndex(u => u.name.toLowerCase() === sub.player.toLowerCase()); if(i > -1) { let cArr = p[i].completions ? (Array.isArray(p[i].completions) ? p[i].completions : Object.values(p[i].completions)) : []; cArr.push({level: sub.level, link: sub.link}); p[i].completions = cArr; } else { p.push({ name: sub.player, country: sub.country || 'es', completions: [{level: sub.level, link: sub.link}] }); } db.ref('players').set(p); }); db.ref('history').push({...sub, status: 'Aceptado'}); db.ref('logs').push({type: 'accept', msg: `✅ ${sub.player} -> ${sub.level} (${staff})`}); showToast("Récord Aceptado"); } else { db.ref('history').push({...sub, status: 'Rechazado'}); db.ref('logs').push({type: 'reject', msg: `❌ ${sub.player} RECHAZADO`}); showToast("Récord Rechazado", true); } db.ref('submissions/' + key).remove(); }
+        async function setStatus(key, status) { const staff = document.getElementById('globalStaffSign').value; if(!staff) { showToast("Pon tu firma de Staff en la cabecera primero", true); document.getElementById('globalStaffSign').focus(); return; } const sub = fullData.submissions[key]; if(status === 'Aceptado') { const btnOk = document.getElementById(`btn-ok-${key}`); if(btnOk) { btnOk.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btnOk.disabled = true; } try { const subVid = extractYTId(sub.link); const lvlIdx = fullData.levels.findIndex(l => l.name === sub.level); if (lvlIdx > -1 && subVid) { const lvlVid = fullData.levels[lvlIdx].id; if(lvlVid && subVid !== lvlVid) { const subDateStr = await getYTDate(subVid); const lvlDateStr = await getYTDate(lvlVid); if (subDateStr && lvlDateStr && (new Date(subDateStr) < new Date(lvlDateStr))) { if(confirm(`⚠️ ¡NUEVO FIRST VICTOR DETECTADO!\nEl video de ${sub.player} es más antiguo que el actual.\n¿Coronar automáticamente?`)) { db.ref(`levels/${lvlIdx}/first`).set(sub.player); db.ref(`levels/${lvlIdx}/id`).set(subVid); showToast(`${sub.player} es el nuevo First Victor`); } } } } } catch(e) { console.log("Auditoría auto fallida", e); } db.ref('players').once('value', v => { let p = Object.values(v.val() || {}); let i = p.findIndex(u => u.name.toLowerCase() === sub.player.toLowerCase()); if(i > -1) { let cArr = p[i].completions ? (Array.isArray(p[i].completions) ? p[i].completions : Object.values(p[i].completions)) : []; cArr.push({level: sub.level, link: sub.link}); p[i].completions = cArr; } else { p.push({ name: sub.player, country: sub.country || 'es', completions: [{level: sub.level, link: sub.link}] }); } db.ref('players').set(p); }); db.ref('history').push({...sub, status: 'Aceptado'}); db.ref('logs').push({type: 'accept', msg: `✅ ${sub.player} -> ${sub.level} (${staff})`}); showToast("Récord Aceptado"); } else { db.ref('history').push({...sub, status: 'Rechazado'}); db.ref('logs').push({type: 'reject', msg: `❌ ${sub.player} RECHAZADO`}); showToast("Récord Rechazado", true); } db.ref('submissions/' + key).remove(); }
 
         function renderAdminUserList(p) { let html = ""; for(let i = 0; i < p.length; i++) { let style = p[i].hidden ? 'text-decoration:line-through; color:var(--red);' : 'color:#fff; font-weight:800;'; html += `<div class="list-item"><span style="${style}">${p[i].name}</span><button onclick="loadPlayerToEditor(${i})" class="btn-blue" style="width:auto; padding:8px 12px; margin:0;"><i class="fas fa-user-edit"></i></button></div>`; } document.getElementById('adminUserList').innerHTML = html; }
         function loadPlayerToEditor(idx) { const u = Object.values(fullData.players)[idx]; document.getElementById('playerEditor').style.display = "block"; document.getElementById('editPIdx').value = idx; document.getElementById('editNick').value = u.name; document.getElementById('editCountry').value = u.country || 'es'; document.getElementById('editHidden').checked = u.hidden || false; let cosHTML = ""; if (u.cosmetics) Object.entries(u.cosmetics).filter(x => x[1]).forEach(x => cosHTML += `<div class="list-item"><span>${x[0]}</span><i class="fas fa-trash-alt" style="color:var(--red); cursor:pointer;" onclick="removeCosmeticFromUser(${idx}, '${x[0]}')"></i></div>`); document.getElementById('playerCosmeticsInternal').innerHTML = cosHTML || "<span style='font-size:0.75rem; color:#666;'>Sin cosméticos.</span>"; let recHTML = ""; let cArr = u.completions ? (Array.isArray(u.completions) ? u.completions : Object.values(u.completions)) : []; cArr.forEach((c, i) => recHTML += `<div class="list-item"><span>${c.level}</span><i class="fas fa-times" style="color:var(--red); cursor:pointer;" onclick="removeLevelFromUser(${idx}, ${i})"></i></div>`); document.getElementById('playerLevelsInternal').innerHTML = recHTML || "<span style='font-size:0.75rem; color:#666;'>Sin récords.</span>"; document.getElementById('panelPlayersContent').scrollTo(0,0); }
