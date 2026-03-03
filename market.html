@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scully Market | Mercado de Prestigio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --accent: #ff6600; --bg: #030303; --card: rgba(15,15,15,0.9); --border: rgba(255,255,255,0.05); }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; text-align: center; }
+        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 12px 24px; text-decoration: none; font-size: 0.7rem; border-radius: 50px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; margin: 40px 10px; }
+        .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; width: 95%; max-width: 1000px; margin: 0 auto; }
+        .market-card { background: var(--card); border: 1px solid var(--border); padding: 40px; border-radius: 30px; transition: 0.3s; }
+        .market-card:hover { border-color: var(--accent); transform: translateY(-10px); }
+        .market-card i { font-size: 3rem; color: var(--accent); margin-bottom: 20px; }
+        .xp-req { display: block; margin: 15px 0; color: #ffcc00; font-weight: 800; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="nav"><a href="index.html" class="btn-scully">VOLVER AL HUB</a></div>
+    <h1 style="font-size:3rem; margin-bottom:50px;">MERCADO DE <span style="color:var(--accent);">PRESTIGIO</span></h1>
+    <div class="market-grid">
+        <div class="market-card"><i class="fas fa-fire"></i><h3>Aura Fuego</h3><span class="xp-req">100 XP</span><button class="btn-scully" onclick="buyItem('aura_fire', 100)">SOLICITAR</button></div>
+        <div class="market-card"><i class="fas fa-bolt"></i><h3>Aura Eléctrica</h3><span class="xp-req">150 XP</span><button class="btn-scully" onclick="buyItem('aura_electric', 150)">SOLICITAR</button></div>
+        <div class="market-card"><i class="fas fa-rainbow"></i><h3>Nick Rainbow</h3><span class="xp-req">300 XP</span><button class="btn-scully" onclick="buyItem('name_rainbow', 300)">SOLICITAR</button></div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = { databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
+        document.documentElement.style.setProperty('--accent', savedColor);
+        let fullData = {};
+        db.ref('/').on('value', s => fullData = s.val());
+
+        function buyItem(item, cost) {
+            const nick = prompt("Nickname:"); if(!nick) return;
+            const p = Object.values(fullData.players || {}).find(x => x.name.toLowerCase() === nick.toLowerCase());
+            if(!p) return alert("No registrado.");
+            let pts = 0;
+            p.completions?.forEach(c => {
+                const idx = fullData.levels.findIndex(l => l.name.toLowerCase() === c.level.toLowerCase());
+                if(idx > -1) pts += parseFloat(Math.max(100 - (idx * 0.6), 5));
+            });
+            if(pts < cost) return alert("XP insuficiente.");
+            db.ref('market_requests').push({ nick: p.name, item: item, cost: cost });
+            alert("Solicitud enviada al Staff.");
+        }
+    </script>
+</body>
+</html>
