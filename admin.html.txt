@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scully Admin | Centro de Comando</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --accent: #ff6600; --bg: #000; --card: #080808; --border: #111; --green: #00ff66; --red: #ff3333; }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; padding: 20px; }
+        .admin-layout { display: flex; gap: 15px; min-width: 2000px; height: 90vh; }
+        .admin-col { flex: 1; background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 15px; display: flex; flex-direction: column; }
+        .admin-list-scroll { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
+        h2 { font-size: 0.6rem; text-transform: uppercase; color: #444; border-bottom: 1px solid #111; padding-bottom: 10px; margin-top: 0; }
+        input, select, button { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-family: 'Lexend Deca'; font-size: 0.7rem; }
+        .sub-card { background: #000; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 3px solid var(--accent); font-size: 0.65rem; }
+        .manage-item { display: flex; justify-content: space-between; align-items: center; padding: 6px; border-bottom: 1px solid #111; font-size: 0.6rem; }
+        .btn-green { border-color: var(--green); color: var(--green); }
+        .btn-red { border-color: var(--red); color: var(--red); }
+    </style>
+</head>
+<body>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h1 style="font-size:1.2rem; margin:0;">SCULLY <span style="color:var(--accent);">COMMAND CENTER</span></h1>
+        <a href="index.html" style="color:var(--accent); text-decoration:none; font-size:0.8rem;">[ SALIR ]</a>
+    </div>
+
+    <div class="admin-layout">
+        <div class="admin-col">
+            <h2>1. Editor & Inyector</h2>
+            <div id="adminLevelsList" class="admin-list-scroll"></div>
+            <input type="hidden" id="editLvlIdx">
+            <input type="text" id="lvlName" placeholder="Nombre"><input type="text" id="lvlYT" placeholder="ID YT"><input type="text" id="lvlFirst" placeholder="Verifier">
+            <input type="number" id="lvlPos" placeholder="Posición">
+            <button onclick="saveLevel()" style="background:var(--accent); color:#000;">GUARDAR NIVEL</button>
+            <input type="text" id="manualVictorNick" placeholder="Inyectar Nick">
+            <button onclick="addVictorDirectly()" class="btn-green">INYECTAR VICTOR</button>
+        </div>
+
+        <div class="admin-col">
+            <h2>2. Moderación Récords</h2>
+            <div id="submissionsList" class="admin-list-scroll"></div>
+        </div>
+
+        <div class="admin-col">
+            <h2>3. Mercado</h2>
+            <div id="marketSubList" class="admin-list-scroll"></div>
+        </div>
+
+        <div class="admin-col">
+            <h2>4. Fotos Perfil</h2>
+            <div id="pfpSubList" class="admin-list-scroll"></div>
+        </div>
+
+        <div class="admin-col">
+            <h2>5. Lista Negra</h2>
+            <div id="banListInteractive" class="admin-list-scroll"></div>
+            <input type="text" id="banUser" placeholder="Nick"><button onclick="banPlayer()" class="btn-red">BANEAR</button>
+        </div>
+
+        <div class="admin-col">
+            <h2>6. Logs Recientes</h2>
+            <div id="adminLogList" class="admin-list-scroll"></div>
+        </div>
+
+        <div class="admin-col">
+            <h2>7. Historial</h2>
+            <div id="adminHistoryList" class="admin-list-scroll"></div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    <script>
+        if(sessionStorage.getItem('scully_session') !== 'active') location.href = 'index.html';
+        const firebaseConfig = { databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        let fullData = {};
+
+        db.ref('/').on('value', (s) => {
+            fullData = s.val() || {};
+            renderAdminLevelsList(fullData.levels || []);
+            renderSubmissions(fullData.submissions || {});
+            renderMarketModeration(fullData.market_requests || {});
+            renderPFPModeration(fullData.pfp_requests || {});
+            renderBanList(fullData.bans || {});
+            renderAdminLogs(fullData.logs || {});
+            renderAdminHistory(fullData.history || {});
+        });
+
+        function saveLevel() {
+            const idx = document.getElementById('editLvlIdx').value;
+            const n = document.getElementById('lvlName').value.trim();
+            const y = document.getElementById('lvlYT').value.trim();
+            const f = document.getElementById('lvlFirst').value.trim();
+            const p = parseInt(document.getElementById('lvlPos').value) - 1;
+            db.ref('levels').once('value', s => {
+                let lvls = s.val() || [];
+                if(idx !== "") lvls.splice(idx, 1);
+                lvls.splice(p >= 0 ? p : lvls.length, 0, { name: n, id: y, first: f });
+                db.ref('levels').set(lvls); alert("Nivel Procesado");
+            });
+        }
+
+        function addVictorDirectly() {
+            const idx = document.getElementById('editLvlIdx').value;
+            const nick = document.getElementById('manualVictorNick').value.trim();
+            if(idx === "" || !nick) return alert("Selecciona nivel y pon nick");
+            const lName = fullData.levels[idx].name;
+            db.ref('players').once('value', s => {
+                let p = Object.values(s.val() || {});
+                let i = p.findIndex(x => x.name.toLowerCase() === nick.toLowerCase());
+                let rec = { level: lName, link: "Manual" };
+                if(i > -1) { if(!p[i].completions) p[i].completions = []; p[i].completions.push(rec); }
+                else { p.push({ name: nick, country: 'es', completions: [rec] }); }
+                db.ref('players').set(p); alert("Inyectado!");
+            });
+        }
+
+        function setStatus(k, s) {
+            const sub = fullData.submissions[k]; const staff = prompt("Staff:");
+            if(s === 'Aceptado') {
+                db.ref('players').once('value', v => {
+                    let p = Object.values(v.val() || {}); let i = p.findIndex(u => u.name.toLowerCase() === sub.player.toLowerCase());
+                    if(i > -1) { if(!p[i].completions) p[i].completions = []; p[i].completions.push({level:sub.level, link:sub.link}); }
+                    else { p.push({name:sub.player, country:'es', completions:[{level:sub.level, link:sub.link}]}); }
+                    db.ref('players').set(p);
+                });
+                db.ref('history').push({...sub, status: 'Aceptado'});
+                db.ref('logs').push({type:'accept', msg:`✅ ${sub.player} POR ${staff}`});
+                db.ref('submissions/'+k).remove();
+            } else if(s === 'Rechazado') {
+                db.ref('history').push({...sub, status: 'Rechazado'});
+                db.ref('logs').push({type:'reject', msg:`❌ ${sub.player} RECHAZADO`});
+                db.ref('submissions/'+k).remove();
+            }
+        }
+
+        function renderAdminLevelsList(l) { document.getElementById('adminLevelsList').innerHTML = l.map((x,i) => `<div class="manage-item"><span>#${i+1} ${x.name}</span><button onclick="loadLevelToEditor(${i})" style="width:auto; padding:3px 8px;">EDIT</button></div>`).join(""); }
+        function loadLevelToEditor(i) { const x = fullData.levels[i]; document.getElementById('editLvlIdx').value=i; document.getElementById('lvlName').value=x.name; document.getElementById('lvlYT').value=x.id; document.getElementById('lvlFirst').value=x.first; document.getElementById('lvlPos').value=i+1; }
+        function renderSubmissions(s) { document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k,x]) => `<div class="sub-card">${x.player}->${x.level}<br><button onclick="setStatus('${k}','Aceptado')" class="btn-green">ACEPTAR</button><button onclick="setStatus('${k}','Rechazado')" class="btn-red">RECHAZAR</button></div>`).join(""); }
+        function renderBanList(b) { document.getElementById('banListInteractive').innerHTML = Object.entries(b).map(([k,v]) => `<div class="manage-item"><span>${v}</span><i class="fas fa-trash" onclick="db.ref('bans/${k}').remove()"></i></div>`).join(""); }
+        function banPlayer() { const n = document.getElementById('banUser').value; db.ref('bans').push(n); db.ref('logs').push({type:'reject', msg:`⛔ ${n} BANEADO`}); }
+        function renderAdminLogs(l) { document.getElementById('adminLogList').innerHTML = Object.entries(l).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.msg}</span><i class="fas fa-trash" onclick="db.ref('logs/${k}').remove()"></i></div>`).join(""); }
+        function renderAdminHistory(h) { document.getElementById('adminHistoryList').innerHTML = Object.entries(h).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.player}</span><i class="fas fa-trash" onclick="db.ref('history/${k}').remove()"></i></div>`).join(""); }
+        function renderMarketModeration(m) { document.getElementById('marketSubList').innerHTML = Object.entries(m).map(([k,v]) => `<div class="sub-card">${v.nick}: ${v.item}<button onclick="approveCosmetic('${k}')" class="btn-green">APROBAR</button></div>`).join(""); }
+        function approveCosmetic(k) { const r = fullData.market_requests[k]; db.ref('players').once('value', s => { let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick); if(i>-1) { if(!p[i].cosmetics) p[i].cosmetics={}; p[i].cosmetics[r.item]=true; db.ref('players').set(p); db.ref('market_requests/'+k).remove(); } }); }
+        function renderPFPModeration(p) { document.getElementById('pfpSubList').innerHTML = Object.entries(p).map(([k,v]) => `<div class="sub-card">${v.nick}<br><img src="${v.url}" style="width:30px;height:30px;"><button onclick="approvePFP('${k}')" class="btn-green">ACEPTAR</button></div>`).join(""); }
+        function approvePFP(k) { const r = fullData.pfp_requests[k]; db.ref('players').once('value', s => { let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick); if(i>-1) { p[i].pfp=r.url; db.ref('players').set(p); db.ref('pfp_requests/'+k).remove(); } }); }
+    </script>
+</body>
+</html>
