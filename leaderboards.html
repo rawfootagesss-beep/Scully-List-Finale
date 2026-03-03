@@ -7,8 +7,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --accent: #ff6600; --bg: #030303; --card: rgba(15,15,15,0.8); --border: rgba(255,255,255,0.05); --blue: #00ccff; }
+        :root { 
+            --accent: #ff6600; --bg: #030303; --card: rgba(15,15,15,0.8); 
+            --border: rgba(255,255,255,0.05); --blue: #00ccff; --glow: 0 0 25px rgba(255, 102, 0, 0.3);
+        }
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; text-align: center; }
+        
+        /* --- ESTILOS DE LA TIENDA (COSMÉTICOS) --- */
+        @keyframes rainbow { 0% { color: #ff0000; } 20% { color: #ff9900; } 40% { color: #ffff00; } 60% { color: #00ff00; } 80% { color: #00ffff; } 100% { color: #cc00ff; } }
+        .cos-rainbow { animation: rainbow 3s linear infinite !important; font-weight: 800; }
+        .cos-fire { box-shadow: 0 0 15px #ff3300 !important; border: 2px solid #ff3300 !important; }
+        .cos-electric { box-shadow: 0 0 15px #00ccff !important; border: 2px solid #00ccff !important; }
+
         header { padding: 60px 20px; }
         h1 { font-size: 3rem; margin: 0; text-transform: uppercase; font-weight: 800; letter-spacing: -1px; }
         .wrapper { width: 95%; max-width: 1100px; margin: 0 auto 40px; }
@@ -23,6 +33,8 @@
         .modal-content { background: #0a0a0a; margin: 8vh auto; padding: 45px; width: 90%; max-width: 500px; border-radius: 35px; border: 1px solid var(--border); text-align: center; position: relative; }
         .u-lvl-btn { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; margin-bottom: 10px; text-decoration: none; color: #fff; border-left: 4px solid var(--accent); transition: 0.3s; }
         .u-lvl-btn:hover { background: rgba(255,255,255,0.08); }
+
+        .footer-credits { padding: 60px 20px; text-align: center; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); margin-top: 100px; }
     </style>
 </head>
 <body>
@@ -35,6 +47,11 @@
         <table><tbody id="leaderboardBody"></tbody></table>
     </main>
 
+    <footer class="footer-credits">
+        <p style="color:#444; font-size:0.75rem; text-transform:uppercase; letter-spacing: 2px;">The Scully List &copy; 2026 | score engineering</p>
+        <p style="font-size:0.65rem; color:#666; margin-bottom: 20px;">Diseñado por <b style="color:var(--accent)">score</b> | Staff: Vegardo &bull; Blitz &bull; Sopa354</p>
+    </footer>
+
     <div id="uModal" class="modal"><div class="modal-content" id="uModalContent"></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -46,7 +63,6 @@
         const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
         document.documentElement.style.setProperty('--accent', savedColor);
 
-        // Variable Global para que el Modal no se rompa
         window.rankData = [];
 
         db.ref('/').on('value', s => {
@@ -67,33 +83,42 @@
                     name: p?.name || nick, pts: pts.toFixed(1), lvl: Math.floor(pts/50), 
                     country: p?.country || 'es', pfp: p?.pfp || 'https://i.imgur.com/8pw98K4.png', 
                     count: uniqueL.size, hidden: p?.hidden, isV: verifL.length > 0,
-                    verifL: verifL, manualL: p?.completions || []
+                    verifL: verifL, manualL: p?.completions || [],
+                    cosmetics: p?.cosmetics || {} // LÓGICA DE COSMÉTICOS RESTAURADA
                 };
             }).filter(p => !p.hidden).sort((a,b) => b.pts - a.pts);
 
-            // Asignación crucial a la variable global
             window.rankData = rank;
 
-            document.getElementById('leaderboardBody').innerHTML = rank.map((u, i) => `
+            document.getElementById('leaderboardBody').innerHTML = rank.map((u, i) => {
+                // APLICANDO CLASES CSS DE LA TIENDA
+                let cosPfp = u.cosmetics.aura_fire ? "cos-fire" : (u.cosmetics.aura_electric ? "cos-electric" : "");
+                let cosName = u.cosmetics.name_rainbow ? "cos-rainbow" : "";
+
+                return `
                 <tr class="rank-row" onclick="window.openUserProfile('${u.name}')">
                     <td style="font-weight:900; font-size:1.2rem; border-radius:15px 0 0 15px;">${i+1}</td>
                     <td style="text-align:left;">
-                        <img src="${u.pfp}" class="rank-pfp">
-                        <b>${u.name.toUpperCase()} ${u.isV?'<i class="fas fa-check-circle" style="color:var(--blue)" title="Verificador"></i>':''} <img src="https://flagcdn.com/w40/${u.country}.png" style="height:12px; border-radius:2px; margin-left:5px;"></b>
+                        <img src="${u.pfp}" class="rank-pfp ${cosPfp}">
+                        <b class="${cosName}">${u.name.toUpperCase()} ${u.isV?'<i class="fas fa-check-circle" style="color:var(--blue)" title="Verificador"></i>':''} <img src="https://flagcdn.com/w40/${u.country}.png" style="height:12px; border-radius:2px; margin-left:5px;"></b>
                         <br><span class="xp-badge" style="margin-top:5px; display:inline-block;">LVL ${u.lvl}</span>
                     </td>
                     <td style="color:#888; font-size:0.8rem;"><b style="color:#fff; font-size:1rem;">${u.count}</b> RECORDS</td>
                     <td style="color:var(--accent); font-weight:900; border-radius:0 15px 15px 0; font-size:1.1rem;">${u.pts} <span style="font-size:0.6rem; color:#666;">XP</span></td>
-                </tr>`).join("");
+                </tr>`;
+            }).join("");
         });
 
-        // Funciones anexadas a window para forzar su disponibilidad
         window.openUserProfile = function(nick) {
             const u = window.rankData.find(x => x.name.toLowerCase() === nick.toLowerCase());
             if(!u) return;
+            
+            let cosPfp = u.cosmetics.aura_fire ? "cos-fire" : (u.cosmetics.aura_electric ? "cos-electric" : "");
+            let cosName = u.cosmetics.name_rainbow ? "cos-rainbow" : "";
+
             let html = `<span onclick="window.closeM()" style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.5rem; color:#444;">&times;</span>
-                <img src="${u.pfp}" style="width:100px;height:100px;border-radius:50%;border:3px solid var(--accent);margin-bottom:15px;object-fit:cover;">
-                <h2 style="margin:0; color:var(--accent); text-transform:uppercase;">${u.name}</h2>
+                <img src="${u.pfp}" class="${cosPfp}" style="width:100px;height:100px;border-radius:50%;border:3px solid var(--accent);margin-bottom:15px;object-fit:cover;">
+                <h2 class="${cosName}" style="margin:0; color:var(--accent); text-transform:uppercase;">${u.name}</h2>
                 <div style="margin:15px 0;"><span class="xp-badge" style="font-size:0.8rem; padding:5px 15px;">LVL ${u.lvl} &bull; ${u.pts} XP</span></div>
                 <div style="margin-top:25px; text-align:left; max-height:300px; overflow-y:auto; padding-right:10px;">`;
             
