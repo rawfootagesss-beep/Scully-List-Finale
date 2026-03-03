@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully Ranking | Global</title>
+    <title>Scully Ranking | Prestigio Global</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #ff6600; --bg: #030303; --border: rgba(255,255,255,0.05); }
+        :root { --accent: #ff6600; --bg: #030303; --border: rgba(255,255,255,0.05); --blue: #00ccff; }
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; text-align: center; }
-        .wrapper { width: 95%; max-width: 1000px; margin: 40px auto; }
+        .wrapper { width: 95%; max-width: 1100px; margin: 40px auto; }
         table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-        .rank-row { background: rgba(15,15,15,0.8); border: 1px solid var(--border); }
+        .rank-row { background: rgba(15,15,15,0.8); border: 1px solid var(--border); transition: 0.3s; cursor: pointer; }
+        .rank-row:hover { border-color: var(--accent); transform: scale(1.01); }
         td { padding: 20px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-        .xp-badge { background: #000; color: var(--accent); padding: 2px 8px; border-radius: 5px; font-size: 0.6rem; font-weight: 800; border: 1px solid var(--accent); }
+        .xp-badge { background: #000; color: var(--accent); padding: 3px 8px; border-radius: 5px; font-size: 0.65rem; font-weight: 800; border: 1px solid var(--accent); }
     </style>
 </head>
 <body>
-    <header style="padding:50px 0;"><h1>SCULLY <span style="color:var(--accent);">RANKING</span></h1><a href="index.html" style="color:var(--accent); text-decoration:none; font-size:0.7rem; border:1px solid; padding:10px 20px; border-radius:50px;">VOLVER</a></header>
+    <header style="padding:60px 0;"><h1>SCULLY <span style="color:var(--accent);">RANKING</span></h1><a href="index.html" style="color:var(--accent); text-decoration:none; font-size:0.7rem; border:1px solid; padding:10px 25px; border-radius:50px;">VOLVER AL HUB</a></header>
     <main class="wrapper"><table><tbody id="leaderboardBody"></tbody></table></main>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
@@ -26,17 +27,17 @@
         const db = firebase.database();
         db.ref('/').on('value', s => {
             const d = s.val(); const lvls = d.levels || []; const players = Object.values(d.players || {});
-            let uniqueNicks = new Set([...players.map(p => p.name.toLowerCase()), ...lvls.map(l => l.first?.toLowerCase()).filter(Boolean)]);
-            let rankList = Array.from(uniqueNicks).map(nick => {
+            let allNicks = new Set([...players.map(p => p.name.toLowerCase()), ...lvls.map(l => l.first?.toLowerCase()).filter(Boolean)]);
+            let rank = Array.from(allNicks).map(nick => {
                 const p = players.find(x => x.name.toLowerCase() === nick);
-                let uniqueLevels = new Set();
-                lvls.filter(l => l.first?.toLowerCase() === nick).forEach(l => uniqueLevels.add(l.name));
-                p?.completions?.forEach(c => uniqueLevels.add(c.level));
+                let uniqueL = new Set();
+                lvls.filter(l => l.first?.toLowerCase() === nick).forEach(l => uniqueL.add(l.name));
+                p?.completions?.forEach(c => uniqueL.add(c.level));
                 let pts = 0;
-                uniqueLevels.forEach(lvlName => { const idx = lvls.findIndex(l => l.name === lvlName); if(idx > -1) pts += parseFloat(Math.max(100 - (idx * 0.6), 5)); });
-                return { name: p?.name || nick, pts: pts.toFixed(1), lvl: Math.floor(pts / 50), country: p?.country || 'es', pfp: p?.pfp || 'https://i.imgur.com/8pw98K4.png', count: uniqueLevels.size, hidden: p?.hidden };
+                uniqueL.forEach(n => { const i = lvls.findIndex(l => l.name === n); if(i > -1) pts += parseFloat(Math.max(100 - (i*0.6), 5)); });
+                return { name: p?.name || nick, pts: pts.toFixed(1), lvl: Math.floor(pts/50), country: p?.country || 'es', pfp: p?.pfp || 'https://i.imgur.com/8pw98K4.png', count: uniqueL.size, hidden: p?.hidden, isV: lvls.some(l => l.first?.toLowerCase() === nick) };
             }).filter(p => !p.hidden).sort((a,b) => b.pts - a.pts);
-            document.getElementById('leaderboardBody').innerHTML = rankList.map((u, i) => `<tr class="rank-row"><td style="font-weight:900;">${i+1}</td><td style="text-align:left;"><img src="${u.pfp}" style="width:40px;height:40px;border-radius:50%;margin-right:15px;vertical-align:middle;"><b>${u.name.toUpperCase()} <img src="https://flagcdn.com/w40/${u.country}.png" style="height:10px;"></b><br><span class="xp-badge">LVL ${u.lvl}</span></td><td>${u.count} COMPLETADOS</td><td style="color:var(--accent); font-weight:900;">${u.pts} XP</td></tr>`).join("");
+            document.getElementById('leaderboardBody').innerHTML = rank.map((u, i) => `<tr class="rank-row"><td>${i+1}</td><td style="text-align:left;"><img src="${u.pfp}" style="width:45px;height:45px;border-radius:50%;margin-right:15px;vertical-align:middle;border:1px solid var(--accent);"><b>${u.name.toUpperCase()} ${u.isV?'<i class="fas fa-check-circle" style="color:var(--blue)"></i>':''} <img src="https://flagcdn.com/w40/${u.country}.png" style="height:10px;"></b><br><span class="xp-badge">LVL ${u.lvl}</span></td><td>${u.count} RECORDS</td><td style="color:var(--accent); font-weight:800;">${u.pts} XP</td></tr>`).join("");
         });
     </script>
 </body>
