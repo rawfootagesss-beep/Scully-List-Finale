@@ -70,7 +70,6 @@
         </div>
 
         <div id="viewProfile" style="display:none;">
-            
             <div class="panel">
                 <h2><i class="fas fa-id-card"></i> Configurar Biografía y Redes</h2>
                 <div class="input-group">
@@ -98,7 +97,6 @@
                 <input type="text" id="pfpInput" placeholder="Link de la imagen...">
                 <button onclick="requestPFP()" class="btn-save btn-pfp"><i class="fas fa-upload"></i> SOLICITAR PFP AL STAFF</button>
             </div>
-
         </div>
     </div>
 
@@ -107,7 +105,17 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     
     <script>
-        const firebaseConfig = { databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" };
+        // CONFIGURACIÓN EXACTA DE SCORE
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",
+            authDomain: "scullylist.firebaseapp.com",
+            databaseURL: "https://scullylist-default-rtdb.firebaseio.com",
+            projectId: "scullylist",
+            storageBucket: "scullylist.firebasestorage.app",
+            messagingSenderId: "498548914021",
+            appId: "1:498548914021:web:59128b5e06b36a4e81938c",
+            measurementId: "G-X3JF2DVWYH"
+        };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
@@ -137,7 +145,6 @@
         function loadPlayerData() {
             db.ref('players').on('value', snap => {
                 const players = Object.values(snap.val() || {});
-                // Buscar si algún jugador tiene este email vinculado
                 myPlayerIndex = players.findIndex(p => p.email === currentUser.email);
                 
                 if(myPlayerIndex > -1) {
@@ -145,7 +152,6 @@
                     document.getElementById('viewClaim').style.display = "none";
                     document.getElementById('viewProfile').style.display = "block";
                     
-                    // Rellenar campos
                     document.getElementById('bioInput').value = myProfileData.bio || "";
                     document.getElementById('ytInput').value = myProfileData.socials?.yt || "";
                     document.getElementById('twInput').value = myProfileData.socials?.tw || "";
@@ -158,8 +164,8 @@
         }
 
         function sendClaimRequest() {
-            const nick = document.getElementById('claimNick').value;
-            const proof = document.getElementById('claimProof').value;
+            const nick = document.getElementById('claimNick').value.trim();
+            const proof = document.getElementById('claimProof').value.trim();
             if(!nick || !proof) return showToast("Llena ambos campos", true);
             
             db.ref('claim_requests').push({
@@ -183,9 +189,7 @@
 
             db.ref(`players/${myPlayerIndex}/bio`).set(bio);
             db.ref(`players/${myPlayerIndex}/socials`).set({ yt: yt, tw: tw, dc: dc })
-            .then(() => {
-                showToast("Biografía y Redes Guardadas!");
-            });
+            .then(() => { showToast("Biografía y Redes Guardadas!"); });
         }
 
         function requestPFP() {
@@ -193,7 +197,6 @@
             const url = document.getElementById('pfpInput').value;
             if(!url) return showToast("Ingresa un link válido", true);
 
-            // Esto se envía exactamente al mismo lugar que los admins ya leen
             db.ref('pfp_requests').push({
                 nick: myProfileData.name,
                 url: url
