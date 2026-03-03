@@ -3,25 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Scully List | Hub de Ingeniería & Tributo</title>
+    <title>The Scully List | Hub de Identidad & Tributo</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
             --accent: #ff6600; --accent-grad: linear-gradient(135deg, #ff6600 0%, #ff9900 100%);
-            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.7);
+            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.8);
             --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
             --green: #00ff66; --red: #ff3333; --blue: #00ccff; --purple: #cc00ff; --yellow: #ffff00;
         }
 
-        body { 
-            background: var(--bg); 
-            color: #fff; 
-            font-family: 'Lexend Deca', sans-serif; 
-            margin: 0; padding: 0; 
-            overflow-x: hidden; 
-            scroll-behavior: smooth; 
-        }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
 
         /* 1. MARQUESINA DE NOVEDADES */
         .news-ticker { 
@@ -64,7 +57,7 @@
         .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: 0 0 15px var(--accent); }
 
         /* 4. EL TRONO (TOP #1) */
-        .throne-section { width: 90%; max-width: 800px; margin: 40px auto; position: relative; }
+        .throne-section { width: 90%; max-width: 800px; margin: 40px auto; }
         .throne-card { 
             background: linear-gradient(to right, rgba(0,0,0,0.95), rgba(255, 102, 0, 0.1)); 
             background-size: cover; border-radius: 30px; padding: 40px; border: 2px solid var(--accent); 
@@ -80,11 +73,14 @@
         .recent-table td { padding: 15px; font-size: 0.8rem; border-bottom: 1px solid var(--border); text-align: center; }
         .res-accepted { color: var(--green); font-weight: 800; } .res-rejected { color: var(--red); font-weight: 800; }
 
-        /* 6. STATUS TRACKER & PRESTIGIO */
+        /* 6. STATUS TRACKER & PFP */
         .status-tracker { max-width: 600px; margin: 40px auto; padding: 30px; background: var(--card-bg); border-radius: 30px; border: 1px solid var(--border); text-align: center; }
+        .user-pfp-display { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--accent); margin: 0 auto 15px; object-fit: cover; box-shadow: var(--glow); background: #111; }
         .status-pill { padding: 15px; border-radius: 12px; margin-bottom: 10px; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); }
-        .xp-tag { background: #111; color: var(--accent); padding: 5px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--accent); }
-        .badge-icon { font-size: 1.2rem; margin: 0 5px; filter: drop-shadow(0 0 5px var(--accent)); }
+        .st-pendiente { border-left: 6px solid var(--yellow); } .st-aceptado { border-left: 6px solid var(--green); }
+        .st-rechazado { border-left: 6px solid var(--red); } .st-enrevisión { border-left: 6px solid var(--blue); }
+        .xp-tag { background: #111; color: var(--accent); padding: 6px 16px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; border: 1px solid var(--accent); display: inline-block; }
+        .badge-icon { font-size: 1.3rem; margin: 0 5px; filter: drop-shadow(0 0 5px var(--accent)); }
 
         /* 7. GRID DIRECTORIO */
         .list-grid { width: 95%; max-width: 1200px; margin: 60px auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
@@ -92,28 +88,22 @@
         .level-card:hover { border-color: var(--accent); transform: scale(1.02); }
         .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
 
-        /* 8. FORMULARIO RAW */
-        .form-section { background: rgba(10,10,10,0.5); padding: 100px 20px; border-top: 1px solid var(--border); }
-        .glass-form { max-width: 550px; margin: 0 auto; background: var(--card-bg); padding: 45px; border-radius: 35px; border: 1px solid var(--border); box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        /* 8. FORMULARIOS */
+        .form-section { background: rgba(10,10,10,0.5); padding: 80px 20px; border-top: 1px solid var(--border); }
+        .glass-form { max-width: 550px; margin: 0 auto 40px; background: var(--card-bg); padding: 45px; border-radius: 35px; border: 1px solid var(--border); box-shadow: 0 0 20px rgba(0,0,0,0.5); }
         input, select { width: 100%; background: #0a0a0a !important; border: 1px solid #222; color: #fff !important; padding: 16px; border-radius: 15px; margin-bottom: 20px; font-family: 'Lexend Deca'; box-sizing: border-box; }
-        option { background: #000; color: #fff; }
         .checkbox-container { display: flex; align-items: center; gap: 10px; margin-top: -10px; margin-bottom: 25px; padding-left: 5px; cursor: pointer; font-size: 0.8rem; color: #777; transition: 0.3s; }
-        .checkbox-container:hover { color: #fff; }
 
-        /* 9. ADMIN PANEL (GESTIÓN COMPLETA) */
-        #adminPanel { display: none; background: #000; border: 2px solid var(--accent); padding: 35px; width: 95%; max-width: 1400px; margin: 50px auto; border-radius: 25px; box-shadow: var(--glow); }
-        .admin-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
-        .admin-col { background: #080808; padding: 15px; border-radius: 15px; border: 1px solid #111; overflow: hidden; }
-        .admin-list-scroll { max-height: 400px; overflow-y: auto; }
-        .admin-sub-card { background: #000; padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #222; font-size: 0.65rem; border-left: 3px solid var(--accent); }
-        .proof-links { display: flex; gap: 8px; margin: 8px 0; }
-        .proof-links a { color: #fff; text-decoration: none; font-size: 0.55rem; background: #111; padding: 4px 8px; border-radius: 4px; border: 1px solid #333; }
-        .admin-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
-        .admin-btns button { font-size: 0.55rem; padding: 8px; cursor: pointer; background: #050505; color: #fff; border: 1px solid #222; border-radius: 5px; }
-        .manage-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #111; font-size: 0.55rem; color: #aaa; }
-        .manage-item i { color: var(--red); cursor: pointer; font-size: 0.7rem; }
+        /* 9. ADMIN PANEL PRO (5+ COLUMNAS) */
+        #adminPanel { display: none; background: #000; border: 2px solid var(--accent); padding: 35px; width: 98%; max-width: 1600px; margin: 50px auto; border-radius: 25px; box-shadow: var(--glow); overflow-x: auto; }
+        .admin-layout { display: flex; gap: 15px; min-width: 1400px; }
+        .admin-col { flex: 1; background: #080808; padding: 15px; border-radius: 15px; border: 1px solid #111; min-width: 250px; }
+        .admin-list-scroll { max-height: 450px; overflow-y: auto; padding-right: 5px; }
+        .admin-sub-card { background: #000; padding: 12px; border-radius: 10px; margin-bottom: 12px; border: 1px solid #222; font-size: 0.65rem; border-left: 3px solid var(--accent); }
+        .manage-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #111; font-size: 0.55rem; color: #aaa; }
+        .manage-item i { color: var(--red); cursor: pointer; }
 
-        /* 10. MODALES & RULETA */
+        /* 10. MODALES */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .modal-content { background: #0a0a0a; margin: 5vh auto; padding: 35px; width: 90%; max-width: 650px; border-radius: 30px; border: 1px solid var(--border); text-align: center; }
         .admin-lock { text-align: center; padding: 100px 0; opacity: 0.05; cursor: pointer; }
@@ -157,14 +147,14 @@
                 <tr><th>Jugador</th><th>Nivel</th><th>Resultado</th></tr>
             </thead>
             <tbody id="recentRecordsBody">
-                <tr><td colspan="3" style="color:#222; font-size:0.6rem; padding:30px;">Sincronizando registros...</td></tr>
+                <tr><td colspan="3" style="color:#222; font-size:0.6rem; padding:30px;">Cargando registros...</td></tr>
             </tbody>
         </table>
     </section>
 
     <section class="status-tracker">
         <h2 style="color:var(--accent); font-size: 0.9rem; letter-spacing: 2px;">PERFIL DE PRESTIGIO</h2>
-        <input type="text" id="checkInput" placeholder="Busca tu Nickname...">
+        <input type="text" id="checkInput" placeholder="Nickname exacto...">
         <button class="btn-scully" style="width:100%; justify-content:center; border-radius:15px;" onclick="checkStatus()">CONSULTAR PERFIL</button>
         <div id="statusDisplay" style="margin-top:25px;"></div>
     </section>
@@ -173,8 +163,8 @@
 
     <section class="form-section" id="submit">
         <div class="glass-form">
-            <h2 style="margin-top:0; color:var(--accent); text-align:center; letter-spacing:2px;">NUEVO ENVÍO</h2>
-            <input type="text" id="recPlayer" placeholder="Nombre de Usuario">
+            <h2 style="margin-top:0; color:var(--accent); text-align:center; letter-spacing:2px;">ENVIAR RÉCORD</h2>
+            <input type="text" id="recPlayer" placeholder="Nickname">
             <select id="recLevel"><option value="">-- Seleccionar Nivel --</option></select>
             <input type="text" id="recLink" placeholder="Link Video YouTube">
             <input type="text" id="recRaw" placeholder="Link RAW (Google Drive)">
@@ -185,9 +175,17 @@
                 <option value="es">España 🇪🇸</option><option value="mx">México 🇲🇽</option>
                 <option value="ar">Argentina 🇦🇷</option><option value="cl">Chile 🇨🇱</option>
                 <option value="co">Colombia 🇨🇴</option><option value="pe">Perú 🇵🇪</option>
-                <option value="ve">Venezuela 🇻🇪</option><option value="uy">Uruguay 🇺🇾</option>
+                <option value="ve">Venezuela 🇻🇪</option>
             </select>
             <button class="btn-scully" style="width:100%; background:var(--accent); color:#000; border:none; justify-content:center; font-weight:800;" onclick="submitRecord()">SUBIR RÉCORD</button>
+        </div>
+
+        <div class="glass-form" style="margin-top:40px; border-color:var(--blue);">
+            <h2 style="margin-top:0; color:var(--blue); text-align:center; letter-spacing:2px;">CAMBIAR FOTO DE PERFIL</h2>
+            <p style="font-size:0.65rem; color:#555; text-align:center; margin-bottom:20px;">Tu foto debe ser aprobada por el staff para evitar contenido explícito.</p>
+            <input type="text" id="pfpNick" placeholder="Tu Nickname">
+            <input type="text" id="pfpUrl" placeholder="Link directo de la imagen (URL)">
+            <button class="btn-scully" style="width:100%; border-color:var(--blue); color:var(--blue); justify-content:center;" onclick="submitPFP()">SOLICITAR CAMBIO</button>
         </div>
     </section>
 
@@ -197,24 +195,28 @@
         <div class="admin-layout">
             <div class="admin-col">
                 <p style="font-size:0.5rem; color:#444; font-weight:bold;">NIVELES</p>
-                <input type="text" id="lvlName" placeholder="Nombre"><input type="text" id="lvlYT" placeholder="ID YouTube"><input type="text" id="lvlFirst" placeholder="First Victor"><input type="number" id="lvlPos" placeholder="Posición">
-                <button class="btn-scully" style="width:100%; justify-content:center; font-size:0.6rem;" onclick="saveLevel()">Publicar</button>
+                <input type="text" id="lvlName" placeholder="Nombre"><input type="text" id="lvlYT" placeholder="ID YT"><input type="text" id="lvlFirst" placeholder="First Victor"><input type="number" id="lvlPos" placeholder="Posición">
+                <button class="btn-scully" style="width:100%; justify-content:center; font-size:0.5rem;" onclick="saveLevel()">Publicar</button>
             </div>
             <div class="admin-col">
-                <p style="font-size:0.5rem; color:var(--green); font-weight:bold;">MODERACIÓN</p>
+                <p style="font-size:0.5rem; color:var(--green); font-weight:bold;">RECORDS</p>
                 <div id="submissionsList" class="admin-list-scroll"></div>
             </div>
             <div class="admin-col">
-                <p style="font-size:0.5rem; color:var(--red); font-weight:bold;">BANEOS</p>
-                <input type="text" id="banUser" placeholder="Nick"><button class="btn-scully" style="width:100%; border-color:var(--red); color:var(--red); font-size:0.6rem;" onclick="banPlayer()">Banear</button>
+                <p style="font-size:0.5rem; color:var(--blue); font-weight:bold;">PFPS PENDIENTES</p>
+                <div id="pfpSubList" class="admin-list-scroll"></div>
+            </div>
+            <div class="admin-col">
+                <p style="font-size:0.5rem; color:var(--red); font-weight:bold;">BANS</p>
+                <input type="text" id="banUser" placeholder="Nick"><button class="btn-scully" style="width:100%; border-color:var(--red); color:var(--red); font-size:0.5rem;" onclick="banPlayer()">Banear</button>
                 <div id="banList" class="admin-list-scroll" style="font-size:0.5rem; margin-top:10px;"></div>
             </div>
             <div class="admin-col">
-                <p style="font-size:0.5rem; color:var(--blue); font-weight:bold;">MARQUESINA</p>
+                <p style="font-size:0.5rem; color:var(--yellow); font-weight:bold;">MARQUESINA</p>
                 <div id="adminLogList" class="admin-list-scroll"></div>
             </div>
             <div class="admin-col">
-                <p style="font-size:0.5rem; color:var(--yellow); font-weight:bold;">HISTORIAL PÚBLICO</p>
+                <p style="font-size:0.5rem; color:#666; font-weight:bold;">HISTORIAL</p>
                 <div id="adminHistoryList" class="admin-list-scroll"></div>
             </div>
         </div>
@@ -223,14 +225,13 @@
     <div id="ruletaModal" class="modal">
         <div class="modal-content">
             <h2 style="color:var(--accent);">RULETA SCULLY 🎲</h2>
-            <p style="font-size:0.7rem; color:#666;">¿Qué nivel deberías pasarte hoy?</p>
             <div id="ruletaText" class="ruleta-result">---</div>
-            <button class="btn-scully" style="width:100%; justify-content:center;" onclick="spinRoulette()">GIRAR DE NUEVO</button>
-            <button class="btn-scully" style="width:100%; margin-top:10px; justify-content:center; border:none; background:transparent; color:#444;" onclick="closeRuleta()">CERRAR</button>
+            <button class="btn-scully" style="width:100%; justify-content:center;" onclick="spinRoulette()">GIRAR</button>
+            <button class="btn-scully" style="width:100%; margin-top:10px; border:none; background:transparent; color:#444;" onclick="closeRuleta()">CERRAR</button>
         </div>
     </div>
 
-    <div id="levelModal" class="modal"><div class="modal-content"><span onclick="closeM()" style="float:right; cursor:pointer; font-size:1.5rem;">&times;</span><div id="modal-body"></div></div></div>
+    <div id="levelModal" class="modal"><div class="modal-content"><span onclick="closeM()" style="float:right; cursor:pointer;">&times;</span><div id="modal-body"></div></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
@@ -254,37 +255,45 @@
                 renderBanList(fullData.bans || {});
                 renderAdminLogs(fullData.logs || {});
                 renderAdminHistory(fullData.history || {});
+                renderPFPModeration(fullData.pfp_requests || {});
             }
         });
 
-        // 1. RULETA SUTIL
-        function spinRoulette() {
-            const lvls = fullData.levels || [];
-            if(lvls.length === 0) return alert("No hay niveles cargados.");
-            document.getElementById('ruletaModal').style.display = "block";
-            const res = document.getElementById('ruletaText');
-            res.innerText = "GIRANDO...";
-            let count = 0;
-            const interval = setInterval(() => {
-                res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name;
-                count++;
-                if(count > 15) {
-                    clearInterval(interval);
-                    res.style.color = "var(--green)";
-                    setTimeout(() => { res.style.color = "var(--accent)"; }, 1500);
-                }
-            }, 80);
+        // 1. SISTEMA PFP MODERACIÓN
+        function submitPFP() {
+            const n = document.getElementById('pfpNick').value.trim();
+            const u = document.getElementById('pfpUrl').value.trim();
+            if(!n || !u) return alert("Faltan datos.");
+            db.ref('pfp_requests').push({ nick: n, url: u });
+            alert("Solicitud enviada al Staff.");
         }
-        function closeRuleta() { document.getElementById('ruletaModal').style.display = "none"; }
 
-        // 2. GESTIÓN ADMIN (LOGS Y HISTORIAL)
-        function deleteLog(k) { if(confirm("¿Borrar noticia?")) db.ref('logs/' + k).remove(); }
-        function deleteHistory(k) { if(confirm("¿Borrar del historial público?")) db.ref('history/' + k).remove(); }
+        function renderPFPModeration(reqs) {
+            document.getElementById('pfpSubList').innerHTML = Object.entries(reqs).map(([k,v]) => `
+                <div class="admin-sub-card">
+                    <b>${v.nick}</b><br>
+                    <img src="${v.url}" style="width:50px; height:50px; border-radius:50%; margin:5px 0; object-fit:cover; border:1px solid #333;"><br>
+                    <button onclick="approvePFP('${k}')" style="background:var(--green); color:#000; border:none; padding:4px 8px; border-radius:4px; font-size:0.5rem; cursor:pointer;">APROBAR</button>
+                    <button onclick="deletePFPRequest('${k}')" style="background:var(--red); color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:0.5rem; cursor:pointer;">RECHAZAR</button>
+                </div>`).join("");
+        }
 
-        function renderAdminLogs(logs) { document.getElementById('adminLogList').innerHTML = Object.entries(logs).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.msg}</span><i class="fas fa-trash" onclick="deleteLog('${k}')"></i></div>`).join(""); }
-        function renderAdminHistory(hist) { document.getElementById('adminHistoryList').innerHTML = Object.entries(hist).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.player} -> ${v.level}</span><i class="fas fa-trash" onclick="deleteHistory('${k}')"></i></div>`).join(""); }
+        function approvePFP(key) {
+            const req = fullData.pfp_requests[key];
+            db.ref('players').once('value', s => {
+                let players = Object.values(s.val() || {});
+                let idx = players.findIndex(p => p.name.toLowerCase() === req.nick.toLowerCase());
+                if(idx > -1) {
+                    players[idx].pfp = req.url;
+                    db.ref('players').set(players);
+                    db.ref('pfp_requests/' + key).remove();
+                    alert("PFP Actualizada para " + req.nick);
+                } else { alert("Jugador no encontrado en el ranking."); }
+            });
+        }
+        function deletePFPRequest(k) { if(confirm("¿Rechazar esta imagen?")) db.ref('pfp_requests/' + k).remove(); }
 
-        // 3. STATUS TRACKER SIN RANGOS TEXTUALES
+        // 2. STATUS TRACKER CON IDENTIDAD
         function checkStatus() {
             const nick = document.getElementById('checkInput').value.trim().toLowerCase();
             if(!nick) return;
@@ -293,7 +302,9 @@
             const playerData = Object.values(fullData.players || {}).find(p => p.name.toLowerCase() === nick);
             
             let pts = 0; let badges = [];
+            let pfp = "https://i.imgur.com/8pw98K4.png"; // Default
             if(playerData) {
+                pfp = playerData.pfp || pfp;
                 playerData.completions?.forEach(c => {
                     const idx = fullData.levels.findIndex(l => l.name.toLowerCase() === c.level.toLowerCase());
                     if(idx > -1) {
@@ -306,8 +317,9 @@
             }
 
             let html = `
-                <div style="background:rgba(255,102,0,0.1); padding:20px; border-radius:20px; border:1px solid var(--accent); margin-bottom:20px;">
-                    <h3 style="margin:0; color:#fff; letter-spacing:1px;">${nick.toUpperCase()}</h3>
+                <div style="background:rgba(255,102,0,0.1); padding:25px; border-radius:25px; border:1px solid var(--accent); margin-bottom:20px;">
+                    <img src="${pfp}" class="user-pfp-display">
+                    <h3 style="margin:0; color:#fff;">${nick.toUpperCase()}</h3>
                     <div style="margin:15px 0;"><span class="xp-tag">XP LVL ${Math.floor(pts / 10)}</span></div>
                     <div>${[...new Set(badges)].map(b => `<span class="badge-icon">${b}</span>`).join("")}</div>
                 </div>`;
@@ -316,12 +328,10 @@
             document.getElementById('statusDisplay').innerHTML = html || "<p style='color:#444;'>Sin registros.</p>";
         }
 
-        // 4. AUTOMATIZACIÓN Y LÓGICA CORE
+        // 3. AUTOMATIZACIÓN ADMIN
         function setStatus(key, newStatus) {
             const sub = fullData.submissions[key];
-            const staff = prompt("Nombre Staff:");
-            if(!staff) return;
-
+            const staff = prompt("Staff:"); if(!staff) return;
             if(newStatus === 'Aceptado') {
                 db.ref('players').once('value', s => {
                     let p = Object.values(s.val() || {});
@@ -333,42 +343,52 @@
                     db.ref('players').set(p);
                 });
                 db.ref('history').push({...sub, status: 'Aceptado'});
-                db.ref('logs').push({ type: 'accept', msg: `✅ ${sub.player} -> ${sub.level} ACEPTADO POR ${staff}` });
+                db.ref('logs').push({ type: 'accept', msg: `✅ ${sub.player} -> ${sub.level} POR ${staff}` });
                 db.ref('submissions/' + key).remove();
             } else if(newStatus === 'Rechazado') {
-                const r = prompt("Razón?");
                 db.ref('history').push({...sub, status: 'Rechazado'});
-                db.ref('logs').push({ type: 'reject', msg: `❌ ${sub.player} -> ${sub.level} RECHAZADO POR ${staff} (${r})` });
+                db.ref('logs').push({ type: 'reject', msg: `❌ ${sub.player} RECHAZADO POR ${staff}` });
                 db.ref('submissions/' + key).remove();
             } else {
                 db.ref('submissions/' + key + '/status').set(newStatus);
-                db.ref('logs').push({ type: 'info', msg: `📡 ${sub.player} -> ${sub.level} EN ${newStatus.toUpperCase()} (${staff})` });
+                db.ref('logs').push({ type: 'info', msg: `📡 ${sub.player} EN ${newStatus.toUpperCase()}` });
             }
         }
 
-        function submitRecord() {
-            const lName = document.getElementById('recLevel').value;
-            const raw = document.getElementById('recRaw').value;
-            const opt = document.getElementById('rawOptional').checked;
-            const idx = fullData.levels.findIndex(lvl => lvl.name === lName);
-            if (idx <= 99 && idx !== -1 && !raw.includes("drive.google.com")) return alert("¡TOP 100! El RAW es obligatorio.");
-            else if (!opt && !raw.includes("drive.google.com") && idx > 99) return alert("Pon el RAW o marca la casilla.");
-            db.ref('submissions').push({ player: document.getElementById('recPlayer').value, level: lName, link: document.getElementById('recLink').value, raw: raw || "N/A", country: document.getElementById('recCountry').value, status: "Pendiente" });
-            alert("¡Enviado con éxito!");
+        // 4. FUNCIONES CORE & HUB
+        function spinRoulette() {
+            const lvls = fullData.levels || []; if(lvls.length === 0) return;
+            document.getElementById('ruletaModal').style.display = "block";
+            const res = document.getElementById('ruletaText'); res.innerText = "GIRANDO...";
+            let count = 0;
+            const interval = setInterval(() => {
+                res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name;
+                count++; if(count > 15) { clearInterval(interval); res.style.color = "var(--green)"; setTimeout(()=>res.style.color="var(--accent)",1000); }
+            }, 80);
         }
-
-        function renderThrone(lvls) { if(!lvls || lvls.length === 0) return; const top1 = lvls[0]; document.getElementById('throneDisplay').innerHTML = `<div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95), rgba(0,0,0,0.4)), url('https://img.youtube.com/vi/${top1.id}/maxresdefault.jpg');"><div class="throne-info"><div class="throne-badge">TOP #1 - FINAL BOSS</div><h2>${top1.name}</h2><p style="color:var(--accent); font-size:0.8rem; font-weight:800;">FIRST VICTOR: <span style="color:#fff;">${top1.first || 'Nadie'}</span></p><button class="btn-scully" style="padding:10px 20px; font-size:0.6rem;" onclick="openDetails(0)">VER NIVEL</button></div></div>`; }
-        function renderRecentActivity(history) { const entries = Object.values(history).reverse().slice(0, 5); if(entries.length === 0) return; document.getElementById('recentRecordsBody').innerHTML = entries.map(e => `<tr><td><b>${e.player}</b></td><td>${e.level}</td><td class="${e.status==='Aceptado'?'res-accepted':'res-rejected'}">${e.status.toUpperCase()}</td></tr>`).join(""); }
+        function closeRuleta() { document.getElementById('ruletaModal').style.display = "none"; }
+        function deleteLog(k) { if(confirm("¿Borrar?")) db.ref('logs/' + k).remove(); }
+        function deleteHistory(k) { if(confirm("¿Borrar?")) db.ref('history/' + k).remove(); }
+        function renderAdminLogs(logs) { document.getElementById('adminLogList').innerHTML = Object.entries(logs).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.msg}</span><i class="fas fa-trash" onclick="deleteLog('${k}')"></i></div>`).join(""); }
+        function renderAdminHistory(h) { document.getElementById('adminHistoryList').innerHTML = Object.entries(h).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.player}</span><i class="fas fa-trash" onclick="deleteHistory('${k}')"></i></div>`).join(""); }
+        function renderThrone(lvls) { if(!lvls || lvls.length === 0) return; const top1 = lvls[0]; document.getElementById('throneDisplay').innerHTML = `<div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95), rgba(0,0,0,0.4)), url('https://img.youtube.com/vi/${top1.id}/maxresdefault.jpg');"><div class="throne-info"><div class="throne-badge">TOP #1</div><h2>${top1.name}</h2><p style="color:var(--accent); font-size:0.8rem; font-weight:800;">FIRST VICTOR: <span style="color:#fff;">${top1.first || 'Nadie'}</span></p><button class="btn-scully" style="padding:10px 20px; font-size:0.6rem;" onclick="openDetails(0)">VER NIVEL</button></div></div>`; }
+        function renderRecentActivity(h) { const entries = Object.values(h).reverse().slice(0, 5); if(entries.length === 0) return; document.getElementById('recentRecordsBody').innerHTML = entries.map(e => `<tr><td><b>${e.player}</b></td><td>${e.level}</td><td class="${e.status==='Aceptado'?'res-accepted':'res-rejected'}">${e.status.toUpperCase()}</td></tr>`).join(""); }
         function updateTicker(l) { const c = document.getElementById('pulse-content'); const e = Object.values(l).reverse().slice(0,10); if(e.length===0){c.innerHTML=`<span class="log-item">🚀 bienvenido scully miembro</span>`; return;} c.innerHTML = e.map(x => `<span class="log-item ${x.type==='accept'?'log-accept':x.type==='info'?'log-info':'log-reject'}">${x.msg}</span>`).join(""); }
         function renderLevels(n) { const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); document.getElementById('list-container').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0; font-size:0.9rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.7rem; margin:0;">+${c(i)} PTS</p></div><div style="position:absolute; right:15px; opacity:0.05; font-size:2rem; font-weight:900;">#${i+1}</div></div>`).join(""); }
         function renderSubmissions(s) { document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k, x]) => `<div class="admin-sub-card"><b>${x.player}</b> -> ${x.level} <div class="proof-links"><a href="${x.link}" target="_blank">YT</a><a href="${x.raw}" target="_blank">RAW</a></div><div class="admin-btns"><button onclick="setStatus('${k}','En revisión')">REV</button><button onclick="setStatus('${k}','Aceptado')" style="color:var(--green)">ACEP</button></div></div>`).join(""); }
-        function openDetails(idx) { const l = fullData.levels[idx]; const victors = Object.values(fullData.players || {}).filter(v => (v.completions || []).some(c => c.level === l.name)); document.getElementById('modal-body').innerHTML = `<h1>${l.name}</h1><p style="font-size:0.75rem;">FIRST VICTOR: <b style="color:#fff;">${l.first || 'Nadie'}</b></p><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:15px; margin-top:15px;"></iframe><div style="margin-top:15px; text-align:left;"><small>VICTORS REGISTRADOS:</small>${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111; font-size:0.8rem;">${v.name}</div>`).join("")}</div>`; document.getElementById('levelModal').style.display = "block"; }
+        function submitRecord() {
+            const lName = document.getElementById('recLevel').value; const raw = document.getElementById('recRaw').value; const opt = document.getElementById('rawOptional').checked; const idx = fullData.levels.findIndex(lvl => lvl.name === lName);
+            if (idx <= 99 && idx !== -1 && !raw.includes("drive.google.com")) return alert("RAW OBLIGATORIO TOP 100.");
+            db.ref('submissions').push({ player: document.getElementById('recPlayer').value, level: lName, link: document.getElementById('recLink').value, raw: raw || "N/A", country: document.getElementById('recCountry').value, status: "Pendiente" });
+            alert("¡Enviado!");
+        }
         function saveLevel() { const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const f = document.getElementById('lvlFirst').value; const p = parseInt(document.getElementById('lvlPos').value)-1; db.ref('levels').once('value', s => { let l = s.val() || []; l = l.filter(x => x.name.toLowerCase() !== n.toLowerCase()); l.splice(p >= 0 ? p : l.length, 0, { name: n, id: y, first: f }); db.ref('levels').set(l); alert("¡Nivel Publicado!"); }); }
         function banPlayer() { const n = document.getElementById('banUser').value.trim(); const staff = prompt("Staff?"); db.ref('bans').push(n); db.ref('logs').push({ type: 'reject', msg: `⛔ ${n} BANEADO POR ${staff || 'ADMIN'}` }); }
         function renderBanList(b) { document.getElementById('banList').innerHTML = "Baneados: " + Object.values(b).join(", "); }
-        function toggleAuth() { const p = prompt("Acceso Codificador:"); if(p === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
+        function toggleAuth() { const p = prompt("Acceso:"); if(p === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
         function closeM() { document.getElementById('levelModal').style.display = "none"; }
         function updateLevelSelect(n) { document.getElementById('recLevel').innerHTML = '<option value="">-- Nivel --</option>' + n.map(l => `<option value="${l.name}">${l.name}</option>`).join(""); }
+        function openDetails(idx) { const l = fullData.levels[idx]; const p = Object.values(fullData.players || {}); const victors = p.filter(v => (v.completions || []).some(c => c.level === l.name)); document.getElementById('modal-body').innerHTML = `<h1>${l.name}</h1><p style="font-size:0.75rem;">FIRST VICTOR: <b style="color:#fff;">${l.first || 'Nadie'}</b></p><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:15px; margin-top:15px;"></iframe><div style="margin-top:15px; text-align:left;"><small>VICTORS REGISTRADOS:</small>${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111; font-size:0.8rem;">${v.name}</div>`).join("")}</div>`; document.getElementById('levelModal').style.display = "block"; }
     </script>
 </body>
 </html>
