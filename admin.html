@@ -46,6 +46,7 @@
         input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(255,102,0,0.2); }
         button { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; border: none; }
         button:hover { filter: brightness(1.15); transform: scale(1.02); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
         
         .btn-primary { background: var(--accent); color: #000; }
         .btn-blue { background: rgba(102,252,241,0.1); color: var(--blue); border: 1px solid var(--blue); }
@@ -172,7 +173,7 @@
 
         <div class="admin-panel" style="border-color: rgba(102,252,241,0.3);">
             <div class="panel-header" style="background: rgba(102,252,241,0.05);">
-                <h2 style="color:var(--blue);"><i class="fab fa-youtube"></i> 9. Auditoría YT</h2>
+                <h2 style="color:var(--blue);"><i class="fab fa-youtube"></i> 9. Auditoría YT Manual</h2>
             </div>
             <div class="panel-content">
                 <p style="font-size:0.75rem; color:#888; margin-top:0; margin-bottom:15px;">Pega dos links de YouTube para analizar exactamente cuál se subió primero en los servidores de Google.</p>
@@ -198,19 +199,17 @@
         const db = firebase.database();
         let fullData = {};
 
-        // API KEY YOUTUBE
+        // 🔑 API KEY YOUTUBE
         const YT_API_KEY = "AIzaSyCLeUZ_mJxJHuCCLr-GMkMdy0q-JHTUi7w";
 
         // 2. ESCUCHA DE DATOS EN TIEMPO REAL
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {}; 
             
-            // Forzar niveles a Array para evitar corrupción
             let lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels : Object.values(fullData.levels)) : [];
             lvls = lvls.filter(l => l && l.name);
             fullData.levels = lvls;
 
-            // Renderizadores de Interfaz
             renderAdminLevelsList(lvls); 
             renderSubmissions(fullData.submissions || {}); 
             renderAdminUserList(Object.values(fullData.players || {})); 
@@ -222,7 +221,7 @@
         });
 
         // ==========================================
-        // MOTOR YOUTUBE API (OPCIÓN A Y B)
+        // FUNCIONES YOUTUBE API
         // ==========================================
         function extractYTId(url) {
             if(!url) return null;
@@ -240,6 +239,9 @@
             return null;
         }
 
+        // ==========================================
+        // PANEL 9: AUDITORÍA MANUAL YT (OPCIÓN B)
+        // ==========================================
         async function analyzeYT() {
             const v1 = extractYTId(document.getElementById('audit1').value);
             const v2 = extractYTId(document.getElementById('audit2').value);
@@ -344,7 +346,7 @@
                 let lvls = [...fullData.levels];
                 if(lvls.length === 0) { btn.innerHTML = originalText; return alert("Lista vacía."); }
                 
-                db.ref('levels_backup').set(lvls); // Respaldo
+                db.ref('levels_backup').set(lvls); 
                 lvls.sort((a, b) => {
                     let posA = aredlMap.has(a.name.toLowerCase().trim()) ? aredlMap.get(a.name.toLowerCase().trim()) : 999999;
                     let posB = aredlMap.has(b.name.toLowerCase().trim()) ? aredlMap.get(b.name.toLowerCase().trim()) : 999999;
@@ -367,7 +369,7 @@
         }
 
         // ==========================================
-        // PANEL 2: MODERACIÓN Y AUTO-FIRST VICTOR
+        // PANEL 2: MODERACIÓN Y AUTO-FIRST VICTOR (OPCIÓN A)
         // ==========================================
         function renderSubmissions(submissionsObj) { 
             let html = "";
@@ -383,7 +385,7 @@
                         <a href="${sub.raw}" target="_blank" class="btn-proof proof-raw"><i class="fab fa-google-drive"></i> RAW</a>
                     </div>
                     <div class="flex-row">
-                        <button onclick="setStatus('${entries[i][0]}','Aceptado')" class="btn-green"><i class="fas fa-check"></i></button>
+                        <button id="btn-ok-${entries[i][0]}" onclick="setStatus('${entries[i][0]}','Aceptado')" class="btn-green"><i class="fas fa-check"></i></button>
                         <button onclick="setStatus('${entries[i][0]}','Rechazado')" class="btn-red"><i class="fas fa-times"></i></button>
                     </div>
                 </div>`;
@@ -397,43 +399,75 @@
             if(!staff) return;
             
             if(status === 'Aceptado') { 
-                // Auditoría Automática YT (OPCIÓN A)
+                
+                // Cambiar el botón visualmente para que sepas que está procesando la API
+                const btnOk = document.getElementById(`btn-ok-${key}`);
+                if(btnOk) {
+                    btnOk.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    btnOk.disabled = true;
+                }
+
+                // --- INICIO DE LA OPCIÓN A: AUTO-FIRST VICTOR ---
                 try {
                     const subVid = extractYTId(sub.link);
                     const lvlIdx = fullData.levels.findIndex(l => l.name === sub.level);
+                    
                     if (lvlIdx > -1 && subVid) {
                         const lvlVid = fullData.levels[lvlIdx].id;
+                        
+                        // Validar si el nivel ya tiene un video guardado para comparar
                         if(lvlVid && subVid !== lvlVid) {
                             const subDateStr = await getYTDate(subVid);
                             const lvlDateStr = await getYTDate(lvlVid);
-                            if (subDateStr && lvlDateStr && (new Date(subDateStr) < new Date(lvlDateStr))) {
-                                if(confirm(`⚠️ ¡ALERTA DE FIRST VICTOR!\nEl video de ${sub.player} es más antiguo que el actual.\n\n¿Coronar a ${sub.player} automáticamente como el First Victor de ${sub.level}?`)) {
-                                    db.ref(`levels/${lvlIdx}/first`).set(sub.player);
-                                    db.ref(`levels/${lvlIdx}/id`).set(subVid);
+                            
+                            if (subDateStr && lvlDateStr) {
+                                const subDate = new Date(subDateStr);
+                                const lvlDate = new Date(lvlDateStr);
+                                
+                                // Si el video nuevo es MÁS VIEJO que el del First Victor actual
+                                if (subDate < lvlDate) {
+                                    if(confirm(`⚠️ ¡ALERTA DE FIRST VICTOR!\n\nEl video que envió ${sub.player} es más antiguo que el del verificador actual.\n\nVideo de ${sub.player}: ${subDate.toLocaleString()}\nVideo Actual: ${lvlDate.toLocaleString()}\n\n¿Quieres coronar automáticamente a ${sub.player} como el nuevo First Victor de ${sub.level}?`)) {
+                                        // Actualiza la base de datos con el nuevo First Victor
+                                        db.ref(`levels/${lvlIdx}/first`).set(sub.player);
+                                        db.ref(`levels/${lvlIdx}/id`).set(subVid);
+                                        alert(`¡Actualizado! ${sub.player} es el nuevo First Victor.`);
+                                    }
                                 }
                             }
                         }
                     }
-                } catch(e) { console.log("Auditoría auto fallida:", e); }
+                } catch(e) { 
+                    console.error("Auditoría automática falló (Opción A):", e); 
+                }
+                // --- FIN DE LA OPCIÓN A ---
 
+                // Guarda el récord de forma normal en el perfil del jugador
                 db.ref('players').once('value', v => { 
                     let p = Object.values(v.val() || {}); 
                     let i = p.findIndex(u => u.name.toLowerCase() === sub.player.toLowerCase()); 
-                    if(i > -1) { if(!p[i].completions) p[i].completions = []; p[i].completions.push({level: sub.level, link: sub.link}); } 
-                    else { p.push({ name: sub.player, country: sub.country || 'es', completions: [{level: sub.level, link: sub.link}] }); } 
+                    if(i > -1) { 
+                        if(!p[i].completions) p[i].completions = []; 
+                        p[i].completions.push({level: sub.level, link: sub.link}); 
+                    } 
+                    else { 
+                        p.push({ name: sub.player, country: sub.country || 'es', completions: [{level: sub.level, link: sub.link}] }); 
+                    } 
                     db.ref('players').set(p); 
                 }); 
+                
                 db.ref('history').push({...sub, status: 'Aceptado'}); 
                 db.ref('logs').push({type: 'accept', msg: `✅ ${sub.player} -> ${sub.level} (${staff})`}); 
             } else {
                 db.ref('history').push({...sub, status: 'Rechazado'}); 
                 db.ref('logs').push({type: 'reject', msg: `❌ ${sub.player} RECHAZADO`}); 
             }
+            
+            // Eliminar de las subidas pendientes sin importar si se aceptó o rechazó
             db.ref('submissions/' + key).remove();
         }
 
         // ==========================================
-        // PANELES 3 AL 8: PLAYERS, MARKET, ETC.
+        // PANELES 3 AL 8: PLAYERS, MARKET, PFPS, LOGS
         // ==========================================
         function renderAdminUserList(p) { 
             let html = "";
