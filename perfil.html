@@ -53,6 +53,8 @@
         .claim-box h3 { color: #fff; font-size: 1.8rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: -1px; }
         .claim-box h3 i { color: var(--accent); }
         .claim-box p { color: #888; font-size: 0.9rem; margin-bottom: 30px; line-height: 1.6; }
+
+        .staff-code-area { border-top: 1px solid var(--border); margin-top: 20px; padding-top: 20px; }
         
         #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 15px; padding: 15px 20px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; transform: translate(-50%, 50px); opacity: 0; }
         #scullyToast.show { visibility: visible; transform: translate(-50%, 0); opacity: 1; }
@@ -80,7 +82,7 @@
                 <input type="text" id="claimNick" placeholder="Tu Nick exacto en la lista..." style="margin-bottom:15px; text-align:center;">
                 <input type="text" id="claimProof" placeholder="Link de tu YouTube o Twitter..." style="margin-bottom:20px; text-align:center;">
                 
-                <div style="border-top: 1px solid var(--border); margin-top: 20px; padding-top: 20px;">
+                <div class="staff-code-area">
                     <p style="font-size:0.75rem; color:var(--yellow); font-weight:800; margin-bottom:10px;"><i class="fas fa-key"></i> INGRESO DE STAFF AUTORIZADO</p>
                     <input type="password" id="staffCodeClaim" placeholder="Código de Staff (Opcional)" style="margin-bottom:20px; text-align:center; border-color:var(--yellow); background:rgba(255,255,0,0.05);">
                 </div>
@@ -123,10 +125,7 @@
                 <h2 style="color:var(--yellow); justify-content:center; border:none; padding:0; margin-bottom:15px;"><i class="fas fa-shield-alt" style="color:var(--yellow);"></i> Autorización de Equipo Staff</h2>
                 
                 <div id="staffInputArea">
-                    <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">Si fuiste ascendido al equipo de moderación, ingresa tu código secreto aquí para habilitar tu consola administrativa.</p>
-                    <input type="password" id="staffCodeProfile" placeholder="Ingresa tu Código de Staff..." style="margin-bottom:15px; border-color:var(--yellow); background:rgba(255,255,0,0.05); text-align:center; font-weight:bold; letter-spacing:2px;">
-                    <button onclick="upgradeToStaff()" class="btn-save" style="background:var(--yellow); color:#000;"><i class="fas fa-key"></i> ACTIVAR RANGO STAFF</button>
-                </div>
+                    </div>
             </div>
 
         </div>
@@ -155,7 +154,6 @@
         let myProfileData = null;
         let myPlayerIndex = -1;
 
-        // LISTA DE CÓDIGOS OFICIALES
         const STAFF_CODES = {
             "ADMIN-SCORE-777": { nick: "score", role: "admin" },
             "ADMIN-AWRQ-888": { nick: "awrqsdt", role: "admin" },
@@ -189,21 +187,28 @@
                     document.getElementById('viewClaim').style.display = "none";
                     document.getElementById('viewProfile').style.display = "block";
                     
-                    // Llenar datos de texto
                     document.getElementById('bioInput').value = myProfileData.bio || "";
                     document.getElementById('ytInput').value = myProfileData.socials?.yt || "";
                     document.getElementById('twInput').value = myProfileData.socials?.tw || "";
                     document.getElementById('dcInput').value = myProfileData.socials?.dc || "";
 
-                    // Lógica visual del Rango Staff
+                    // LÓGICA VISUAL DEL RANGO Y BOTÓN DE CHAT
                     if(myProfileData.role) {
                         let colorHex = myProfileData.role === 'admin' ? '#ff6600' : '#66fcf1';
                         let icon = myProfileData.role === 'admin' ? 'fa-crown' : 'fa-shield-alt';
+                        
                         document.getElementById('staffInputArea').innerHTML = `
                             <div class="staff-badge" style="border-color:${colorHex}; color:${colorHex}; background:rgba(0,0,0,0.5);">
                                 <i class="fas ${icon}"></i> RANGO ACTIVO: ${myProfileData.role.toUpperCase()}
                             </div>
-                            <p style="color:#888; font-size:0.75rem; margin-top:15px;">Tu cuenta tiene permisos elevados. Vuelve al Hub para entrar a tu consola.</p>
+                            <p style="color:#888; font-size:0.75rem; margin-top:15px;">Tu cuenta está encriptada y protegida. Tienes acceso a los canales de alta seguridad.</p>
+                            <a href="chat.html" class="btn-save" style="background:${colorHex}; color:#000; margin-top:20px; text-decoration:none;"><i class="fas fa-comments"></i> ENTRAR AL CHAT DEL STAFF</a>
+                        `;
+                    } else {
+                        document.getElementById('staffInputArea').innerHTML = `
+                            <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">Si fuiste ascendido al equipo de moderación, ingresa tu código secreto aquí para habilitar tu consola administrativa.</p>
+                            <input type="password" id="staffCodeProfile" placeholder="Ingresa tu Código de Staff..." style="margin-bottom:15px; border-color:var(--yellow); background:rgba(255,255,0,0.05); text-align:center; font-weight:bold; letter-spacing:2px;">
+                            <button onclick="upgradeToStaff()" class="btn-save" style="background:var(--yellow); color:#000;"><i class="fas fa-key"></i> ACTIVAR RANGO STAFF</button>
                         `;
                     }
                 } else {
@@ -213,17 +218,12 @@
             });
         }
 
-        // FUNCIÓN 1: Reclamar perfil (Y usar código si lo tiene en ese momento)
         function sendClaimRequest() {
             const nick = document.getElementById('claimNick').value.trim();
             const proof = document.getElementById('claimProof').value.trim();
             const staffCode = document.getElementById('staffCodeClaim').value.trim();
 
-            if(staffCode && STAFF_CODES[staffCode]) {
-                processStaffCode(staffCode);
-                return;
-            }
-
+            if(staffCode && STAFF_CODES[staffCode]) { processStaffCode(staffCode); return; }
             if(!nick || !proof) return showToast("Llena Nick y Prueba", true);
             
             db.ref('claim_requests').push({ email: currentUser.email, nick: nick, proof: proof }).then(() => {
@@ -232,59 +232,41 @@
             });
         }
 
-        // FUNCIÓN 2: Ascender cuenta existente usando la nueva caja del Perfil
         function upgradeToStaff() {
             const code = document.getElementById('staffCodeProfile').value.trim();
             if(!code) return showToast("Ingresa un código", true);
-            if(STAFF_CODES[code]) {
-                processStaffCode(code);
-            } else {
-                showToast("Código de Staff Inválido", true);
-            }
+            if(STAFF_CODES[code]) { processStaffCode(code); } else { showToast("Código de Staff Inválido", true); }
         }
 
-        // Lógica maestra de Inyección de Rango
         function processStaffCode(code) {
             const data = STAFF_CODES[code];
             db.ref('players').once('value', s => {
                 let pList = Object.values(s.val() || {});
                 let idx = pList.findIndex(x => x.name.toLowerCase() === data.nick.toLowerCase());
                 
-                if(idx > -1) {
-                    // El jugador ya existe, le ponemos el email y el rol
-                    pList[idx].email = currentUser.email;
-                    pList[idx].role = data.role;
-                } else {
-                    // El jugador no existía en la lista, lo creamos
-                    pList.push({ name: data.nick, email: currentUser.email, role: data.role, country: 'es' });
-                }
+                if(idx > -1) { pList[idx].email = currentUser.email; pList[idx].role = data.role; } 
+                else { pList.push({ name: data.nick, email: currentUser.email, role: data.role, country: 'es' }); }
 
-                db.ref('players').set(pList).then(() => {
-                    showToast(`¡Autorizado! Bienvenido al Staff, ${data.nick}.`);
-                });
+                db.ref('players').set(pList).then(() => { showToast(`¡Autorizado! Bienvenido al Staff, ${data.nick}.`); });
             });
         }
 
         function saveProfile() {
             if(myPlayerIndex === -1) return;
-            const bio = document.getElementById('bioInput').value;
-            const yt = document.getElementById('ytInput').value;
-            const tw = document.getElementById('twInput').value;
-            const dc = document.getElementById('dcInput').value;
-
-            db.ref(`players/${myPlayerIndex}/bio`).set(bio);
-            db.ref(`players/${myPlayerIndex}/socials`).set({ yt: yt, tw: tw, dc: dc })
-            .then(() => { showToast("Biografía y Redes Guardadas!"); });
+            db.ref(`players/${myPlayerIndex}/bio`).set(document.getElementById('bioInput').value);
+            db.ref(`players/${myPlayerIndex}/socials`).set({ 
+                yt: document.getElementById('ytInput').value, 
+                tw: document.getElementById('twInput').value, 
+                dc: document.getElementById('dcInput').value 
+            }).then(() => { showToast("Biografía y Redes Guardadas!"); });
         }
 
         function requestPFP() {
             if(myPlayerIndex === -1) return;
             const url = document.getElementById('pfpInput').value;
             if(!url) return showToast("Ingresa un link válido", true);
-
             db.ref('pfp_requests').push({ nick: myProfileData.name, url: url }).then(() => {
-                showToast("Solicitud PFP enviada al Staff");
-                document.getElementById('pfpInput').value = "";
+                showToast("Solicitud PFP enviada"); document.getElementById('pfpInput').value = "";
             });
         }
     </script>
