@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Scully List | Hub de Duelos & Ingeniería</title>
+    <title>The Scully List | Hub de Ingeniería & Personalización</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
-            --accent: #ff6600; --accent-grad: linear-gradient(135deg, #ff6600 0%, #ff9900 100%);
+            --accent: #ff6600; 
+            --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
             --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
             --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
             --green: #00ff66; --red: #ff3333; --blue: #00ccff; --purple: #cc00ff; --yellow: #ffff00;
@@ -16,13 +17,13 @@
 
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
 
-        /* COSMÉTICOS */
+        /* --- COSMÉTICOS Y ANIMACIONES --- */
         @keyframes rainbow { 0% { color: #ff0000; } 20% { color: #ff9900; } 40% { color: #ffff00; } 60% { color: #00ff00; } 80% { color: #00ffff; } 100% { color: #cc00ff; } }
         .cos-rainbow { animation: rainbow 3s linear infinite !important; font-weight: 800; }
-        .cos-fire { box-shadow: 0 0 20px #ff3300, inset 0 0 10px #ff3300 !important; border: 2px solid #ff3300 !important; }
-        .cos-electric { box-shadow: 0 0 20px #00ccff, inset 0 0 10px #00ccff !important; border: 2px solid #00ccff !important; }
+        .cos-fire { box-shadow: 0 0 20px #ff3300 !important; border: 2px solid #ff3300 !important; }
+        .cos-electric { box-shadow: 0 0 20px #00ccff !important; border: 2px solid #00ccff !important; }
 
-        /* 1. NOVEDADES */
+        /* 1. NOVEDADES (TICKER) */
         .news-ticker { background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); padding: 12px 0; font-size: 0.65rem; position: sticky; top: 0; z-index: 1000; overflow: hidden; display: flex; }
         .ticker-content { display: flex; white-space: nowrap; animation: ticker-scroll 45s linear infinite; }
         .log-item { margin-right: 100px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; gap: 8px; }
@@ -33,60 +34,57 @@
         .staff-bar { display: flex; justify-content: center; gap: 25px; padding: 15px; background: rgba(255,255,255,0.02); font-size: 0.6rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center; }
         .staff-item { display: flex; align-items: center; gap: 8px; color: #888; }
         .staff-item i { color: var(--accent); }
+        .staff-item b { color: #fff; }
         .tribute-item { color: #fff; font-weight: 800; gap: 5px; text-shadow: 0 0 10px rgba(255,255,255,0.4); }
 
+        /* 3. HEADER & NAV */
         header { padding: 60px 20px 20px; text-align: center; }
         h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 800; margin: 0; letter-spacing: -2px; }
         h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .slogan { font-size: 0.85rem; color: #777; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; }
-
-        .main-nav { margin-top: 35px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .main-nav { margin-top: 35px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center; }
         .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 14px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-        .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: 0 0 15px var(--accent); }
+        .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: var(--glow); }
 
-        /* 3. EL TRONO */
+        /* COLOR PICKER SUTIL */
+        .color-picker-wrapper { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 8px 15px; border-radius: 50px; border: 1px solid var(--border); }
+        #themeColor { cursor: pointer; border: none; background: none; width: 25px; height: 25px; }
+
+        /* 4. EL TRONO */
         .throne-section { width: 90%; max-width: 800px; margin: 40px auto; }
         .throne-card { background: linear-gradient(to right, rgba(0,0,0,0.95), rgba(255, 102, 0, 0.1)); background-size: cover; border-radius: 30px; padding: 40px; border: 2px solid var(--accent); box-shadow: var(--glow); display: flex; align-items: center; }
         .throne-badge { background: var(--accent); color: #000; padding: 4px 12px; border-radius: 50px; font-weight: 800; font-size: 0.65rem; margin-bottom: 10px; display: inline-block; }
 
-        /* 4. COMPARADOR VERSUS (NUEVO) */
-        .versus-section { width: 95%; max-width: 800px; margin: 60px auto; text-align: center; }
-        .versus-inputs { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+        /* 5. LISTA DE NIVELES (Grid Principal) */
+        .list-grid { width: 95%; max-width: 1200px; margin: 40px auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .level-card { background: var(--card-bg); border-radius: 20px; padding: 12px; display: flex; align-items: center; border: 1px solid var(--border); cursor: pointer; transition: 0.3s; position: relative; }
+        .level-card:hover { border-color: var(--accent); transform: scale(1.02); }
+        .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
+
+        /* 6. VERSUS & ACTIVIDAD */
+        .versus-section, .recent-section, .market-section { width: 95%; max-width: 850px; margin: 60px auto; }
         .versus-card { background: var(--card-bg); border: 2px solid var(--accent); border-radius: 30px; display: grid; grid-template-columns: 1fr 0.2fr 1fr; padding: 30px; align-items: center; }
         .v-player { text-align: center; }
-        .v-pfp { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; margin-bottom: 10px; }
-        .v-stat { font-size: 0.65rem; color: #777; text-transform: uppercase; margin: 5px 0; }
+        .v-pfp { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--accent); object-fit: cover; margin-bottom: 10px; }
+        .v-stat { font-size: 0.6rem; color: #777; text-transform: uppercase; margin: 4px 0; }
         .v-stat b { color: #fff; font-size: 0.8rem; }
         .v-winner { color: var(--green) !important; text-shadow: 0 0 10px var(--green); }
 
-        /* 5. RECIENTES */
-        .recent-section { width: 95%; max-width: 800px; margin: 40px auto; }
         .recent-table { width: 100%; background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; border-collapse: collapse; }
         .recent-table td { padding: 15px; font-size: 0.8rem; border-bottom: 1px solid var(--border); text-align: center; }
-        .res-accepted { color: var(--green); font-weight: 800; } .res-rejected { color: var(--red); font-weight: 800; }
-
-        /* 6. MERCADO */
-        .market-section { width: 95%; max-width: 1000px; margin: 60px auto; }
-        .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-        .market-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 25px; padding: 30px; text-align: center; transition: 0.3s; }
-        .price-tag { display: block; color: var(--yellow); font-weight: 800; font-size: 0.65rem; margin: 10px 0; }
 
         /* 7. STATUS TRACKER */
         .status-tracker { max-width: 600px; margin: 40px auto; padding: 40px; background: var(--card-bg); border-radius: 35px; border: 1px solid var(--border); text-align: center; }
-        .user-pfp-display { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--accent); margin: 0 auto 20px; object-fit: cover; }
-        .xp-tag { background: #000; color: var(--accent); padding: 8px 18px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--accent); }
+        .user-pfp-display { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--accent); margin: 0 auto 20px; object-fit: cover; background: #111; }
+        .xp-tag { background: #000; color: var(--accent); padding: 8px 18px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; border: 1px solid var(--accent); display: inline-block; }
 
-        /* 8. GRID NIVELES */
-        .list-grid { width: 95%; max-width: 1200px; margin: 60px auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        .level-card { background: var(--card-bg); border-radius: 20px; padding: 12px; display: flex; align-items: center; border: 1px solid var(--border); cursor: pointer; }
-        .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
-
-        /* 9. ADMIN PANEL */
-        #adminPanel { display: none; background: #000; border: 2px solid var(--accent); padding: 35px; width: 98%; max-width: 1800px; margin: 50px auto; border-radius: 25px; overflow-x: auto; }
-        .admin-layout { display: flex; gap: 15px; min-width: 1700px; }
-        .admin-col { flex: 1; background: #080808; padding: 15px; border-radius: 15px; border: 1px solid #111; min-width: 240px; }
-        .admin-list-scroll { max-height: 480px; overflow-y: auto; }
-        .manage-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #111; font-size: 0.55rem; color: #aaa; }
+        /* 8. ADMIN PANEL (7 COLUMNAS) */
+        #adminPanel { display: none; background: #000; border: 2px solid var(--accent); padding: 35px; width: 98%; max-width: 1900px; margin: 50px auto; border-radius: 25px; overflow-x: auto; box-shadow: var(--glow); }
+        .admin-layout { display: flex; gap: 15px; min-width: 1800px; }
+        .admin-col { flex: 1; background: #080808; padding: 15px; border-radius: 15px; border: 1px solid #111; min-width: 250px; }
+        .admin-list-scroll { max-height: 480px; overflow-y: auto; padding-right: 5px; }
+        .admin-sub-card { background: #000; padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #222; font-size: 0.65rem; border-left: 3px solid var(--accent); }
+        .manage-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #111; font-size: 0.55rem; color: #aaa; }
         .manage-item i { color: var(--red); cursor: pointer; }
 
         input, select { width: 100%; background: #0a0a0a !important; border: 1px solid #222; color: #fff !important; padding: 16px; border-radius: 15px; margin-bottom: 20px; font-family: 'Lexend Deca'; box-sizing: border-box; }
@@ -104,6 +102,8 @@
         <div class="staff-item tribute-item">Tributo a 2parx 🕊️</div>
         <div class="staff-item"><i class="fas fa-crown"></i> OWNER <b>score</b></div>
         <div class="staff-item"><i class="fas fa-user-shield"></i> ADMIN <b>Vegardo</b></div>
+        <div class="staff-item"><i class="fas fa-hands-helping"></i> HELPER <b>Blitz</b></div>
+        <div class="staff-item"><i class="fas fa-hands-helping"></i> HELPER <b>Sopa354</b></div>
         <div class="staff-item"><i class="fas fa-code"></i> CODIFICADOR <b>score</b></div>
     </nav>
 
@@ -112,17 +112,23 @@
         <p class="slogan">Tanta diversión que es ilegal, sin limites para la diversión</p>
         <div class="main-nav">
             <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking</a>
-            <a href="#market" class="btn-scully"><i class="fas fa-shopping-cart"></i> Mercado</a>
+            <a href="#main-list" class="btn-scully"><i class="fas fa-list-ol"></i> Lista</a>
             <a href="#versus" class="btn-scully"><i class="fas fa-bolt"></i> Versus</a>
-            <a href="#submit" class="btn-scully"><i class="fas fa-upload"></i> Enviar</a>
+            <a href="#market" class="btn-scully"><i class="fas fa-shopping-cart"></i> Mercado</a>
+            <div class="color-picker-wrapper">
+                <i class="fas fa-palette" style="font-size:0.7rem; color:var(--accent);"></i>
+                <input type="color" id="themeColor" value="#ff6600" oninput="updateThemeColor(this.value)">
+            </div>
             <button class="btn-scully" onclick="spinRoulette()"><i class="fas fa-dice"></i></button>
         </div>
     </header>
 
     <section class="throne-section" id="throneDisplay"></section>
 
+    <main class="list-grid" id="main-list"></main>
+
     <section class="recent-section">
-        <h2 style="color:var(--accent); font-size:0.75rem; text-align:center; letter-spacing:3px; margin-bottom:15px; text-transform:uppercase; opacity:0.5;">Actividad Reciente</h2>
+        <h2 style="color:var(--accent); font-size:0.75rem; text-align:center; letter-spacing:3px; margin-bottom:15px; text-transform:uppercase;">Actividad Reciente</h2>
         <table class="recent-table">
             <thead><tr><th>Jugador</th><th>Nivel</th><th>Resultado</th></tr></thead>
             <tbody id="recentRecordsBody"></tbody>
@@ -131,28 +137,28 @@
 
     <section class="versus-section" id="versus">
         <h2 style="color:var(--accent); text-align:center; letter-spacing:5px; text-transform:uppercase; margin-bottom:30px;">Duelo de Prestigio</h2>
-        <div class="versus-inputs">
+        <div class="versus-inputs" style="display:flex; gap:10px; justify-content:center; margin-bottom:20px;">
             <input type="text" id="vNick1" placeholder="Jugador 1" style="margin-bottom:0;">
             <input type="text" id="vNick2" placeholder="Jugador 2" style="margin-bottom:0;">
-            <button class="btn-scully" style="border-radius:15px;" onclick="comparePlayers()">VERSUS</button>
+            <button class="btn-scully" style="border-radius:15px;" onclick="comparePlayers()">DUELO</button>
         </div>
         <div id="versusResult"></div>
     </section>
 
     <section class="market-section" id="market">
-        <h2 style="color:var(--accent); text-align:center; letter-spacing:5px; text-transform:uppercase; margin-bottom:30px;">Mercado de Prestigio</h2>
+        <h2 style="color:var(--accent); text-align:center; letter-spacing:5px; text-transform:uppercase; margin-bottom:30px;">Mercado</h2>
         <div class="market-grid">
             <div class="market-card">
-                <i class="fas fa-fire"></i><h3>Aura de Fuego</h3><span class="price-tag">COSTE: 100 XP</span>
-                <button class="btn-scully" onclick="buyItem('aura_fire', 100)">SOLICITAR</button>
+                <i class="fas fa-fire"></i><h3>Aura Fuego</h3><span class="xp-tag">100 XP</span>
+                <button class="btn-scully" style="width:100%;" onclick="buyItem('aura_fire', 100)">SOLICITAR</button>
             </div>
             <div class="market-card">
-                <i class="fas fa-bolt"></i><h3>Borde Eléctrico</h3><span class="price-tag">COSTE: 150 XP</span>
-                <button class="btn-scully" onclick="buyItem('aura_electric', 150)">SOLICITAR</button>
+                <i class="fas fa-bolt"></i><h3>Aura Eléctrica</h3><span class="xp-tag">150 XP</span>
+                <button class="btn-scully" style="width:100%;" onclick="buyItem('aura_electric', 150)">SOLICITAR</button>
             </div>
             <div class="market-card">
-                <i class="fas fa-rainbow"></i><h3>Nombre Arcoíris</h3><span class="price-tag">COSTE: 300 XP</span>
-                <button class="btn-scully" onclick="buyItem('name_rainbow', 300)">SOLICITAR</button>
+                <i class="fas fa-rainbow"></i><h3>Nick Rainbow</h3><span class="xp-tag">300 XP</span>
+                <button class="btn-scully" style="width:100%;" onclick="buyItem('name_rainbow', 300)">SOLICITAR</button>
             </div>
         </div>
     </section>
@@ -160,24 +166,22 @@
     <section class="status-tracker">
         <div id="statusDisplay"><p style="color:#444;">Consulta tu Perfil Global.</p></div>
         <input type="text" id="checkInput" placeholder="Introduce tu Nick..." style="margin-top:20px;">
-        <button class="btn-scully" style="width:100%; justify-content:center; border-radius:15px;" onclick="checkStatus()">VER MI PERFIL</button>
+        <button class="btn-scully" style="width:100%; justify-content:center; border-radius:15px;" onclick="checkStatus()">VER PERFIL</button>
     </section>
-
-    <main class="list-grid" id="list-container"></main>
 
     <section class="form-section" id="submit">
         <div class="glass-form">
             <h2 style="margin-top:0; color:var(--accent); text-align:center;">SUBIR RÉCORD</h2>
             <input type="text" id="recPlayer" placeholder="Nickname">
-            <select id="recLevel"><option value="">-- Seleccionar Nivel --</option></select>
-            <input type="text" id="recLink" placeholder="Link YouTube">
-            <input type="text" id="recRaw" placeholder="Link RAW (Drive)">
+            <select id="recLevel"><option value="">-- Nivel --</option></select>
+            <input type="text" id="recLink" placeholder="YouTube Link">
+            <input type="text" id="recRaw" placeholder="RAW Link">
             <button class="btn-scully" style="width:100%; background:var(--accent); color:#000;" onclick="submitRecord()">ENVIAR</button>
         </div>
         <div class="glass-form" style="margin-top:30px; border-color:var(--blue);">
-            <h2 style="margin-top:0; color:var(--blue); text-align:center;">FOTO DE PERFIL</h2>
-            <input type="text" id="pfpNick" placeholder="Tu Nickname">
-            <input type="text" id="pfpUrl" placeholder="URL de la imagen">
+            <h2 style="margin-top:0; color:var(--blue); text-align:center;">FOTO PERFIL</h2>
+            <input type="text" id="pfpNick" placeholder="Nickname">
+            <input type="text" id="pfpUrl" placeholder="URL Imagen">
             <button class="btn-scully" style="width:100%; border-color:var(--blue); color:var(--blue);" onclick="submitPFP()">SOLICITAR PFP</button>
         </div>
     </section>
@@ -186,36 +190,13 @@
 
     <div id="adminPanel">
         <div class="admin-layout">
-            <div class="admin-col">
-                <p style="font-weight:bold; font-size:0.5rem;">NIVELES</p>
-                <input type="text" id="lvlName" placeholder="Nombre"><input type="text" id="lvlYT" placeholder="ID YT"><input type="text" id="lvlFirst" placeholder="First Victor"><input type="number" id="lvlPos" placeholder="Pos">
-                <button class="btn-scully" onclick="saveLevel()">PUBLICAR</button>
-            </div>
-            <div class="admin-col">
-                <p style="font-weight:bold; color:var(--green); font-size:0.5rem;">RECORDS</p>
-                <div id="submissionsList" class="admin-list-scroll"></div>
-            </div>
-            <div class="admin-col">
-                <p style="font-weight:bold; color:var(--purple); font-size:0.5rem;">TIENDA</p>
-                <div id="marketSubList" class="admin-list-scroll"></div>
-            </div>
-            <div class="admin-col">
-                <p style="font-weight:bold; color:var(--blue); font-size:0.5rem;">PFPS</p>
-                <div id="pfpSubList" class="admin-list-scroll"></div>
-            </div>
-            <div class="admin-col">
-                <p style="font-weight:bold; color:var(--red); font-size:0.5rem;">BANEOS (QUITA UNO PARA UNBAN)</p>
-                <input type="text" id="banUser" placeholder="Nick"><button onclick="banPlayer()">BANEAR</button>
-                <div id="banListInteractive" class="admin-list-scroll" style="margin-top:10px;"></div>
-            </div>
-            <div class="admin-col">
-                <p style="font-weight:bold; color:var(--yellow); font-size:0.5rem;">MARQUESINA</p>
-                <div id="adminLogList" class="admin-list-scroll"></div>
-            </div>
-            <div class="admin-col">
-                <p style="font-weight:bold; font-size:0.5rem;">RECIENTES</p>
-                <div id="adminHistoryList" class="admin-list-scroll"></div>
-            </div>
+            <div class="admin-col"><p style="font-weight:bold;">NIVELES</p><input type="text" id="lvlName" placeholder="Nombre"><input type="text" id="lvlYT" placeholder="ID YT"><input type="text" id="lvlFirst" placeholder="First"><input type="number" id="lvlPos" placeholder="Pos"><button onclick="saveLevel()">PUBLICAR</button></div>
+            <div class="admin-col"><p style="font-weight:bold; color:var(--green);">RECORDS</p><div id="submissionsList" class="admin-list-scroll"></div></div>
+            <div class="admin-col"><p style="font-weight:bold; color:var(--purple);">TIENDA</p><div id="marketSubList" class="admin-list-scroll"></div></div>
+            <div class="admin-col"><p style="font-weight:bold; color:var(--blue);">PFPS</p><div id="pfpSubList" class="admin-list-scroll"></div></div>
+            <div class="admin-col"><p style="font-weight:bold; color:var(--red);">BANEOS</p><div id="banListInteractive" class="admin-list-scroll"></div><input type="text" id="banUser" placeholder="Nick"><button onclick="banPlayer()">BANEAR</button></div>
+            <div class="admin-col"><p style="font-weight:bold; color:var(--yellow);">LOGS</p><div id="adminLogList" class="admin-list-scroll"></div></div>
+            <div class="admin-col"><p style="font-weight:bold; color:#666;">HISTORIAL</p><div id="adminHistoryList" class="admin-list-scroll"></div></div>
         </div>
     </div>
 
@@ -230,6 +211,16 @@
         const db = firebase.database();
         const TOKEN = "GdfuFCRy";
         let fullData = {};
+
+        // INICIALIZACIÓN DE COLOR PERSONALIZADO
+        const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
+        updateThemeColor(savedColor);
+        document.getElementById('themeColor').value = savedColor;
+
+        function updateThemeColor(val) {
+            document.documentElement.style.setProperty('--accent', val);
+            localStorage.setItem('scully-theme-color', val);
+        }
 
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {};
@@ -249,43 +240,10 @@
             }
         });
 
-        // 1. SISTEMA VERSUS (COMPARADOR)
-        function comparePlayers() {
-            const n1 = document.getElementById('vNick1').value.trim();
-            const n2 = document.getElementById('vNick2').value.trim();
-            if(!n1 || !n2) return alert("Pon dos nicks.");
-            
-            const p1 = calcUserStats(n1);
-            const p2 = calcUserStats(n2);
-            if(!p1.name || !p2.name) return alert("Uno de los jugadores no existe.");
-
-            const winPts = parseFloat(p1.pts) > parseFloat(p2.pts);
-            const winRecords = p1.recordCount > p2.recordCount;
-
-            document.getElementById('versusResult').innerHTML = `
-                <div class="versus-card">
-                    <div class="v-player">
-                        <img src="${p1.pfp}" class="v-pfp">
-                        <h3 style="margin:0;">${p1.name}</h3>
-                        <div class="v-stat">XP: <b class="${winPts?'v-winner':''}">${p1.pts}</b></div>
-                        <div class="v-stat">NIVEL: <b>${p1.lvl}</b></div>
-                        <div class="v-stat">RECORDS: <b class="${winRecords?'v-winner':''}">${p1.recordCount}</b></div>
-                    </div>
-                    <div style="font-weight:900; color:var(--accent); font-size:1.5rem;">VS</div>
-                    <div class="v-player">
-                        <img src="${p2.pfp}" class="v-pfp">
-                        <h3 style="margin:0;">${p2.name}</h3>
-                        <div class="v-stat">XP: <b class="${!winPts?'v-winner':''}">${p2.pts}</b></div>
-                        <div class="v-stat">NIVEL: <b>${p2.lvl}</b></div>
-                        <div class="v-stat">RECORDS: <b class="${!winRecords?'v-winner':''}">${p2.recordCount}</b></div>
-                    </div>
-                </div>`;
-        }
-
-        // 2. XP Y ESTADÍSTICAS (1 LVL = 50 PTS)
+        // 1. CÁLCULOS XP (1 NIVEL = 50 XP)
         function calcUserStats(nick) {
             const player = Object.values(fullData.players || {}).find(p => p.name.toLowerCase() === nick.toLowerCase());
-            if(!player) return { pts: 0 };
+            if(!player) return { pts: 0, name: null };
             let pts = 0; let badges = [];
             player.completions?.forEach(c => {
                 const idx = fullData.levels.findIndex(l => l.name.toLowerCase() === c.level.toLowerCase());
@@ -296,52 +254,26 @@
                 }
             });
             if(player.completions?.length >= 5) badges.push('🛡️');
-            return {
-                name: player.name, pts: pts.toFixed(1),
-                lvl: Math.floor(pts / 50),
-                recordCount: player.completions?.length || 0,
-                badges: [...new Set(badges)],
-                pfp: player.pfp || "https://i.imgur.com/8pw98K4.png",
-                cosmetics: player.cosmetics || {}
-            };
+            return { name: player.name, pts: pts.toFixed(1), lvl: Math.floor(pts / 50), recordCount: player.completions?.length || 0, badges: [...new Set(badges)], pfp: player.pfp || "https://i.imgur.com/8pw98K4.png", cosmetics: player.cosmetics || {} };
         }
 
-        // 3. SISTEMA UNBAN (ADMIN)
-        function renderBanList(bans) {
-            const cont = document.getElementById('banListInteractive');
-            cont.innerHTML = Object.entries(bans).map(([k, v]) => `
-                <div class="manage-item">
-                    <span>${v}</span>
-                    <i class="fas fa-trash-alt" onclick="unbanPlayer('${k}', '${v}')" title="Desbanear"></i>
-                </div>`).join("");
-        }
+        // 2. VERSUS REAL
+        function comparePlayers() {
+            const p1 = calcUserStats(document.getElementById('vNick1').value.trim());
+            const p2 = calcUserStats(document.getElementById('vNick2').value.trim());
+            if(!p1.name || !p2.name) return alert("Jugador no encontrado.");
+            const winXP = parseFloat(p1.pts) > parseFloat(p2.pts);
+            const winRec = p1.recordCount > p2.recordCount;
 
-        function unbanPlayer(key, name) {
-            if(confirm(`¿Desbanear a ${name}?`)) {
-                db.ref('bans/' + key).remove();
-                db.ref('logs').push({ type: 'info', msg: `🔓 ${name.toUpperCase()} HA SIDO DESBANEADO` });
-            }
-        }
-
-        // 4. FUNCIONES CORE
-        function checkStatus() {
-            const nick = document.getElementById('checkInput').value.trim(); if(!nick) return;
-            const stats = calcUserStats(nick);
-            const userRecords = [...Object.values(fullData.submissions || {}), ...Object.values(fullData.history || {})].filter(s => s.player.toLowerCase() === nick.toLowerCase());
-            let cosClass = "";
-            if(stats.cosmetics?.aura_fire) cosClass = "cos-fire";
-            if(stats.cosmetics?.aura_electric) cosClass = "cos-electric";
-            let html = `
-                <div style="background:rgba(255,102,0,0.1); padding:30px; border-radius:30px; border:1px solid var(--accent); margin-bottom:20px;">
-                    <img src="${stats.pfp}" class="user-pfp-display ${cosClass}">
-                    <h3 class="${stats.cosmetics?.name_rainbow ? 'cos-rainbow' : ''}">${stats.name.toUpperCase()}</h3>
-                    <div style="margin:15px 0;"><span class="xp-tag">LVL ${stats.lvl} (${stats.pts} XP)</span></div>
-                    <div>${stats.badges?.map(b => `<span class="badge-icon">${b}</span>`).join("")}</div>
+            document.getElementById('versusResult').innerHTML = `
+                <div class="versus-card">
+                    <div class="v-player"><img src="${p1.pfp}" class="v-pfp"><h3>${p1.name}</h3><div class="v-stat">XP: <b class="${winXP?'v-winner':''}">${p1.pts}</b></div><div class="v-stat">REC: <b class="${winRec?'v-winner':''}">${p1.recordCount}</b></div></div>
+                    <div style="font-weight:900; color:var(--accent); font-size:1.2rem;">VS</div>
+                    <div class="v-player"><img src="${p2.pfp}" class="v-pfp"><h3>${p2.name}</h3><div class="v-stat">XP: <b class="${!winXP?'v-winner':''}">${p2.pts}</b></div><div class="v-stat">REC: <b class="${!winRec?'v-winner':''}">${p2.recordCount}</b></div></div>
                 </div>`;
-            html += userRecords.map(r => `<div class="status-pill st-${(r.status||'pendiente').toLowerCase().replace(/ /g, "")}"><b>${r.level}</b> <span>${(r.status||'PENDIENTE').toUpperCase()}</span></div>`).join("");
-            document.getElementById('statusDisplay').innerHTML = html;
         }
 
+        // 3. FUNCIONES CORE
         function setStatus(key, newStatus) {
             const sub = fullData.submissions[key]; if(!sub) return;
             const staff = prompt("Staff:"); if(!staff) return;
@@ -351,59 +283,54 @@
                     let i = p.findIndex(u => u.name.toLowerCase() === sub.player.toLowerCase());
                     let rec = { level: sub.level, link: sub.link };
                     if(i > -1) { if(!p[i].completions) p[i].completions = []; p[i].completions.push(rec); }
-                    else { p.push({ name: sub.player, country: sub.country || 'es', completions: [rec] }); }
+                    else { p.push({ name: sub.player, country: 'es', completions: [rec] }); }
                     db.ref('players').set(p);
                 });
                 db.ref('history').push({...sub, status: 'Aceptado'});
                 db.ref('logs').push({ type: 'accept', msg: `✅ ${sub.player} POR ${staff}` });
-                db.ref('submissions/' + key).remove();
+                db.ref('submissions/'+key).remove();
             } else if(newStatus === 'Rechazado') {
-                const r = prompt("Razón:");
                 db.ref('history').push({...sub, status: 'Rechazado'});
-                db.ref('logs').push({ type: 'reject', msg: `❌ ${sub.player} RECHAZADO POR ${staff}` });
-                db.ref('submissions/' + key).remove();
-            } else { db.ref('submissions/' + key + '/status').set(newStatus); }
+                db.ref('logs').push({ type: 'reject', msg: `❌ ${sub.player} RECHAZADO` });
+                db.ref('submissions/'+key).remove();
+            }
         }
 
-        // MERCADO & PFPs
-        function buyItem(item, cost) {
-            const nick = prompt("Tu Nick:"); if(!nick) return;
-            const s = calcUserStats(nick);
-            if(parseFloat(s.pts) < cost) return alert("XP insuficiente.");
-            db.ref('market_requests').push({ nick: s.name, item: item, cost: cost });
-            alert("Solicitud enviada.");
-        }
-        function approveCosmetic(key) {
-            const r = fullData.market_requests[key];
-            db.ref('players').once('value', s => {
-                let p = Object.values(s.val() || {});
-                let i = p.findIndex(x => x.name.toLowerCase() === r.nick.toLowerCase());
-                if(i > -1) { if(!p[i].cosmetics) p[i].cosmetics = {}; p[i].cosmetics[r.item] = true; db.ref('players').set(p); db.ref('market_requests/' + key).remove(); }
-            });
-        }
-        function submitPFP() { const n = document.getElementById('pfpNick').value.trim(); const u = document.getElementById('pfpUrl').value.trim(); db.ref('pfp_requests').push({ nick: n, url: u }); alert("Enviada."); }
-        function approvePFP(key) { const r = fullData.pfp_requests[key]; db.ref('players').once('value', s => { let p = Object.values(s.val() || {}); let i = p.findIndex(x => x.name.toLowerCase() === r.nick.toLowerCase()); if(i > -1) { p[i].pfp = r.url; db.ref('players').set(p); db.ref('pfp_requests/' + key).remove(); } }); }
-
-        // RENDERERS
-        function renderThrone(lvls) { if(!lvls || lvls.length === 0) return; const top1 = lvls[0]; document.getElementById('throneDisplay').innerHTML = `<div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95), rgba(0,0,0,0.4)), url('https://img.youtube.com/vi/${top1.id}/maxresdefault.jpg');"><div class="throne-info"><div class="throne-badge">FINAL BOSS</div><h2>${top1.name}</h2><p>FIRST VICTOR: <b>${top1.first || 'Nadie'}</b></p></div></div>`; }
-        function renderRecentActivity(h) { const e = Object.values(h).reverse().slice(0, 5); document.getElementById('recentRecordsBody').innerHTML = e.map(x => `<tr><td><b>${x.player}</b></td><td>${x.level}</td><td class="${x.status==='Aceptado'?'res-accepted':'res-rejected'}">${x.status.toUpperCase()}</td></tr>`).join(""); }
-        function renderLevels(n) { const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); document.getElementById('list-container').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0;">${l.name}</h3><p style="color:var(--accent); font-size:0.6rem;">+${c(i)} XP</p></div></div>`).join(""); }
+        // MODERADORES Y RENDERERS
         function renderSubmissions(s) { document.getElementById('submissionsList').innerHTML = Object.entries(s).map(([k, x]) => `<div class="admin-sub-card"><b>${x.player}</b> -> ${x.level}<div class="admin-btns"><button onclick="setStatus('${k}','Aceptado')" style="color:var(--green)">ACEP</button><button onclick="setStatus('${k}','Rechazado')" style="color:var(--red)">RECH</button></div></div>`).join(""); }
+        function renderBanList(b) { document.getElementById('banListInteractive').innerHTML = Object.entries(b).map(([k,v]) => `<div class="manage-item"><span>${v}</span><i class="fas fa-trash-alt" onclick="db.ref('bans/${k}').remove()"></i></div>`).join(""); }
         function renderAdminLogs(l) { document.getElementById('adminLogList').innerHTML = Object.entries(l).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.msg}</span><i class="fas fa-trash" onclick="db.ref('logs/${k}').remove()"></i></div>`).join(""); }
         function renderAdminHistory(h) { document.getElementById('adminHistoryList').innerHTML = Object.entries(h).reverse().map(([k,v]) => `<div class="manage-item"><span>${v.player}</span><i class="fas fa-trash" onclick="db.ref('history/${k}').remove()"></i></div>`).join(""); }
-        function renderMarketModeration(m) { document.getElementById('marketSubList').innerHTML = Object.entries(m).map(([k,v]) => `<div class="admin-sub-card"><b>${v.nick}</b>: ${v.item}<div class="admin-btns"><button onclick="approveCosmetic('${k}')" style="color:var(--green)">ACEP</button><button onclick="db.ref('market_requests/${k}').remove()" style="color:var(--red)">BORRAR</button></div></div>`).join(""); }
-        function renderPFPModeration(p) { document.getElementById('pfpSubList').innerHTML = Object.entries(p).map(([k,v]) => `<div class="admin-sub-card"><b>${v.nick}</b><br><img src="${v.url}" style="width:30px;height:30px;border-radius:50%;"><div class="admin-btns"><button onclick="approvePFP('${k}')" style="color:var(--green)">ACEP</button><button onclick="db.ref('pfp_requests/${k}').remove()" style="color:var(--red)">RECH</button></div></div>`).join(""); }
+        function renderMarketModeration(m) { document.getElementById('marketSubList').innerHTML = Object.entries(m).map(([k,v]) => `<div class="admin-sub-card"><b>${v.nick}</b>: ${v.item}<br><button onclick="approveCosmetic('${k}')" style="color:var(--green)">APROBAR</button></div>`).join(""); }
+        function renderPFPModeration(p) { document.getElementById('pfpSubList').innerHTML = Object.entries(p).map(([k,v]) => `<div class="admin-sub-card"><b>${v.nick}</b><br><img src="${v.url}" style="width:30px;height:30px;border-radius:50%;"><br><button onclick="approvePFP('${k}')" style="color:var(--green)">APROBAR</button></div>`).join(""); }
 
-        // AUX
-        function submitRecord() { const l = document.getElementById('recLevel').value; const r = document.getElementById('recRaw').value; const idx = fullData.levels.findIndex(lvl => lvl.name === l); if (idx <= 99 && idx !== -1 && !r.includes("drive.google.com")) return alert("RAW OBLIGATORIO TOP 100."); db.ref('submissions').push({ player: document.getElementById('recPlayer').value, level: l, link: document.getElementById('recLink').value, raw: r || "N/A", status: "Pendiente" }); alert("Enviado!"); }
-        function saveLevel() { const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const f = document.getElementById('lvlFirst').value; const p = parseInt(document.getElementById('lvlPos').value)-1; db.ref('levels').once('value', s => { let l = s.val() || []; l.splice(p >= 0 ? p : l.length, 0, { name: n, id: y, first: f }); db.ref('levels').set(l); alert("Hecho!"); }); }
-        function banPlayer() { const n = document.getElementById('banUser').value.trim(); db.ref('bans').push(n); db.ref('logs').push({ type: 'reject', msg: `⛔ ${n} BANEADO` }); }
-        function spinRoulette() { const lvls = fullData.levels || []; if(lvls.length === 0) return; document.getElementById('ruletaModal').style.display = "block"; const res = document.getElementById('ruletaText'); res.innerText = "GIRANDO..."; let count = 0; const interval = setInterval(() => { res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name; count++; if(count > 15) { clearInterval(interval); res.style.color = "var(--green)"; setTimeout(()=>res.style.color="var(--accent)",1000); } }, 80); }
+        function checkStatus() {
+            const nick = document.getElementById('checkInput').value.trim(); if(!nick) return;
+            const stats = calcUserStats(nick);
+            const userRecords = [...Object.values(fullData.submissions || {}), ...Object.values(fullData.history || {})].filter(s => s.player.toLowerCase() === nick.toLowerCase());
+            let cos = stats.cosmetics?.aura_fire ? "cos-fire" : stats.cosmetics?.aura_electric ? "cos-electric" : "";
+            let html = `<div style="background:rgba(255,102,0,0.1); padding:30px; border-radius:30px; border:1px solid var(--accent); margin-bottom:20px;"><img src="${stats.pfp}" class="user-pfp-display ${cos}"><h3 class="${stats.cosmetics?.name_rainbow?'cos-rainbow':''}">${stats.name.toUpperCase()}</h3><div style="margin:15px 0;"><span class="xp-tag">LVL ${stats.lvl} (${stats.pts} XP)</span></div><div>${stats.badges.map(b => `<span class="badge-icon">${b}</span>`).join("")}</div></div>`;
+            html += userRecords.map(r => `<div class="status-pill"><b>${r.level}</b> <span>${r.status.toUpperCase()}</span></div>`).join("");
+            document.getElementById('statusDisplay').innerHTML = html;
+        }
+
+        function renderLevels(n) { const c = (i) => Math.max(100 - (i*0.6), 5).toFixed(1); document.getElementById('main-list').innerHTML = n.map((l, i) => `<div class="level-card" onclick="openDetails(${i})"><img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg"><div><h3 style="margin:0; font-size:0.85rem;">${l.name}</h3><p style="color:var(--accent); font-size:0.6rem;">+${c(i)} XP</p></div><div style="position:absolute; right:15px; opacity:0.1; font-weight:900;">#${i+1}</div></div>`).join(""); }
+        function renderThrone(lvls) { if(!lvls || lvls.length === 0) return; const t = lvls[0]; document.getElementById('throneDisplay').innerHTML = `<div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95), rgba(0,0,0,0.4)), url('https://img.youtube.com/vi/${t.id}/maxresdefault.jpg');"><div class="throne-info"><div class="throne-badge">FINAL BOSS</div><h2>${t.name}</h2><p>FIRST VICTOR: <b>${t.first || 'Nadie'}</b></p></div></div>`; }
+        function renderRecentActivity(h) { const entries = Object.values(h).reverse().slice(0, 5); document.getElementById('recentRecordsBody').innerHTML = entries.map(e => `<tr><td><b>${e.player}</b></td><td>${e.level}</td><td class="${e.status==='Aceptado'?'res-accepted':'res-rejected'}">${e.status.toUpperCase()}</td></tr>`).join(""); }
+        function spinRoulette() { const lvls = fullData.levels || []; if(lvls.length === 0) return; document.getElementById('ruletaModal').style.display = "block"; const res = document.getElementById('ruletaText'); let count = 0; const interval = setInterval(() => { res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name; count++; if(count > 15) clearInterval(interval); }, 80); }
         function closeRuleta() { document.getElementById('ruletaModal').style.display = "none"; }
-        function toggleAuth() { const p = prompt("Acceso:"); if(p === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
+        function toggleAuth() { if(prompt("Acceso:") === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
+        function saveLevel() { const n = document.getElementById('lvlName').value; const y = document.getElementById('lvlYT').value; const f = document.getElementById('lvlFirst').value; const p = parseInt(document.getElementById('lvlPos').value)-1; db.ref('levels').once('value', s => { let l = s.val() || []; l.splice(p >= 0 ? p : l.length, 0, { name: n, id: y, first: f }); db.ref('levels').set(l); alert("Hecho!"); }); }
+        function openDetails(idx) { const l = fullData.levels[idx]; const p = Object.values(fullData.players || {}); const victors = p.filter(v => (v.completions || []).some(c => c.level === l.name)); document.getElementById('modal-body').innerHTML = `<h1>${l.name}</h1><p>FIRST VICTOR: <b>${l.first || 'Nadie'}</b></p><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen></iframe><div style="margin-top:15px; text-align:left;"><small>VICTORS:</small>${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111;">${v.name}</div>`).join("")}</div>`; document.getElementById('levelModal').style.display = "block"; }
         function closeM() { document.getElementById('levelModal').style.display = "none"; }
         function updateLevelSelect(n) { document.getElementById('recLevel').innerHTML = n.map(l => `<option value="${l.name}">${l.name}</option>`).join(""); }
-        function openDetails(idx) { const l = fullData.levels[idx]; const p = Object.values(fullData.players || {}); const victors = p.filter(v => (v.completions || []).some(c => c.level === l.name)); document.getElementById('modal-body').innerHTML = `<h1>${l.name}</h1><p>FIRST VICTOR: <b>${l.first || 'Nadie'}</b></p><iframe width="100%" height="300" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:15px;"></iframe><div style="margin-top:15px; text-align:left;"><small>VICTORS:</small>${victors.map(v => `<div style="padding:8px; border-bottom:1px solid #111;">${v.name}</div>`).join("")}</div>`; document.getElementById('levelModal').style.display = "block"; }
+        function banPlayer() { const n = document.getElementById('banUser').value.trim(); db.ref('bans').push(n); db.ref('logs').push({ type: 'reject', msg: `⛔ ${n} BANEADO` }); }
+        function approveCosmetic(key) { const r = fullData.market_requests[key]; db.ref('players').once('value', s => { let p = Object.values(s.val() || {}); let i = p.findIndex(x => x.name.toLowerCase() === r.nick.toLowerCase()); if(i > -1) { if(!p[i].cosmetics) p[i].cosmetics = {}; p[i].cosmetics[r.item] = true; db.ref('players').set(p); db.ref('market_requests/'+key).remove(); } }); }
+        function approvePFP(key) { const r = fullData.pfp_requests[key]; db.ref('players').once('value', s => { let p = Object.values(s.val() || {}); let i = p.findIndex(x => x.name.toLowerCase() === r.nick.toLowerCase()); if(i > -1) { p[i].pfp = r.url; db.ref('players').set(p); db.ref('pfp_requests/' + key).remove(); } }); }
+        function buyItem(item, cost) { const n = prompt("Tu Nick:"); if(!n) return; const s = calcUserStats(n); if(parseFloat(s.pts) < cost) return alert("XP insuficiente."); db.ref('market_requests').push({ nick: s.name, item: item, cost: cost }); alert("Solicitud enviada."); }
+        function submitRecord() { const l = document.getElementById('recLevel').value; const r = document.getElementById('recRaw').value; const idx = fullData.levels.findIndex(lvl => lvl.name === l); if (idx <= 99 && idx !== -1 && !r.includes("drive.google.com")) return alert("RAW OBLIGATORIO TOP 100."); db.ref('submissions').push({ player: document.getElementById('recPlayer').value, level: l, link: document.getElementById('recLink').value, raw: r || "N/A", status: "Pendiente" }); alert("Enviado!"); }
+        function submitPFP() { const n = document.getElementById('pfpNick').value.trim(); const u = document.getElementById('pfpUrl').value.trim(); db.ref('pfp_requests').push({ nick: n, url: u }); alert("Enviada."); }
+        function updateTicker(l) { const e = Object.values(l).reverse().slice(0,10); document.getElementById('pulse-content').innerHTML = e.map(x => `<span class="log-item ${x.type==='accept'?'log-accept':x.type==='info'?'log-info':'log-reject'}">${x.msg}</span>`).join(""); }
     </script>
 </body>
 </html>
