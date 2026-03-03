@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scully List | Reglas y Especificaciones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --accent: #ff6600; --bg: #030303; --card: rgba(15,15,15,0.9); --border: rgba(255,255,255,0.05); }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; line-height: 1.6; padding-bottom: 50px; }
+        
+        header { padding: 60px 20px 30px; text-align: center; }
+        h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin: 0; text-transform: uppercase; font-weight: 800; letter-spacing: -1px; }
+        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 12px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        .btn-scully:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(255,102,0,0.4); }
+        
+        .rules-container { width: 90%; max-width: 900px; margin: 40px auto; display: flex; flex-direction: column; gap: 35px; }
+        .rule-card { background: var(--card); border: 1px solid var(--border); padding: 40px; border-radius: 30px; border-left: 5px solid var(--accent); }
+        .rule-card h2 { margin-top: 0; color: var(--accent); font-size: 1.6rem; display: flex; align-items: center; gap: 15px; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        
+        .rule-card p { color: #ccc; font-size: 0.95rem; }
+        .rule-card ul { padding-left: 20px; color: #bbb; font-size: 0.9rem; }
+        .rule-card li { margin-bottom: 12px; }
+        .rule-card li strong { color: #fff; }
+        
+        .highlight { background: rgba(255,102,0,0.1); padding: 2px 8px; border-radius: 5px; color: var(--accent); font-weight: 800; }
+        .ban-escalation { background: #0a0a0a; padding: 20px; border-radius: 15px; border: 1px solid #222; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>MANUAL DE <span style="color:var(--accent);">JUGADOR</span></h1>
+        <p style="color:#666; font-size:0.8rem; margin-top:10px;">Lee detenidamente antes de enviar un récord o usar la lista.</p>
+        <a href="index.html" class="btn-scully"><i class="fas fa-arrow-left"></i> VOLVER AL HUB</a>
+        <a href="https://discord.gg/HDGzCVazwT" target="_blank" class="btn-scully" style="border-color:#7289da; color:#7289da;"><i class="fab fa-discord"></i> DISCORD</a>
+    </header>
+
+    <div class="rules-container">
+        
+        <div class="rule-card">
+            <h2><i class="fas fa-upload"></i> 1. Subida de Récords</h2>
+            <p>El sistema de evaluación y subida de récords de <b>The Scully List</b> funciona bajo los mismos principios estrictos que listas como <i>AREDL</i> y <i>Pointercrate</i>, pero con un enfoque más simplificado para el usuario:</p>
+            <ul>
+                <li><strong>Vídeo de YouTube Obligatorio:</strong> Todo jugador debe subir su récord a YouTube. El vídeo debe tener una calidad decente (mínimo 720p) y el audio del juego debe ser claramente audible. Los clics del ratón o teclado son altamente recomendados para facilitar la verificación.</li>
+                <li><strong>Evidencia en RAW (Drive):</strong> Para niveles que se encuentren dentro del <b>Top 100</b>, será obligatorio proporcionar un enlace a Google Drive con el archivo de vídeo RAW original (sin cortes ni edición).</li>
+                <li><strong>Modificaciones Permitidas:</strong> Solo se permiten texturas cosméticas y mods de optimización visual (LVM, No Particles). Queda estrictamente prohibido usar físicas alteradas o hitboxes visibles.</li>
+            </ul>
+        </div>
+
+        <div class="rule-card" style="border-color: var(--red);">
+            <h2 style="color: var(--red);"><i class="fas fa-gavel"></i> 2. Rechazos y Sistema de Baneos</h2>
+            <p>Entendemos que a veces las grabaciones fallan. <b>Si tu récord es rechazado</b> (por ejemplo, por falta de clics audibles, lagazos visuales o falta de pruebas RAW), <span style="color:var(--red); font-weight:800;">ESTO NO DESEMBOCA EN UN BANEO</span>. Simplemente se rechaza la solicitud y puedes volver a intentarlo cuando tengas las pruebas correctas.</p>
+            
+            <p>Sin embargo, si a través del escrutinio del Staff se te encuentra <b>haciendo trampas de forma intencionada y continua</b> (uso de Noclip, Speedhack, Macros o Botting), se aplicará el siguiente sistema escalonado de sanciones:</p>
+            
+            <div class="ban-escalation">
+                <ul>
+                    <li><strong style="color:#ffcc00;">Primera Ofensa:</strong> Baneo temporal de <b>6 meses</b> de la lista y pérdida de todos los puntos actuales.</li>
+                    <li><strong style="color:#ff6600;">Segunda Ofensa:</strong> Baneo temporal de <b>1 Año</b> sin posibilidad de apelación temprana.</li>
+                    <li><strong style="color:#ff3333;">Tercera Ofensa:</strong> <span class="highlight" style="color:#ff3333; background:rgba(255,51,51,0.1);">Baneo Permanente (Blacklist)</span>. Nunca más podrás volver a registrar un récord en la Scully List.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="rule-card" style="border-color: var(--blue);">
+            <h2 style="color: var(--blue);"><i class="fas fa-user-circle"></i> 3. Sistema de Fotos de Perfil</h2>
+            <p>Cada jugador en la Leaderboard tiene derecho a personalizar su perfil con una Foto de Perfil (PFP) única para destacar en la clasificación y en la página de Duelos.</p>
+            <ul>
+                <li><strong>Proceso de Solicitud:</strong> Las PFPs se solicitan desde la página de "Enviar". Deberás ingresar tu Nick y la URL directa de la imagen (debe terminar en .jpg o .png, preferiblemente subida a Imgur).</li>
+                <li><strong>Aprobación Manual:</strong> Para mantener la estética y el orden, <span class="highlight">las PFPs no se actualizan automáticamente</span>. Deben ser revisadas y aprobadas manualmente por un miembro del Staff desde la consola de administración.</li>
+                <li><strong>Contenido:</strong> Cualquier imagen con contenido NSFW, gore, o que incite al odio será denegada de inmediato.</li>
+            </ul>
+        </div>
+
+        <div class="rule-card" style="border-color: var(--green);">
+            <h2 style="color: var(--green);"><i class="fas fa-map-signs"></i> 4. Guía del Sitio Web</h2>
+            <p>La Scully List está dividida en varias herramientas diseñadas para la comunidad. Aquí tienes la explicación detallada de cada opción del menú de navegación:</p>
+            <ul>
+                <li><strong><i class="fas fa-list-ol"></i> Lista:</strong> Es el Hub principal. Aquí verás todos los niveles ordenados por dificultad. Arriba siempre estará expuesto el "Top #1 Boss" actual. Al hacer clic en un nivel, verás su vídeo en YouTube y a todos los jugadores que han logrado pasárselo.</li>
+                <li><strong><i class="fas fa-trophy"></i> Ranking:</strong> La Leaderboard Global. Aquí compiten todos los jugadores según la Cantidad de XP que poseen. Si fuiste el verificador de un nivel de la lista (First Victor), recibirás un <b>Check Azul de Verificación</b> al lado de tu nombre.</li>
+                <li><strong><i class="fas fa-bolt"></i> Versus:</strong> La arena de Duelos. Ingresa el Nickname de dos jugadores distintos y el sistema calculará automáticamente quién tiene mejores estadísticas, nivel y XP.</li>
+                <li><strong><i class="fas fa-shopping-cart"></i> Mercado:</strong> Nuestra tienda de cosméticos. A medida que pases niveles ganarás XP. Puedes usar ese XP para solicitar "Auras" para tu Foto de Perfil o un "Nick Rainbow" brillante. Estas solicitudes también las aprueba el Staff.</li>
+                <li><strong><i class="fas fa-upload"></i> Enviar:</strong> El formulario central donde debes enviar los enlaces de tus récords de YouTube y Drive, además de ser la terminal para actualizar tu Foto de Perfil.</li>
+                <li><strong><i class="fas fa-dice"></i> Botón Ruleta:</strong> Si no sabes qué demonio jugar hoy, presiona el dado en el menú y el sistema seleccionará aleatoriamente un nivel de la lista para ti.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script>
+        const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
+        document.documentElement.style.setProperty('--accent', savedColor);
+    </script>
+</body>
+</html>
