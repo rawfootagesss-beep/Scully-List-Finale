@@ -8,85 +8,48 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root { 
-            --accent: #ff6600; 
-            --accent-grad: linear-gradient(135deg, #ff6600 0%, #ff9900 100%);
-            --bg: #030303; 
-            --card-bg: rgba(15, 15, 15, 0.7);
-            --glow: 0 0 20px rgba(255, 102, 0, 0.2); 
+            --accent: #ff6600; --accent-grad: linear-gradient(135deg, #ff6600 0%, #ff9900 100%);
+            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.7);
             --border: rgba(255, 255, 255, 0.05);
-            /* Colores de Podio */
-            --gold: #ffd700;
-            --silver: #c0c0c0;
-            --bronze: #cd7f32;
+            --gold: #ffd700; --silver: #c0c0c0; --bronze: #cd7f32;
         }
 
-        body { 
-            background: var(--bg); 
-            background-image: radial-gradient(circle at top left, rgba(255, 102, 0, 0.05), transparent);
-            color: #fff; 
-            font-family: 'Lexend Deca', sans-serif; 
-            margin: 0; padding: 0;
-            overflow-x: hidden;
-        }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; }
 
-        /* STAFF BAR */
-        .staff-bar { display: flex; justify-content: center; gap: 20px; padding: 15px; background: rgba(0,0,0,0.4); font-size: 0.6rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+        .staff-bar { display: flex; justify-content: center; gap: 20px; padding: 12px; background: rgba(0,0,0,0.5); font-size: 0.6rem; border-bottom: 1px solid var(--border); }
         .staff-item b { color: var(--accent); }
 
         header { padding: 60px 20px; text-align: center; }
-        h1 { font-size: 3rem; font-weight: 800; text-transform: uppercase; letter-spacing: -1px; margin: 0; }
+        h1 { font-size: 3rem; font-weight: 800; text-transform: uppercase; margin: 0; }
         h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .btn-back { display: inline-block; margin-top: 20px; color: var(--accent); text-decoration: none; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; border: 1px solid var(--accent); padding: 12px 25px; border-radius: 50px; transition: 0.3s; }
-        .btn-back:hover { background: var(--accent); color: #000; box-shadow: var(--glow); transform: translateY(-3px); }
+        .btn-back { display: inline-block; margin-top: 20px; color: var(--accent); text-decoration: none; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; border: 1px solid var(--accent); padding: 12px 25px; border-radius: 50px; transition: 0.3s; }
+        .btn-back:hover { background: var(--accent); color: #000; }
 
-        /* TABLA DE RANKING */
         .wrapper { width: 95%; max-width: 900px; margin: 40px auto; }
         table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-        th { text-transform: uppercase; font-size: 0.65rem; color: #444; letter-spacing: 2px; padding: 10px; }
+        .rank-row { background: var(--card-bg); backdrop-filter: blur(10px); cursor: pointer; transition: 0.3s; border: 1px solid var(--border); }
+        .rank-row:hover { border-color: var(--accent); transform: scale(1.02); }
         
-        .rank-row { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--border); cursor: pointer; transition: 0.3s; }
-        .rank-row:hover { transform: scale(1.02); border-color: var(--accent); background: rgba(255,102,0,0.05); }
-        
-        /* ESTILOS DE PODIO */
-        .rank-row.top-0 { border-color: var(--gold); box-shadow: 0 0 20px rgba(255, 215, 0, 0.1); }
+        /* PODIO */
+        .rank-row.top-0 { border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); }
         .rank-row.top-0 td:first-child { color: var(--gold); text-shadow: 0 0 10px var(--gold); font-size: 1.5rem; }
-        
-        .rank-row.top-1 { border-color: var(--silver); box-shadow: 0 0 15px rgba(192, 192, 192, 0.1); }
-        .rank-row.top-1 td:first-child { color: var(--silver); font-size: 1.3rem; }
-        
-        .rank-row.top-2 { border-color: var(--bronze); box-shadow: 0 0 15px rgba(205, 127, 50, 0.1); }
-        .rank-row.top-2 td:first-child { color: var(--bronze); font-size: 1.1rem; }
+        .rank-row.top-1 { border-color: var(--silver); }
+        .rank-row.top-2 { border-color: var(--bronze); }
 
         td { padding: 20px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
         td:first-child { border-left: 1px solid var(--border); border-radius: 15px 0 0 15px; font-weight: 800; text-align: center; width: 60px; }
         td:last-child { border-right: 1px solid var(--border); border-radius: 0 15px 15px 0; font-weight: 800; color: var(--accent); }
 
-        /* PANEL ADMIN */
-        #adminPanel { 
-            display: none; background: #000; border: 1px solid var(--accent); 
-            padding: 40px; width: 95%; max-width: 1000px; margin: 50px auto; 
-            border-radius: 30px; box-shadow: var(--glow); text-align: left;
-        }
-        .admin-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; }
-        
-        input, select, textarea { 
-            width: 100%; background: #0a0a0a; border: 1px solid #222; 
-            color: #fff !important; padding: 15px; border-radius: 12px; 
-            margin-bottom: 15px; font-family: 'Lexend Deca'; box-sizing: border-box; 
-        }
-        option { background: #000; color: #fff; }
-
-        .lvl-pill { display: flex; justify-content: space-between; align-items: center; background: rgba(255,102,0,0.1); padding: 10px 15px; border-radius: 10px; margin-bottom: 8px; font-size: 0.8rem; border: 1px solid rgba(255,102,0,0.2); }
-        .lvl-pill i { color: #ff4444; cursor: pointer; }
+        /* ADMIN PANEL */
+        #adminPanel { display: none; background: #000; border: 1px solid var(--accent); padding: 40px; width: 95%; max-width: 1000px; margin: 50px auto; border-radius: 30px; text-align: left; }
+        input, select, textarea { width: 100%; background: #0a0a0a; border: 1px solid #222; color: #fff !important; padding: 15px; border-radius: 12px; margin-bottom: 15px; font-family: 'Lexend Deca'; box-sizing: border-box; }
 
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .modal-content { background: #0a0a0a; margin: 10vh auto; padding: 40px; width: 90%; max-width: 450px; border-radius: 30px; border: 1px solid var(--border); text-align: center; }
-        .u-lvl-btn { display: flex; justify-content: space-between; background: #111; padding: 12px; border-radius: 12px; margin-bottom: 8px; text-decoration: none; color: #fff; font-size: 0.8rem; border-left: 4px solid var(--accent); transition: 0.3s; }
-        .u-lvl-btn:hover { background: #181818; transform: translateX(5px); box-shadow: var(--glow); }
+        .u-lvl-btn { display: flex; justify-content: space-between; background: #111; padding: 12px; border-radius: 12px; margin-bottom: 8px; text-decoration: none; color: #fff; font-size: 0.8rem; border-left: 4px solid var(--accent); }
 
-        .admin-lock { padding: 60px 0; opacity: 0.05; transition: 0.3s; cursor: pointer; text-align: center; }
-        .admin-lock:hover { opacity: 1; color: var(--accent); }
+        .admin-lock { padding: 60px 0; opacity: 0.05; cursor: pointer; text-align: center; }
     </style>
 </head>
 <body>
@@ -96,71 +59,36 @@
         <div class="staff-item">ADMIN <b>Vegardo</b></div>
         <div class="staff-item">HELPER <b>Blitz</b></div>
         <div class="staff-item">HELPER <b>Sopa354</b></div>
-        <div class="staff-item">CODIFICADOR <b>score</b></div>
     </nav>
 
     <header>
         <h1>SCULLY <span>RANKING</span></h1>
-        <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Regresar al Hub</a>
+        <a href="index.html" class="btn-back">Regresar al Hub</a>
     </header>
 
-    <main class="wrapper">
-        <table>
-            <thead><tr><th>#</th><th style="text-align:left">Jugador</th><th>Récords</th><th>Puntos Totales</th></tr></thead>
-            <tbody id="leaderboardBody"></tbody>
-        </table>
-    </main>
+    <main class="wrapper"><table><tbody id="leaderboardBody"></tbody></table></main>
 
     <div class="admin-lock" onclick="toggleAuth()"><i class="fas fa-lock"></i></div>
-    <div id="authBox" style="display:none; text-align:center; margin-bottom:100px;">
-        <input type="password" id="tokenInput" placeholder="Token de Acceso" style="width:180px;">
-        <button onclick="checkAuth()" style="background:var(--accent); border:none; padding:12px 25px; border-radius:50px; cursor:pointer; font-weight:bold; color:#000;">ACCEDER AL PANEL</button>
+    <div id="authBox" style="display:none; text-align:center; padding-bottom:100px;">
+        <input type="password" id="tokenInput" placeholder="Token" style="width:150px;"><button onclick="checkAuth()">ENTRAR</button>
     </div>
 
     <div id="adminPanel">
-        <h2 style="color:var(--accent); margin-top:0; text-transform:uppercase; letter-spacing:2px;">Gestión de Ranking Hispano</h2>
-        <div class="admin-grid">
-            <div class="admin-col">
-                <p style="font-size: 0.6rem; color: #444; text-transform: uppercase;">1. Datos del Jugador</p>
-                <input type="text" id="targetUser" placeholder="Nombre de Usuario">
+        <h2 style="color:var(--accent); margin-top:0;">Gestión de Ranking Hispano</h2>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px;">
+            <div>
+                <input type="text" id="targetUser" placeholder="Nombre Usuario">
                 <select id="targetCountry">
-                    <option value="" disabled selected>-- Seleccionar País --</option>
-                    <option value="es">España 🇪🇸</option>
-                    <option value="mx">México 🇲🇽</option>
-                    <option value="ar">Argentina 🇦🇷</option>
-                    <option value="cl">Chile cl 🇨🇱</option>
-                    <option value="co">Colombia 🇨🇴</option>
-                    <option value="pe">Perú pe 🇵🇪</option>
-                    <option value="ve">Venezuela 🇻🇪</option>
-                    <option value="ec">Ecuador 🇪🇨</option>
-                    <option value="gt">Guatemala 🇬🇹</option>
-                    <option value="cu">Cuba 🇨🇺</option>
-                    <option value="bo">Bolivia 🇧🇴</option>
-                    <option value="do">República Dominicana 🇩🇴</option>
-                    <option value="hn">Honduras 🇭🇳</option>
-                    <option value="py">Paraguay 🇵🇾</option>
-                    <option value="sv">El Salvador 🇸🇻</option>
-                    <option value="ni">Nicaragua 🇳🇮</option>
-                    <option value="cr">Costa Rica 🇨🇷</option>
-                    <option value="pa">Panamá 🇵🇦</option>
-                    <option value="uy">Uruguay 🇺🇾</option>
-                    <option value="pr">Puerto Rico 🇵🇷</option>
-                    <option value="gq">Guinea Ecuatorial 🇬🇶</option>
+                    <option value="es">España 🇪🇸</option><option value="mx">México 🇲🇽</option>
+                    <option value="ar">Argentina 🇦🇷</option><option value="cl">Chile 🇨🇱</option>
+                    <option value="co">Colombia 🇨🇴</option><option value="pe">Perú 🇵🇪</option>
+                    <option value="ve">Venezuela 🇻🇪</option><option value="ec">Ecuador 🇪🇨</option>
                 </select>
-                
-                <p style="font-size: 0.6rem; color: #444; text-transform: uppercase; margin-top:20px;">2. Registrar Completion</p>
-                <select id="levelSelect" style="color: var(--accent) !important; font-weight:bold;"></select>
-                <input type="text" id="levelLink" placeholder="Enlace del Video (YouTube)">
-                <button onclick="addCompletion()" style="width:100%; background:var(--accent); border:none; padding:15px; border-radius:12px; font-weight:800; cursor:pointer; color:#000;">AÑADIR A PERFIL</button>
+                <select id="levelSelect"></select>
+                <input type="text" id="levelLink" placeholder="URL Video YouTube">
+                <button onclick="addCompletion()" style="width:100%; background:var(--accent); border:none; padding:15px; border-radius:12px; font-weight:800; cursor:pointer;">AÑADIR RÁCORD</button>
             </div>
-            <div class="admin-col">
-                <p style="font-size: 0.6rem; color: #444; text-transform: uppercase;">Niveles del Jugador</p>
-                <div id="currentUserLevels" style="background:#080808; padding:15px; border-radius:15px; min-height:100px; max-height:200px; overflow-y:auto; border:1px solid var(--border);">
-                    <small style="color:#222;">Selecciona un jugador abajo...</small>
-                </div>
-                <p style="font-size: 0.6rem; color: #444; text-transform: uppercase; margin-top:20px;">Lista de Miembros</p>
-                <div id="adminUserList" style="max-height:200px; overflow-y:auto; border-top:1px solid #111;"></div>
-            </div>
+            <div id="adminUserList" style="max-height:300px; overflow-y:auto; background:#080808; padding:15px; border-radius:15px;"></div>
         </div>
     </div>
 
@@ -178,25 +106,22 @@
         db.ref('/').on('value', (s) => {
             fullData = s.val() || {};
             const lvls = fullData.levels || [];
-            const players = Object.values(fullData.players || {});
+            const bans = Object.values(fullData.bans || {});
+            const players = Object.values(fullData.players || {}).filter(p => !bans.includes(p.name));
             
             renderLeaderboard(lvls, players);
             updateLevelSelect(lvls);
             if(sessionStorage.getItem('scully_session') === 'active') {
                 document.getElementById('adminPanel').style.display = "block";
                 updateAdminUserList(players);
-                const current = document.getElementById('targetUser').value;
-                if(current) selectUser(current);
             }
         });
-
-        function calculatePoints(i) { return Math.max(100 - (i * 0.6), 5).toFixed(1); }
 
         function renderLeaderboard(lvls, players) {
             players.forEach(u => {
                 let t = 0; u.completions?.forEach(c => {
                     const idx = lvls.findIndex(l => l.name.toLowerCase() === c.level.toLowerCase());
-                    if(idx > -1) t += parseFloat(calculatePoints(idx));
+                    if(idx > -1) t += parseFloat(Math.max(100 - (idx * 0.6), 5));
                 });
                 u.pts = t.toFixed(1);
             });
@@ -204,59 +129,25 @@
             document.getElementById('leaderboardBody').innerHTML = players.map((u, i) => `
                 <tr class="rank-row top-${i}" onclick="openUserProfile('${u.name}')">
                     <td>${i+1}</td>
-                    <td style="text-align:left;"><img src="https://flagcdn.com/w20/${u.country}.png" style="margin-right:15px; border-radius:2px;">${u.name}</td>
-                    <td>${(u.completions || []).length}</td>
+                    <td style="text-align:left;"><img src="https://flagcdn.com/w20/${u.country}.png" style="margin-right:15px;">${u.name}</td>
                     <td>${u.pts} PTS</td>
                 </tr>`).join("");
         }
 
-        function updateLevelSelect(lvls) {
-            const sel = document.getElementById('levelSelect');
-            sel.innerHTML = '<option value="" style="color:#555">-- Seleccionar Nivel --</option>' + 
-                            lvls.map(l => `<option value="${l.name}">${l.name}</option>`).join("");
-        }
-
-        function selectUser(name) {
-            document.getElementById('targetUser').value = name;
-            const u = Object.values(fullData.players).find(p => p.name === name);
-            if(!u) return;
-            document.getElementById('targetCountry').value = u.country;
-            document.getElementById('currentUserLevels').innerHTML = (u.completions || []).map((c, i) => `
-                <div class="lvl-pill">
-                    <span>${c.level}</span>
-                    <i class="fas fa-times-circle" onclick="removeCompletion(${i})"></i>
-                </div>`).join("");
-        }
-
+        function updateLevelSelect(lvls) { document.getElementById('levelSelect').innerHTML = '<option value="">-- Nivel --</option>' + lvls.map(l => `<option value="${l.name}">${l.name}</option>`).join(""); }
+        
         function addCompletion() {
             const name = document.getElementById('targetUser').value.trim();
             const level = document.getElementById('levelSelect').value;
             const link = document.getElementById('levelLink').value.trim();
             const country = document.getElementById('targetCountry').value;
-            if(!name || !level) return alert("Nombre y Nivel son obligatorios");
-
             db.ref('players').once('value', s => {
                 let p = Object.values(s.val() || {});
-                let idx = p.findIndex(u => u.name.toLowerCase() === name.toLowerCase());
+                let idx = p.findIndex(u => u.name === name);
                 if(idx > -1) {
                     if(!p[idx].completions) p[idx].completions = [];
                     p[idx].completions.push({ level, link });
-                    p[idx].country = country;
-                } else {
-                    p.push({ name, country, completions: [{ level, link }] });
-                }
-                db.ref('players').set(p);
-                document.getElementById('levelLink').value = "";
-            });
-        }
-
-        function removeCompletion(idx) {
-            const name = document.getElementById('targetUser').value;
-            if(!confirm("¿Quitar este récord del jugador?")) return;
-            db.ref('players').once('value', s => {
-                let p = Object.values(s.val() || {});
-                let i = p.findIndex(u => u.name === name);
-                p[i].completions.splice(idx, 1);
+                } else { p.push({ name, country, completions: [{ level, link }] }); }
                 db.ref('players').set(p);
             });
         }
@@ -264,24 +155,17 @@
         function openUserProfile(n) {
             const u = Object.values(fullData.players).find(x => x.name === n);
             document.getElementById('uModalContent').innerHTML = `
-                <span onclick="closeM()" style="float:right; cursor:pointer; color:var(--accent); font-size:1.5rem;">&times;</span>
-                <img src="https://flagcdn.com/w80/${u.country}.png" style="width:60px; border-radius:10px; margin-bottom:15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
-                <h2 style="color:var(--accent); margin:0; text-transform:uppercase;">${u.name}</h2>
-                <div style="margin-top:25px; text-align:left; max-height:300px; overflow-y:auto; padding-right:10px;">
-                    ${(u.completions || []).map(c => `
-                        <a href="${c.link}" target="_blank" class="u-lvl-btn">
-                            <span>${c.level}</span>
-                            <i class="fab fa-youtube"></i>
-                        </a>`).join("") || '<p style="color:#444; text-align:center;">Sin récords registrados</p>'}
-                </div>`;
+                <span onclick="closeM()" style="float:right; cursor:pointer;">&times;</span>
+                <img src="https://flagcdn.com/w80/${u.country}.png" style="width:60px; border-radius:10px; margin-bottom:15px;">
+                <h2 style="color:var(--accent); margin:0;">${u.name}</h2>
+                <div style="margin-top:20px;">${(u.completions || []).map(c => `<a href="${c.link}" target="_blank" class="u-lvl-btn"><span>${c.level}</span><i class="fab fa-youtube"></i></a>`).join("")}</div>
+            `;
             document.getElementById('uModal').style.display = "block";
         }
-
         function toggleAuth() { const b = document.getElementById('authBox'); b.style.display = b.style.display === "block" ? "none" : "block"; }
         function checkAuth() { if(document.getElementById('tokenInput').value === TOKEN) { sessionStorage.setItem('scully_session', 'active'); location.reload(); } }
         function closeM() { document.getElementById('uModal').style.display = "none"; }
-        function deleteUser(i) { if(confirm("¿Eliminar jugador de la base de datos?")) db.ref('players').once('value', s => { let p = Object.values(s.val() || {}); p.splice(i, 1); db.ref('players').set(p); }); }
-        function updateAdminUserList(p) { document.getElementById('adminUserList').innerHTML = p.map((u, i) => `<div style="display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid #111; font-size:0.75rem;"><span onclick="selectUser('${u.name}')" style="cursor:pointer; color:var(--accent); font-weight:bold;">${u.name}</span><i class="fas fa-trash-alt" onclick="deleteUser(${i})" style="color:#400; cursor:pointer;"></i></div>`).join(""); }
+        function updateAdminUserList(p) { document.getElementById('adminUserList').innerHTML = p.map((u, i) => `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #111;"><span onclick="document.getElementById('targetUser').value='${u.name}'" style="cursor:pointer; color:var(--accent);">${u.name}</span><i class="fas fa-trash" onclick="db.ref('players').once('value',s=>{let list=Object.values(s.val());list.splice(${i},1);db.ref('players').set(list);})"></i></div>`).join(""); }
     </script>
 </body>
 </html>
