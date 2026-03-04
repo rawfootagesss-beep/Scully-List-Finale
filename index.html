@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Scully List | Hub de Ingeniería</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
@@ -33,7 +33,6 @@
         .log-item { margin-right: 100px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; gap: 8px; }
         @keyframes ticker-scroll { 0% { transform: translateX(80vw); } 100% { transform: translateX(-250%); } }
         
-        /* BARRA DE STAFF CON LOGOS RE-ESTABLECIDOS */
         .staff-bar { display: flex; justify-content: center; gap: 25px; padding: 15px; background: rgba(255,255,255,0.02); font-size: 0.6rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center; }
         .staff-item i { color: var(--accent); margin-right: 6px; }
         
@@ -103,7 +102,7 @@
         <div class="main-nav">
             <a href="index.html" class="btn-scully" style="color:var(--green); border-color:var(--green);"><i class="fas fa-list-ol"></i> Lista</a>
             <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking</a>
-            <a href="submit.html" class="btn-scully"><i class="fas fa-upload"></i> Enviar</a>
+            <a href="submit.html" class="btn-scully"><i class="fas fa-upload"></i> Enviar Récord</a>
             <a href="suggest.html" class="btn-scully" style="color:var(--purple); border-color:var(--purple);"><i class="fas fa-lightbulb"></i> Sugerir Nivel</a>
             <a href="rules.html" class="btn-scully" style="color:var(--blue); border-color:var(--blue);"><i class="fas fa-book"></i> Reglas y Orientación</a>
             <a href="changelog.html" class="btn-scully" style="color:var(--yellow); border-color:var(--yellow);">
@@ -168,7 +167,6 @@
 
         const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
         updateThemeColor(savedColor);
-        document.getElementById('themeColor').value = savedColor;
         function updateThemeColor(v) { document.documentElement.style.setProperty('--accent', v); localStorage.setItem('scully-theme-color', v); }
 
         auth.onAuthStateChanged(user => {
@@ -199,7 +197,7 @@
             let html = "";
             const list = Object.values(sugs).reverse().slice(0, 4);
             list.forEach(s => { html += `<div class="sug-card"><span>PROPUESTA:</span> <b>${s.level}</b><br>Por: <b>${s.player}</b></div>`; });
-            document.getElementById('communitySuggestions').innerHTML = html || "<p style='text-align:center; color:#333; grid-column:1/-1; font-size:0.7rem;'>No hay propuestas nuevas.</p>";
+            document.getElementById('communitySuggestions').innerHTML = html || "<p style='text-align:center; color:#333; font-size:0.7rem; grid-column:1/-1;'>No hay propuestas nuevas.</p>";
         }
 
         function renderLevels(n) { 
