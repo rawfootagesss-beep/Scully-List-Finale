@@ -38,8 +38,9 @@
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; font-size: 0.75rem; color: var(--accent); font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
         
-        input, textarea, select { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 15px; font-family: 'Lexend Deca'; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: 0.3s; resize: vertical; }
-        input:focus, textarea:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 15px rgba(0,204,255,0.1); }
+        input, textarea { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 15px; font-family: 'Lexend Deca'; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: 0.3s; resize: vertical; }
+        input:focus, textarea:focus { border-color: var(--blue); box-shadow: 0 0 15px rgba(0,204,255,0.1); }
+        input:read-only { background: rgba(255,255,255,0.05); color: #888; cursor: not-allowed; border-color: #222 !important; box-shadow: none !important; text-transform: uppercase; font-weight: 800; text-align: center; }
         
         .btn-save { background: var(--blue); color: #000; border: none; padding: 15px 30px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 100%; display: flex; justify-content: center; gap: 10px; align-items: center; text-transform: uppercase; margin-top: 10px; }
         .btn-save:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0,204,255,0.4); }
@@ -65,7 +66,6 @@
 
         .staff-badge { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 25px; background: rgba(255,255,0,0.1); border: 2px solid var(--yellow); color: var(--yellow); border-radius: 50px; font-weight: 900; font-size: 1.2rem; letter-spacing: 1px; margin-top: 10px; }
 
-        /* ZONA DE STATUS DE RÉCORDS */
         .status-list { max-height: 250px; overflow-y: auto; padding-right: 10px; margin-top: 15px; }
         .record-card { background: rgba(0,0,0,0.4); border: 1px solid var(--border); padding: 15px 20px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .record-info h4 { margin: 0 0 5px 0; font-size: 0.95rem; color: #fff; }
@@ -110,18 +110,11 @@
                 <h2><i class="fas fa-id-badge"></i> Perfil Público y Redes Sociales</h2>
                 
                 <div class="input-group">
-                    <label><i class="fas fa-flag"></i> Ubicación (Bandera)</label>
-                    <button onclick="detectCountry()" class="btn-save btn-geo"><i class="fas fa-map-marker-alt"></i> DETECTAR MI PAÍS AUTOMÁTICAMENTE</button>
-                    <select id="countrySelect">
-                        <option value="ar">Argentina</option><option value="bo">Bolivia</option><option value="br">Brasil</option>
-                        <option value="cl">Chile</option><option value="co">Colombia</option><option value="cr">Costa Rica</option>
-                        <option value="cu">Cuba</option><option value="ec">Ecuador</option><option value="sv">El Salvador</option>
-                        <option value="es">España</option><option value="gt">Guatemala</option><option value="hn">Honduras</option>
-                        <option value="mx">México</option><option value="ni">Nicaragua</option><option value="pa">Panamá</option>
-                        <option value="py">Paraguay</option><option value="pe">Perú</option><option value="pr">Puerto Rico</option>
-                        <option value="do">Rep. Dominicana</option><option value="uy">Uruguay</option><option value="ve">Venezuela</option>
-                        <option value="us">Estados Unidos</option>
-                    </select>
+                    <label><i class="fas fa-flag"></i> Ubicación Global (Bandera)</label>
+                    <p style="font-size:0.75rem; color:#888; margin-bottom:10px;">Tu país solo se puede configurar mediante nuestro sistema de detección segura.</p>
+                    <button onclick="detectCountry()" class="btn-save btn-geo"><i class="fas fa-map-marker-alt"></i> DETECTAR MI UBICACIÓN</button>
+                    <input type="text" id="displayCountry" placeholder="País Desconocido" readonly>
+                    <input type="hidden" id="hiddenCountryCode">
                 </div>
 
                 <div class="input-group">
@@ -154,14 +147,13 @@
 
             <div class="panel" style="border-color: rgba(0,255,102,0.2);">
                 <h2 style="color:var(--green);"><i class="fas fa-image" style="color:var(--green);"></i> Foto de Perfil</h2>
-                <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">El Staff revisará tu imagen. Usa links directos (Imgur, Discord) .png o .jpg.</p>
+                <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">El Staff revisará tu imagen. Usa links directos (Imgur, Discord) terminados en .png o .jpg.</p>
                 <input type="text" id="pfpInput" placeholder="Pega el link de la imagen aquí..." style="margin-bottom:15px;">
                 <button onclick="requestPFP()" class="btn-save btn-pfp"><i class="fas fa-upload"></i> SOLICITAR PFP</button>
             </div>
 
             <div id="staffZone" class="panel" style="border-color: rgba(255,255,0,0.3); text-align:center;">
                 <h2 style="color:var(--yellow); justify-content:center; border:none; padding:0; margin-bottom:15px;"><i class="fas fa-shield-alt" style="color:var(--yellow);"></i> Autorización de Equipo Staff</h2>
-                
                 <div id="staffInputArea">
                     </div>
             </div>
@@ -218,14 +210,14 @@
 
         async function detectCountry() {
             try {
-                showToast("Detectando ubicación de red...");
+                showToast("Detectando red...");
                 const res = await fetch('https://ipapi.co/json/');
                 const data = await res.json();
-                const code = data.country_code.toLowerCase();
-                document.getElementById('countrySelect').value = code;
-                showToast("País detectado: " + data.country_name);
+                document.getElementById('hiddenCountryCode').value = data.country_code.toLowerCase();
+                document.getElementById('displayCountry').value = data.country_name;
+                showToast("Detección Exitosa");
             } catch (e) {
-                showToast("Error al detectar. Selecciónalo manualmente.", true);
+                showToast("Bloqueado por AdBlocker o Privacidad", true);
             }
         }
 
@@ -243,12 +235,13 @@
                     document.getElementById('viewProfile').style.display = "block";
                     
                     document.getElementById('bioInput').value = myProfileData.bio || "";
-                    document.getElementById('countrySelect').value = myProfileData.country || "es";
+                    document.getElementById('hiddenCountryCode').value = myProfileData.country || "es";
+                    document.getElementById('displayCountry').value = (myProfileData.country || "NO ASIGNADO").toUpperCase();
+                    
                     document.getElementById('ytInput').value = myProfileData.socials?.yt || "";
                     document.getElementById('twInput').value = myProfileData.socials?.tw || "";
                     document.getElementById('dcInput').value = myProfileData.socials?.dc || "";
 
-                    // INTERFAZ RANGO STAFF
                     if(myProfileData.role) {
                         let colorHex = myProfileData.role === 'admin' ? '#ff6600' : '#66fcf1';
                         let icon = myProfileData.role === 'admin' ? 'fa-crown' : 'fa-shield-alt';
@@ -268,7 +261,6 @@
                         `;
                     }
 
-                    // CARGAR EL STATUS DE LOS RÉCORDS
                     loadMyRecordsStatus(fullData.submissions || {}, fullData.history || {});
 
                 } else {
@@ -282,7 +274,6 @@
             let html = "";
             let recordsFound = 0;
 
-            // 1. Buscar en Subidas Pendientes
             Object.values(submissions).forEach(sub => {
                 if(sub.player.toLowerCase() === myNick.toLowerCase()) {
                     recordsFound++;
@@ -297,7 +288,6 @@
                 }
             });
 
-            // 2. Buscar en Historial (Aceptados/Rechazados)
             Object.values(history).reverse().forEach(hist => {
                 if(hist.player.toLowerCase() === myNick.toLowerCase()) {
                     recordsFound++;
@@ -360,7 +350,7 @@
             if(myPlayerIndex === -1) return;
             const updates = {
                 bio: document.getElementById('bioInput').value,
-                country: document.getElementById('countrySelect').value
+                country: document.getElementById('hiddenCountryCode').value
             };
             db.ref(`players/${myPlayerIndex}`).update(updates);
             
@@ -368,7 +358,7 @@
                 yt: document.getElementById('ytInput').value, 
                 tw: document.getElementById('twInput').value, 
                 dc: document.getElementById('dcInput').value 
-            }).then(() => { showToast("¡Perfil y Redes Guardadas!"); });
+            }).then(() => { showToast("¡Perfil Guardado Corectamente!"); });
         }
 
         function requestPFP() {
@@ -376,11 +366,9 @@
             const url = document.getElementById('pfpInput').value;
             if(!url) return showToast("Ingresa un link válido", true);
             db.ref('pfp_requests').push({ nick: myProfileData.name, url: url }).then(() => {
-                showToast("Solicitud PFP enviada al Staff"); document.getElementById('pfpInput').value = "";
+                showToast("Solicitud PFP enviada"); document.getElementById('pfpInput').value = "";
             });
         }
     </script>
-</body>
-</html>
 </body>
 </html>
