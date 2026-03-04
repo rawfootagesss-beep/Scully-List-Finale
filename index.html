@@ -3,190 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>The Scully List | Hub de Ingeniería</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <meta name="description" content="La clasificación definitiva de Demons de Geometry Dash. Récords, estadísticas y mercado de XP.">
     <meta property="og:title" content="The Scully List | Hub de Ingeniería">
-    <meta property="og:description" content="Tanta innovación que es ilegal. Monitoreo OMNI v7.0 activo.">
+    <meta property="og:description" content="Tanta innovación que es ilegal. Clasificación y Mercado OMNI Activo.">
     <meta property="og:image" content="preview.png">
-    <meta property="og:type" content="website">
-
+    
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* VARIABLES GLOBALES */
         :root { 
-            --accent: #ff6600; 
-            --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
-            --bg: #030303; 
-            --card-bg: rgba(15, 15, 15, 0.85);
-            --glow: 0 0 25px rgba(255, 102, 0, 0.3); 
-            --border: rgba(255, 255, 255, 0.05);
-            --green: #00ff66; 
-            --red: #ff3333; 
-            --blue: #00ccff; 
-            --yellow: #ffff00; 
-            --purple: #cc00ff; 
-            --gold: #ffd700;
+            --accent: #ff6600; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
+            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85); --glow: 0 0 25px rgba(255, 102, 0, 0.3); 
+            --border: rgba(255, 255, 255, 0.05); --green: #00ff66; --red: #ff3333; --blue: #00ccff; 
+            --purple: #cc00ff; --gold: #ffd700; --discord: #7289da;
         }
 
-        /* RESET Y BASE */
-        body { 
-            background: var(--bg); 
-            color: #fff; 
-            font-family: 'Lexend Deca', sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            overflow-x: hidden; 
-            scroll-behavior: smooth; 
-        }
-        
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
-        /* ALERTA GLOBAL (OMNI v7) */
-        #globalAlert { 
-            display: none; 
-            background: var(--red); 
-            color: #fff; 
-            text-align: center; 
-            padding: 12px; 
-            font-weight: 800; 
-            font-size: 0.75rem; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-            position: sticky; 
-            top: 0; 
-            z-index: 2000; 
-            box-shadow: 0 5px 20px rgba(255, 51, 51, 0.4); 
-        }
-
-        /* TICKER DE NOTICIAS DE RED */
-        .news-ticker { 
-            background: rgba(0,0,0,0.95); 
-            border-bottom: 1px solid var(--border); 
-            padding: 12px 0; 
-            font-size: 0.65rem; 
-            font-family: 'JetBrains Mono'; 
-            overflow: hidden; 
-            display: flex; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
-        }
-        .ticker-content { 
-            display: flex; 
-            white-space: nowrap; 
-            animation: ticker-scroll 45s linear infinite; 
-        }
-        .log-item { 
-            margin-right: 100px; 
-            letter-spacing: 1px; 
-            text-transform: uppercase; 
-            font-weight: 800; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-        }
+        /* ALERTA Y TICKER */
+        #globalAlert { display: none; background: var(--red); color: #fff; text-align: center; padding: 12px; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; position: sticky; top: 0; z-index: 2000; box-shadow: 0 5px 20px rgba(255, 51, 51, 0.4); }
+        .news-ticker { background: rgba(0,0,0,0.95); border-bottom: 1px solid var(--border); padding: 12px 0; font-size: 0.65rem; font-family: 'JetBrains Mono'; overflow: hidden; display: flex; position: sticky; top: 0; z-index: 1000; }
+        .ticker-content { display: flex; white-space: nowrap; animation: ticker-scroll 45s linear infinite; }
+        .log-item { margin-right: 100px; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; gap: 8px; }
         @keyframes ticker-scroll { 0% { transform: translateX(100vw); } 100% { transform: translateX(-150%); } }
-        
-        /* STAFF BAR CLÁSICA */
-        .staff-bar { 
-            display: flex; justify-content: center; gap: 25px; padding: 15px; 
-            background: rgba(255,255,255,0.02); font-size: 0.6rem; 
-            border-bottom: 1px solid var(--border); flex-wrap: wrap; 
-            align-items: center; text-transform: uppercase; font-weight: 700; 
-        }
-        .staff-item i { color: var(--accent); margin-right: 6px; }
+
+        /* STAFF BAR */
+        .staff-bar { display: flex; justify-content: center; gap: 25px; padding: 15px; background: rgba(255,255,255,0.02); font-size: 0.6rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center; text-transform: uppercase; font-weight: 700; }
+        .staff-item i { margin-right: 6px; }
         .tribute-item { color: #fff; font-weight: 800; border: 1px solid rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 50px; }
 
-        /* CABECERA */
+        /* HEADER Y NAVEGACIÓN ESTÉTICA */
         header { padding: 60px 20px 40px; text-align: center; position: relative; }
-        h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 800; margin: 0; letter-spacing: -2px; }
+        h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 800; margin: 0; letter-spacing: -2px; text-transform: uppercase; }
         h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        /* NAVEGACIÓN COMPLETA */
         .main-nav { margin-top: 35px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; align-items: center; }
-        .btn-scully { 
-            background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; 
-            padding: 14px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; 
-            font-weight: 600; transition: 0.3s; text-transform: uppercase; 
-            display: inline-flex; align-items: center; gap: 10px; cursor: pointer; position: relative; 
-        }
-        .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: var(--glow); }
+        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 14px 28px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; text-transform: uppercase; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; position: relative; }
+        .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: var(--glow); border-color: var(--accent); }
         .btn-scully.active { border-color: var(--accent); color: var(--accent); }
-        
-        .badge-new { 
-            background: var(--purple); color: #fff; font-size: 0.5rem; padding: 2px 6px; 
-            border-radius: 4px; font-weight: 800; position: absolute; top: -8px; right: -8px; 
-            animation: pulse 1.5s infinite; box-shadow: 0 0 10px var(--purple); 
-        }
+        .badge-new { background: var(--purple); color: #fff; font-size: 0.5rem; padding: 2px 6px; border-radius: 4px; font-weight: 800; position: absolute; top: -8px; right: -8px; animation: pulse 1.5s infinite; box-shadow: 0 0 10px var(--purple); }
         @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* ESTRUCTURA PRINCIPAL */
+        /* SECCIONES */
         .container { width: 95%; max-width: 1200px; margin: 40px auto; }
-        
-        /* EL TRONO (TOP 1) */
         .throne-section { width: 90%; max-width: 850px; margin: 40px auto; }
-        .throne-card { 
-            background-size: cover; background-position: center; border-radius: 30px; 
-            padding: 60px; border: 2px solid var(--accent); box-shadow: var(--glow); 
-            display: flex; align-items: center; position: relative; overflow: hidden; 
-            min-height: 250px; transition: 0.5s; 
-        }
-        .throne-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, #000 50%, transparent); z-index: 1; }
+        .throne-card { background-size: cover; background-position: center; border-radius: 30px; padding: 60px; border: 2px solid var(--accent); box-shadow: var(--glow); display: flex; align-items: center; position: relative; overflow: hidden; min-height: 280px; transition: 0.5s; }
+        .throne-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, #000 60%, transparent); z-index: 1; }
         .throne-info { position: relative; z-index: 2; text-align: left; }
 
-        /* SUGERENCIAS DE LA COMUNIDAD */
         .suggestions-hub { width: 95%; max-width: 1200px; margin: 40px auto; }
         .sug-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; margin-top: 20px; }
         .sug-card { background: rgba(204, 0, 255, 0.03); border: 1px solid rgba(204, 0, 255, 0.1); padding: 18px; border-radius: 20px; font-size: 0.75rem; color: #aaa; }
-        .sug-card b { color: #fff; }
-        .sug-card span { color: var(--purple); font-weight: 800; }
-
-        /* LISTA PRINCIPAL (GRID) */
-        .list-grid { width: 95%; max-width: 1200px; margin: 40px auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        .level-card { 
-            background: var(--card-bg); border-radius: 20px; padding: 12px; display: flex; 
-            align-items: center; border: 1px solid var(--border); cursor: pointer; 
-            transition: 0.3s; position: relative; overflow: hidden; 
-        }
-        .level-card:hover { border-color: var(--accent); transform: scale(1.02); }
-        .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
-        .level-rank { position: absolute; right: 15px; font-weight: 900; font-size: 2rem; opacity: 0.05; font-family: 'JetBrains Mono'; }
-
-        /* IDENTIDAD TRACKER */
-        .status-tracker { max-width: 700px; margin: 80px auto; padding: 50px; background: var(--card-bg); border-radius: 40px; border: 1px solid var(--border); text-align: center; }
         
-        /* FOOTER Y COLOR PICKER */
-        .footer-credits { padding: 60px 20px; text-align: center; background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); margin-top: 100px; }
-        .color-trigger { display: inline-flex; align-items: center; justify-content: center; width: 45px; height: 45px; background: var(--accent); color: #000; border-radius: 50%; cursor: pointer; box-shadow: var(--glow); margin-top: 20px; }
-        #themeColor { opacity: 0; position: absolute; pointer-events: none; }
+        .list-grid { width: 95%; max-width: 1200px; margin: 40px auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .level-card { background: var(--card-bg); border-radius: 20px; padding: 12px; display: flex; align-items: center; border: 1px solid var(--border); cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; }
+        .level-card:hover { border-color: var(--accent); transform: scale(1.02); background: rgba(255,255,255,0.02); }
+        .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
+        .level-rank { position: absolute; right: 15px; font-weight: 900; font-size: 2.2rem; opacity: 0.05; font-family: 'JetBrains Mono'; }
 
-        /* MODALES (DETAILS Y RULETA) */
+        .status-tracker { max-width: 700px; margin: 80px auto; padding: 50px; background: var(--card-bg); border-radius: 40px; border: 1px solid var(--border); text-align: center; }
+        .footer-credits { padding: 60px 20px; text-align: center; background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); margin-top: 100px; }
+        
+        /* MODALES */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000; backdrop-filter: blur(15px); }
         .modal-content { background: #0a0a0a; margin: 5vh auto; padding: 35px; width: 90%; max-width: 650px; border-radius: 35px; border: 1px solid var(--border); text-align: center; position: relative; max-height: 85vh; overflow-y: auto; }
-        
         .victor-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #111; font-size: 0.85rem; }
-        .btn-video { color: var(--red); text-decoration: none; font-weight: 800; font-size: 0.65rem; background: rgba(255,51,51,0.1); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,51,51,0.2); }
+        .btn-video { color: var(--red); text-decoration: none; font-weight: 800; font-size: 0.65rem; background: rgba(255,51,51,0.1); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,51,51,0.2); transition: 0.3s; }
+        .btn-video:hover { background: var(--red); color: #fff; }
     </style>
-    
     <style id="omni-custom-css"></style>
 </head>
 <body>
 
-    <div id="globalAlert"></div>
+    <div id="globalAlert">ALERTA DE SISTEMA</div>
 
-    <div class="news-ticker"><div class="ticker-content" id="ticker-box">Cargando transmisiones del servidor...</div></div>
+    <div class="news-ticker"><div class="ticker-content" id="ticker-box">CARGANDO DATOS DEL SERVIDOR...</div></div>
     
     <nav class="staff-bar">
         <div class="staff-item tribute-item">TRIBUTO A 2PARX 🕊️</div>
         <div class="staff-item"><i class="fas fa-crown"></i> OWNER <b>score</b></div>
-        <div class="staff-item"><i class="fas fa-user-shield"></i> ADMIN <b>awrqsdt</b></div>
-        <div class="staff-item"><i class="fas fa-hands-helping"></i> HELPER <b>Blitz</b></div>
+        <div class="staff-item"><i class="fas fa-code" style="color:var(--purple);"></i> DEV <b>score</b></div>
+        <div class="staff-item"><i class="fas fa-user-shield" style="color:var(--blue);"></i> ADMIN <b>awrqsdt</b></div>
+        <div class="staff-item"><i class="fas fa-hands-helping" style="color:var(--green);"></i> HELPER <b>Blitz</b></div>
+        <div class="staff-item"><i class="fas fa-hands-helping" style="color:var(--green);"></i> HELPER <b>nico</b></div>
     </nav>
     
     <header>
@@ -195,253 +98,131 @@
         <div class="main-nav">
             <a href="index.html" class="btn-scully active"><i class="fas fa-list-ol"></i> Lista</a>
             <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking</a>
-            <a href="market.html" class="btn-scully" style="color:var(--gold); border-color:var(--gold);"><i class="fas fa-shopping-cart"></i> Mercado <span class="badge-new">XP</span></a>
+            
+            <a href="market.html" class="btn-scully" style="color:var(--gold); border-color:rgba(255,215,0,0.3);"><i class="fas fa-shopping-cart"></i> Mercado <span class="badge-new">XP</span></a>
+            <a href="https://discord.gg/96W3MWrZ2P" target="_blank" class="btn-scully" style="color:var(--discord); border-color:rgba(114,137,218,0.3);"><i class="fab fa-discord"></i> Discord Oficial</a>
+            
             <a href="submit.html" class="btn-scully"><i class="fas fa-upload"></i> Enviar</a>
-            <a href="suggest.html" class="btn-scully" style="color:var(--purple); border-color:var(--purple);"><i class="fas fa-lightbulb"></i> Sugerir</a>
+            <a href="suggest.html" class="btn-scully" style="color:var(--purple); border-color:rgba(204,0,255,0.3);"><i class="fas fa-lightbulb"></i> Sugerir</a>
             <button class="btn-scully" onclick="openRuleta()"><i class="fas fa-dice"></i></button>
-            <a href="login.html" class="btn-scully" id="nav-login">Acceso Datos</a>
-            <a href="admin.html" id="adminBtn" class="btn-scully" style="display:none; background:var(--accent); color:#000;"><i class="fas fa-terminal"></i> MASTER PANEL</a>
+            
+            <a href="login.html" class="btn-scully" id="nav-login"><i class="fas fa-user"></i> Acceso</a>
+            <a href="admin.html" id="adminBtn" class="btn-scully" style="display:none; background:var(--accent); color:#000; border:none;"><i class="fas fa-terminal"></i> ADMIN OMNI</a>
         </div>
     </header>
 
     <main class="container">
-        
         <section class="throne-section" id="throneDisplay"></section>
 
         <section class="suggestions-hub">
-            <h2 style="font-size:0.75rem; color:var(--purple); text-transform:uppercase; letter-spacing:2px; text-align:center; margin-bottom: 25px;">
-                <i class="fas fa-comments"></i> Propuestas de la Red
-            </h2>
+            <h2 style="font-size:0.75rem; color:var(--purple); text-transform:uppercase; letter-spacing:2px; text-align:center; margin-bottom: 25px;"><i class="fas fa-comments"></i> Sugerencias Globales</h2>
             <div class="sug-grid" id="communitySuggestions"></div>
         </section>
 
         <div class="list-grid" id="main-list"></div>
 
         <section class="status-tracker">
-            <h2 style="color:var(--accent); text-transform: uppercase; font-size: 1.2rem; margin-bottom:10px;"><i class="fas fa-id-card"></i> Identidad Scully</h2>
-            <p style="color:#666; font-size:0.85rem; margin-bottom:30px;">Sincroniza tus récords, acumula XP y personaliza tu perfil en el Ranking Global.</p>
+            <h2 style="color:var(--accent); text-transform: uppercase; font-size: 1.5rem; margin-top:0;"><i class="fas fa-id-card"></i> Identidad Scully</h2>
+            <p style="color:#888; font-size:0.9rem; margin-bottom:30px;">Crea tu perfil, acumula XP superando niveles y gástala en el Mercado Global.</p>
             <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                <a href="login.html" class="btn-scully" style="background:var(--accent); color:#000; border:none; padding:15px 35px;">GESTIONAR CUENTA</a>
-                <a href="leaderboards.html" class="btn-scully" style="padding:15px 35px;">VER LÍDERES GLOBALES</a>
+                <a href="login.html" class="btn-scully" style="background:var(--accent); color:#000; border:none; padding:15px 35px;">CREAR PERFIL / LOGIN</a>
+                <a href="leaderboards.html" class="btn-scully" style="padding:15px 35px;">EXPLORAR RANKING</a>
             </div>
         </section>
-
     </main>
 
     <footer class="footer-credits">
-        <p style="color:#444; font-size:0.7rem; text-transform:uppercase; letter-spacing: 2px;">The Scully List &copy; 2026 | score engineering</p>
-        <label for="themeColor" class="color-trigger"><i class="fas fa-palette"></i></label>
-        <input type="color" id="themeColor" oninput="updateThemeColor(this.value)">
+        <p>THE SCULLY LIST &copy; 2026 | CODED BY SCORE ENGINEERING</p>
     </footer>
 
     <div id="ruletaModal" class="modal">
         <div class="modal-content">
-            <h2 style="color:var(--accent); text-transform:uppercase;">Ruleta de Desafío</h2>
-            <div id="ruletaText" style="font-size:2.2rem; font-weight:800; margin:40px 0; color:#fff;">¿Qué jugarás hoy?</div>
-            <button class="btn-scully" onclick="spinRoulette()" style="width:100%; justify-content:center; background:var(--accent); color:#000;">GIRAR RULETA</button>
-            <button class="btn-scully" onclick="closeModal('ruletaModal')" style="width:100%; justify-content:center; margin-top:10px; background:transparent; border:none; color:#444;">CERRAR</button>
+            <h2 style="color:var(--accent); text-transform:uppercase; letter-spacing:1px;"><i class="fas fa-dice"></i> Ruleta de Desafío</h2>
+            <div id="ruletaText" style="font-size:2.5rem; font-family:'JetBrains Mono'; font-weight:800; margin:40px 0; color:#fff;">¿QUÉ JUGARÁS?</div>
+            <button class="btn-scully" onclick="spinRoulette()" style="width:100%; justify-content:center; background:var(--accent); color:#000; padding:20px; font-size:1rem;">GIRAR RULETA</button>
+            <button class="btn-scully" onclick="closeModal('ruletaModal')" style="width:100%; justify-content:center; margin-top:15px; background:transparent; border:none; color:#666;">CERRAR</button>
         </div>
     </div>
     
-    <div id="levelModal" class="modal">
-        <div class="modal-content" id="modal-body"></div>
-    </div>
+    <div id="levelModal" class="modal"><div class="modal-content" id="modal-body"></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     
     <script>
-        const firebaseConfig = { 
-            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
-            authDomain: "scullylist.firebaseapp.com", 
-            databaseURL: "https://scullylist-default-rtdb.firebaseio.com", 
-            projectId: "scullylist", 
-            storageBucket: "scullylist.firebasestorage.app", 
-            messagingSenderId: "498548914021", 
-            appId: "1:498548914021:web:59128b5e06b36a4e81938c" 
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
+        const firebaseConfig = { apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", authDomain: "scullylist.firebaseapp.com", databaseURL: "https://scullylist-default-rtdb.firebaseio.com", projectId: "scullylist", storageBucket: "scullylist.firebasestorage.app", messagingSenderId: "498548914021", appId: "1:498548914021:web:59128b5e06b36a4e81938c" };
+        firebase.initializeApp(firebaseConfig); const auth = firebase.auth(), db = firebase.database();
         let fullData = {};
 
-        // SISTEMA DE TEMA DINÁMICO
-        const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
-        updateThemeColor(savedColor);
-        function updateThemeColor(v) { 
-            document.documentElement.style.setProperty('--accent', v); 
-            localStorage.setItem('scully-theme-color', v); 
-        }
-
-        // CARGA MAESTRA DE DATOS
         db.ref('/').on('value', snap => {
             fullData = snap.val() || {};
-            
-            // Array seguro de niveles
             const lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels.filter(l=>l) : Object.values(fullData.levels)) : [];
             
             renderLevels(lvls);
             renderThrone(lvls);
             renderSuggestions(fullData.level_suggestions || {});
             
-            // Ajustes OMNI (Alerta, Custom CSS, Ticker)
             if(fullData.system_settings){
                 const alertEl = document.getElementById('globalAlert');
-                if(fullData.system_settings.global_alert){
-                    alertEl.innerText = fullData.system_settings.global_alert_msg || "ALERTA DE SISTEMA";
-                    alertEl.style.display = 'block';
-                } else {
-                    alertEl.style.display = 'none';
-                }
-                
-                if(fullData.system_settings.custom_css) {
-                    document.getElementById('omni-custom-css').innerHTML = fullData.system_settings.custom_css;
-                }
+                if(fullData.system_settings.global_alert){ alertEl.innerText = fullData.system_settings.global_alert_msg; alertEl.style.display = 'block'; } else { alertEl.style.display = 'none'; }
+                if(fullData.system_settings.custom_css) document.getElementById('omni-custom-css').innerHTML = fullData.system_settings.custom_css;
             }
-
-            // Ticker de Auditoría en Vivo (Logs del Panel Admin)
-            const tickerBox = document.getElementById('ticker-box');
-            if(fullData.logs) {
-                tickerBox.innerHTML = Object.values(fullData.logs).reverse().slice(0,10).map(l => `<span class="log-item"><i class="fas fa-terminal" style="color:var(--accent)"></i> ${l.msg}</span>`).join("");
-            } else {
-                tickerBox.innerHTML = `<span class="log-item"><i class="fas fa-satellite-dish" style="color:var(--green)"></i> SISTEMA OMNI v7.0 ONLINE</span>`;
-            }
+            if(fullData.logs) document.getElementById('ticker-box').innerHTML = Object.values(fullData.logs).reverse().slice(0,10).map(l => `<span class="log-item"><i class="fas fa-satellite-dish" style="color:var(--accent)"></i> ${l.msg}</span>`).join("");
         });
 
-        // RENDERIZADO DE LA LISTA
         function renderLevels(lvls) { 
-            const calcXP = (index) => Math.max(100 - (index * 0.6), 5).toFixed(1);
-            let html = "";
-            lvls.forEach((l, i) => {
-                html += `
+            const calcXP = (i) => Math.max(100 - (i * 0.6), 5).toFixed(1);
+            document.getElementById('main-list').innerHTML = lvls.map((l, i) => `
                 <div class="level-card" onclick="openDetails(${i})">
-                    <img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg" alt="Level Thumbnail">
+                    <img src="https://img.youtube.com/vi/${l.id}/mqdefault.jpg">
                     <div>
-                        <h3 style="font-size:0.9rem; margin:0; text-transform:uppercase;">${l.name}</h3>
-                        <p style="color:var(--accent); font-weight:800; font-size:0.65rem; margin-top:3px;">+${calcXP(i)} XP</p>
+                        <h3 style="font-size:1rem; margin:0; text-transform:uppercase;">${l.name}</h3>
+                        <p style="color:var(--accent); font-weight:800; font-size:0.7rem; margin-top:5px;"><i class="fas fa-star"></i> +${calcXP(i)} XP</p>
                     </div>
                     <div class="level-rank">#${i+1}</div>
-                </div>`;
-            });
-            document.getElementById('main-list').innerHTML = html || "<p style='text-align:center;'>La base de datos está vacía.</p>"; 
+                </div>`).join(""); 
         }
 
-        // RENDERIZADO DEL TOP 1 (EL TRONO)
         function renderThrone(lvls) { 
-            if(!lvls || lvls.length === 0 || !lvls[0]) return;
-            const t = lvls[0];
+            if(!lvls[0]) return; const t = lvls[0];
             document.getElementById('throneDisplay').innerHTML = `
-            <div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.9) 45%, transparent), url('https://i.ytimg.com/vi/${t.id}/maxresdefault.jpg');">
+            <div class="throne-card" style="background-image: linear-gradient(to right, rgba(0,0,0,0.9) 40%, transparent), url('https://i.ytimg.com/vi/${t.id}/maxresdefault.jpg');">
                 <div class="throne-info">
-                    <div style="background:var(--accent); color:#000; padding:6px 15px; border-radius:50px; font-size:0.6rem; font-weight:900; margin-bottom:15px; display:inline-block; box-shadow: 0 0 15px var(--accent);">TOP #1 BOSS</div>
-                    <h2 style="font-size:clamp(2.5rem, 5vw, 4rem); margin:0; text-transform:uppercase; letter-spacing:-1px;">${t.name}</h2>
-                    <p style="color:#ccc; margin:10px 0 25px;">FIRST VICTOR: <b style="color:var(--accent);">${t.first || 'Nadie'}</b></p>
-                    <button class="btn-scully" onclick="openDetails(0)">REVISAR RÉCORDS</button>
+                    <div style="background:var(--accent); color:#000; padding:6px 15px; border-radius:50px; font-size:0.6rem; font-weight:900; margin-bottom:15px; display:inline-block;">TOP #1 BOSS</div>
+                    <h2 style="font-size:clamp(2.5rem, 5vw, 4rem); margin:0; text-transform:uppercase; letter-spacing:-2px;">${t.name}</h2>
+                    <p style="color:#aaa; margin:10px 0 25px;">VERIFICADOR: <b style="color:var(--accent);">${t.first || 'Desconocido'}</b></p>
+                    <button class="btn-scully" style="border-color:var(--accent);" onclick="openDetails(0)"><i class="fas fa-eye"></i> EXPLORAR RÉCORDS</button>
                 </div>
             </div>`;
         }
 
-        // RENDERIZADO DE SUGERENCIAS
         function renderSuggestions(s) {
-            let html = "";
-            Object.values(s).reverse().slice(0,4).forEach(x => {
-                html += `<div class="sug-card"><span>NUEVA PROPUESTA:</span> <b>${x.level}</b><br>Sugerido por: <b>${x.player}</b></div>`;
-            });
-            document.getElementById('communitySuggestions').innerHTML = html || "<p style='text-align:center; color:#333; font-size:0.7rem; grid-column:1/-1;'>Sin propuestas recientes.</p>";
+            document.getElementById('communitySuggestions').innerHTML = Object.values(s).reverse().slice(0,4).map(x => `<div class="sug-card"><span>PROPUESTA:</span> <b style="color:#fff;">${x.level}</b><br><small style="color:#666;">Por: ${x.player}</small></div>`).join("") || "<p style='text-align:center; color:#333; font-size:0.7rem; grid-column:1/-1;'>Sin propuestas en cola.</p>";
         }
 
-        // DETALLES DEL NIVEL (MODAL)
         function openDetails(idx) {
-            const lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels : Object.values(fullData.levels)) : [];
-            const l = lvls[idx];
-            if(!l) return;
-
-            const players = Object.values(fullData.players || {});
-            
-            // Buscar jugadores que tengan este nivel en sus completados y no estén baneados
-            const victors = players.filter(p => {
-                let cArr = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : [];
-                return cArr.some(c => c.level === l.name) && !p.hidden;
-            });
-
-            let vHTML = "";
-            if(l.first) {
-                vHTML += `<div class="victor-row" style="color:var(--blue); background:rgba(0,204,255,0.03); font-weight:800;"><span>🥇 ${l.first}</span> <small style="font-size:0.6rem; opacity:0.8;">VERIFICADOR</small></div>`;
-            }
-
-            victors.forEach(p => {
-                let cArr = Array.isArray(p.completions) ? p.completions : Object.values(p.completions);
-                let record = cArr.find(x => x.level === l.name);
-                if(record && p.name.toLowerCase() !== (l.first || "").toLowerCase()) {
-                    vHTML += `<div class="victor-row"><span>${p.name}</span><a href="${record.link}" target="_blank" class="btn-video">EVIDENCIA</a></div>`;
-                }
-            });
-
-            document.getElementById('modal-body').innerHTML = `
-                <span onclick="closeModal('levelModal')" style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.5rem; color:#444;">&times;</span>
-                <h1 style="color:var(--accent); text-transform:uppercase; margin-top:0;">${l.name}</h1>
-                <iframe width="100%" height="320" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:20px; border:1px solid #222;"></iframe>
-                <div style="text-align:left; margin-top:30px;">
-                    <p style="font-size:0.7rem; color:#444; font-weight:800; text-transform:uppercase; margin-bottom:15px; border-bottom:1px solid #111; padding-bottom:8px;">Liga de Vencedores (${victors.length})</p>
-                    <div style="max-height:220px; overflow-y:auto; background:rgba(0,0,0,0.5); border-radius:15px; border:1px solid var(--border);">
-                        ${vHTML || '<p style="padding:20px; text-align:center; color:#333; font-size:0.8rem;">Sin registros confirmados.</p>'}
-                    </div>
-                </div>
-            `;
+            const l = (Array.isArray(fullData.levels)?fullData.levels:Object.values(fullData.levels))[idx];
+            const victors = Object.values(fullData.players || {}).filter(p => { let cArr = p.completions ? (Array.isArray(p.completions)?p.completions:Object.values(p.completions)) : []; return cArr.some(c => c.level === l.name) && !p.hidden; });
+            let vHTML = l.first ? `<div class="victor-row" style="color:var(--blue); background:rgba(0,204,255,0.05); font-weight:800;"><span>🥇 ${l.first}</span> <small style="font-size:0.6rem;">VERIFICADOR</small></div>` : "";
+            victors.forEach(p => { if(p.name !== l.first) { let rec = (Array.isArray(p.completions)?p.completions:Object.values(p.completions)).find(x=>x.level===l.name); vHTML += `<div class="victor-row"><span>${p.name}</span><a href="${rec.link}" target="_blank" class="btn-video"><i class="fas fa-play"></i> VIDEO</a></div>`; } });
+            document.getElementById('modal-body').innerHTML = `<span onclick="closeModal('levelModal')" style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.5rem; color:#444;">&times;</span><h1 style="color:var(--accent); text-transform:uppercase; margin-top:0;">${l.name}</h1><iframe width="100%" height="320" src="https://www.youtube.com/embed/${l.id}" frameborder="0" allowfullscreen style="border-radius:20px; border:1px solid #222;"></iframe><div style="text-align:left; margin-top:30px;"><p style="font-size:0.7rem; color:#444; font-weight:800; text-transform:uppercase; margin-bottom:15px; border-bottom:1px solid #111; padding-bottom:8px;">Liga de Vencedores (${victors.length})</p><div style="max-height:220px; overflow-y:auto; background:rgba(0,0,0,0.5); border-radius:15px; border:1px solid var(--border);">${vHTML || '<p style="padding:20px; text-align:center; color:#333; font-size:0.8rem;">Ningún jugador ha conquistado este nivel aún.</p>'}</div></div>`;
             document.getElementById('levelModal').style.display = "block";
         }
 
-        // FUNCIONES DE LA RULETA
-        function openRuleta() { 
-            const lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels.filter(l=>l) : Object.values(fullData.levels)) : [];
-            if(lvls.length === 0) return;
-            document.getElementById('ruletaModal').style.display = 'block'; 
-        }
-        
+        function openRuleta() { if(fullData.levels) document.getElementById('ruletaModal').style.display = 'block'; }
         function spinRoulette() {
-            const lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels.filter(l=>l) : Object.values(fullData.levels)) : [];
-            if(lvls.length === 0) return;
-            
-            const res = document.getElementById('ruletaText');
-            res.style.color = "#fff";
-            let count = 0;
-            const interval = setInterval(() => {
-                res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name;
-                count++;
-                if(count > 20) { 
-                    clearInterval(interval); 
-                    res.style.color = "var(--green)"; 
-                }
-            }, 70);
+            const lvls = Array.isArray(fullData.levels)?fullData.levels:Object.values(fullData.levels);
+            const res = document.getElementById('ruletaText'); res.style.color = "#fff";
+            let count = 0; const interval = setInterval(() => { res.innerText = lvls[Math.floor(Math.random() * lvls.length)].name; count++; if(count > 20) { clearInterval(interval); res.style.color = "var(--green)"; } }, 70);
         }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; if(id === 'ruletaModal') document.getElementById('ruletaText').innerText = "¿QUÉ JUGARÁS?"; }
 
-        function closeModal(id) { 
-            document.getElementById(id).style.display = 'none'; 
-            if(id === 'ruletaModal') document.getElementById('ruletaText').innerText = "---"; 
-        }
-
-        // VERIFICACIÓN DE ADMIN
         auth.onAuthStateChanged(user => {
-            if (user) {
-                db.ref('players').once('value', snap => {
-                    const players = Object.values(snap.val() || {});
-                    const me = players.find(p => p.email === user.email);
-                    if(me && (me.role === 'admin' || me.name.toLowerCase() === 'score')) {
-                        const btn = document.getElementById('adminBtn');
-                        btn.style.display = "inline-flex";
-                    }
-                });
-            }
+            if (user) db.ref('players').once('value', snap => { const me = Object.values(snap.val() || {}).find(p => p.email === user.email); if(me && (me.role === 'admin' || me.name.toLowerCase() === 'score' || me.role === 'helper')) document.getElementById('adminBtn').style.display = "inline-flex"; });
         });
 
-        // CERRAR MODALES CLICK FUERA
-        window.onclick = e => { 
-            if(e.target.className === 'modal') { 
-                closeModal('ruletaModal'); 
-                closeModal('levelModal'); 
-            } 
-        }
+        window.onclick = e => { if(e.target.className === 'modal') { closeModal('ruletaModal'); closeModal('levelModal'); } }
     </script>
 </body>
 </html>
