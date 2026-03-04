@@ -203,7 +203,6 @@
         <button class="nav-btn" onclick="switchTab('tab-discord')" style="color:var(--discord);"><i class="fab fa-discord"></i> Discord Webhooks</button>
         <button class="nav-btn" onclick="switchTab('tab-packs')" style="color:var(--accent);"><i class="fas fa-box-open"></i> Creador de Packs</button>
         <button class="nav-btn" onclick="switchTab('tab-firewall')" style="color:var(--green);"><i class="fas fa-shield-virus"></i> Firewall & Seguridad</button>
-
         <button class="nav-btn" onclick="switchTab('tab-settings')" style="color:var(--purple);"><i class="fas fa-cogs"></i> Ajustes Visuales</button>
         <button class="nav-btn" onclick="switchTab('tab-ticker')" style="color:var(--yellow);"><i class="fas fa-bullhorn"></i> Inyector Hub</button>
         <button class="nav-btn" onclick="switchTab('tab-audit')" style="color:var(--blue);"><i class="fas fa-eye"></i> Auditoría</button>
@@ -369,7 +368,7 @@
             
             <div class="admin-panel" style="border-color:rgba(114,137,218,0.4);">
                 <h3 style="color:var(--discord); margin-top:0;"><i class="fas fa-plug"></i> Configurar Webhook</h3>
-                <p style="color:#aaa; font-size:0.8rem; margin-bottom:20px;">Conecta el panel a tu servidor de Discord para enviar notificaciones automáticas cuando se acepte un récord.</p>
+                <p style="color:#aaa; font-size:0.8rem; margin-bottom:20px;">Conecta el panel a tu servidor de Discord para enviar notificaciones automáticas.</p>
                 
                 <div class="input-group">
                     <label style="color:var(--discord);">URL del Webhook (Canal de Anuncios)</label>
@@ -378,8 +377,8 @@
                 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; background:rgba(255,255,255,0.02); padding:15px; border-radius:10px;">
                     <div>
-                        <h4 style="margin:0; color:#fff;">Auto-Anunciar Récords Aceptados</h4>
-                        <p style="margin:5px 0 0 0; font-size:0.75rem; color:#aaa;">Envía un mensaje al servidor cada vez que presiones "Aceptar" en la bandeja de revisión.</p>
+                        <h4 style="margin:0; color:#fff;">Auto-Anunciar Decisiones de Récords</h4>
+                        <p style="margin:5px 0 0 0; font-size:0.75rem; color:#aaa;">Envía un mensaje al servidor cada vez que presiones "Aceptar", "Rechazar" o "Apelación".</p>
                     </div>
                     <label class="switch">
                         <input type="checkbox" id="toggleDiscordRecords">
@@ -517,8 +516,10 @@
             <div id="reviewVideoContainer" style="margin-bottom:20px;"></div>
             <p style="font-size:0.85rem; color:#aaa; margin-bottom:10px;"><b style="color:#fff;">RAW:</b> <span id="reviewRaw"></span></p>
             <p style="font-size:0.85rem; color:#aaa; margin-bottom:20px;"><b style="color:#fff;">Comentarios:</b> <span id="reviewComments"></span></p>
+            
             <div style="display:flex; gap:10px;">
                 <button id="btnAcceptRecord" class="btn-action" style="background:var(--green); flex:1;"><i class="fas fa-check"></i> ACEPTAR</button>
+                <button id="btnAppealRecord" class="btn-action" style="background:var(--yellow); color:#000; flex:1;"><i class="fas fa-exclamation-triangle"></i> APELACIÓN</button>
                 <button id="btnRejectRecord" class="btn-action" style="background:var(--red); color:#fff; flex:1;"><i class="fas fa-times"></i> RECHAZAR</button>
             </div>
         </div>
@@ -664,7 +665,7 @@
         }
 
         // ==========================================
-        // RECORDS
+        // RECORDS & APPEALS
         // ==========================================
         function renderPendingRecords(subs) { 
             let h = ""; 
@@ -674,6 +675,7 @@
             document.getElementById('pendingRecordsList').innerHTML = h || '<p style="color:#555;">Bandeja limpia.</p>'; 
         }
 
+        let currentReviewKey = null;
         function openReviewModal(k) { 
             const s = fullData.submissions[k]; 
             currentReviewKey = k; 
@@ -682,8 +684,11 @@
             document.getElementById('reviewVideoContainer').innerHTML = vId.length === 11 ? `<iframe width="100%" height="315" src="https://www.youtube.com/embed/${vId}" frameborder="0" allowfullscreen style="border-radius:15px;"></iframe>` : `<a href="${s.link}" target="_blank" style="color:var(--blue);">Ver en YT</a>`; 
             document.getElementById('reviewRaw').innerHTML = s.raw ? `<a href="${s.raw}" target="_blank" style="color:var(--blue);">Link RAW</a>` : "N/A"; 
             document.getElementById('reviewComments').innerText = s.comments || "Ninguno"; 
+            
             document.getElementById('btnAcceptRecord').onclick = () => acceptRecord(k); 
+            document.getElementById('btnAppealRecord').onclick = () => appealRecord(k); 
             document.getElementById('btnRejectRecord').onclick = () => rejectRecord(k); 
+            
             document.getElementById('reviewModal').style.display = 'block'; 
             termPrint(`Abriendo Request ID: ${k}`); 
         }
@@ -705,7 +710,6 @@
             db.ref('history').push({player: s.player, level: s.level, link: s.link, status: 'Aceptado', timestamp: Date.now()}); 
             db.ref(`submissions/${k}`).remove(); 
             
-            // Check Discord Webhook
             if(fullData.system_settings && fullData.system_settings.discord && fullData.system_settings.discord.auto_records && fullData.system_settings.discord.url) {
                 sendDiscordMessage(fullData.system_settings.discord.url, `✅ **NUEVO RÉCORD ACEPTADO**\n**Jugador:** ${s.player}\n**Nivel:** ${s.level}\n**Video:** ${s.link}`);
             }
@@ -715,13 +719,35 @@
             showToast("Aceptado."); 
         }
 
+        function appealRecord(k) { 
+            const s = fullData.submissions[k]; 
+            const r = prompt("Razón de la Apelación (Ej: Falta RAW, contactar en Discord):"); 
+            if(!r) return; 
+            
+            db.ref('history').push({player: s.player, level: s.level, link: s.link, status: 'Apelación', reason: r, timestamp: Date.now()}); 
+            db.ref(`submissions/${k}`).remove(); 
+            
+            if(fullData.system_settings && fullData.system_settings.discord && fullData.system_settings.discord.auto_records && fullData.system_settings.discord.url) {
+                sendDiscordMessage(fullData.system_settings.discord.url, `⚠️ **RÉCORD EN APELACIÓN**\n**Jugador:** ${s.player}\n**Nivel:** ${s.level}\n**Mensaje del Staff:** ${r}\n*Por favor, abre un ticket en Discord para resolver esto.*`);
+            }
+
+            logAction(`Envió a apelación: ${s.player} en ${s.level}`); 
+            closeModal('reviewModal'); 
+            showToast("Enviado a Apelación.", false); 
+        }
+
         function rejectRecord(k) { 
             const s = fullData.submissions[k]; 
-            const r = prompt("Razón del Rechazo:"); 
+            const r = prompt("Razón del Rechazo (Total):"); 
             if(!r) return; 
             
             db.ref('history').push({player: s.player, level: s.level, link: s.link, status: 'Rechazado', reason: r, timestamp: Date.now()}); 
             db.ref(`submissions/${k}`).remove(); 
+            
+            if(fullData.system_settings && fullData.system_settings.discord && fullData.system_settings.discord.auto_records && fullData.system_settings.discord.url) {
+                sendDiscordMessage(fullData.system_settings.discord.url, `❌ **RÉCORD RECHAZADO**\n**Jugador:** ${s.player}\n**Nivel:** ${s.level}\n**Razón:** ${r}`);
+            }
+
             logAction(`Rechazó: ${s.player} en ${s.level}`); 
             closeModal('reviewModal'); 
             showToast("Rechazado.", true); 
