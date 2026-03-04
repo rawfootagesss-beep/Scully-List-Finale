@@ -28,7 +28,7 @@
         .nav-btn:hover { color: #fff; background: rgba(255,255,255,0.02); }
         .nav-btn.active { color: var(--accent); background: rgba(255, 102, 0, 0.05); border-left-color: var(--accent); font-weight: 800; }
 
-        .sidebar-bottom { margin-top: auto; padding: 20px; border-top: 1px solid var(--border); }
+        .sidebar-bottom { margin-top: auto; padding: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
         .btn-exit { background: rgba(255,51,51,0.1); color: var(--red); border: 1px solid var(--red); width: 100%; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; gap: 10px; text-decoration: none; box-sizing: border-box; }
         .btn-exit:hover { background: var(--red); color: #000; }
 
@@ -76,6 +76,8 @@
         .btn-blue:hover { background: var(--blue); color: #000; }
         .btn-purple { background: rgba(204,0,255,0.1); color: var(--purple); border: 1px solid var(--purple); }
         .btn-purple:hover { background: var(--purple); color: #000; }
+        .btn-yellow { background: rgba(255,255,0,0.1); color: var(--yellow); border: 1px solid var(--yellow); }
+        .btn-yellow:hover { background: var(--yellow); color: #000; }
 
         /* REORDER LEVELS */
         .level-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 12px 20px; border-radius: 10px; margin-bottom: 8px; border: 1px solid transparent; transition: 0.2s; }
@@ -100,6 +102,14 @@
         #loadingScreen { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg); z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .spinner { border: 4px solid rgba(255,102,0,0.1); border-top: 4px solid var(--accent); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* TOGGLE SWITCHES */
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--red); }
+        input:checked + .slider:before { transform: translateX(24px); }
     </style>
 </head>
 <body>
@@ -123,11 +133,13 @@
         <button class="nav-btn" onclick="switchTab('tab-levels')"><i class="fas fa-list-ol"></i> Reordenar Lista</button>
         <button class="nav-btn" onclick="switchTab('tab-approvals')"><i class="fas fa-user-check"></i> Centro de Perfiles</button>
         <button class="nav-btn" onclick="switchTab('tab-player-control')"><i class="fas fa-users-cog"></i> Control de Jugadores</button>
+        <button class="nav-btn" onclick="switchTab('tab-staff')"><i class="fas fa-user-shield"></i> Gestor de Staff</button>
         <button class="nav-btn" onclick="switchTab('tab-ticker')"><i class="fas fa-bullhorn"></i> Noticias Hub</button>
+        <button class="nav-btn" onclick="switchTab('tab-settings')" style="color:var(--purple);"><i class="fas fa-cogs"></i> Ajustes del Sistema</button>
         <button class="nav-btn" onclick="switchTab('tab-audit')" style="color:var(--blue);"><i class="fas fa-eye"></i> Auditoría (Logs)</button>
-        <button class="nav-btn" onclick="switchTab('tab-backup')" style="color:var(--yellow);"><i class="fas fa-save"></i> Backups</button>
-
+        
         <div class="sidebar-bottom">
+            <button class="nav-btn" onclick="switchTab('tab-backup')" style="color:var(--yellow); padding: 0; justify-content:center; margin-bottom: 10px;"><i class="fas fa-save"></i> Backups</button>
             <a href="index.html" class="btn-exit"><i class="fas fa-door-open"></i> SALIR AL HUB</a>
         </div>
     </div>
@@ -159,8 +171,8 @@
                 </div>
             </div>
             <div class="admin-panel" style="border-color:rgba(0,204,255,0.3);">
-                <h3 style="color:var(--blue); margin-top:0;"><i class="fas fa-info-circle"></i> Ecosistema Operativo</h3>
-                <p style="color:#aaa; font-size:0.9rem; line-height:1.6;">Este es el núcleo de The Scully List. Toda modificación impacta la base de datos en tiempo real. Verifica dos veces antes de borrar o banear.</p>
+                <h3 style="color:var(--blue); margin-top:0;"><i class="fas fa-info-circle"></i> Ecosistema Operativo Nivel Dios</h3>
+                <p style="color:#aaa; font-size:0.9rem; line-height:1.6;">Estás accediendo a la consola administrativa completa. Toda modificación (Baneos, Borrados, Promociones de Staff) impacta la base de datos de producción en tiempo real. Actúa con total discreción y profesionalismo.</p>
             </div>
         </div>
 
@@ -230,7 +242,7 @@
 
         <div id="tab-levels" class="tab-content">
             <h2 class="section-title"><i class="fas fa-list-ol" style="color:var(--blue);"></i> Reordenamiento de Niveles</h2>
-            <p style="color:#888; font-size:0.85rem; margin-bottom:20px;">Modifica el Ranking. Recuerda guardar los cambios para actualizar la XP global.</p>
+            <p style="color:#888; font-size:0.85rem; margin-bottom:20px;">Modifica el Ranking arrastrando niveles. Recuerda guardar los cambios para actualizar la XP global.</p>
             <div class="data-list" id="levelManagerList" style="background:#000; padding:15px; border-radius:15px; border:1px solid var(--border);"></div>
             <button onclick="saveLevelOrder()" class="btn-action" style="background:var(--blue); color:#000; width:100%; margin-top:20px;"><i class="fas fa-save"></i> GUARDAR NUEVO ORDEN</button>
         </div>
@@ -257,9 +269,17 @@
             </div>
             
             <div id="pcResultArea" style="display:none;">
-                <div class="admin-panel" style="background:rgba(255,51,51,0.05); border-color:var(--red);">
-                    <h3 id="pcName" style="margin-top:0; font-size:1.8rem; text-transform:uppercase;">---</h3>
-                    <p id="pcStatus" style="font-weight:800; margin-bottom:20px;">---</p>
+                <div class="admin-panel" style="background:rgba(255,51,51,0.05); border-color:var(--red); position:relative;">
+                    
+                    <h3 style="color:var(--accent); margin-top:0; border-bottom:1px solid rgba(255,102,0,0.2); padding-bottom:10px;"><i class="fas fa-user-edit"></i> Edición de Perfil</h3>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
+                        <div class="input-group"><label>Nombre</label><input type="text" id="pcEditName"></div>
+                        <div class="input-group"><label>País (Código ej: es, ar, us)</label><input type="text" id="pcEditCountry"></div>
+                    </div>
+                    <div class="input-group"><label>Biografía</label><textarea id="pcEditBio" rows="2"></textarea></div>
+                    <button onclick="savePlayerProfileEdit()" class="btn-small btn-blue" style="margin-bottom:20px;"><i class="fas fa-save"></i> GUARDAR CAMBIOS DE PERFIL</button>
+                    
+                    <p id="pcStatus" style="font-weight:800; margin: 20px 0; font-size:1.1rem; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">---</p>
                     
                     <div style="display:flex; gap:10px; margin-bottom:30px;" id="pcBanControls">
                         </div>
@@ -268,6 +288,73 @@
                     <div class="data-list" id="pcRecordsList" style="max-height:300px;">
                         </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="tab-staff" class="tab-content">
+            <h2 class="section-title"><i class="fas fa-user-shield" style="color:var(--blue);"></i> Gestor de Equipo (Staff)</h2>
+            
+            <div class="admin-panel" style="border-color:rgba(0,204,255,0.3);">
+                <h3 style="color:var(--blue); margin-top:0;"><i class="fas fa-arrow-up"></i> Promover a Staff</h3>
+                <div style="display:flex; gap:15px;">
+                    <div class="input-group" style="flex:1;">
+                        <label>Nombre del Jugador</label>
+                        <input type="text" id="staffPromoteName" placeholder="Usuario registrado...">
+                    </div>
+                    <div class="input-group" style="flex:1;">
+                        <label>Rango</label>
+                        <select id="staffPromoteRole">
+                            <option value="helper">Helper (Escudo Azul)</option>
+                            <option value="admin">Admin (Corona Naranja)</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="promoteStaffMember()" class="btn-action" style="background:var(--blue); color:#000;"><i class="fas fa-check-circle"></i> CONCEDER PERMISOS</button>
+            </div>
+
+            <h3 style="color:#fff; text-transform:uppercase; margin-bottom:15px; font-size:1.1rem;"><i class="fas fa-id-card"></i> Personal Activo</h3>
+            <div class="data-list" id="staffMemberList">
+                <p style="color:#555;">Cargando personal...</p>
+            </div>
+        </div>
+
+        <div id="tab-settings" class="tab-content">
+            <h2 class="section-title"><i class="fas fa-cogs" style="color:var(--purple);"></i> Ajustes Globales del Sistema</h2>
+            
+            <div class="admin-panel" style="border-color:rgba(204,0,255,0.3);">
+                <h3 style="color:var(--red); margin-top:0;"><i class="fas fa-lock"></i> Controles de Emergencia</h3>
+                
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; background:rgba(255,255,255,0.02); padding:15px; border-radius:10px;">
+                    <div>
+                        <h4 style="margin:0; color:#fff;">Bloquear Envíos de Récords</h4>
+                        <p style="margin:5px 0 0 0; font-size:0.75rem; color:#aaa;">Cierra temporalmente la página de Submit.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="toggleLockSubmissions" onchange="toggleSystemLock('submissions', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; background:rgba(255,255,255,0.02); padding:15px; border-radius:10px;">
+                    <div>
+                        <h4 style="margin:0; color:#fff;">Alerta Global (Banner Hub)</h4>
+                        <p style="margin:5px 0 0 0; font-size:0.75rem; color:#aaa;">Muestra un mensaje rojo persistente a todos los usuarios.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="toggleGlobalAlert" onchange="toggleSystemAlert(this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="input-group" id="alertInputArea" style="display:none;">
+                    <input type="text" id="globalAlertText" placeholder="Texto de la alerta... Ej: Servidor en mantenimiento." style="border-color:var(--red);">
+                    <button onclick="saveGlobalAlert()" class="btn-small btn-red" style="margin-top:10px;">APLICAR ALERTA</button>
+                </div>
+            </div>
+
+            <div class="admin-panel" style="border-color:var(--green); text-align:center;">
+                <h3 style="color:var(--green); margin-top:0;"><i class="fas fa-sync-alt"></i> Limpieza de Caché y Recálculo</h3>
+                <p style="color:#aaa; font-size:0.85rem; margin-bottom:20px;">Fuerza a todos los clientes conectados a recargar la base de datos y recalcular las XP basadas en el orden actual de la lista.</p>
+                <button onclick="forceGlobalRecalc()" class="btn-action" style="background:var(--green); color:#000;"><i class="fas fa-bolt"></i> FORZAR ACTUALIZACIÓN DE CLIENTES</button>
             </div>
         </div>
 
@@ -323,6 +410,7 @@
         let fullData = {};
         let editingLevels = []; 
         let currentAdminName = "Admin";
+        let currentAdminRole = "helper";
         let pcCurrentPlayerIdx = -1;
 
         function showToast(msg, isError=false) {
@@ -349,9 +437,10 @@
             db.ref('players').once('value', snap => {
                 const players = Object.values(snap.val() || {});
                 const me = players.find(p => p.email === user.email);
-                if(me && (me.role === 'admin' || me.role === 'helper' || me.name.toLowerCase() === 'score')) {
+                if(me && (me.role === 'admin' || me.role === 'owner' || me.name.toLowerCase() === 'score' || me.role === 'helper')) {
                     currentAdminName = me.name;
-                    document.getElementById('authBadge').innerHTML = `<i class="fas fa-shield-alt"></i> ${me.role ? me.role.toUpperCase() : 'OWNER'}: ${me.name}`;
+                    currentAdminRole = me.name.toLowerCase() === 'score' ? 'owner' : me.role;
+                    document.getElementById('authBadge').innerHTML = `<i class="fas fa-shield-alt"></i> ${currentAdminRole.toUpperCase()}: ${me.name}`;
                     document.getElementById('loadingScreen').style.display = 'none';
                     initMasterPanel();
                 } else { alert("ACCESO DENEGADO."); window.location.href = "index.html"; }
@@ -374,12 +463,20 @@
                 renderManageLevels(levelsArr);
                 renderApprovals(fullData.claim_requests || {}, fullData.pfp_requests || {});
                 renderAuditLogs(fullData.staff_logs || {});
+                renderStaffManager(playersArr);
+
+                // Settings Check
+                if(fullData.system_settings) {
+                    document.getElementById('toggleLockSubmissions').checked = !!fullData.system_settings.lock_submissions;
+                    document.getElementById('toggleGlobalAlert').checked = !!fullData.system_settings.global_alert;
+                    document.getElementById('globalAlertText').value = fullData.system_settings.global_alert_msg || "";
+                    if(fullData.system_settings.global_alert) document.getElementById('alertInputArea').style.display = 'block';
+                }
 
                 if(editingLevels.length === 0 || editingLevels.length !== levelsArr.length) {
                     editingLevels = [...levelsArr]; renderLevelReorder();
                 }
 
-                // Update Player Control if open
                 if(pcCurrentPlayerIdx !== -1) renderPlayerControlData();
             });
         }
@@ -447,7 +544,6 @@
                 let comps = pList[idx].completions ? (Array.isArray(pList[idx].completions) ? pList[idx].completions : Object.values(pList[idx].completions)) : [];
                 comps.push({level: level, link: link}); pList[idx].completions = comps;
             }
-            
             db.ref('players').set(pList);
             db.ref('history').push({ player: player, level: level, link: link, status: 'Aceptado (Manual)', timestamp: Date.now() });
             logAction(`Forzó récord manual: ${player} en ${level}`);
@@ -459,7 +555,7 @@
         function renderSuggestions(sugs) {
             let html = "";
             Object.entries(sugs).forEach(([key, s]) => {
-                html += `<div class="data-card"><div class="data-info"><h4>${s.level}</h4><p>Por: ${s.player} | Arriba de: ${s.above} | Abajo de: ${s.below}</p><p>Prueba: <a href="${s.yt}" target="_blank" style="color:var(--blue);">YT Link</a></p></div><div class="data-actions"><button onclick="processSuggestion('${key}')" class="btn-small btn-purple">PROCESAR</button><button onclick="deleteSuggestion('${key}')" class="btn-small btn-red">BORRAR</button></div></div>`;
+                html += `<div class="data-card"><div class="data-info"><h4>${s.level}</h4><p>Por: ${s.player} | Arriba: ${s.above} | Abajo: ${s.below}</p><p><a href="${s.yt}" target="_blank" style="color:var(--blue);">Ver YT</a></p></div><div class="data-actions"><button onclick="processSuggestion('${key}')" class="btn-small btn-purple">PROCESAR</button><button onclick="deleteSuggestion('${key}')" class="btn-small btn-red">BORRAR</button></div></div>`;
             });
             document.getElementById('suggestionsList').innerHTML = html || '<p style="text-align:center; color:#555;">Sin sugerencias.</p>';
         }
@@ -470,7 +566,7 @@
             document.getElementById('addLevelId').value = extractVideoID(s.yt);
             document.getElementById('addLevelVictor').value = s.player;
             document.getElementById('addLevelName').focus();
-            showToast("Datos copiados al formulario. Revísalos y guarda.");
+            showToast("Datos copiados al formulario.");
         }
         function deleteSuggestion(key) { if(confirm("¿Borrar sugerencia?")) db.ref(`level_suggestions/${key}`).remove(); }
 
@@ -504,16 +600,13 @@
             const name = document.getElementById('addLevelName').value.trim();
             const id = document.getElementById('addLevelId').value.trim();
             const victor = document.getElementById('addLevelVictor').value.trim() || "Nadie";
-
             if(!name || !id) return showToast("Faltan datos", true);
 
             let newLevels = [...editingLevels];
             if(idx === -1) { newLevels.push({ name: name, id: id, first: victor }); logAction(`Añadió nivel: ${name}`); } 
             else { newLevels[idx] = { name: name, id: id, first: victor }; logAction(`Editó nivel: ${name}`); }
             
-            db.ref('levels').set(newLevels).then(() => {
-                showToast("Datos de nivel guardados."); cancelEditLevel();
-            });
+            db.ref('levels').set(newLevels).then(() => { showToast("Nivel guardado."); cancelEditLevel(); });
         }
         function deleteLevel(index) {
             if(confirm(`¿Eliminar ${editingLevels[index].name}?`)) {
@@ -539,12 +632,12 @@
             let pfpHtml = ""; Object.entries(pfps).forEach(([key, p]) => { pfpHtml += `<div class="data-card"><div class="data-info" style="display:flex; gap:10px;"><img src="${p.url}" style="width:40px; height:40px; border-radius:5px;"><div><h4>${p.nick}</h4></div></div><div class="data-actions"><button onclick="approvePFP('${key}')" class="btn-small btn-green">APROBAR</button><button onclick="rejectPFP('${key}')" class="btn-small btn-red">RECHAZAR</button></div></div>`; });
             document.getElementById('pfpRequestsList').innerHTML = pfpHtml || '<p style="color:#555;">Vacio.</p>';
         }
-        function approveClaim(key) { const r = fullData.claim_requests[key]; let pL = Object.values(fullData.players||{}); let idx = pL.findIndex(p=>p.name.toLowerCase()===r.nick.toLowerCase()); if(idx>-1) pL[idx].email=r.email; else pL.push({name:r.nick, email:r.email}); db.ref('players').set(pL); db.ref(`claim_requests/${key}`).remove(); logAction(`Vinculó perfil: ${r.nick}`); }
+        function approveClaim(key) { const r = fullData.claim_requests[key]; let pL = Object.values(fullData.players||{}); let idx = pL.findIndex(p=>p.name.toLowerCase()===r.nick.toLowerCase()); if(idx>-1) pL[idx].email=r.email; else pL.push({name:r.nick, email:r.email, country:'es'}); db.ref('players').set(pL); db.ref(`claim_requests/${key}`).remove(); logAction(`Vinculó perfil: ${r.nick}`); }
         function rejectClaim(key) { db.ref(`claim_requests/${key}`).remove(); }
-        function approvePFP(key) { const r = fullData.pfp_requests[key]; let pL = Object.values(fullData.players||{}); let idx = pL.findIndex(p=>p.name.toLowerCase()===r.nick.toLowerCase()); if(idx>-1){ db.ref(`players/${idx}/pfp`).set(r.url); db.ref(`pfp_requests/${key}`).remove(); logAction(`Aprobó PFP de ${r.nick}`); } }
+        function approvePFP(key) { const r = fullData.pfp_requests[key]; let pL = Object.values(fullData.players||{}); let idx = pL.findIndex(p=>p.name.toLowerCase()===r.nick.toLowerCase()); if(idx>-1){ db.ref(`players/${idx}/pfp`).set(r.url); db.ref(`pfp_requests/${key}`).remove(); logAction(`Aprobó PFP de ${r.nick}`); showToast("PFP Actualizada."); } }
         function rejectPFP(key) { db.ref(`pfp_requests/${key}`).remove(); }
 
-        /* --- 5. CONTROL DE JUGADORES (BAN, UNBAN, DELETE RECORDS) --- */
+        /* --- 5. CONTROL Y EDICIÓN DE JUGADORES --- */
         function searchPlayerControl() {
             const query = document.getElementById('pcSearch').value.trim().toLowerCase();
             if(!query) return;
@@ -554,10 +647,7 @@
             if(pcCurrentPlayerIdx > -1) {
                 document.getElementById('pcResultArea').style.display = "block";
                 renderPlayerControlData();
-            } else {
-                showToast("Jugador no encontrado", true);
-                document.getElementById('pcResultArea').style.display = "none";
-            }
+            } else { showToast("Jugador no encontrado", true); document.getElementById('pcResultArea').style.display = "none"; }
         }
 
         function renderPlayerControlData() {
@@ -565,6 +655,9 @@
             if(!p) return;
 
             document.getElementById('pcName').innerText = p.name;
+            document.getElementById('pcEditName').value = p.name;
+            document.getElementById('pcEditCountry').value = p.country || "es";
+            document.getElementById('pcEditBio').value = p.bio || "";
             
             const statusEl = document.getElementById('pcStatus');
             const btnsEl = document.getElementById('pcBanControls');
@@ -580,10 +673,22 @@
             const recsEl = document.getElementById('pcRecordsList');
             let comps = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : [];
             let html = "";
-            comps.forEach((c, i) => {
-                html += `<div class="data-card" style="padding:10px 15px;"><div class="data-info"><h4 style="font-size:0.9rem;">${c.level}</h4><a href="${c.link}" target="_blank" style="font-size:0.7rem; color:var(--blue);">Ver Video</a></div><button onclick="deletePlayerRecord(${i})" class="btn-small btn-red"><i class="fas fa-trash"></i> BORRAR</button></div>`;
-            });
+            comps.forEach((c, i) => { html += `<div class="data-card" style="padding:10px 15px;"><div class="data-info"><h4 style="font-size:0.9rem;">${c.level}</h4><a href="${c.link}" target="_blank" style="font-size:0.7rem; color:var(--blue);">Ver Video</a></div><button onclick="deletePlayerRecord(${i})" class="btn-small btn-red"><i class="fas fa-trash"></i> BORRAR</button></div>`; });
             recsEl.innerHTML = html || '<p style="color:#555;">No tiene récords registrados.</p>';
+        }
+
+        function savePlayerProfileEdit() {
+            const newName = document.getElementById('pcEditName').value.trim();
+            const newCountry = document.getElementById('pcEditCountry').value.trim().toLowerCase();
+            const newBio = document.getElementById('pcEditBio').value.trim();
+
+            if(!newName) return showToast("El nombre no puede estar vacío", true);
+            db.ref(`players/${pcCurrentPlayerIdx}/name`).set(newName);
+            db.ref(`players/${pcCurrentPlayerIdx}/country`).set(newCountry);
+            db.ref(`players/${pcCurrentPlayerIdx}/bio`).set(newBio);
+
+            logAction(`Editó el perfil de: ${newName}`);
+            showToast("Perfil de jugador actualizado.");
         }
 
         function banPlayerPrompt() {
@@ -592,7 +697,7 @@
                 db.ref(`players/${pcCurrentPlayerIdx}/hidden`).set(true);
                 db.ref(`players/${pcCurrentPlayerIdx}/banReason`).set(reason);
                 db.ref('bans').push({ player: Object.values(fullData.players)[pcCurrentPlayerIdx].name, reason: reason, date: Date.now() });
-                logAction(`BANEÓ al jugador en Control: ${Object.values(fullData.players)[pcCurrentPlayerIdx].name}`);
+                logAction(`BANEÓ al jugador: ${Object.values(fullData.players)[pcCurrentPlayerIdx].name}`);
                 showToast("Jugador Baneado.");
             }
         }
@@ -608,22 +713,95 @@
             const p = Object.values(fullData.players)[pcCurrentPlayerIdx];
             let comps = Array.isArray(p.completions) ? p.completions : Object.values(p.completions);
             const levelName = comps[recIndex].level;
-            
             if(confirm(`¿Borrar el récord de ${levelName} de este jugador?`)) {
-                comps.splice(recIndex, 1);
-                db.ref(`players/${pcCurrentPlayerIdx}/completions`).set(comps);
-                logAction(`Eliminó récord individual: ${p.name} en ${levelName}`);
-                showToast("Récord eliminado.");
+                comps.splice(recIndex, 1); db.ref(`players/${pcCurrentPlayerIdx}/completions`).set(comps);
+                logAction(`Eliminó récord individual: ${p.name} en ${levelName}`); showToast("Récord eliminado.");
             }
         }
 
-        /* --- 6. TICKER, AUDITORÍA Y BACKUP --- */
+        /* --- 6. GESTOR DE STAFF --- */
+        function renderStaffManager(playersArr) {
+            let html = "";
+            playersArr.forEach((p, idx) => {
+                if(p.role) {
+                    let color = p.role === 'admin' ? 'var(--accent)' : 'var(--blue)';
+                    html += `
+                    <div class="data-card">
+                        <div class="data-info"><h4>${p.name} <span style="font-size:0.7rem; color:${color};">[${p.role.toUpperCase()}]</span></h4><p>${p.email || 'Sin correo'}</p></div>
+                        <div class="data-actions"><button onclick="demoteStaff(${idx})" class="btn-small btn-red">DEGRADAR</button></div>
+                    </div>`;
+                }
+            });
+            document.getElementById('staffMemberList').innerHTML = html;
+        }
+
+        function promoteStaffMember() {
+            if(currentAdminRole !== 'owner' && currentAdminRole !== 'admin') return showToast("No tienes permisos para ascender", true);
+            const name = document.getElementById('staffPromoteName').value.trim();
+            const role = document.getElementById('staffPromoteRole').value;
+            if(!name) return showToast("Ingresa un nombre", true);
+
+            let pList = Object.values(fullData.players || {});
+            let idx = pList.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+            
+            if(idx > -1) {
+                db.ref(`players/${idx}/role`).set(role);
+                logAction(`Otorgó rol de ${role.toUpperCase()} a ${name}`);
+                showToast(`Usuario ${name} promovido a ${role}.`);
+                document.getElementById('staffPromoteName').value = "";
+            } else { showToast("Jugador no encontrado", true); }
+        }
+
+        function demoteStaff(idx) {
+            if(currentAdminRole !== 'owner' && currentAdminRole !== 'admin') return showToast("Sin permisos", true);
+            const name = Object.values(fullData.players)[idx].name;
+            if(confirm(`¿Remover todos los privilegios a ${name}?`)) {
+                db.ref(`players/${idx}/role`).remove();
+                logAction(`Degradó a ${name} a usuario normal`);
+                showToast("Privilegios revocados.");
+            }
+        }
+
+        /* --- 7. AJUSTES DEL SISTEMA --- */
+        function toggleSystemLock(type, val) {
+            if(currentAdminRole !== 'owner' && currentAdminRole !== 'admin') return showToast("Sin permisos", true);
+            db.ref(`system_settings/lock_${type}`).set(val);
+            logAction(`${val ? 'Bloqueó' : 'Desbloqueó'} el módulo: ${type}`);
+            showToast(val ? "Sistema Bloqueado" : "Sistema Desbloqueado");
+        }
+
+        function toggleSystemAlert(val) {
+            const inputArea = document.getElementById('alertInputArea');
+            if(val) { inputArea.style.display = 'block'; } 
+            else { 
+                inputArea.style.display = 'none'; 
+                db.ref(`system_settings/global_alert`).set(false);
+                logAction("Desactivó la Alerta Global");
+                showToast("Alerta Desactivada");
+            }
+        }
+
+        function saveGlobalAlert() {
+            const msg = document.getElementById('globalAlertText').value.trim();
+            if(!msg) return showToast("Escribe la alerta", true);
+            db.ref(`system_settings/global_alert`).set(true);
+            db.ref(`system_settings/global_alert_msg`).set(msg);
+            logAction(`Activó Alerta Global: ${msg}`);
+            showToast("Alerta Pública Activada.");
+        }
+
+        function forceGlobalRecalc() {
+            if(confirm("¿Forzar actualización de clientes? (Actualiza timestamp)")) {
+                db.ref('system_settings/last_update').set(Date.now());
+                logAction("Forzó limpieza de caché global.");
+                showToast("Ping enviado a todos los clientes.");
+            }
+        }
+
+        /* --- 8. TICKER, AUDITORÍA Y BACKUP --- */
         function pushTickerNews() { const msg = document.getElementById('tickerMsg').value.trim(); if(msg) { db.ref('logs').push({ msg: msg, timestamp: Date.now() }); logAction(`Lanzó Noticia: ${msg}`); document.getElementById('tickerMsg').value=""; showToast("Enviado."); } }
-        function renderAuditLogs(logs) { let html = ""; Object.values(logs).reverse().forEach(log => { html += `<div class="audit-log"><span class="time">[${new Date(log.timestamp).toLocaleString()}]</span> <span class="staff">${log.staff}</span>: ${log.action}</div>`; }); document.getElementById('auditLogList').innerHTML = html; }
+        function renderAuditLogs(logs) { let html = ""; Object.values(logs).reverse().forEach(log => { html += `<div class="audit-log"><span class="time">[${new Date(log.timestamp).toLocaleString()}]</span> <span class="staff">${log.staff}</span>: ${log.action}</div>`; }); document.getElementById('auditLogList').innerHTML = html || '<p>Vacio.</p>'; }
         function downloadBackup() { logAction("Descargó Backup .JSON"); const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullData, null, 2)); const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", "SCULLY_BACKUP_" + new Date().toISOString().split('T')[0] + ".json"); dl.click(); }
     </script>
 </body>
 </html>
-</body>
-</html>
-
