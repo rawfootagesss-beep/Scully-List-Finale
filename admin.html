@@ -3,352 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully List | Master Panel OMNI</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>Scully List | Master Panel OMNI v5.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { 
-            --accent: #ff6600; 
-            --bg: #030303; 
-            --sidebar: #070707; 
-            --card-bg: rgba(15, 15, 15, 0.95);
-            --border: rgba(255, 255, 255, 0.05); 
-            --green: #00ff66; 
-            --red: #ff3333; 
-            --blue: #00ccff; 
-            --yellow: #ffff00; 
-            --purple: #cc00ff; 
-            --discord: #7289da;
-        }
-
-        body { 
-            background: var(--bg); 
-            color: #fff; 
-            font-family: 'Lexend Deca', sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            display: flex; 
-            height: 100vh; 
-            overflow: hidden; 
-            background-image: radial-gradient(circle at 50% 0%, rgba(255, 102, 0, 0.05) 0%, transparent 50%); 
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+        :root { --accent: #ff6600; --bg: #030303; --sidebar: #070707; --card-bg: rgba(15, 15, 15, 0.95); --border: rgba(255, 255, 255, 0.05); --green: #00ff66; --red: #ff3333; --blue: #00ccff; --yellow: #ffff00; --purple: #cc00ff; --discord: #7289da; }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
         /* SIDEBAR */
-        .sidebar { 
-            width: 280px; 
-            min-width: 280px; 
-            background: var(--sidebar); 
-            border-right: 1px solid var(--border); 
-            display: flex; 
-            flex-direction: column; 
-            padding: 20px 0; 
-            z-index: 100; 
-            overflow-y: auto; 
-            box-shadow: 10px 0 30px rgba(0,0,0,0.8); 
-        }
+        .sidebar { width: 280px; min-width: 280px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0; overflow-y: auto; }
+        .brand { text-align: center; padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 15px; }
+        .brand h1 { font-family: 'JetBrains Mono'; font-size: 1.6rem; margin: 0; text-transform: uppercase; }
+        .brand span { color: var(--accent); }
+        .nav-btn { background: transparent; color: #777; border: none; padding: 12px 25px; text-align: left; font-size: 0.75rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 12px; font-weight: 600; text-transform: uppercase; border-left: 3px solid transparent; }
+        .nav-btn:hover, .nav-btn.active { color: #fff; background: rgba(255,102,0,0.05); border-left-color: var(--accent); }
+        .sidebar-bottom { margin-top: auto; padding: 20px; border-top: 1px solid var(--border); }
 
-        .brand { 
-            text-align: center; 
-            padding: 0 20px 20px 20px; 
-            border-bottom: 1px solid var(--border); 
-            margin-bottom: 20px; 
-        }
-
-        .brand h1 { font-family: 'JetBrains Mono', monospace; font-size: 1.8rem; margin: 0; color: #fff; text-transform: uppercase; text-shadow: 0 0 10px var(--accent); }
-        .brand h1 span { color: var(--accent); }
-        .brand p { font-size: 0.65rem; color: var(--green); font-weight: 800; letter-spacing: 2px; margin-top: 5px; font-family: 'JetBrains Mono', monospace; }
-
-        .nav-btn { 
-            background: transparent; 
-            color: #888; 
-            border: none; 
-            padding: 12px 25px; 
-            text-align: left; 
-            font-family: 'Lexend Deca'; 
-            font-weight: 600; 
-            font-size: 0.75rem; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            border-left: 3px solid transparent; 
-            text-transform: uppercase; 
-        }
-
-        .nav-btn:hover { color: #fff; background: rgba(255,255,255,0.02); padding-left: 30px; }
-        .nav-btn.active { color: var(--accent); background: rgba(255, 102, 0, 0.05); border-left-color: var(--accent); font-weight: 800; }
-
-        .sidebar-bottom { margin-top: auto; padding: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
-        
-        .btn-exit { background: rgba(255,51,51,0.1); color: var(--red); border: 1px solid var(--red); width: 100%; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; gap: 10px; text-decoration: none; box-sizing: border-box; }
-        .btn-exit:hover { background: var(--red); color: #000; box-shadow: 0 0 15px rgba(255,51,51,0.4); }
-
-        /* MAIN CONTENT */
+        /* MAIN */
         .main-content { flex: 1; padding: 40px; overflow-y: auto; position: relative; }
         .tab-content { display: none; animation: fadeIn 0.3s ease; }
         .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        h2.section-title { font-size: 1.6rem; margin-bottom: 30px; display: flex; align-items: center; gap: 15px; text-transform: uppercase; font-weight: 800; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+
+        /* COMPONENTS */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border); padding: 20px; border-radius: 15px; text-align: center; transition: 0.3s; }
+        .stat-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .stat-card h3 { font-size: 1.8rem; margin: 5px 0; font-family: 'JetBrains Mono'; }
+        .stat-card p { font-size: 0.6rem; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+
+        .terminal-box { background: #000; border: 1px solid #222; border-radius: 12px; padding: 15px; font-family: 'JetBrains Mono'; font-size: 0.7rem; height: 150px; overflow-y: auto; color: #aaa; box-shadow: inset 0 0 20px #000; }
+        .admin-panel { background: var(--card-bg); border: 1px solid var(--border); padding: 25px; border-radius: 15px; margin-bottom: 25px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.7rem; color: var(--accent); font-weight: 800; margin-bottom: 5px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 8px; font-family: inherit; font-size: 0.8rem; outline: none; box-sizing: border-box; }
+        input:focus { border-color: var(--accent); }
         
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: scale(0.98); } 
-            to { opacity: 1; transform: scale(1); } 
-        }
+        .btn-action { background: var(--accent); color: #000; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 0.75rem; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-action:hover { box-shadow: 0 0 15px rgba(255,102,0,0.4); transform: scale(1.02); }
 
-        h2.section-title { font-size: 1.8rem; margin-top: 0; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 15px; display: flex; align-items: center; gap: 15px; font-weight: 800; text-transform: uppercase; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-
-        /* MONITOR & STATS */
-        .sys-monitor { display: flex; gap: 15px; background: rgba(0,255,102,0.05); border: 1px solid rgba(0,255,102,0.2); padding: 10px 20px; border-radius: 10px; margin-bottom: 25px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--green); flex-wrap: wrap; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 40px; }
-        .stat-card { background: var(--card-bg); border: 1px solid var(--border); padding: 20px; border-radius: 20px; text-align: center; transition: 0.3s; position: relative; overflow: hidden; }
-        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); opacity: 0.5; }
-        .stat-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        .stat-card i { font-size: 1.8rem; color: var(--accent); margin-bottom: 10px; }
-        .stat-card h3 { font-size: 2rem; margin: 0; font-family: 'JetBrains Mono', monospace; font-weight: 800; }
-        .stat-card p { color: #888; font-size: 0.65rem; text-transform: uppercase; margin: 5px 0 0 0; font-weight: 800; letter-spacing: 1px; }
-
-        /* LIVE TERMINAL */
-        .terminal-box { background: #000; border: 1px solid #222; border-radius: 15px; padding: 15px; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; height: 150px; overflow-y: auto; color: #aaa; margin-bottom: 30px; box-shadow: inset 0 0 20px rgba(0,0,0,1); }
-        .term-line { margin-bottom: 5px; }
-        .term-sys { color: var(--blue); } .term-warn { color: var(--yellow); } .term-err { color: var(--red); } .term-ok { color: var(--green); }
-
-        /* PANELS & FORMS */
-        .admin-panel { background: var(--card-bg); border: 1px solid var(--border); padding: 30px; border-radius: 20px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .input-group { margin-bottom: 20px; }
-        label { display: block; font-size: 0.75rem; color: var(--accent); font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-        input, select, textarea { width: 100%; background: rgba(0,0,0,0.8); border: 1px solid #333; color: #fff; padding: 15px; border-radius: 12px; font-family: 'Lexend Deca'; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: 0.3s; resize: vertical; }
-        input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(255,102,0,0.2); background: #000; }
+        .data-list { display: flex; flex-direction: column; gap: 10px; }
+        .data-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 15px 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .data-card:hover { border-color: var(--accent); background: rgba(255,255,255,0.04); }
+        .data-info h4 { margin: 0; font-size: 0.9rem; text-transform: uppercase; }
+        .btn-small { padding: 6px 12px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; }
         
-        .btn-action { background: var(--accent); color: #000; border: none; padding: 15px 30px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-action:hover { box-shadow: 0 0 20px rgba(255,102,0,0.5); transform: translateY(-2px); }
-
-        /* LISTS & CARDS */
-        .data-list { display: flex; flex-direction: column; gap: 15px; max-height: 500px; overflow-y: auto; padding-right: 10px; }
-        .data-card { background: rgba(0,0,0,0.6); border: 1px solid var(--border); padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; flex-wrap: wrap; gap: 15px; }
-        .data-card:hover { border-color: var(--accent); background: rgba(255,255,255,0.02); }
-        .data-info h4 { margin: 0 0 5px 0; font-size: 1.1rem; color: #fff; text-transform: uppercase; letter-spacing: -0.5px; }
-        .data-info p { margin: 0; font-size: 0.8rem; color: #aaa; line-height:1.4; }
-        .data-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        /* MODALS */
+        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); }
+        .modal-content { background: var(--sidebar); margin: 5vh auto; padding: 30px; width: 90%; max-width: 700px; border-radius: 20px; border: 1px solid var(--border); max-height: 85vh; overflow-y: auto; position: relative; }
         
-        .btn-small { padding: 8px 15px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; border: none; cursor: pointer; transition: 0.2s; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px; letter-spacing: 1px; }
-        .btn-green { background: rgba(0,255,102,0.1); color: var(--green); border: 1px solid var(--green); } .btn-green:hover { background: var(--green); color: #000; box-shadow: 0 0 10px var(--green); }
-        .btn-red { background: rgba(255,51,51,0.1); color: var(--red); border: 1px solid var(--red); } .btn-red:hover { background: var(--red); color: #000; box-shadow: 0 0 10px var(--red); }
-        .btn-blue { background: rgba(0,204,255,0.1); color: var(--blue); border: 1px solid var(--blue); } .btn-blue:hover { background: var(--blue); color: #000; box-shadow: 0 0 10px var(--blue); }
-
-        /* REORDER LEVELS */
-        .level-row { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); padding: 12px 20px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #222; transition: 0.2s; }
-        .level-row:hover { background: rgba(255,255,255,0.05); border-color: var(--accent); }
-        .level-rank { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 800; width: 40px; font-size: 1.2rem; }
-        .level-name { flex: 1; font-weight: 800; font-size: 0.95rem; text-transform: uppercase; }
-        .level-controls button { background: #111; border: 1px solid #333; color: #fff; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; transition: 0.2s; margin-left: 5px; }
-        .level-controls button:hover { background: var(--accent); color: #000; border-color: var(--accent); }
-
-        /* MODALS & TOASTS */
-        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
-        .modal-content { background: var(--sidebar); margin: 5vh auto; padding: 35px; width: 90%; max-width: 700px; border-radius: 25px; border: 1px solid var(--border); position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 0 50px rgba(0,0,0,1); }
-        #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 15px; padding: 15px 20px; position: fixed; z-index: 9999; right: 30px; bottom: 30px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; transform: translateY(50px); opacity: 0; }
-        #scullyToast.show { visibility: visible; transform: translateY(0); opacity: 1; }
-        #loadingScreen { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg); z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .spinner { border: 4px solid rgba(255,102,0,0.1); border-top: 4px solid var(--accent); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; margin-bottom: 20px; box-shadow: 0 0 20px rgba(255,102,0,0.2); }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--accent); }
-        input:checked + .slider:before { transform: translateX(24px); }
-
-        .audit-log { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 10px; border-bottom: 1px solid #111; color: #aaa; }
-        .audit-log span.time { color: var(--accent); margin-right: 10px; }
-        .audit-log span.staff { color: var(--blue); font-weight: 800; }
+        .level-row { display: flex; align-items: center; background: #000; padding: 10px 15px; border-radius: 8px; border: 1px solid #111; margin-bottom: 5px; gap: 15px; }
+        .level-rank { font-family: 'JetBrains Mono'; color: var(--accent); font-weight: 800; width: 30px; }
+        .level-controls button { background: #111; color: #fff; border: 1px solid #222; width: 30px; height: 30px; border-radius: 5px; cursor: pointer; }
+        
+        #loadingScreen { position: fixed; inset: 0; background: var(--bg); z-index: 20000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .spinner { border: 3px solid rgba(255,102,0,0.1); border-top-color: var(--accent); border-radius: 50%; width: 50px; height: 50px; animation: spin 0.8s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div id="loadingScreen">
-        <div class="spinner"></div>
-        <h2 style="font-family:'JetBrains Mono'; color:var(--accent); text-transform:uppercase; letter-spacing:3px; font-size:1rem;">SYSTEM.INITIALIZE()</h2>
-        <p style="color:#666; font-family:'JetBrains Mono'; font-size:0.7rem;">Estableciendo conexión encriptada con la base de datos...</p>
-    </div>
-
-    <div id="scullyToast"><i class="fas fa-check-circle"></i> Mensaje</div>
+    <div id="loadingScreen"><div class="spinner"></div><p style="font-family:'JetBrains Mono'; color:var(--accent); font-size:0.7rem; letter-spacing:2px;">INITIALIZING_OMNI_KERNEL...</p></div>
+    <div id="scullyToast" style="position:fixed; bottom:20px; right:20px; padding:15px 25px; border-radius:10px; z-index:30000; font-weight:800; display:none;"></div>
 
     <div class="sidebar">
-        <div class="brand">
-            <h1>SYS.<span>OMNI</span></h1>
-            <p id="authBadge"><i class="fas fa-fingerprint"></i> VERIFICANDO...</p>
-        </div>
-
-        <span style="font-size: 0.6rem; color: #555; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin: 10px 20px; display: block;">Core Database</span>
-        <button class="nav-btn active" onclick="switchTab('tab-dashboard')"><i class="fas fa-satellite-dish"></i> Centro de Monitoreo</button>
-        <button class="nav-btn" onclick="switchTab('tab-records')"><i class="fas fa-tasks"></i> Gestión de Récords</button>
-        <button class="nav-btn" onclick="switchTab('tab-level-manager')"><i class="fas fa-plus-square"></i> Base de Niveles</button>
-        <button class="nav-btn" onclick="switchTab('tab-levels')"><i class="fas fa-list-ol"></i> Modificar Ranking</button>
-        <button class="nav-btn" onclick="switchTab('tab-approvals')"><i class="fas fa-user-check"></i> Centro de Perfiles</button>
-        <button class="nav-btn" onclick="switchTab('tab-player-control')"><i class="fas fa-users-cog"></i> Control de Jugadores</button>
-        <button class="nav-btn" onclick="switchTab('tab-staff')"><i class="fas fa-user-shield"></i> Personal (Staff)</button>
-        
-        <span style="font-size: 0.6rem; color: #555; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin: 20px 20px 10px 20px; display: block; border-top: 1px solid var(--border); padding-top: 15px;">Módulos de Expansión</span>
-        
-        <button class="nav-btn" onclick="switchTab('tab-discord')" style="color:var(--discord);"><i class="fab fa-discord"></i> Discord Webhooks</button>
-        <button class="nav-btn" onclick="switchTab('tab-packs')" style="color:var(--accent);"><i class="fas fa-box-open"></i> Creador de Packs</button>
-        <button class="nav-btn" onclick="switchTab('tab-firewall')" style="color:var(--green);"><i class="fas fa-shield-virus"></i> Firewall & Seguridad</button>
-        <button class="nav-btn" onclick="switchTab('tab-settings')" style="color:var(--purple);"><i class="fas fa-cogs"></i> Ajustes Visuales</button>
-        <button class="nav-btn" onclick="switchTab('tab-ticker')" style="color:var(--yellow);"><i class="fas fa-bullhorn"></i> Inyector Hub</button>
-        <button class="nav-btn" onclick="switchTab('tab-audit')" style="color:var(--blue);"><i class="fas fa-eye"></i> Auditoría</button>
-
+        <div class="brand"><h1>SYS.<span>OMNI</span></h1><p id="authBadge" style="font-size:0.5rem; color:var(--green); font-weight:800; margin:5px 0 0;">STANDBY</p></div>
+        <button class="nav-btn active" onclick="switchTab('tab-dash')"><i class="fas fa-home"></i> Inicio</button>
+        <button class="nav-btn" onclick="switchTab('tab-recs')"><i class="fas fa-check-double"></i> Récords</button>
+        <button class="nav-btn" onclick="switchTab('tab-lvls')"><i class="fas fa-layer-group"></i> Niveles</button>
+        <button class="nav-btn" onclick="switchTab('tab-rank')"><i class="fas fa-sort-amount-down"></i> Ranking</button>
+        <button class="nav-btn" onclick="switchTab('tab-players')"><i class="fas fa-user-edit"></i> Jugadores</button>
+        <button class="nav-btn" onclick="switchTab('tab-config')"><i class="fas fa-tools"></i> Módulos</button>
+        <button class="nav-btn" onclick="switchTab('tab-audit')"><i class="fas fa-history"></i> Auditoría</button>
         <div class="sidebar-bottom">
-            <button class="nav-btn" onclick="downloadBackup()" style="color:var(--yellow); padding: 0; justify-content:center; margin-bottom: 10px; text-align:center;"><i class="fas fa-download"></i> Backup JSON</button>
-            <a href="index.html" class="btn-exit"><i class="fas fa-power-off"></i> CERRAR SESIÓN OMNI</a>
+            <button class="nav-btn" style="color:var(--yellow); border:1px solid #222; margin-bottom:10px;" onclick="backupDB()"><i class="fas fa-download"></i> Backup JSON</button>
+            <button class="nav-btn" style="color:var(--red); border:1px solid #222;" onclick="location.href='index.html'"><i class="fas fa-power-off"></i> Salir</button>
         </div>
     </div>
 
     <div class="main-content">
-        
-        <div id="tab-dashboard" class="tab-content active">
-            <h2 class="section-title"><i class="fas fa-satellite-dish" style="color:var(--accent);"></i> Centro de Monitoreo</h2>
-            
-            <div class="sys-monitor">
-                <span><i class="fas fa-server"></i> STATUS: <b style="color:var(--green);">ONLINE</b></span>
-                <span><i class="fas fa-network-wired"></i> PING: <b id="fakePing" style="color:var(--accent);">24ms</b></span>
-                <span><i class="fas fa-memory"></i> MEM LOAD: <b id="fakeMem" style="color:var(--blue);">14%</b></span>
-            </div>
-
+        <div id="tab-dash" class="tab-content active">
+            <h2 class="section-title"><i class="fas fa-satellite-dish" style="color:var(--accent);"></i> Monitoreo</h2>
             <div class="stats-grid">
-                <div class="stat-card"><i class="fas fa-users" style="color:var(--blue);"></i><h3 id="statPlayers">0</h3><p>Entidades Registradas</p></div>
-                <div class="stat-card"><i class="fas fa-ghost" style="color:var(--purple);"></i><h3 id="statLevels">0</h3><p>Nodos de Nivel</p></div>
-                <div class="stat-card"><i class="fas fa-clock" style="color:var(--yellow);"></i><h3 id="statPending">0</h3><p>Récords en Cola</p></div>
-                <div class="stat-card"><i class="fas fa-exclamation-circle" style="color:var(--red);"></i><h3 id="statBans">0</h3><p>Blacklist Activa</p></div>
+                <div class="stat-card"><p>Jugadores</p><h3 id="s-players">0</h3></div>
+                <div class="stat-card"><p>Niveles</p><h3 id="s-levels">0</h3></div>
+                <div class="stat-card"><p>Pendientes</p><h3 id="s-pending">0</h3></div>
+                <div class="stat-card" style="border-color:var(--red);"><p>Baneados</p><h3 id="s-bans">0</h3></div>
             </div>
-
-            <h3 style="font-family:'JetBrains Mono'; font-size:0.8rem; color:var(--accent); text-transform:uppercase; margin-bottom:10px;"><i class="fas fa-terminal"></i> Terminal de Diagnóstico en Vivo</h3>
-            <div class="terminal-box" id="liveTerminal">
-                <div class="term-line term-sys">> Inicializando sistema OMNI v3.4...</div>
-                <div class="term-line term-ok">> Módulo de Auto-XP integrado correctamente.</div>
-            </div>
+            <div class="terminal-box" id="term"></div>
         </div>
 
-        <div id="tab-records" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-tasks" style="color:var(--green);"></i> Gestión de Récords</h2>
-            
-            <h3 style="color:#fff; text-transform:uppercase; margin-bottom:15px; font-size:1rem;"><i class="fas fa-inbox" style="color:var(--green);"></i> Bandeja de Revisión</h3>
-            <div class="data-list" id="pendingRecordsList" style="margin-bottom:40px;"></div>
-
-            <div class="admin-panel" style="border-color:rgba(255,102,0,0.3);">
-                <h3 style="color:var(--accent); margin-top:0;"><i class="fas fa-bolt"></i> Inyección Manual de Récords (AUTO-XP)</h3>
-                <p style="color:#888; font-size:0.8rem; margin-bottom:20px;">Fuerza la adición de un récord. El sistema calculará la XP automáticamente según la posición del nivel.</p>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-                    <div class="input-group"><label>Sujeto (Jugador)</label><input type="text" id="manualPlayer"></div>
-                    <div class="input-group"><label>Objetivo (Nivel)</label><input type="text" id="manualLevel"></div>
+        <div id="tab-recs" class="tab-content">
+            <h2 class="section-title"><i class="fas fa-inbox"></i> Bandeja de Entrada</h2>
+            <div class="data-list" id="list-subs"></div>
+            <hr style="border:0; border-top:1px solid #111; margin:40px 0;">
+            <div class="admin-panel">
+                <h3 style="margin-top:0; color:var(--accent);">Inyectar Récord (Auto-XP)</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+                    <input type="text" id="m-player" placeholder="Nombre del Jugador">
+                    <input type="text" id="m-lvl" placeholder="Nombre del Nivel">
                 </div>
-                <div class="input-group"><label>Enlace de Evidencia (YouTube)</label><input type="text" id="manualLink"></div>
-                <button onclick="addManualRecord()" class="btn-action"><i class="fas fa-syringe"></i> INYECTAR RÉCORD Y XP</button>
+                <input type="text" id="m-link" placeholder="URL de YouTube" style="margin-bottom:15px;">
+                <button class="btn-action" onclick="injectManualRec()"><i class="fas fa-syringe"></i> Inyectar a DB</button>
             </div>
         </div>
 
-        <div id="tab-level-manager" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-plus-square" style="color:var(--accent);"></i> Base de Niveles</h2>
-            <div class="data-list" id="suggestionsList" style="margin-bottom:40px;"></div>
-            <div class="admin-panel" id="levelFormPanel">
-                <h3 id="levelFormTitle" style="color:var(--accent); margin-top:0;"><i class="fas fa-code-branch"></i> Compilar Nuevo Nivel</h3>
-                <input type="hidden" id="editLevelIndex" value="-1">
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-                    <div class="input-group"><label>Nombre</label><input type="text" id="addLevelName"></div>
-                    <div class="input-group"><label>Video ID</label><input type="text" id="addLevelId"></div>
+        <div id="tab-lvls" class="tab-content">
+            <h2 class="section-title"><i class="fas fa-plus-circle"></i> Gestión de Base</h2>
+            <div class="admin-panel">
+                <input type="hidden" id="edit-idx" value="-1">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+                    <input type="text" id="add-n" placeholder="Nombre del Nivel">
+                    <input type="text" id="add-id" placeholder="Video ID (Ej: d9D4...)">
                 </div>
-                <div class="input-group"><label>Verificador</label><input type="text" id="addLevelVictor"></div>
-                <button onclick="saveLevelData()" class="btn-action" style="width:100%"><i class="fas fa-save"></i> GUARDAR EN DB</button>
-                <button id="btnCancelEdit" onclick="cancelEditLevel()" class="btn-action" style="background:var(--red); color:#fff; width:100%; margin-top:10px;" hidden>CANCELAR</button>
+                <input type="text" id="add-v" placeholder="Verificador" style="margin-bottom:15px;">
+                <button class="btn-action" onclick="saveLvl()"><i class="fas fa-save"></i> Guardar Nivel</button>
+                <button class="btn-action" id="cancel-edit" style="background:#222; color:#fff; display:none;" onclick="resetLvlForm()">Cancelar</button>
             </div>
-            <div class="data-list" id="manageLevelsList"></div>
+            <div class="data-list" id="list-lvls"></div>
         </div>
 
-        <div id="tab-levels" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-list-ol" style="color:var(--blue);"></i> Modificar Ranking</h2>
-            <div class="data-list" id="levelManagerList"></div>
-            <button onclick="saveLevelOrder()" class="btn-action" style="background:var(--blue); color:#000; width:100%; margin-top:20px;"><i class="fas fa-save"></i> GUARDAR NUEVO ORDEN</button>
+        <div id="tab-rank" class="tab-content">
+            <h2 class="section-title"><i class="fas fa-sort"></i> Estructura Ranking</h2>
+            <div id="rank-sort-list"></div>
+            <button class="btn-action" style="width:100%; margin-top:20px; background:var(--blue);" onclick="publishOrder()"><i class="fas fa-globe"></i> Publicar Nuevo Orden</button>
         </div>
 
-        <div id="tab-approvals" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-user-check" style="color:var(--purple);"></i> Centro de Perfiles</h2>
-            <div class="data-list" id="claimRequestsList" style="margin-bottom:30px;"></div>
-            <div class="data-list" id="pfpRequestsList"></div>
-        </div>
-
-        <div id="tab-player-control" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-users-cog" style="color:var(--red);"></i> Control de Jugadores</h2>
-            <div class="admin-panel"><div style="display:flex; gap:10px;"><input type="text" id="pcSearch" placeholder="Buscar jugador..."><button onclick="searchPlayerControl()" class="btn-action" style="background:var(--red); color:#fff;"><i class="fas fa-search"></i></button></div></div>
-            <div id="pcResultArea" style="display:none;">
+        <div id="tab-players" class="tab-content">
+            <h2 class="section-title"><i class="fas fa-search"></i> Editor Maestro</h2>
+            <div class="admin-panel"><div style="display:flex; gap:10px;"><input type="text" id="p-search" placeholder="Nombre exacto..."><button class="btn-action" onclick="searchP()"><i class="fas fa-search"></i></button></div></div>
+            <div id="p-result" style="display:none;">
                 <div class="admin-panel">
-                    <input type="text" id="pcEditName">
-                    <input type="text" id="pcEditCountry">
-                    <textarea id="pcEditBio"></textarea>
-                    <button onclick="savePlayerProfileEdit()" class="btn-small btn-blue">GUARDAR</button>
-                    <div id="pcBanControls" style="margin-top:20px;"></div>
-                    <div id="pcRecordsList" class="data-list" style="margin-top:20px;"></div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
+                        <input type="text" id="pe-n">
+                        <input type="text" id="pe-c">
+                    </div>
+                    <textarea id="pe-b" placeholder="Biografía" rows="2" style="margin-bottom:15px;"></textarea>
+                    <button class="btn-small btn-blue" onclick="updateP()">Guardar Perfil</button>
+                    <div id="p-ban-box" style="margin-top:20px;"></div>
+                    <h4 style="border-bottom:1px solid #222; padding-bottom:10px;">Récords del Usuario</h4>
+                    <div id="p-recs" class="data-list"></div>
                 </div>
             </div>
         </div>
 
-        <div id="tab-discord" class="tab-content">
-            <h2 class="section-title"><i class="fab fa-discord" style="color:var(--discord);"></i> Integración Discord</h2>
-            <div class="admin-panel" style="border-color:var(--discord);">
-                <div class="input-group"><label>URL Webhook</label><input type="text" id="discordWebhookUrl"></div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <div><h4 style="margin:0;">Notificar Decisiones</h4></div>
-                    <label class="switch"><input type="checkbox" id="toggleDiscordRecords"><span class="slider"></span></label>
-                </div>
-                <button onclick="saveDiscordSettings()" class="btn-action" style="background:var(--discord); color:#fff; width:100%"><i class="fas fa-save"></i> GUARDAR</button>
-            </div>
-        </div>
-
-        <div id="tab-packs" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-box-open" style="color:var(--accent);"></i> Creador de Packs</h2>
+        <div id="tab-config" class="tab-content">
+            <h2 class="section-title"><i class="fas fa-cog"></i> Módulos Avanzados</h2>
             <div class="admin-panel">
-                <input type="text" id="packName" placeholder="Nombre del Pack">
-                <input type="text" id="packColor" placeholder="Color Hex">
-                <input type="text" id="packLevels" placeholder="Niveles, Separados, Por, Coma">
-                <button onclick="createListPack()" class="btn-action" style="width:100%; margin-top:15px;"><i class="fas fa-boxes"></i> CREAR PACK</button>
-            </div>
-            <div class="data-list" id="packsListContainer"></div>
-        </div>
-
-        <div id="tab-firewall" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-shield-virus" style="color:var(--green);"></i> Firewall & Seguridad</h2>
-            <div class="admin-panel">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <div><h4>Modo Paranoia (Bloqueo Estricto)</h4></div>
-                    <label class="switch"><input type="checkbox" id="toggleParanoiaMode" onchange="updateFirewallRule('paranoia', this.checked)"><span class="slider"></span></label>
-                </div>
+                <label>Discord Webhook URL</label>
+                <input type="text" id="conf-disc" style="margin-bottom:15px;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div><h4>Rate Limit (Anti-Spam)</h4></div>
-                    <label class="switch"><input type="checkbox" id="toggleRateLimit" onchange="updateFirewallRule('rate_limit', this.checked)"><span class="slider"></span></label>
+                    <span>Auto-Notificar Récords</span>
+                    <label class="switch"><input type="checkbox" id="conf-disc-toggle"><span class="slider"></span></label>
                 </div>
+                <button class="btn-action" style="margin-top:15px; background:var(--discord); color:#fff;" onclick="saveConfig()"><i class="fab fa-discord"></i> Guardar Integración</button>
+            </div>
+            <div class="admin-panel">
+                <label>CSS Inyector (Live Hub)</label>
+                <textarea id="conf-css" rows="4" placeholder="body { background: red !important; }"></textarea>
+                <button class="btn-action" style="margin-top:15px; background:var(--green); color:#000;" onclick="injectCSS()"><i class="fas fa-code"></i> Compilar CSS</button>
             </div>
         </div>
 
         <div id="tab-audit" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-eye" style="color:var(--blue);"></i> Auditoría</h2>
-            <div class="admin-panel" id="auditLogList" style="background:#000;"></div>
+            <h2 class="section-title"><i class="fas fa-history"></i> Logs de Actividad</h2>
+            <div id="audit-list" style="background:#000; border-radius:15px; padding:10px;"></div>
         </div>
-
     </div>
 
-    <div id="reviewModal" class="modal">
+    <div id="modal-rev" class="modal">
         <div class="modal-content">
-            <span onclick="closeModal('reviewModal')" style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.5rem;">&times;</span>
-            <h2 id="reviewTitle" style="color:var(--accent); text-transform:uppercase;">Revisar</h2>
-            <div id="reviewVideoContainer" style="margin-bottom:20px;"></div>
-            <p id="reviewRaw" style="font-size:0.8rem;"></p>
-            <p id="reviewComments" style="font-size:0.8rem;"></p>
+            <span style="position:absolute; top:20px; right:20px; cursor:pointer;" onclick="closeModal('modal-rev')">✕</span>
+            <h2 id="rev-t" style="margin-top:0; color:var(--accent);">Revisar Récord</h2>
+            <div id="rev-vid" style="margin-bottom:20px; border-radius:12px; overflow:hidden; border:1px solid #222;"></div>
+            <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:10px; margin-bottom:20px; font-size:0.8rem;">
+                <p><b>Link RAW:</b> <span id="rev-raw">--</span></p>
+                <p><b>Comentario:</b> <span id="rev-comm">--</span></p>
+            </div>
             <div style="display:flex; gap:10px;">
-                <button id="btnAcceptRecord" class="btn-action" style="background:var(--green); flex:1;"><i class="fas fa-check"></i> ACEPTAR</button>
-                <button id="btnAppealRecord" class="btn-action" style="background:var(--yellow); color:#000; flex:1;"><i class="fas fa-exclamation-triangle"></i> APELACIÓN</button>
-                <button id="btnRejectRecord" class="btn-action" style="background:var(--red); color:#fff; flex:1;"><i class="fas fa-times"></i> RECHAZAR</button>
+                <button id="b-acc" class="btn-action" style="background:var(--green); flex:1;">Aceptar</button>
+                <button id="b-app" class="btn-action" style="background:var(--yellow); color:#000; flex:1;">Apelación</button>
+                <button id="b-rej" class="btn-action" style="background:var(--red); color:#fff; flex:1;">Rechazar</button>
             </div>
         </div>
     </div>
@@ -360,181 +197,230 @@
     <script>
         const firebaseConfig = { apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", authDomain: "scullylist.firebaseapp.com", databaseURL: "https://scullylist-default-rtdb.firebaseio.com", projectId: "scullylist", storageBucket: "scullylist.firebasestorage.app", messagingSenderId: "498548914021", appId: "1:498548914021:web:59128b5e06b36a4e81938c" };
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
+        const auth = firebase.auth(), db = firebase.database();
+        let fullData = {}, levelsArr = [], currentStaff = "System", staffRole = "Helper", selPIdx = -1;
 
-        let fullData = {}, editingLevels = [], currentAdminName = "Sys", currentAdminRole = "helper", pcCurrentPlayerIdx = -1;
-
-        // UI HELPERS
-        function showToast(msg, isErr=false) { const t = document.getElementById("scullyToast"); t.innerHTML=isErr?`<i class="fas fa-times"></i> ${msg}`:`<i class="fas fa-check"></i> ${msg}`; t.style.backgroundColor=isErr?"var(--red)":"var(--green)"; t.className="show"; setTimeout(()=>t.className="",3500); }
-        function switchTab(id) { document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).classList.add('active'); event.currentTarget.classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function extractVideoID(url) { let match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/); return match ? match[1] : url; }
-        function termPrint(msg, type="term-sys") { const term = document.getElementById('liveTerminal'); term.innerHTML += `<div class="term-line ${type}">> [${new Date().toLocaleTimeString()}] ${msg}</div>`; term.scrollTop = term.scrollHeight; }
-        function logAction(msg) { db.ref('staff_logs').push({ staff: currentAdminName, action: msg, timestamp: Date.now() }); termPrint(`LOG: ${msg}`); }
+        // UI CORE
+        function toast(m, e=false){ const t=document.getElementById('scullyToast'); t.innerText=m; t.style.backgroundColor=e?"var(--red)":"var(--green)"; t.style.display='block'; t.className='show'; setTimeout(()=>{t.style.display='none';},3000); }
+        function switchTab(id){ document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active')); document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active')); document.getElementById(id).classList.add('active'); event.currentTarget.classList.add('active'); }
+        function closeModal(id){ document.getElementById(id).style.display='none'; }
+        function printTerm(m, t="term-sys"){ const b=document.getElementById('term'); b.innerHTML+=`<div class="term-line ${t}">> [${new Date().toLocaleTimeString()}] ${m}</div>`; b.scrollTop=b.scrollHeight; }
+        function log(m){ db.ref('staff_logs').push({staff:currentStaff, action:m, timestamp:Date.now()}); printTerm(m); }
 
         // AUTH
         auth.onAuthStateChanged(u => {
-            if (!u) { window.location.href = "login.html"; return; }
+            if(!u) location.href="login.html";
             db.ref('players').once('value', s => {
-                const ps = Object.values(s.val()||{}); const me = ps.find(p=>p.email===u.email);
-                if(me && (me.role==='admin' || me.name.toLowerCase()==='score' || me.role==='helper')) {
-                    currentAdminName=me.name; currentAdminRole=me.name.toLowerCase()==='score'?'owner':me.role;
-                    document.getElementById('authBadge').innerHTML = `<i class="fas fa-shield-alt"></i> ${currentAdminRole.toUpperCase()}: ${me.name}`;
-                    document.getElementById('loadingScreen').style.display='none'; initMasterPanel();
-                } else { alert("ACCESS DENIED"); window.location.href="index.html"; }
+                const ps = Object.values(s.val()||{});
+                const me = ps.find(x => x.email === u.email);
+                if(me && (me.role === 'admin' || me.name.toLowerCase() === 'score' || me.role === 'helper')) {
+                    currentStaff = me.name; staffRole = me.name.toLowerCase()==='score'?'owner':me.role;
+                    document.getElementById('authBadge').innerText = `${staffRole.toUpperCase()}: ${me.name}`;
+                    document.getElementById('loadingScreen').style.display='none';
+                    init();
+                } else { alert("ACCESO DENEGADO"); location.href="index.html"; }
             });
         });
 
-        function initMasterPanel() {
-            db.ref('/').on('value', (s) => {
-                fullData = s.val() || {};
-                const pArr = Object.values(fullData.players || {}), lArr = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels.filter(l => l) : Object.values(fullData.levels)) : [];
-                document.getElementById('statPlayers').innerText = pArr.length; document.getElementById('statLevels').innerText = lArr.length;
-                document.getElementById('statPending').innerText = Object.keys(fullData.submissions || {}).length;
-                let bans = 0; pArr.forEach(p => { if(p.hidden) bans++; }); document.getElementById('statBans').innerText = bans;
+        function init(){
+            db.ref('/').on('value', snap => {
+                fullData = snap.val() || {};
+                const pArr = Object.values(fullData.players || {});
+                levelsArr = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels.filter(l=>l) : Object.values(fullData.levels)) : [];
+                
+                document.getElementById('s-players').innerText = pArr.length;
+                document.getElementById('s-levels').innerText = levelsArr.length;
+                document.getElementById('s-pending').innerText = Object.keys(fullData.submissions || {}).length;
+                document.getElementById('s-bans').innerText = pArr.filter(x=>x.hidden).length;
 
-                renderPendingRecords(fullData.submissions || {}); renderManageLevels(lArr); 
-                renderAuditLogs(fullData.staff_logs || {}); renderStaffManager(pArr);
-                renderPacks(fullData.packs || {}); renderSuggestions(fullData.level_suggestions || {});
-                renderApprovals(fullData.claim_requests || {}, fullData.pfp_requests || {});
-
-                if(editingLevels.length === 0 || editingLevels.length !== lArr.length) { editingLevels = [...lArr]; renderLevelReorder(); }
-                if(pcCurrentPlayerIdx !== -1) renderPlayerControlData();
-
-                if(fullData.system_settings) {
-                    if(fullData.system_settings.discord) {
-                        document.getElementById('discordWebhookUrl').value = fullData.system_settings.discord.url || "";
-                        document.getElementById('toggleDiscordRecords').checked = !!fullData.system_settings.discord.auto_records;
-                    }
-                    if(fullData.system_settings.firewall) {
-                        document.getElementById('toggleParanoiaMode').checked = !!fullData.system_settings.firewall.paranoia;
-                        document.getElementById('toggleRateLimit').checked = !!fullData.system_settings.firewall.rate_limit;
-                    }
+                renderRecs(fullData.submissions || {});
+                renderLvls(levelsArr);
+                renderRank(levelsArr);
+                renderAudit(fullData.staff_logs || {});
+                if(fullData.system_settings?.discord){
+                    document.getElementById('conf-disc').value = fullData.system_settings.discord.url || "";
+                    document.getElementById('conf-disc-toggle').checked = !!fullData.system_settings.discord.auto;
                 }
+                if(selPIdx !== -1) renderPData();
             });
         }
 
-        // ==========================================
-        // AUTO XP LOGIC & RECORD INJECTION
-        // ==========================================
-        function calculateXP(levelName) {
-            const index = editingLevels.findIndex(l => l.name.toLowerCase() === levelName.toLowerCase());
-            if (index === -1) return 0;
-            return Math.max(100 - (index * 0.6), 5);
+        // CALC XP
+        function getXP(lvlName){
+            const i = levelsArr.findIndex(x => x.name.toLowerCase() === lvlName.toLowerCase());
+            return i === -1 ? 0 : Math.max(100 - (i * 0.6), 5);
         }
 
-        function sendDiscordMessage(content) {
+        // DISCORD
+        function pushDiscord(m){
             const url = fullData.system_settings?.discord?.url;
-            if(!url || !fullData.system_settings.discord.auto_records) return;
-            fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content: content, username: "Scully System OMNI" }) });
+            if(!url || !fullData.system_settings.discord.auto) return;
+            fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content:m, username:"Scully Omni"}) });
         }
 
-        function acceptRecord(k) { 
-            const s = fullData.submissions[k]; 
-            let pL = fullData.players ? Object.values(fullData.players) : []; 
-            let i = pL.findIndex(p => p.name.toLowerCase() === s.player.toLowerCase()); 
-            const xpToAdd = calculateXP(s.level);
+        // RECS LOGIC
+        function renderRecs(data){
+            let h = "";
+            Object.entries(data).forEach(([id, r]) => {
+                h += `<div class="data-card"><div class="data-info"><h4>${r.level}</h4><p>Por: ${r.player}</p></div><button class="btn-small btn-blue" onclick="openReview('${id}')">REVISAR</button></div>`;
+            });
+            document.getElementById('list-subs').innerHTML = h || '<p style="color:#444;">Bandeja vacía.</p>';
+        }
 
-            if(i === -1) {
-                pL.push({ name: s.player, country: 'es', totalXP: xpToAdd, completions: [{level: s.level, link: s.link, xp: xpToAdd}] });
-            } else {
-                let c = pL[i].completions ? Object.values(pL[i].completions) : [];
-                if(!c.some(x => x.level === s.level)) {
-                    c.push({level: s.level, link: s.link, xp: xpToAdd});
-                    pL[i].completions = c;
-                    pL[i].totalXP = (pL[i].totalXP || 0) + xpToAdd;
+        function openReview(id){
+            const r = fullData.submissions[id];
+            document.getElementById('rev-t').innerText = `${r.level} | ${r.player}`;
+            const vId = r.link.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+            document.getElementById('rev-vid').innerHTML = vId ? `<iframe width="100%" height="300" src="https://www.youtube.com/embed/${vId[1]}" frameborder="0" allowfullscreen></iframe>` : `<a href="${r.link}" target="_blank">VER VIDEO</a>`;
+            document.getElementById('rev-raw').innerText = r.raw || "N/A";
+            document.getElementById('rev-comm').innerText = r.comments || "Ninguno";
+            
+            document.getElementById('b-acc').onclick = () => processRec(id, 'accept');
+            document.getElementById('b-app').onclick = () => processRec(id, 'appeal');
+            document.getElementById('b-rej').onclick = () => processRec(id, 'reject');
+            document.getElementById('modal-rev').style.display='block';
+        }
+
+        function processRec(id, mode){
+            const r = fullData.submissions[id];
+            if(mode === 'accept'){
+                const xp = getXP(r.level);
+                let pL = Object.values(fullData.players || {});
+                let i = pL.findIndex(x => x.name.toLowerCase() === r.player.toLowerCase());
+                if(i===-1) pL.push({name:r.player, country:'es', totalXP:xp, completions:[{level:r.level, link:r.link, xp:xp}]});
+                else {
+                    let c = pL[i].completions ? (Array.isArray(pL[i].completions) ? pL[i].completions : Object.values(pL[i].completions)) : [];
+                    if(!c.some(x=>x.level === r.level)){
+                        c.push({level:r.level, link:r.link, xp:xp});
+                        pL[i].completions = c; pL[i].totalXP = (pL[i].totalXP || 0) + xp;
+                    }
                 }
-            } 
-            db.ref('players').set(pL); 
-            db.ref(`submissions/${k}`).remove(); 
-            sendDiscordMessage(`✅ **RÉCORD ACEPTADO**\n**Jugador:** ${s.player}\n**Nivel:** ${s.level}\n**XP:** +${xpToAdd.toFixed(1)}`);
-            logAction(`Aceptó: ${s.player} en ${s.level} (+${xpToAdd.toFixed(1)} XP)`);
-            closeModal('reviewModal'); showToast("Aceptado con XP.");
-        }
-
-        function appealRecord(k) {
-            const s = fullData.submissions[k]; 
-            const r = prompt("Razón de Apelación:"); if(!r) return;
-            db.ref('history').push({player: s.player, level: s.level, status: 'Apelación', reason: r, timestamp: Date.now()});
-            db.ref(`submissions/${k}`).remove();
-            sendDiscordMessage(`⚠️ **RÉCORD EN APELACIÓN**\n**Jugador:** ${s.player}\n**Nivel:** ${s.level}\n**Nota:** ${r}`);
-            logAction(`Apelación: ${s.player} - ${s.level}`);
-            closeModal('reviewModal'); showToast("Enviado a apelación.");
-        }
-
-        function rejectRecord(k) {
-            const s = fullData.submissions[k]; 
-            const r = prompt("Razón del Rechazo:"); if(!r) return;
-            db.ref(`submissions/${k}`).remove();
-            sendDiscordMessage(`❌ **RÉCORD RECHAZADO**\n**Jugador:** ${s.player}\n**Nivel:** ${s.level}\n**Razón:** ${r}`);
-            logAction(`Rechazó: ${s.player} en ${s.level}`);
-            closeModal('reviewModal'); showToast("Rechazado.");
-        }
-
-        function addManualRecord() { 
-            const p = document.getElementById('manualPlayer').value.trim();
-            const l = document.getElementById('manualLevel').value.trim();
-            const lnk = document.getElementById('manualLink').value.trim(); 
-            if(!p || !l || !lnk) return showToast("Campos vacíos", true); 
-
-            let pL = fullData.players ? Object.values(fullData.players) : []; 
-            let i = pL.findIndex(x => x.name.toLowerCase() === p.toLowerCase()); 
-            const xpToAdd = calculateXP(l);
-
-            if(i === -1) {
-                pL.push({ name: p, country: 'es', totalXP: xpToAdd, completions: [{level: l, link: lnk, xp: xpToAdd}] });
+                db.ref('players').set(pL);
+                pushDiscord(`✅ **RÉCORD ACEPTADO**\n**Jugador:** ${r.player}\n**Nivel:** ${r.level}\n**XP:** +${xp.toFixed(1)}`);
+                log(`Aceptó récord de ${r.player} en ${r.level}`);
+            } else if(mode === 'appeal'){
+                const msg = prompt("Mensaje de Apelación:"); if(!msg) return;
+                db.ref('history').push({player:r.player, level:r.level, status:'Apelación', reason:msg, timestamp:Date.now()});
+                pushDiscord(`⚠️ **RÉCORD EN APELACIÓN**\n**Jugador:** ${r.player}\n**Nivel:** ${r.level}\n**Staff:** ${msg}`);
             } else {
-                let c = pL[i].completions ? Object.values(pL[i].completions) : [];
-                c.push({level: l, link: lnk, xp: xpToAdd});
-                pL[i].completions = c;
-                pL[i].totalXP = (pL[i].totalXP || 0) + xpToAdd;
-            } 
-            db.ref('players').set(pL); 
-            logAction(`Inyección Manual: ${p} -> ${l} (+${xpToAdd.toFixed(1)} XP)`);
-            showToast("Inyectado con XP.");
-            document.getElementById('manualPlayer').value=""; document.getElementById('manualLevel').value=""; document.getElementById('manualLink').value="";
+                const msg = prompt("Razón del Rechazo:"); if(!msg) return;
+                pushDiscord(`❌ **RÉCORD RECHAZADO**\n**Jugador:** ${r.player}\n**Nivel:** ${r.level}\n**Razón:** ${msg}`);
+            }
+            db.ref(`submissions/${id}`).remove();
+            closeModal('modal-rev'); toast("Procesado.");
         }
 
-        // LEVEL MANAGER
-        function renderManageLevels(lvls) { let h = ""; lvls.forEach((l, i) => { h += `<div class="data-card"><h4>#${i+1} ${l.name}</h4><button onclick="loadEditLevel(${i})" class="btn-small btn-blue">EDITAR</button></div>`; }); document.getElementById('manageLevelsList').innerHTML = h; }
-        function loadEditLevel(i) { const l = editingLevels[i]; document.getElementById('editLevelIndex').value=i; document.getElementById('addLevelName').value=l.name; document.getElementById('addLevelId').value=l.id; document.getElementById('addLevelVictor').value=l.first||""; document.getElementById('btnCancelEdit').hidden=false; document.getElementById('levelFormPanel').scrollIntoView(); }
-        function saveLevelData() { const idx = parseInt(document.getElementById('editLevelIndex').value), n = document.getElementById('addLevelName').value.trim(), id = document.getElementById('addLevelId').value.trim(), v = document.getElementById('addLevelVictor').value.trim(); let nL = [...editingLevels]; if(idx===-1) nL.push({name:n,id:id,first:v}); else nL[idx]={name:n,id:id,first:v}; db.ref('levels').set(nL); cancelEditLevel(); showToast("Guardado"); }
-        function cancelEditLevel() { document.getElementById('editLevelIndex').value="-1"; document.getElementById('addLevelName').value=""; document.getElementById('addLevelId').value=""; document.getElementById('addLevelVictor').value=""; document.getElementById('btnCancelEdit').hidden=true; }
-        
-        // OTHER RENDERS
-        function renderPendingRecords(subs) { let h = ""; Object.entries(subs).forEach(([k,s]) => { h += `<div class="data-card"><h4>${s.level} - ${s.player}</h4><button onclick="openReviewModal('${k}')" class="btn-small btn-blue">REVISAR</button></div>`; }); document.getElementById('pendingRecordsList').innerHTML = h || '<p>Limpio.</p>'; }
-        function renderLevelReorder() { let h = ""; editingLevels.forEach((l, i) => { h += `<div class="level-row"><div class="level-rank">#${i+1}</div><div class="level-name">${l.name}</div><div class="level-controls"><button onclick="moveL(${i},-1)">^</button><button onclick="moveL(${i},1)">v</button></div></div>`; }); document.getElementById('levelManagerList').innerHTML = h; }
-        function moveL(i, d) { if((d===-1&&i===0)||(d===1&&i===editingLevels.length-1)) return; const t = editingLevels[i+d]; editingLevels[i+d]=editingLevels[i]; editingLevels[i]=t; renderLevelReorder(); }
-        function saveLevelOrder() { db.ref('levels').set(editingLevels); logAction("Ranking reordenado"); showToast("Orden guardado"); }
-        function renderAuditLogs(l) { let h = ""; Object.values(l).reverse().slice(0,50).forEach(x => { h += `<div class="audit-log"><span class="time">[${new Date(x.timestamp).toLocaleTimeString()}]</span> <span class="staff">${x.staff}</span>: ${x.action}</div>`; }); document.getElementById('auditLogList').innerHTML = h; }
-        function downloadBackup() { const d = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullData, null, 2)); const a = document.createElement('a'); a.href = d; a.download = "DB_BACKUP.json"; a.click(); }
-        
-        // DISCORD & EXPANSIONS
-        function saveDiscordSettings() { const url = document.getElementById('discordWebhookUrl').value.trim(), toggle = document.getElementById('toggleDiscordRecords').checked; db.ref('system_settings/discord').set({url:url, auto_records:toggle}); showToast("Ajustes Discord Guardados"); }
-        function testDiscordWebhook() { const url = document.getElementById('discordWebhookUrl').value.trim(); if(url) fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content: "🚀 Test OMNI v3.4 Conectado", username: "Scully Bot" }) }); }
-        function createListPack() { const n = document.getElementById('packName').value, c = document.getElementById('packColor').value, lvls = document.getElementById('packLevels').value.split(',').map(s=>s.trim()); db.ref('packs').push({name:n, color:c, levels:lvls}); showToast("Pack Creado"); }
-        function renderPacks(p) { let h = ""; Object.entries(p).forEach(([k,v]) => { h += `<div class="data-card"><h4>${v.name}</h4><button onclick="db.ref('packs/${k}').remove()" class="btn-small btn-red">BORRAR</button></div>`; }); document.getElementById('packsListContainer').innerHTML = h; }
-        function updateFirewallRule(r, v) { db.ref(`system_settings/firewall/${r}`).set(v); showToast("Seguridad actualizada"); }
-        function toggleSystemLock(t, v) { db.ref(`system_settings/lock_${t}`).set(v); showToast("Lockdown activado"); }
-        function toggleSystemAlert(v) { document.getElementById('alertInputArea').style.display = v ? 'block' : 'none'; }
-        function saveGlobalAlert() { db.ref('system_settings/global_alert').set(true); db.ref('system_settings/global_alert_msg').set(document.getElementById('globalAlertText').value); showToast("Alerta enviada"); }
-        function injectCSS() { db.ref('system_settings/custom_css').set(document.getElementById('customCssBox').value); showToast("CSS Inyectado"); }
-        function forceGlobalRecalc() { db.ref('system_settings/last_update').set(Date.now()); showToast("Refresh enviado a clientes"); }
+        function injectManualRec(){
+            const p = document.getElementById('m-player').value.trim(), l = document.getElementById('m-lvl').value.trim(), lnk = document.getElementById('m-link').value.trim();
+            if(!p||!l||!lnk) return toast("Faltan datos", true);
+            const xp = getXP(l);
+            let pL = Object.values(fullData.players || {});
+            let i = pL.findIndex(x => x.name.toLowerCase() === p.toLowerCase());
+            if(i===-1) pL.push({name:p, country:'es', totalXP:xp, completions:[{level:l, link:lnk, xp:xp}]});
+            else {
+                let c = pL[i].completions ? (Array.isArray(pL[i].completions) ? pL[i].completions : Object.values(pL[i].completions)) : [];
+                c.push({level:l, link:lnk, xp:xp}); pL[i].completions = c; pL[i].totalXP = (pL[i].totalXP || 0) + xp;
+            }
+            db.ref('players').set(pL);
+            log(`Inyección Manual: ${p} en ${l} (+${xp.toFixed(1)} XP)`);
+            toast("Inyectado con XP");
+            document.getElementById('m-player').value=""; document.getElementById('m-lvl').value=""; document.getElementById('m-link').value="";
+        }
 
-        // PLAYER CONTROL LOGIC
-        function searchPlayerControl() { const q = document.getElementById('pcSearch').value.trim().toLowerCase(); pcCurrentPlayerIdx = Object.values(fullData.players || {}).findIndex(p => p.name.toLowerCase() === q); if(pcCurrentPlayerIdx > -1) { document.getElementById('pcResultArea').style.display = "block"; renderPlayerControlData(); } else showToast("No encontrado", true); }
-        function renderPlayerControlData() { const p = Object.values(fullData.players)[pcCurrentPlayerIdx]; document.getElementById('pcEditName').value = p.name; document.getElementById('pcEditCountry').value = p.country || "es"; document.getElementById('pcEditBio').value = p.bio || ""; const bEl = document.getElementById('pcBanControls'); bEl.innerHTML = p.hidden ? `<button onclick="unB()" class="btn-action" style="background:var(--green)">UNBAN</button>` : `<button onclick="doB()" class="btn-action" style="background:var(--red)">BANEAR</button>`; let h = ""; (p.completions ? Object.values(p.completions) : []).forEach((c, i) => { h += `<div class="data-card"><h4>${c.level}</h4><button onclick="delR(${i})" class="btn-small btn-red">BORRAR</button></div>`; }); document.getElementById('pcRecordsList').innerHTML = h; }
-        function savePlayerProfileEdit() { db.ref(`players/${pcCurrentPlayerIdx}/name`).set(document.getElementById('pcEditName').value); db.ref(`players/${pcCurrentPlayerIdx}/country`).set(document.getElementById('pcEditCountry').value); db.ref(`players/${pcCurrentPlayerIdx}/bio`).set(document.getElementById('pcEditBio').value); showToast("Perfil actualizado"); }
-        function doB() { const r = prompt("Razón:"); if(r) { db.ref(`players/${pcCurrentPlayerIdx}/hidden`).set(true); db.ref(`players/${pcCurrentPlayerIdx}/banReason`).set(r); showToast("Baneado"); } }
-        function unB() { db.ref(`players/${pcCurrentPlayerIdx}/hidden`).remove(); showToast("Desbaneado"); }
-        function delR(i) { const p = Object.values(fullData.players)[pcCurrentPlayerIdx]; let c = Object.values(p.completions); if(confirm("Borrar?")) { c.splice(i,1); db.ref(`players/${pcCurrentPlayerIdx}/completions`).set(c); showToast("Borrado"); } }
-        function renderSuggestions(s) { let h = ""; Object.entries(s).forEach(([k,v]) => { h += `<div class="data-card"><h4>${v.level}</h4><button onclick="processSuggestion('${k}')" class="btn-small btn-purple">USAR</button></div>`; }); document.getElementById('suggestionsList').innerHTML = h; }
-        function processSuggestion(k) { const s = fullData.level_suggestions[k]; document.getElementById('addLevelName').value = s.level; document.getElementById('addLevelId').value = extractVideoID(s.yt); showToast("Cargado"); }
-        function renderApprovals(c,p) { let h = ""; Object.entries(c).forEach(([k,v]) => { h += `<div class="data-card"><h4>${v.nick}</h4><button onclick="db.ref('claim_requests/${k}').remove()" class="btn-small btn-red">X</button></div>`; }); document.getElementById('claimRequestsList').innerHTML = h; }
-        function renderStaffManager(ps) { let h = ""; ps.forEach((p, i) => { if(p.role) h += `<div class="data-card"><h4>${p.name} [${p.role}]</h4><button onclick="demS(${i})" class="btn-small btn-red">X</button></div>`; }); document.getElementById('staffMemberList').innerHTML = h; }
-        function promoteStaffMember() { const n = document.getElementById('staffPromoteName').value, r = document.getElementById('staffPromoteRole').value; let i = Object.values(fullData.players||{}).findIndex(p=>p.name.toLowerCase()===n.toLowerCase()); if(i>-1) db.ref(`players/${i}/role`).set(r); }
-        function demS(i) { db.ref(`players/${i}/role`).remove(); }
+        // LEVEL LOGIC
+        function renderLvls(data){
+            let h = "";
+            data.forEach((l, i) => {
+                h += `<div class="data-card"><div><h4>#${i+1} ${l.name}</h4><p>ID: ${l.id}</p></div><div style="display:flex; gap:5px;"><button class="btn-small btn-blue" onclick="loadLvl(${i})">EDIT</button><button class="btn-small btn-red" onclick="delLvl(${i})">X</button></div></div>`;
+            });
+            document.getElementById('list-lvls').innerHTML = h;
+        }
+
+        function saveLvl(){
+            const idx = parseInt(document.getElementById('edit-idx').value), n = document.getElementById('add-n').value.trim(), id = document.getElementById('add-id').value.trim(), v = document.getElementById('add-v').value.trim();
+            if(!n || !id) return toast("Nombre e ID obligatorios", true);
+            let nL = [...levelsArr];
+            if(idx === -1) { nL.push({name:n, id:id, first:v}); log(`Añadió nivel: ${n}`); }
+            else { nL[idx] = {name:n, id:id, first:v}; log(`Actualizó nivel: ${n}`); }
+            db.ref('levels').set(nL); resetLvlForm(); toast("Guardado");
+        }
+
+        function loadLvl(i){
+            const l = levelsArr[i]; document.getElementById('edit-idx').value=i; document.getElementById('add-n').value=l.name; document.getElementById('add-id').value=l.id; document.getElementById('add-v').value=l.first||"";
+            document.getElementById('cancel-edit').style.display='inline-block'; document.getElementById('levelFormPanel').scrollIntoView();
+        }
+
+        function resetLvlForm(){ document.getElementById('edit-idx').value="-1"; document.getElementById('add-n').value=""; document.getElementById('add-id').value=""; document.getElementById('add-v').value=""; document.getElementById('cancel-edit').style.display='none'; }
+        
+        function delLvl(i){ if(confirm(`¿Borrar ${levelsArr[i].name}?`)){ log(`Eliminó nivel: ${levelsArr[i].name}`); let nL=[...levelsArr]; nL.splice(i,1); db.ref('levels').set(nL); } }
+
+        // RANK ORDER
+        function renderRank(data){
+            let h = "";
+            data.forEach((l, i) => {
+                h += `<div class="level-row"><div class="level-rank">#${i+1}</div><div class="level-name">${l.name}</div><div class="level-controls"><button onclick="moveL(${i},-1)">▲</button><button onclick="moveL(${i},1)">▼</button></div></div>`;
+            });
+            document.getElementById('rank-sort-list').innerHTML = h;
+        }
+
+        function moveL(i, d){ if((d===-1&&i===0)||(d===1&&i===levelsArr.length-1)) return; const t=levelsArr[i+d]; levelsArr[i+d]=levelsArr[i]; levelsArr[i]=t; renderRank(levelsArr); }
+        function publishOrder(){ db.ref('levels').set(levelsArr); log("Publicó nuevo orden estructural"); toast("Ranking Actualizado"); }
+
+        // PLAYER CONTROL
+        function searchP(){
+            const q = document.getElementById('p-search').value.trim().toLowerCase();
+            selPIdx = Object.values(fullData.players || {}).findIndex(x => x.name.toLowerCase() === q);
+            if(selPIdx > -1){ document.getElementById('p-result').style.display='block'; renderPData(); }
+            else toast("No encontrado", true);
+        }
+
+        function renderPData(){
+            const p = Object.values(fullData.players)[selPIdx];
+            document.getElementById('pe-n').value = p.name;
+            document.getElementById('pe-c').value = p.country || "es";
+            document.getElementById('pe-b').value = p.bio || "";
+            document.getElementById('p-ban-box').innerHTML = p.hidden ? `<button class="btn-action" style="background:var(--green)" onclick="banP(false)">UNBAN</button>` : `<button class="btn-action" style="background:var(--red); color:#fff;" onclick="banP(true)">BANEAR JUGADOR</button>`;
+            let h = ""; const c = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : [];
+            c.forEach((x, i) => { h += `<div class="data-card"><span>${x.level}</span><button class="btn-small btn-red" onclick="delPrec(${i})">BORRAR</button></div>`; });
+            document.getElementById('p-recs').innerHTML = h || '<p>Sin récords.</p>';
+        }
+
+        function updateP(){
+            const n = document.getElementById('pe-n').value, c = document.getElementById('pe-c').value, b = document.getElementById('pe-b').value;
+            db.ref(`players/${selPIdx}/name`).set(n); db.ref(`players/${selPIdx}/country`).set(c); db.ref(`players/${selPIdx}/bio`).set(b);
+            toast("Perfil Actualizado");
+        }
+
+        function banP(v){
+            if(v){ const r = prompt("Razón:"); if(r){ db.ref(`players/${selPIdx}/hidden`).set(true); db.ref(`players/${selPIdx}/banReason`).set(r); log(`BAN: ${document.getElementById('pe-n').value}`); }}
+            else { db.ref(`players/${selPIdx}/hidden`).remove(); db.ref(`players/${selPIdx}/banReason`).remove(); log(`UNBAN: ${document.getElementById('pe-n').value}`); }
+        }
+
+        function delPrec(i){
+            if(confirm("¿Borrar récord?")){
+                const p = Object.values(fullData.players)[selPIdx];
+                let c = Array.isArray(p.completions) ? p.completions : Object.values(p.completions);
+                const lostXP = c[i].xp || 0;
+                c.splice(i,1);
+                db.ref(`players/${selPIdx}/completions`).set(c);
+                db.ref(`players/${selPIdx}/totalXP`).set((p.totalXP || 0) - lostXP);
+                log(`Eliminó récord de ${p.name}`);
+            }
+        }
+
+        // CONFIG & OTHERS
+        function saveConfig(){
+            const url = document.getElementById('conf-disc').value.trim(), toggle = document.getElementById('conf-disc-toggle').checked;
+            db.ref('system_settings/discord').set({url:url, auto:toggle}); toast("Config Discord Guardada");
+        }
+        function injectCSS(){ db.ref('system_settings/custom_css').set(document.getElementById('conf-css').value); toast("CSS Inyectado"); }
+        function testDiscordWebhook(){ const url = document.getElementById('conf-disc').value.trim(); if(url) fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:"🚀 Conexión OMNI v5.0 Exitosa", username:"Scully Robot"})}); }
+        function createListPack(){ const n = document.getElementById('packName').value, c = document.getElementById('packColor').value, lvls = document.getElementById('packLevels').value.split(',').map(x=>x.trim()); db.ref('packs').push({name:n, color:c, levels:lvls}); toast("Pack Creado"); }
+        function renderAudit(data){ let h = ""; Object.values(data).reverse().slice(0,50).forEach(x => { h += `<div class="audit-log"><span class="time">[${new Date(x.timestamp).toLocaleTimeString()}]</span> <span class="staff">${x.staff}</span>: ${x.action}</div>`; }); document.getElementById('audit-list').innerHTML = h; }
+        function backupDB(){ const d = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullData)); const a = document.createElement('a'); a.href = d; a.download = `SCULLY_BACKUP_${Date.now()}.json`; a.click(); }
+
+        // SIMULATORS
+        setInterval(()=>{ document.getElementById('fakePing').innerText = Math.floor(Math.random()*30+10)+"ms"; document.getElementById('fakeMem').innerText = Math.floor(Math.random()*15+5)+"%"; }, 3000);
     </script>
 </body>
 </html>
