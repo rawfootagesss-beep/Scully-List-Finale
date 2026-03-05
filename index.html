@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Scully List | Hub OMNI v21</title>
+    
+    <title>The Scully List | Hub OMNI v22.5</title>
     <link rel="icon" type="image/png" href="favicon.png">
     
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* ==========================================
-           VARIABLES GLOBALES Y CORE
-           ========================================== */
+        /* Variables Globales */
         :root { 
             --accent: #ff6600; 
             --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%); 
@@ -29,6 +28,7 @@
             --cyan: #00ffff; 
         }
 
+        /* Estructura Base */
         body { 
             background: var(--bg); 
             color: #fff; 
@@ -39,13 +39,19 @@
             scroll-behavior: smooth; 
         }
 
-        ::-webkit-scrollbar { width: 6px; } 
-        ::-webkit-scrollbar-track { background: var(--bg); } 
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+        /* Scrollbar */
+        ::-webkit-scrollbar { 
+            width: 6px; 
+        } 
+        ::-webkit-scrollbar-track { 
+            background: var(--bg); 
+        } 
+        ::-webkit-scrollbar-thumb { 
+            background: var(--accent); 
+            border-radius: 10px; 
+        }
 
-        /* ==========================================
-           PANTALLA DE CUARENTENA (RESTAURADA)
-           ========================================== */
+        /* Sistemas de Alerta y Cuarentena */
         #lockdownScreen { 
             display: none; 
             position: fixed; 
@@ -59,9 +65,6 @@
             padding: 20px; 
         }
 
-        /* ==========================================
-           ALERTAS Y TICKER DE NOTICIAS (RESTAURADO)
-           ========================================== */
         #globalAlert { 
             display: none; 
             background: var(--red); 
@@ -78,6 +81,7 @@
             box-shadow: 0 5px 20px rgba(255, 51, 51, 0.4); 
         }
 
+        /* Ticker de Noticias */
         .news-ticker { 
             background: rgba(0,0,0,0.95); 
             border-bottom: 1px solid var(--border); 
@@ -112,9 +116,7 @@
             100% { transform: translateX(-150%); } 
         }
 
-        /* ==========================================
-           BARRA STAFF (RESTAURADA CON SOPA354)
-           ========================================== */
+        /* Barra de Staff */
         .staff-bar { 
             display: flex; 
             justify-content: center; 
@@ -128,12 +130,16 @@
             text-transform: uppercase; 
             font-weight: 700; 
         }
-        .staff-bar b { color: #fff; } 
-        .staff-bar i { color: var(--accent); margin-right: 5px; }
 
-        /* ==========================================
-           HEADER Y BOTONES DE NAVEGACIÓN
-           ========================================== */
+        .staff-bar b { 
+            color: #fff; 
+        } 
+
+        .staff-bar i { 
+            margin-right: 5px; 
+        }
+
+        /* Encabezado Principal */
         header { 
             padding: 60px 20px 40px; 
             text-align: center; 
@@ -154,6 +160,7 @@
             -webkit-text-fill-color: transparent; 
         }
 
+        /* Navegación y Botones */
         .main-nav { 
             margin-top: 35px; 
             display: flex; 
@@ -189,98 +196,395 @@
             border-color: var(--accent); 
         }
 
-        .btn-scully.active { border-color: var(--accent); color: var(--accent); }
-        .btn-ai { border-color: var(--cyan); color: var(--cyan); } 
-        .btn-ai:hover { background: var(--cyan); color: #000; box-shadow: 0 0 15px rgba(0,255,255,0.3); }
-
-        .badge-new { 
-            background: var(--purple); color: #fff; font-size: 0.5rem; padding: 2px 6px; 
-            border-radius: 4px; font-weight: 800; position: absolute; top: -8px; right: -8px; 
-            animation: pulse 1.5s infinite; box-shadow: 0 0 10px var(--purple); 
+        .btn-scully.active { 
+            border-color: var(--accent); 
+            color: var(--accent); 
         }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
-        /* ==========================================
-           CONTENEDORES PRINCIPALES
-           ========================================== */
-        .container { width: 95%; max-width: 1200px; margin: 40px auto; }
+        .btn-ai { 
+            border-color: var(--cyan); 
+            color: var(--cyan); 
+        } 
 
-        /* LIVE ACTIVITY FEED (NUEVO) */
+        .btn-ai:hover { 
+            background: var(--cyan); 
+            color: #000; 
+            box-shadow: 0 0 15px rgba(0,255,255,0.3); 
+        }
+
+        /* Etiquetas/Badges */
+        .badge-new { 
+            background: var(--purple); 
+            color: #fff; 
+            font-size: 0.5rem; 
+            padding: 2px 6px; 
+            border-radius: 4px; 
+            font-weight: 800; 
+            position: absolute; 
+            top: -8px; 
+            right: -8px; 
+            animation: pulse 1.5s infinite; 
+            box-shadow: 0 0 10px var(--purple); 
+        }
+
+        @keyframes pulse { 
+            0%, 100% { transform: scale(1); } 
+            50% { transform: scale(1.1); } 
+        }
+
+        /* Contenedor Principal */
+        .container { 
+            width: 95%; 
+            max-width: 1200px; 
+            margin: 40px auto; 
+        }
+
+        /* Live Activity Feed */
         .live-feed { 
-            background: rgba(10,10,10,0.9); border: 1px solid var(--border); 
-            border-radius: 15px; padding: 20px; margin-bottom: 40px; 
+            background: rgba(10,10,10,0.9); 
+            border: 1px solid var(--border); 
+            border-radius: 15px; 
+            padding: 20px; 
+            margin-bottom: 40px; 
             box-shadow: inset 0 0 20px rgba(0,0,0,0.8); 
         }
+
         .live-feed h3 { 
-            margin: 0 0 15px; font-size: 0.9rem; color: var(--cyan); 
-            text-transform: uppercase; font-family: 'JetBrains Mono'; display: flex; align-items: center; gap: 10px; 
+            margin: 0 0 15px; 
+            font-size: 0.9rem; 
+            color: var(--cyan); 
+            text-transform: uppercase; 
+            font-family: 'JetBrains Mono'; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
         }
-        .feed-scroll { display: flex; flex-direction: column; gap: 10px; max-height: 120px; overflow-y: auto; padding-right: 10px; }
-        .feed-item { font-size: 0.75rem; color: #aaa; border-left: 2px solid var(--accent); padding-left: 10px; animation: fadeIn 0.5s ease; }
-        .feed-item b { color: #fff; }
 
-        /* SECCIÓN DEL TRONO - TOP 1 (RESTAURADA) */
-        .throne-section { width: 90%; max-width: 850px; margin: 0 auto 40px; }
+        .feed-scroll { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            max-height: 120px; 
+            overflow-y: auto; 
+            padding-right: 10px; 
+        }
+
+        .feed-item { 
+            font-size: 0.75rem; 
+            color: #aaa; 
+            border-left: 2px solid var(--accent); 
+            padding-left: 10px; 
+            animation: fadeIn 0.5s ease; 
+        }
+
+        .feed-item b { 
+            color: #fff; 
+        }
+
+        /* Sección del Trono (Top 1) */
+        .throne-section { 
+            width: 90%; 
+            max-width: 850px; 
+            margin: 0 auto 40px; 
+        }
+
         .throne-card { 
-            background-size: cover; background-position: center; border-radius: 30px; 
-            padding: 60px; border: 2px solid var(--accent); box-shadow: var(--glow); 
-            display: flex; align-items: center; position: relative; overflow: hidden; 
-            min-height: 280px; transition: 0.5s; cursor: pointer;
+            background-size: cover; 
+            background-position: center; 
+            border-radius: 30px; 
+            padding: 60px; 
+            border: 2px solid var(--accent); 
+            box-shadow: var(--glow); 
+            display: flex; 
+            align-items: center; 
+            position: relative; 
+            overflow: hidden; 
+            min-height: 280px; 
+            transition: 0.5s; 
+            cursor: pointer; 
         }
-        .throne-card:hover { transform: scale(1.02); }
-        .throne-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, #000 60%, transparent); z-index: 1; }
-        .throne-info { position: relative; z-index: 2; text-align: left; }
 
-        /* GRID DE NIVELES */
-        .list-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .throne-card:hover { 
+            transform: scale(1.02); 
+        }
+
+        .throne-card::before { 
+            content: ''; 
+            position: absolute; 
+            inset: 0; 
+            background: linear-gradient(to right, #000 60%, transparent); 
+            z-index: 1; 
+        }
+
+        .throne-info { 
+            position: relative; 
+            z-index: 2; 
+            text-align: left; 
+        }
+
+        /* Cuadrícula de Niveles (Grid) */
+        .list-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+            gap: 20px; 
+        }
+
         .level-card { 
-            background: var(--card-bg); border-radius: 20px; padding: 12px; 
-            display: flex; align-items: center; border: 1px solid var(--border); 
-            cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; 
+            background: var(--card-bg); 
+            border-radius: 20px; 
+            padding: 12px; 
+            display: flex; 
+            align-items: center; 
+            border: 1px solid var(--border); 
+            cursor: pointer; 
+            transition: 0.3s; 
+            position: relative; 
+            overflow: hidden; 
         }
-        .level-card:hover { border-color: var(--accent); transform: scale(1.02); background: rgba(255,255,255,0.04); box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
-        .level-card img { width: 100px; height: 60px; border-radius: 10px; object-fit: cover; margin-right: 15px; border: 1px solid #222; }
-        .level-rank { position: absolute; right: 15px; font-weight: 900; font-size: 2.2rem; opacity: 0.05; font-family: 'JetBrains Mono'; }
 
-        /* ==========================================
-           TRACKER Y GENERADOR TITAN CARD (NUEVO)
-           ========================================== */
+        .level-card:hover { 
+            border-color: var(--accent); 
+            transform: scale(1.02); 
+            background: rgba(255,255,255,0.04); 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5); 
+        }
+
+        .level-card img { 
+            width: 100px; 
+            height: 60px; 
+            border-radius: 10px; 
+            object-fit: cover; 
+            margin-right: 15px; 
+            border: 1px solid #222; 
+        }
+
+        .level-rank { 
+            position: absolute; 
+            right: 15px; 
+            font-weight: 900; 
+            font-size: 2.2rem; 
+            opacity: 0.05; 
+            font-family: 'JetBrains Mono'; 
+        }
+
+        /* Identidad Scully (Status Tracker) */
         .status-tracker { 
-            max-width: 800px; margin: 80px auto; padding: 50px; 
-            background: var(--card-bg); border-radius: 40px; 
-            border: 1px solid var(--border); text-align: center; 
+            max-width: 800px; 
+            margin: 80px auto 40px; 
+            padding: 50px; 
+            background: var(--card-bg); 
+            border-radius: 40px; 
+            border: 1px solid var(--border); 
+            text-align: center; 
         }
 
-        /* ==========================================
-           FOOTER Y COLOR PICKER (RESTAURADO)
-           ========================================== */
-        .footer-credits { padding: 60px 20px; text-align: center; background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); margin-top: 100px; }
-        .color-trigger { display: inline-flex; align-items: center; justify-content: center; width: 45px; height: 45px; background: var(--accent); color: #000; border-radius: 50%; cursor: pointer; box-shadow: var(--glow); margin-top: 20px; transition: 0.3s; font-size: 1.2rem; }
-        .color-trigger:hover { transform: scale(1.1); }
-        #themeColor { opacity: 0; position: absolute; pointer-events: none; }
+        /* Chat Global (NUEVO) */
+        .global-chat-section { 
+            max-width: 800px; 
+            margin: 0 auto 60px; 
+            padding: 30px; 
+            background: rgba(255,255,255,0.01); 
+            border-radius: 30px; 
+            border: 1px solid var(--border); 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
+        }
 
-        /* ==========================================
-           CINEMA MODE MODAL (NUEVO)
-           ========================================== */
-        .cinema-mod { display: none; position: fixed; inset: 0; z-index: 100000; justify-content: center; align-items: center; overflow: hidden; }
-        .cinema-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: blur(25px) brightness(0.25); transform: scale(1.1); z-index: 1; }
-        .cinema-content { position: relative; z-index: 2; width: 95%; max-width: 1100px; display: grid; grid-template-columns: 2fr 1fr; gap: 30px; background: rgba(0,0,0,0.6); padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 60px rgba(0,0,0,0.9); }
-        .cinema-vid { border-radius: 15px; overflow: hidden; box-shadow: 0 0 40px rgba(255,102,0,0.2); border: 2px solid var(--accent); background: #000; }
-        .cinema-info { max-height: 450px; overflow-y: auto; padding-right: 15px; }
-        .c-close { position: absolute; top: -40px; right: 0; color: #fff; font-size: 2.5rem; cursor: pointer; transition: 0.3s; z-index: 3; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .c-close:hover { color: var(--accent); transform: scale(1.1); }
-        .v-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; transition: 0.2s; }
-        .v-row:hover { background: rgba(255,255,255,0.03); }
+        .chat-messages { 
+            height: 350px; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            margin-bottom: 20px; 
+            padding-right: 10px; 
+        }
 
+        .chat-bubble { 
+            background: rgba(0,0,0,0.5); 
+            padding: 12px 18px; 
+            border-radius: 15px; 
+            border: 1px solid #222; 
+            font-size: 0.85rem; 
+            line-height: 1.4; 
+            animation: fadeIn 0.3s ease; 
+        }
+
+        .chat-bubble b { 
+            color: var(--cyan); 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            font-size: 0.75rem; 
+            letter-spacing: 1px; 
+        }
+
+        .chat-bubble span { 
+            font-size: 0.6rem; 
+            color: #666; 
+            margin-left: 8px; 
+        }
+
+        .chat-bubble .text { 
+            margin-top: 5px; 
+            color: #ddd; 
+            word-break: break-word; 
+        }
+
+        /* Pie de Página y Color Picker */
+        .footer-credits { 
+            padding: 60px 20px; 
+            text-align: center; 
+            background: rgba(255,255,255,0.01); 
+            border-top: 1px solid var(--border); 
+        }
+
+        .color-trigger { 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            width: 45px; 
+            height: 45px; 
+            background: var(--accent); 
+            color: #000; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            box-shadow: var(--glow); 
+            margin-top: 20px; 
+            transition: 0.3s; 
+            font-size: 1.2rem; 
+        }
+
+        .color-trigger:hover { 
+            transform: scale(1.1); 
+        }
+
+        #themeColor { 
+            opacity: 0; 
+            position: absolute; 
+            pointer-events: none; 
+        }
+
+        /* Modo Enfoque (Cinema Mode) */
+        .cinema-mod { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            z-index: 100000; 
+            justify-content: center; 
+            align-items: center; 
+            overflow: hidden; 
+        }
+
+        .cinema-bg { 
+            position: absolute; 
+            inset: 0; 
+            background-size: cover; 
+            background-position: center; 
+            filter: blur(25px) brightness(0.25); 
+            transform: scale(1.1); 
+            z-index: 1; 
+        }
+
+        .cinema-content { 
+            position: relative; 
+            z-index: 2; 
+            width: 95%; 
+            max-width: 1100px; 
+            display: grid; 
+            grid-template-columns: 2fr 1fr; 
+            gap: 30px; 
+            background: rgba(0,0,0,0.6); 
+            padding: 40px; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9); 
+        }
+
+        .cinema-vid { 
+            border-radius: 15px; 
+            overflow: hidden; 
+            box-shadow: 0 0 40px rgba(255,102,0,0.2); 
+            border: 2px solid var(--accent); 
+            background: #000; 
+        }
+
+        .cinema-info { 
+            max-height: 450px; 
+            overflow-y: auto; 
+            padding-right: 15px; 
+        }
+
+        .c-close { 
+            position: absolute; 
+            top: -40px; 
+            right: 0; 
+            color: #fff; 
+            font-size: 2.5rem; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            z-index: 3; 
+            text-shadow: 0 5px 15px rgba(0,0,0,0.5); 
+        }
+
+        .c-close:hover { 
+            color: var(--accent); 
+            transform: scale(1.1); 
+        }
+
+        .v-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px; 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+            font-size: 0.85rem; 
+            transition: 0.2s; 
+        }
+
+        .v-row:hover { 
+            background: rgba(255,255,255,0.03); 
+        }
+
+        /* Modal Base AI */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.95); 
+            z-index: 10000; 
+            backdrop-filter: blur(15px); 
+        }
+
+        .modal-content { 
+            background: #0a0a0a; 
+            margin: 15vh auto; 
+            padding: 35px; 
+            width: 90%; 
+            max-width: 500px; 
+            border-radius: 35px; 
+            border: 1px solid var(--cyan); 
+            text-align: center; 
+            position: relative; 
+            box-shadow: 0 0 40px rgba(0,255,255,0.15); 
+        }
+
+        /* Media Queries Móvil */
         @media(max-width: 900px) {
-            .cinema-content { grid-template-columns: 1fr; max-height: 90vh; overflow-y: auto; padding: 20px; }
-            .cinema-vid iframe { height: 250px; }
-            .c-close { top: 10px; right: 20px; font-size: 2rem; text-shadow: 0 0 10px #000; }
+            .cinema-content { 
+                grid-template-columns: 1fr; 
+                max-height: 90vh; 
+                overflow-y: auto; 
+                padding: 20px; 
+            }
+            .cinema-vid iframe { 
+                height: 250px; 
+            }
+            .c-close { 
+                top: 10px; 
+                right: 20px; 
+                font-size: 2rem; 
+                text-shadow: 0 0 10px #000; 
+            }
         }
-
-        /* MODAL AI SCULLY */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000; backdrop-filter: blur(15px); }
-        .modal-content { background: #0a0a0a; margin: 15vh auto; padding: 35px; width: 90%; max-width: 500px; border-radius: 35px; border: 1px solid var(--cyan); text-align: center; position: relative; box-shadow: 0 0 40px rgba(0,255,255,0.15); }
     </style>
     
     <style id="omni-custom-css"></style>
@@ -293,8 +597,7 @@
         <p style="color: #888; max-width: 400px; line-height: 1.6;">El sistema se encuentra en Cuarentena de Ingeniería. Mantenimiento de red en progreso dictado por el Owner.</p>
     </div>
 
-    <div id="globalAlert">ALERTA DE SISTEMA</div>
-
+    <div id="globalAlert">ALERTA DE SISTEMA COMPROMETIDO</div>
     <div class="news-ticker">
         <div class="ticker-content" id="ticker-box">CARGANDO TRANSMISIONES GLOBALES...</div>
     </div>
@@ -302,7 +605,7 @@
     <nav class="staff-bar">
         <span style="color:#fff; font-weight:800; border:1px solid rgba(255,255,255,0.2); padding:4px 12px; border-radius:50px;">TRIBUTO A 2PARX 🕊️</span>
         <span><i class="fas fa-crown"></i> OWNER <b>score</b></span>
-        <span><i class="fas fa-code" style="color:var(--purple);"></i> DEV <b>Sopa354</b></span>
+        <span><i class="fas fa-user-shield" style="color:var(--blue);"></i> ADMIN <b>Sopa354</b></span>
         <span><i class="fas fa-user-shield" style="color:var(--blue);"></i> ADMIN <b>awrqsdt</b></span>
         <span><i class="fas fa-hands-helping" style="color:var(--green);"></i> HELPER <b>Blitz</b></span>
         <span><i class="fas fa-hands-helping" style="color:var(--green);"></i> HELPER <b>nico</b></span>
@@ -317,12 +620,9 @@
             <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking Global</a>
             <a href="market.html" class="btn-scully" style="color:var(--gold); border-color:rgba(255,215,0,0.3);"><i class="fas fa-shopping-cart"></i> Mercado <span class="badge-new">XP</span></a>
             <a href="https://discord.gg/96W3MWrZ2P" target="_blank" class="btn-scully" style="color:var(--discord); border-color:rgba(114,137,218,0.3);"><i class="fab fa-discord"></i> Discord</a>
-            
-            <a href="changelog.html" class="btn-scully" style="color:var(--cyan); border-color:rgba(0,255,255,0.3);"><i class="fas fa-file-code"></i> Changelog <span class="badge-new" style="background:var(--red); box-shadow:0 0 10px var(--red);">v19.5</span></a>
+            <a href="changelog.html" class="btn-scully" style="color:var(--cyan); border-color:rgba(0,255,255,0.3);"><i class="fas fa-file-code"></i> Changelog</a>
             <a href="rules.html" class="btn-scully"><i class="fas fa-book"></i> Reglas</a>
-            
             <button class="btn-scully btn-ai" onclick="runScullyAI()"><i class="fas fa-brain"></i> Scully AI</button>
-            
             <a href="login.html" class="btn-scully" id="nav-login"><i class="fas fa-user"></i> Acceso</a>
             <a href="admin.html" id="adminBtn" class="btn-scully" style="display:none; background:var(--accent); color:#000; border:none; font-weight:800;"><i class="fas fa-terminal"></i> MASTER PANEL</a>
         </div>
@@ -349,6 +649,18 @@
                 <button class="btn-scully" style="background:var(--accent); color:#000; border:none; padding:15px 35px; font-weight:800;" onclick="generateTitanCard()"><i class="fas fa-download"></i> GENERAR TITAN CARD</button>
             </div>
         </section>
+
+        <section class="global-chat-section">
+            <h2 style="color:var(--cyan); text-transform: uppercase; font-size: 1.5rem; margin-top:0; border-bottom:1px solid var(--border); padding-bottom:15px;"><i class="fas fa-globe"></i> Comunidad Global</h2>
+            <div class="chat-messages" id="global-chat-box">
+                <p style="text-align:center; color:#555; font-size:0.8rem; margin-top:50px;">Conectando a los servidores de comunicación...</p>
+            </div>
+            <div style="display:flex; gap:10px; background:#000; padding:15px; border-radius:15px; border:1px solid #222;">
+                <input type="text" id="g-chat-input" placeholder="Inicia sesión para participar en el chat global..." disabled onkeypress="if(event.keyCode==13) sendGlobalChat()" style="flex:1; background:transparent; border:none; color:#fff; font-size:0.9rem; outline:none;">
+                <button id="g-chat-btn" class="btn-scully" style="background:var(--cyan); color:#000; border:none; opacity:0.5; pointer-events:none; padding:10px 20px;" onclick="sendGlobalChat()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </section>
+
     </main>
 
     <footer class="footer-credits">
@@ -393,7 +705,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     
     <script>
-        // CONFIGURACIÓN FIREBASE
+        // Configuración de Firebase
         const firebaseConfig = { 
             apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
             authDomain: "scullylist.firebaseapp.com", 
@@ -403,27 +715,31 @@
             messagingSenderId: "498548914021", 
             appId: "1:498548914021:web:59128b5e06b36a4e81938c" 
         };
+        
         firebase.initializeApp(firebaseConfig); 
         const auth = firebase.auth(); 
         const db = firebase.database();
+        
         let fullData = {};
+        let currentChatUser = null; // Variable para identificar a quien escribe en el chat global
 
-        // SISTEMA DE TEMA DINÁMICO (Restaurado)
+        // Manejo del color del tema
         const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
         updateThemeColor(savedColor);
+        
         function updateThemeColor(color) { 
             document.documentElement.style.setProperty('--accent', color); 
             localStorage.setItem('scully-theme-color', color); 
         }
 
-        // FUNCIÓN SEGURA PARA ARRAYS DE FIREBASE
+        // Array Helper seguro
         const nexus = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
 
-        // LECTURA MAESTRA Y RENDERIZADO
+        // LECTURA MAESTRA Y RENDERIZADO PRINCIPAL
         db.ref('/').on('value', snap => {
             fullData = snap.val() || {};
             
-            // 1. Lockdown (Cuarentena)
+            // 1. Pantalla de Cuarentena
             if (fullData.system_settings && fullData.system_settings.lockdown_active) {
                 document.getElementById('lockdownScreen').style.display = 'flex';
                 return; 
@@ -431,19 +747,22 @@
                 document.getElementById('lockdownScreen').style.display = 'none';
             }
 
-            // 2. Niveles
+            // 2. Extracción de Niveles
             const lvls = nexus(fullData.levels);
             renderThrone(lvls);
             renderLevels(lvls);
             
-            // 3. Live Feed (Novedad)
+            // 3. Extracción de Live Feed
             renderLiveFeed(fullData.staff_logs || {});
+            
+            // 4. Extracción del Chat Global
+            renderGlobalChat(fullData.global_chat || {});
 
-            // 4. Ajustes OMNI y Ticker Antiguo
+            // 5. Configuración de Sistema (CSS y Alertas)
             if (fullData.system_settings) {
                 const alertEl = document.getElementById('globalAlert');
                 if (fullData.system_settings.global_alert) { 
-                    alertEl.innerText = fullData.system_settings.global_alert_msg || "ALERTA DE SISTEMA COMPROMETIDO"; 
+                    alertEl.innerText = fullData.system_settings.global_alert_msg; 
                     alertEl.style.display = 'block'; 
                 } else { 
                     alertEl.style.display = 'none'; 
@@ -454,7 +773,7 @@
                 }
             }
 
-            // Ticker Clásico
+            // 6. Ticker Clásico (Changelog Logs)
             if (fullData.admin_changelog) {
                 const tickerHtml = Object.values(fullData.admin_changelog).reverse().slice(0, 5).map(log => `
                     <span class="log-item"><i class="fas fa-code" style="color:var(--accent)"></i> ${log.title}</span>
@@ -464,9 +783,10 @@
         });
 
         // ==========================================
-        // FUNCIONES DE RENDERIZADO VISUAL
+        // FUNCIONES DE RENDERIZADO DEL DOM
         // ==========================================
 
+        // Renderizar el Jefe Top 1
         function renderThrone(lvls) { 
             if (!lvls || !lvls[0]) return; 
             const throne = lvls[0];
@@ -482,22 +802,22 @@
             `;
         }
 
+        // Renderizar la Grid de Niveles
         function renderLevels(lvls) { 
             let htmlContent = "";
-            // Empezamos desde el índice 1 (el 0 es el trono)
             for(let i = 1; i < lvls.length; i++) {
                 const level = lvls[i];
                 let xp = Math.max(100 - (i * 0.6), 5).toFixed(1);
                 
-                // Lógica Visual de Bounties (Contratos)
-                let bountyStyle = "";
-                let bountyIcon = '<i class="fas fa-star"></i>';
+                let bountyStyle = ""; 
+                let bountyIcon = '<i class="fas fa-star"></i>'; 
                 let xpColor = "var(--accent)";
                 
+                // Aplicar estilo dorado si es un Contrato
                 if(level.bounty) {
                     xp = (xp * 2).toFixed(1);
                     bountyStyle = "border-color:var(--gold); box-shadow: 0 0 15px rgba(255,215,0,0.2);";
-                    bountyIcon = '<i class="fas fa-fire"></i> BOUNTY:';
+                    bountyIcon = '<i class="fas fa-fire"></i> BOUNTY:'; 
                     xpColor = "var(--gold)";
                 }
                 
@@ -517,10 +837,10 @@
             document.getElementById('main-list').innerHTML = htmlContent || "<p style='text-align:center;'>Red de niveles vacía.</p>"; 
         }
 
+        // Renderizar el Live Activity Feed del Staff
         function renderLiveFeed(logs) {
             let logArray = Object.values(logs).reverse().slice(0, 6);
             let html = logArray.map(l => {
-                // Colorear acciones positivas vs negativas para mejor estética
                 let actionColor = l.action.includes('Rechazó') ? '#ff3333' : (l.action.includes('Aprobó') ? '#00ff66' : '#aaa');
                 return `<div class="feed-item"><i class="fas fa-bolt" style="color:var(--accent);"></i> [${new Date(l.timestamp).toLocaleTimeString()}] <b style="color:var(--cyan);">${l.staff}</b>: <span style="color:${actionColor}">${l.action}</span></div>`;
             }).join('');
@@ -528,25 +848,62 @@
         }
 
         // ==========================================
-        // CINEMA MODE LÓGICA (NUEVO)
+        // LÓGICA DEL CHAT GLOBAL PÚBLICO
+        // ==========================================
+        function renderGlobalChat(chatData) {
+            const box = document.getElementById('global-chat-box');
+            let html = "";
+            
+            Object.values(chatData).slice(-40).forEach(msg => {
+                let nameColor = "var(--cyan)"; 
+                html += `
+                <div class="chat-bubble">
+                    <b style="color:${nameColor};">${msg.user}</b> 
+                    <span>${new Date(msg.time).toLocaleTimeString()}</span>
+                    <div class="text">${msg.text}</div>
+                </div>`;
+            });
+            
+            box.innerHTML = html || "<p style='color:#666; text-align:center; margin-top:50px;'>El chat está vacío. Sé el primero en escribir.</p>";
+            box.scrollTop = box.scrollHeight; // Auto-scroll hacia abajo
+        }
+
+        function sendGlobalChat() {
+            if (!currentChatUser) return alert("Debes iniciar sesión para participar en el chat global.");
+            
+            const input = document.getElementById('g-chat-input');
+            const text = input.value.trim();
+            
+            if (text.length > 0) {
+                db.ref('global_chat').push({
+                    user: currentChatUser,
+                    text: text,
+                    time: Date.now()
+                });
+                input.value = '';
+            }
+        }
+
+        // ==========================================
+        // MODO ENFOQUE (CINEMA MODE)
         // ==========================================
         function openCinema(idx) {
             const lvls = nexus(fullData.levels);
             const level = lvls[idx];
             if (!level) return;
 
-            // Blur Background
+            // Inyectar Blur de Fondo
             document.getElementById('c-bg').style.backgroundImage = `url('https://img.youtube.com/vi/${level.id}/maxresdefault.jpg')`;
             
-            // Inject Video
+            // Inyectar Video de YouTube
             document.getElementById('c-vid-container').innerHTML = `<iframe width="100%" height="480" src="https://www.youtube.com/embed/${level.id}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
             
-            // Metadata
+            // Textos
             document.getElementById('c-title').innerText = level.name;
             document.getElementById('c-verif').innerText = level.first || 'N/A';
             document.getElementById('c-bounty-badge').style.display = level.bounty ? 'inline-block' : 'none';
 
-            // Victors Data
+            // Generar Lista de Vencedores Confirmados
             const players = nexus(fullData.players);
             const victors = players.filter(p => { 
                 let comps = nexus(p.completions); 
@@ -567,19 +924,19 @@
 
             document.getElementById('c-victors').innerHTML = vHTML || '<p style="padding:20px; text-align:center; color:#555; font-size:0.8rem; border:1px solid #222; border-radius:10px;">El nivel permanece invicto.</p>';
             
-            // Show
+            // Mostrar Modal Inmersivo
             document.getElementById('cinemaModal').style.display = "flex";
-            document.body.style.overflow = "hidden"; // Prevent background scrolling
+            document.body.style.overflow = "hidden"; // Bloquea el scroll del fondo
         }
 
         function closeCinema() {
             document.getElementById('cinemaModal').style.display = "none";
-            document.getElementById('c-vid-container').innerHTML = ""; // Stop video playback
+            document.getElementById('c-vid-container').innerHTML = ""; // Detiene la reproducción del video
             document.body.style.overflow = "auto";
         }
 
         // ==========================================
-        // TITAN CARD GENERATOR (CANVAS ENGINE)
+        // GENERADOR DE TARJETAS (TITAN CARDS) HTML5
         // ==========================================
         function generateTitanCard() {
             let nick = prompt("Ingresa tu Nombre exacto (tal como aparece en tu perfil) para forjar tu Tarjeta:");
@@ -590,58 +947,67 @@
             
             if(!p) return alert("Denegado: No se ha encontrado este perfil en la Base de Datos OMNI.");
 
-            // Canvas Setup
+            // Crear el elemento Canvas en memoria
             const canvas = document.createElement('canvas');
-            canvas.width = 800; canvas.height = 450;
+            canvas.width = 800; 
+            canvas.height = 450;
             const ctx = canvas.getContext('2d');
 
-            // Dark Matter Background
-            ctx.fillStyle = '#050505'; ctx.fillRect(0, 0, 800, 450);
+            // Pintar Fondo Oscuro
+            ctx.fillStyle = '#050505'; 
+            ctx.fillRect(0, 0, 800, 450);
             
-            // Cyber Grid
-            ctx.strokeStyle = '#111111'; ctx.lineWidth = 1;
+            // Dibujar la Cuadrícula Cyberpunk
+            ctx.strokeStyle = '#111111'; 
+            ctx.lineWidth = 1;
             for(let i=0; i<800; i+=40) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,450); ctx.stroke(); }
             for(let i=0; i<450; i+=40) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(800,i); ctx.stroke(); }
 
-            // Neon Border
-            ctx.strokeStyle = '#ff6600'; ctx.lineWidth = 10; ctx.strokeRect(10, 10, 780, 430);
+            // Borde Exterior Neón
+            ctx.strokeStyle = '#ff6600'; 
+            ctx.lineWidth = 10; 
+            ctx.strokeRect(10, 10, 780, 430);
 
-            // User Name
-            ctx.fillStyle = '#ff6600'; ctx.font = 'bold 55px "Courier New"';
+            // Textos: Nombre
+            ctx.fillStyle = '#ff6600'; 
+            ctx.font = 'bold 55px "Courier New"';
             ctx.fillText(p.name.toUpperCase(), 40, 90);
 
-            // Level / Role
-            ctx.fillStyle = '#aaaaaa'; ctx.font = 'bold 20px "Courier New"';
+            // Textos: Rango
+            ctx.fillStyle = '#aaaaaa'; 
+            ctx.font = 'bold 20px "Courier New"';
             ctx.fillText(p.role ? "ROLE: " + p.role.toUpperCase() : "CLASS: VERIFIER", 40, 125);
 
-            // Stats
-            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 35px Arial';
+            // Textos: Estadísticas
+            ctx.fillStyle = '#ffffff'; 
+            ctx.font = 'bold 35px Arial';
             ctx.fillText("XP TOTAL: " + (p.totalXP || 0).toFixed(1), 40, 200);
             
             let comps = nexus(p.completions);
             ctx.fillText("DEMONS COMPLETADOS: " + comps.length, 40, 260);
             
-            // Clan Logic
+            // Textos: Sindicato
             let clanName = "LOBO SOLITARIO";
             if(p.clanId && fullData.clans && fullData.clans[p.clanId]) clanName = fullData.clans[p.clanId].name;
             ctx.fillStyle = '#00ffff';
             ctx.fillText("SINDICATO: " + clanName.toUpperCase(), 40, 320);
 
-            // Watermark
-            ctx.fillStyle = '#333333'; ctx.font = 'bold 18px "Courier New"';
+            // Textos: Marca de Agua
+            ctx.fillStyle = '#333333'; 
+            ctx.font = 'bold 18px "Courier New"';
             ctx.fillText("SYS.OMNI - THE SCULLY LIST IDENTITY", 40, 410);
 
-            // Download Trigger
+            // Iniciar Descarga de la Imagen
             const link = document.createElement('a');
             link.download = `OMNI_TITAN_CARD_${p.name}.png`;
             link.href = canvas.toDataURL("image/png");
             link.click();
             
-            alert("Tu Tarjeta Titán ha sido forjada y descargada.");
+            alert("Tu Tarjeta Titán ha sido forjada y descargada con éxito.");
         }
 
         // ==========================================
-        // SCULLY AI Y SEGURIDAD
+        // SCULLY AI ENGINE
         // ==========================================
         function runScullyAI() {
             document.getElementById('aiModal').style.display = 'block';
@@ -662,14 +1028,30 @@
             }, 1800);
         }
 
-        // Verificación Master Panel Button
+        // ==========================================
+        // VERIFICACIÓN DE SESIÓN (AUTH) Y CHAT GLOBAL
+        // ==========================================
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.ref('players').once('value', snap => { 
                     const allP = nexus(snap.val());
                     const me = allP.find(p => p.email === user.email); 
-                    if (me && (me.role === 'admin' || me.name.toLowerCase() === 'score' || me.role === 'helper' || me.role === 'owner')) {
-                        document.getElementById('adminBtn').style.display = "inline-flex"; 
+                    
+                    if (me) {
+                        // 1. Habilitar Input del Chat Global
+                        currentChatUser = me.name;
+                        const chatInput = document.getElementById('g-chat-input');
+                        const chatBtn = document.getElementById('g-chat-btn');
+                        
+                        chatInput.disabled = false;
+                        chatInput.placeholder = `Conectado como ${me.name}. Escribe un mensaje a la comunidad...`;
+                        chatBtn.style.opacity = "1";
+                        chatBtn.style.pointerEvents = "all";
+
+                        // 2. Verificar Rango para Botón de Admin
+                        if (me.role === 'admin' || me.name.toLowerCase() === 'score' || me.role === 'helper' || me.role === 'owner') {
+                            document.getElementById('adminBtn').style.display = "inline-flex"; 
+                        }
                     } 
                 });
             }
