@@ -287,18 +287,18 @@
     <div id="sugModal" class="modal">
         <div class="modal-content" style="border-color:var(--purple);">
             <span style="position:absolute; top:15px; right:20px; color:#888; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('sugModal').style.display='none'">✕</span>
-            <h2 style="color:var(--purple); margin-top:0;"><i class="fas fa-lightbulb"></i> Sugerir Nivel</h2>
+            <h2 style="color:var(--purple); margin-top:0;"><i class="fas fa-lightbulb"></i> Smart Submit (Niveles)</h2>
             
             <input type="text" id="sug-n" class="g-input" placeholder="Nombre del Nivel (Obligatorio)">
+            <input type="number" id="sug-pos" class="g-input" placeholder="Posición sugerida en la lista (Ej: 10) (Obligatorio)" min="1">
             <input type="text" id="sug-v" class="g-input" placeholder="Link del Video de YouTube (Obligatorio)" oninput="previewSugThumb()">
-            <input type="text" id="sug-i" class="g-input" placeholder="ID del Nivel en GD (Opcional)">
             
             <div id="sug-thumb-box" style="display:none; margin-bottom: 20px; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 15px; border: 1px dashed var(--purple);">
                 <p style="margin: 0 0 10px; font-size: 0.75rem; color: #aaa; text-transform: uppercase;">Vista Previa de la Prueba</p>
                 <img id="sug-thumb-img" src="" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; border: 1px solid #333;">
             </div>
             
-            <button class="btn-scully" style="background:var(--purple); color:#fff; width:100%; justify-content:center; border:none; font-size:0.9rem;" onclick="sendSuggestion()">ENVIAR SUGERENCIA AL STAFF</button>
+            <button class="btn-scully" style="background:var(--purple); color:#fff; width:100%; justify-content:center; border:none; font-size:0.9rem;" onclick="sendSuggestion()">ENVIAR SUGERENCIA INTELIGENTE</button>
         </div>
     </div>
 
@@ -525,7 +525,7 @@
         }
 
         // ==========================================
-        // SUGERENCIAS: PREVIEW DE MINIATURA + ENVÍO
+        // SMART SUBMIT (SUGERENCIAS CON POSICIÓN)
         // ==========================================
         function previewSugThumb() {
             const inputField = document.getElementById('sug-v');
@@ -534,7 +534,7 @@
             const thumbImg = document.getElementById('sug-thumb-img');
             
             if (vid && vid.length === 11) {
-                inputField.value = vid; // Convierte el texto automáticamente a la ID limpia
+                inputField.value = vid; // Limpia la URL dejando solo la ID
                 thumbImg.src = `https://img.youtube.com/vi/${vid}/mqdefault.jpg`;
                 thumbBox.style.display = 'block';
             } else {
@@ -544,25 +544,37 @@
 
         function sendSuggestion() {
             const n = document.getElementById('sug-n').value.trim();
-            const id = document.getElementById('sug-i').value.trim();
-            const vid = document.getElementById('sug-v').value.trim();
+            const pos = document.getElementById('sug-pos').value.trim();
+            const rawVid = document.getElementById('sug-v').value.trim();
             
-            if (!n || !vid) return alert("Error: El nombre del nivel y el link del video son obligatorios.");
+            const vid = extraerYouTubeID(rawVid);
+            
+            if (!n || !vid || !pos) return alert("Error: El nombre, la posición y el link del video son obligatorios.");
             if (vid.length !== 11) return alert("El enlace de YouTube proporcionado no es válido. Verifica que sea correcto.");
             
-            db.ref('level_suggestions').push({ name: n, id: id || "N/A", video: vid, user: currentUserData.name || "Anónimo", time: Date.now() });
+            // Guardamos la sugerencia con la posición requerida
+            db.ref('level_suggestions').push({ 
+                name: n, 
+                position: parseInt(pos), 
+                video: vid, 
+                user: currentUserData.name || "Anónimo", 
+                time: Date.now() 
+            });
             
             const url = fullData.system_settings?.discord?.url_sug;
             if (url) {
                 fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ content: `💡 **NUEVA SUGERENCIA:** **${currentUserData.name || "Anónimo"}** sugiere **${n}** (ID: ${id||"N/A"}).\n🎥 **Prueba:** https://youtu.be/${vid}`, username: "SCULLY SYSTEM" }) 
+                    body: JSON.stringify({ 
+                        content: `💡 **NUEVA SUGERENCIA INTELIGENTE:** **${currentUserData.name || "Anónimo"}** sugiere añadir **${n}** en el Top **#${pos}**.\n🎥 **Prueba:** https://youtu.be/${vid}`, 
+                        username: "SCULLY SYSTEM" 
+                    }) 
                 });
             }
             
             document.getElementById('sugModal').style.display = 'none';
-            document.getElementById('sug-n').value = ''; document.getElementById('sug-i').value = ''; document.getElementById('sug-v').value = '';
+            document.getElementById('sug-n').value = ''; document.getElementById('sug-pos').value = ''; document.getElementById('sug-v').value = '';
             document.getElementById('sug-thumb-box').style.display = 'none';
-            alert("Sugerencia enviada exitosamente al equipo OMNI.");
+            alert("Sugerencia inteligente enviada exitosamente al equipo OMNI.");
         }
 
         // ==========================================
@@ -696,4 +708,4 @@
         });
     </script>
 </body>
-</html>
+    </html> 
