@@ -3,75 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Scully OMNI | Titan Engine v14</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Lexend+Deca:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Scully OMNI | Overlord v15.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Lexend+Deca:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root{--ac:#ff6600;--bg:#030303;--sb:#0a0a0a;--cd:#111;--bd:rgba(255,255,255,0.08);--gr:#00ff66;--rd:#ff3333;--bl:#00ccff;--gd:#ffd700;--di:#7289da;--pu:#cc00ff;--cy:#00ffff;--ow:#ff0055;}
-        *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+        *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;transition:0.2s ease-in-out;}
         body{background:var(--bg);color:#fff;font-family:'Lexend Deca',sans-serif;margin:0;display:flex;height:100vh;overflow:hidden;}
-        ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--ac);}
+        
+        /* SCROLLBAR */
+        ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--ac);border-radius:10px;}
+
+        /* MOBILE NAV */
         .mob-nav{display:none;background:var(--sb);height:60px;width:100%;position:fixed;top:0;left:0;z-index:4000;border-bottom:1px solid var(--bd);padding:0 20px;align-items:center;justify-content:space-between;}
         .ham{font-size:1.5rem;color:var(--ac);cursor:pointer;}
-        .staff-bar{background:#000;border-bottom:1px solid var(--bd);padding:10px;display:flex;justify-content:center;gap:15px;font-size:0.65rem;text-transform:uppercase;font-weight:800;flex-wrap:wrap;}
+        
+        /* STAFF BAR */
+        .staff-bar{background:#000;border-bottom:1px solid var(--bd);padding:8px;display:flex;justify-content:center;gap:15px;font-size:0.6rem;text-transform:uppercase;font-weight:800;flex-wrap:wrap;}
         .staff-bar b{color:#fff;} .staff-bar i{color:var(--ac);margin-right:4px;}
-        .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:3000;backdrop-filter:blur(4px);}
+
+        /* SIDEBAR */
         .sidebar{width:280px;min-width:280px;background:var(--sb);border-right:1px solid var(--bd);display:flex;flex-direction:column;z-index:3500;transition:0.3s;}
-        .brand{text-align:center;padding:25px 10px;border-bottom:1px solid var(--border);cursor:pointer;background:#000;touch-action:manipulation;}
-        .brand h1{font-family:'JetBrains Mono';font-size:1.6rem;margin:0;text-transform:uppercase;letter-spacing:-1px;} .brand span{color:var(--ac);}
+        .brand{text-align:center;padding:25px 10px;border-bottom:1px solid var(--bd);cursor:pointer;background:#000;touch-action:manipulation;}
+        .brand h1{font-family:'JetBrains Mono';font-size:1.5rem;margin:0;text-transform:uppercase;} .brand span{color:var(--ac);}
+        
         .nav-sc{flex:1;overflow-y:auto;padding:10px 0;}
-        .n-btn{width:100%;background:transparent;color:#888;border:none;padding:12px 25px;text-align:left;font-size:.75rem;cursor:pointer;display:flex;align-items:center;gap:12px;font-weight:700;text-transform:uppercase;border-left:3px solid transparent;transition:.2s;}
-        .n-btn:hover,.n-btn.active{color:#fff;background:rgba(255,102,0,0.06);border-left-color:var(--ac);}
-        .n-sec{font-size:.6rem;color:#444;text-transform:uppercase;font-weight:800;margin:15px 25px 8px;letter-spacing:1px;display:block;}
-        .m-wrap{flex:1;display:flex;flex-direction:column;position:relative;overflow:hidden;}
-        .m-cont{flex:1;padding:30px 40px;overflow-y:auto;background:radial-gradient(circle at 50% 0%, rgba(255,102,0,0.02) 0%, transparent 50%);}
-        .tab{display:none;} .tab.active{display:block;animation:fade .3s ease;}
-        @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-        h2.title{font-size:1.4rem;margin-bottom:20px;display:flex;align-items:center;gap:15px;text-transform:uppercase;font-weight:800;border-bottom:1px solid var(--bd);padding-bottom:10px;}
-        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px;margin-bottom:25px;}
-        .card{background:var(--cd);border:1px solid var(--bd);padding:20px;border-radius:15px;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,0.3);}
+        .n-btn{width:100%;background:transparent;color:#777;border:none;padding:14px 25px;text-align:left;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:12px;font-weight:700;text-transform:uppercase;border-left:3px solid transparent;}
+        .n-btn:hover,.n-btn.active{color:#fff;background:rgba(255,102,0,0.08);border-left-color:var(--ac);}
+        .n-sec{font-size:0.55rem;color:#444;text-transform:uppercase;font-weight:900;margin:20px 25px 8px;letter-spacing:1.5px;display:block;}
+
+        /* MAIN */
+        .m-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+        .m-cont{flex:1;padding:30px 40px;overflow-y:auto;background:radial-gradient(circle at 50% 0%, rgba(255,102,0,0.01) 0%, transparent 50%);}
+        .tab{display:none;} .tab.active{display:block;animation:tabFade 0.4s ease;}
+        @keyframes tabFade{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+
+        h2.title{font-size:1.3rem;margin-bottom:20px;display:flex;align-items:center;gap:12px;text-transform:uppercase;font-weight:800;border-bottom:1px solid var(--bd);padding-bottom:10px;}
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-bottom:25px;}
+        .card{background:var(--cd);border:1px solid var(--bd);padding:20px;border-radius:15px;text-align:center;}
         .card h3{font-size:1.8rem;margin:5px 0;font-family:'JetBrains Mono';color:var(--ac);}
+        
         .panel{background:var(--cd);border:1px solid var(--bd);padding:25px;border-radius:15px;margin-bottom:20px;position:relative;}
-        .ig{margin-bottom:15px;} label{display:block;font-size:.7rem;color:var(--ac);font-weight:800;margin-bottom:6px;text-transform:uppercase;}
-        input,select,textarea{width:100%;background:#000;border:1px solid #222;color:#fff;padding:12px;border-radius:8px;font-family:inherit;font-size:.85rem;outline:none;}
-        .btn{background:var(--ac);color:#000;border:none;padding:12px 25px;border-radius:8px;font-weight:800;cursor:pointer;text-transform:uppercase;font-size:.75rem;display:inline-flex;align-items:center;justify-content:center;gap:8px;}
-        .dl{display:flex;flex-direction:column;gap:10px;max-height:400px;overflow-y:auto;}
-        .dc{background:rgba(255,255,255,.02);border:1px solid var(--bd);padding:15px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;}
-        .bs{padding:8px 12px;border-radius:6px;font-size:.65rem;font-weight:800;border:none;cursor:pointer;}
-        .bg{background:rgba(0,255,102,.1);color:var(--gr);border:1px solid var(--gr);} .br{background:rgba(255,51,51,.1);color:var(--rd);border:1px solid var(--rd);}
-        .chat-box{background:#000;border:1px solid #222;border-radius:12px;height:250px;overflow-y:auto;padding:15px;margin-bottom:15px;}
-        .chat-msg{margin-bottom:10px;font-size:0.8rem;} .chat-msg b{color:var(--bl);}
-        .mod{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:10000;backdrop-filter:blur(5px);}
-        .mc{background:var(--sb);margin:8vh auto;padding:25px;width:90%;max-width:500px;border-radius:15px;border:1px solid var(--bd);position:relative;}
+        .help{position:absolute;top:12px;right:12px;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,0.05);color:#555;display:flex;align-items:center;justify-content:center;font-size:0.6rem;cursor:pointer;}
+        .help:hover{background:var(--bl);color:#000;}
+
+        input,select,textarea{width:100%;background:#000;border:1px solid #222;color:#fff;padding:12px;border-radius:8px;font-family:inherit;font-size:0.85rem;outline:none;}
+        input:focus{border-color:var(--ac);}
+        .btn{background:var(--ac);color:#000;border:none;padding:12px 25px;border-radius:8px;font-weight:800;cursor:pointer;text-transform:uppercase;font-size:0.7rem;display:inline-flex;align-items:center;justify-content:center;gap:8px;}
+        .btn:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(255,102,0,0.3);}
+
+        .dc{background:rgba(255,255,255,0.02);border:1px solid var(--bd);padding:15px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+        .bs{padding:6px 12px;border-radius:6px;font-size:0.65rem;font-weight:800;border:none;cursor:pointer;text-transform:uppercase;}
+        .bg{background:rgba(0,255,102,0.1);color:var(--gr);border:1px solid var(--gr);} .br{background:rgba(255,51,51,0.1);color:var(--rd);border:1px solid var(--rd);}
+        
+        .chat-box{background:#000;border:1px solid #222;border-radius:12px;height:220px;overflow-y:auto;padding:15px;margin-bottom:10px;font-size:0.8rem;}
+        .chat-msg{margin-bottom:8px; border-bottom:1px solid #111; padding-bottom:4px;} .chat-msg b{color:var(--ac);}
+
         #toast{visibility:hidden;min-width:200px;background:var(--gr);color:#000;text-align:center;border-radius:8px;padding:12px;position:fixed;z-index:20000;bottom:30px;left:50%;transform:translateX(-50%);font-weight:800;transition:.4s;}
         #toast.show{visibility:visible;opacity:1;}
-        .sw{position:relative;display:inline-block;width:40px;height:20px;} .sw input{opacity:0;width:0;height:0;}
-        .sl{position:absolute;cursor:pointer;inset:0;background:#222;transition:.3s;border-radius:20px;} .sl:before{position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background:#fff;transition:.3s;border-radius:50%;}
-        input:checked+.sl{background:var(--ac);} input:checked+.sl:before{transform:translateX(20px);}
-        @media(max-width:768px){.mob-nav{display:flex;}.sidebar{position:fixed;left:-100%;top:60px;height:calc(100vh - 60px);width:260px;}.sidebar.open{left:0;}.overlay.active{display:block;}.m-wrap{margin-top:60px;}.m-cont{padding:15px;}.grid{grid-template-columns:1fr 1fr;}}
+
+        @media(max-width:768px){
+            .mob-nav{display:flex;} .sidebar{position:fixed;left:-100%;top:60px;height:calc(100vh - 60px);width:260px;}
+            .sidebar.open{left:0;} .main-wrapper{margin-top:60px;} .main-content{padding:15px;} .stats-grid{grid-template-columns:1fr 1fr;}
+        }
     </style>
 </head>
 <body>
-    <div id="loader" style="position:fixed;inset:0;background:#000;z-index:99999;display:flex;justify-content:center;align-items:center;"><h2 style="color:var(--ac);font-family:'JetBrains Mono';">OMNI_V14_TITAN</h2></div>
+    <div id="loader" style="position:fixed;inset:0;background:#000;z-index:99999;display:flex;justify-content:center;align-items:center;"><h2 style="color:var(--ac);font-family:'JetBrains Mono';">SCULLY_OMNI_V15</h2></div>
     <div id="toast">Exito</div>
-    <div class="overlay" id="overlay" onclick="tMenu()"></div>
+    <div class="sidebar-overlay" onclick="tMenu()"></div>
+
     <div class="mob-nav"><h1>SYS.<span>OMNI</span></h1><div class="ham" onclick="tMenu()"><i class="fas fa-bars"></i></div></div>
 
     <div class="sidebar" id="sidebar">
-        <div class="brand" onclick="rTap()"><h1>SYS.<span>OMNI</span></h1><p id="badge" style="font-size:0.5rem;color:var(--gr);font-weight:800;margin-top:5px;">ONLINE</p></div>
+        <div class="brand" onclick="rTap()"><h1>SYS.<span>OMNI</span></h1><p id="badge" style="font-size:0.5rem;color:var(--gr);font-weight:800;">CORE READY</p></div>
         <div class="nav-sc">
-            <span class="n-sec">Core</span>
+            <span class="n-sec">General</span>
             <button class="n-btn active" onclick="sTab('t-dash')"><i class="fas fa-satellite-dish"></i> Dashboard</button>
             <button class="n-btn" onclick="sTab('t-recs')"><i class="fas fa-tasks"></i> Récords</button>
-            <button class="nav-btn" onclick="sTab('t-lvls')"><i class="fas fa-database"></i> Niveles</button>
-            <button class="nav-btn" onclick="sTab('t-players')"><i class="fas fa-users-cog"></i> Jugadores</button>
-            <span class="n-sec">Titán</span>
-            <button class="nav-btn" onclick="sTab('t-market')" style="color:var(--gd);"><i class="fas fa-store"></i> Mercado XP</button>
-            <button class="nav-btn" onclick="sTab('t-chat')" style="color:var(--bl);"><i class="fas fa-comments"></i> Staff Chat</button>
-            <button class="nav-btn" onclick="sTab('t-achange')" style="color:var(--gd);"><i class="fas fa-file-code"></i> Admin Log</button>
-            <span id="ow-t" class="n-sec" style="color:var(--ow);display:none;">Owner</span>
-            <button class="nav-btn" onclick="sTab('t-staff')" id="b-st" style="color:var(--ow);display:none;"><i class="fas fa-chess-king"></i> Staff</button>
-            <button class="nav-btn" onclick="sTab('t-cfg')" id="b-cf" style="color:var(--di);display:none;"><i class="fas fa-cogs"></i> Sistema</button>
+            <button class="n-btn" onclick="sTab('t-lvls')"><i class="fas fa-database"></i> Niveles</button>
+            <button class="n-btn" onclick="sTab('t-players')"><i class="fas fa-users-cog"></i> Jugadores</button>
+            <span class="n-sec">Económico</span>
+            <button class="n-btn" onclick="sTab('t-market')" style="color:var(--gd);"><i class="fas fa-store"></i> Mercado XP</button>
+            <button class="n-btn" onclick="sTab('t-clans')" style="color:var(--cy);"><i class="fas fa-shield-alt"></i> Sindicatos</button>
+            <span class="n-sec">Social</span>
+            <button class="n-btn" onclick="sTab('t-chat')" style="color:var(--bl);"><i class="fas fa-comments"></i> Staff Chat</button>
+            <button class="n-btn" onclick="sTab('t-achange')" style="color:var(--gd);"><i class="fas fa-file-code"></i> Admin Log</button>
+            <span id="ow-t" class="n-sec" style="color:var(--ow);display:none;">Owner Control</span>
+            <button class="n-btn" onclick="sTab('t-staff')" id="b-st" style="color:var(--ow);display:none;"><i class="fas fa-chess-king"></i> Gestion Staff</button>
+            <button class="n-btn" onclick="sTab('t-cfg')" id="b-cf" style="color:var(--di);display:none;"><i class="fas fa-cogs"></i> Sistema</button>
         </div>
         <div class="sidebar-bottom"><button class="n-btn" style="color:var(--rd);" onclick="location.href='index.html'">SALIR</button></div>
     </div>
@@ -82,79 +102,72 @@
         </div>
         <div class="m-cont">
             <div id="t-dash" class="tab active">
-                <h2 class="title">Dashboard</h2>
+                <h2 class="title">Monitor</h2>
                 <div class="grid">
                     <div class="card"><h3><span id="st-p">0</span></h3><p>Usuarios</p></div>
                     <div class="card"><h3><span id="st-l">0</span></h3><p>Niveles</p></div>
                     <div class="card"><h3><span id="st-r">0</span></h3><p>Pendientes</p></div>
                 </div>
-                <div class="term" id="term" style="height:300px;"></div>
+                <div class="term" id="term" style="background:#000;height:250px;padding:15px;overflow-y:auto;font-family:'JetBrains Mono';font-size:0.7rem;border-radius:10px;border:1px solid #222;"></div>
             </div>
 
             <div id="t-recs" class="tab">
                 <h2 class="title">Récords</h2>
-                <div class="dl" id="l-subs"></div>
+                <div id="l-subs" class="dl"></div>
                 <div class="panel" style="margin-top:20px;border-color:var(--ac);">
-                    <h3>Inyectar Manual</h3>
-                    <input type="text" id="m-p" placeholder="Jugador" style="margin-bottom:10px;">
-                    <input type="text" id="m-l" placeholder="Nivel" style="margin-bottom:10px;">
-                    <input type="text" id="m-k" placeholder="Link">
-                    <button class="btn" style="margin-top:10px;width:100%" onclick="iRec()">INYECTAR</button>
+                    <h3>Inyección Manual</h3>
+                    <input type="text" id="m-p" placeholder="Nombre Jugador" style="margin-bottom:10px;">
+                    <input type="text" id="m-l" placeholder="Nombre Nivel" style="margin-bottom:10px;">
+                    <input type="text" id="m-k" placeholder="URL Video">
+                    <button class="btn" style="margin-top:15px;width:100%" onclick="iRec()">INYECTAR</button>
                 </div>
             </div>
 
             <div id="t-lvls" class="tab">
-                <h2 class="title">Ranking</h2>
+                <h2 class="title">Niveles</h2>
                 <div class="panel">
                     <input type="hidden" id="e-idx" value="-1">
                     <input type="text" id="a-n" placeholder="Nombre" style="margin-bottom:10px;">
-                    <input type="text" id="a-i" placeholder="Video ID">
+                    <input type="text" id="a-i" placeholder="YouTube ID">
                     <button class="btn" style="width:100%;margin-top:10px;background:var(--pu);color:#fff;" onclick="sLvl()">GUARDAR</button>
                 </div>
                 <div id="r-list" class="dl"></div>
-                <button class="btn" style="width:100%;margin-top:15px;background:var(--bl);" onclick="pOrd()">PUBLICAR ORDEN</button>
-            </div>
-
-            <div id="t-market" class="tab">
-                <h2 class="title">Mercado</h2>
-                <div class="dl" id="l-mreq"></div>
-                <div class="panel" style="margin-top:20px;border-color:var(--gd);">
-                    <h3>Nuevo Item</h3>
-                    <input type="text" id="i-n" placeholder="Nombre" style="margin-bottom:10px;">
-                    <input type="number" id="i-p" placeholder="Precio XP">
-                    <button class="btn" style="background:var(--gd);width:100%;margin-top:10px;" onclick="aMItem()">PUBLICAR</button>
-                </div>
+                <button class="btn" style="width:100%;margin-top:15px;background:var(--bl);color:#000;" onclick="pOrd()">PUBLICAR CAMBIOS</button>
             </div>
 
             <div id="t-chat" class="tab">
                 <h2 class="title">Staff Chat</h2>
                 <div class="chat-box" id="c-box"></div>
                 <div style="display:flex;gap:10px;">
-                    <input type="text" id="c-msg" placeholder="Escribir...">
+                    <input type="text" id="c-msg" placeholder="Mensaje...">
                     <button class="btn" onclick="sChat()">ENVIAR</button>
-                    <button class="btn br" onclick="fCPurge()" title="Purgar Cache">PURGA</button>
+                    <button class="btn br" onclick="fCPurge()">PURGA</button>
                 </div>
             </div>
-            
+
             <div id="t-players" class="tab">
-                <h2 class="title">Jugadores</h2>
+                <h2 class="title">Usuarios</h2>
                 <input type="text" id="p-s" placeholder="Buscar Nick..."><button class="btn" onclick="sP()" style="margin:10px 0;">BUSCAR</button>
                 <div id="p-res" style="display:none;" class="panel">
                     <input type="text" id="pe-n">
                     <textarea id="pe-b" rows="3" style="margin:10px 0;"></textarea>
                     <button class="btn" onclick="uP()">GUARDAR</button>
-                    <div id="p-ban" style="margin-top:10px;"></div>
                     <div id="p-r" class="dl" style="margin-top:20px;"></div>
                 </div>
             </div>
 
-            <div id="t-staff" class="tab"><h2 class="title">Owner Control</h2><div class="dl" id="l-stf"></div></div>
-            <div id="t-cfg" class="tab"><h2 class="title">Config</h2><input type="text" id="cf-dw" placeholder="Webhook"><button class="btn" onclick="sCfg()" style="margin-top:10px;">GUARDAR</button></div>
+            <div id="t-market" class="tab">
+                <h2 class="title">Mercado</h2>
+                <div id="l-mreq" class="dl"></div>
+            </div>
+
+            <div id="t-staff" class="tab"><h2 class="title">Roles</h2><div class="dl" id="l-stf"></div></div>
+            <div id="t-cfg" class="tab"><h2 class="title">Sistema</h2><input type="text" id="cf-dw" placeholder="Webhook Discord"><button class="btn" onclick="sCfg()" style="margin-top:15px;">GUARDAR</button></div>
         </div>
     </div>
 
-    <div id="m-rev" class="mod"><div class="mc"><h2>Revisión</h2><div id="r-v"></div><p id="r-rw"></p><p id="r-cm"></p><button id="b-ac" class="btn bg">ACEPTAR</button><button id="b-rj" class="btn br" style="margin-top:10px;">RECHAZAR</button><button onclick="cMod('m-rev')" class="btn" style="background:#222;color:#fff;margin-top:10px;">CERRAR</button></div></div>
-    <div id="m-own" class="mod"><div class="mc" style="text-align:center;"><h2>ROOT LOGIN</h2><input type="password" id="o-k" placeholder="LLAVE"><button class="btn" onclick="eOw()" style="margin-top:15px;">ACCEDER</button></div></div>
+    <div id="m-rev" class="mod"><div class="mc"><h2>Revisión</h2><div id="r-v"></div><button id="b-ac" class="btn bg" style="width:100%">ACEPTAR</button><button onclick="cMod('m-rev')" class="btn" style="width:100%;margin-top:10px;background:#222;color:#fff;">CERRAR</button></div></div>
+    <div id="m-own" class="mod"><div class="mc" style="text-align:center;"><h2>LLAVE ROOT</h2><input type="password" id="o-k" placeholder="PIN"><button class="btn" onclick="eOw()" style="margin-top:15px;width:100%;">ACCEDER</button></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
@@ -167,9 +180,9 @@
         let fD={}, lvls=[], pIx=-1, sN="Admin", sR="helper", cEm="";
 
         function toast(m,e=false){ $('toast').innerText=m; $('toast').style.background=e?"var(--rd)":"var(--gr)"; $('toast').className='show'; setTimeout(()=>$('toast').className="",3000); }
-        function sTab(id){ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); document.querySelectorAll('.n-btn').forEach(x=>x.classList.remove('active')); if($(id)) $(id).classList.add('active'); if(event&&event.currentTarget) event.currentTarget.classList.add('active'); if(window.innerWidth<=768) tMenu(); }
+        function sTab(id){ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); document.querySelectorAll('.n-btn').forEach(x=>x.classList.remove('active')); if($(id)) $(id).classList.add('active'); if(event&&event.currentTarget) event.currentTarget.classList.add('active'); }
         function cMod(id){ if($(id)) $(id).style.display='none'; }
-        function tMenu(){ $('sidebar').classList.toggle('open'); $('overlay').classList.toggle('active'); }
+        function tMenu(){ $('sidebar').classList.toggle('open'); }
         function log(m){ db.ref('staff_logs').push({staff:sN,action:m,timestamp:Date.now()}); if($('term')){ $('term').innerHTML+=`<div>> [${new Date().toLocaleTimeString()}] ${m}</div>`; $('term').scrollTop=$('term').scrollHeight; } }
 
         let tps=0, tmr;
@@ -183,58 +196,46 @@
                 if(me && (me.role==='admin'||me.name.toLowerCase()==='score'||me.role==='helper'||me.role==='owner')){
                     sN=me.name; sR=me.role||(me.name.toLowerCase()==='score'?'owner':'helper');
                     $('badge').innerText=`${sR.toUpperCase()}: ${sN}`; $('loader').style.display='none';
-                    if(sR==='owner'||sN.toLowerCase()==='score'){ $('ow-t').style.display='block'; $('b-st').style.display='flex'; $('b-cf').style.display='flex'; $('b-au').style.display='flex'; }
-                    iMas();
+                    if(sR==='owner'||sN.toLowerCase()==='score'){ $('ow-t').style.display='block'; $('b-st').style.display='flex'; $('b-cf').style.display='flex'; }
+                    initMas();
                 } else location.href="index.html";
             });
         });
 
-        function iMas(){
+        function initMas(){
             db.ref('/').on('value', s=>{
-                try {
-                    fD=s.val()||{}; lvls=toArr(fD.levels);
-                    $('st-p').innerText=Object.keys(fD.players||{}).length; $('st-l').innerText=lvls.length;
-                    $('st-r').innerText=Object.keys(fD.submissions||{}).length;
-                    rRcs(fD.submissions||{}); rLvs(lvls); rRnk(lvls); rMReq(fD.market_requests||{});
-                    rStf(toArr(fD.players)); rChat(fD.staff_chat||{});
-                    if(pIx!==-1) rPDat();
-                } catch(e){ console.error(e); }
+                fD=s.val()||{}; lvls=toArr(fD.levels);
+                $('st-p').innerText=Object.keys(fD.players||{}).length; $('st-l').innerText=lvls.length;
+                $('st-r').innerText=Object.keys(fD.submissions||{}).length;
+                renderRecs(fD.submissions||{}); renderLvls(lvls); renderStaff(toArr(fD.players)); 
+                renderChat(fD.staff_chat||{}); renderMReq(fD.market_requests||{});
             });
         }
 
-        const gXP=l=>{ const i=lvls.findIndex(x=>x.name.toLowerCase()===l.toLowerCase()); return i===-1?0:Math.max(100-(i*0.6),5); };
-        
-        function rRcs(d){ let h=""; Object.entries(d).forEach(([id,r])=>{ h+=`<div class="dc"><div><h4>${r.level}</h4><p>${r.player}</p></div><button class="bs bg" onclick="oRev('${id}')">REV</button></div>`;}); $('l-subs').innerHTML=h||'<p>Bandeja limpia</p>'; }
-        function oRev(id){ const r=fD.submissions[id]; $('r-t').innerText=r.level; $('r-v').innerHTML=`<a href="${r.link}" target="_blank">VER VIDEO</a>`; $('b-acc').onclick=()=>pRec(id,'acc'); $('b-rj').onclick=()=>pRec(id,'rej'); $('m-rev').style.display='block'; }
+        function renderRecs(d){ let h=""; Object.entries(d).forEach(([id,r])=>{ h+=`<div class="dc"><div><h4>${r.level}</h4><p>${r.player}</p></div><button class="bs bg" onclick="oRev('${id}')">REV</button></div>`;}); $('l-subs').innerHTML=h||'<p>Bandeja limpia</p>'; }
+        function oRev(id){ const r=fD.submissions[id]; $('r-v').innerHTML=`<a href="${r.link}" target="_blank">VER VIDEO</a>`; $('b-ac').onclick=()=>pRec(id,'acc'); $('m-rev').style.display='block'; }
         function pRec(id,m){
             const r=fD.submissions[id]; if(m==='acc'){
-                const xp=gXP(r.level); let pL=toArr(fD.players); let i=pL.findIndex(x=>x.name.toLowerCase()===r.player.toLowerCase());
+                const xp=Math.max(100-(lvls.findIndex(x=>x.name.toLowerCase()===r.level.toLowerCase())*0.6),5); 
+                let pL=toArr(fD.players); let i=pL.findIndex(x=>x.name.toLowerCase()===r.player.toLowerCase());
                 if(i===-1) pL.push({name:r.player, country:'es', totalXP:xp, completions:[{level:r.level,link:r.link,xp:xp}]});
                 else{ let c=toArr(pL[i].completions); if(!c.some(x=>x.level===r.level)){c.push({level:r.level,link:r.link,xp:xp}); pL[i].completions=c; pL[i].totalXP=(pL[i].totalXP||0)+xp;} }
                 db.ref('players').set(pL); log(`Aprobó: ${r.player}`);
             }
             db.ref(`submissions/${id}`).remove(); cMod('m-rev'); toast("Listo");
         }
-        function iRec(){ const p=$('m-p').value.trim(), l=$('m-l').value.trim(); if(!p||!l)return; const xp=gXP(l); let pL=toArr(fD.players); let i=pL.findIndex(x=>x.name.toLowerCase()===p.toLowerCase()); if(i===-1) pL.push({name:p,totalXP:xp,completions:[{level:l,link:$('m-k').value,xp:xp}]}); else{ let c=toArr(pL[i].completions); c.push({level:l,link:$('m-k').value,xp:xp}); pL[i].completions=c; pL[i].totalXP=(pL[i].totalXP||0)+xp; } db.ref('players').set(pL); toast("Inyectado"); }
 
-        function rLvs(d){ let h=""; d.forEach((l,i)=>{ h+=`<div class="dc"><div><h4>#${i+1} ${l.name}</h4></div><button class="bs bb" onclick="$('e-idx').value='${i}';$('a-n').value='${l.name}';$('a-i').value='${l.id}';$('c-edit').hidden=false;">EDIT</button></div>`;}); $('l-lvls').innerHTML=h; }
-        function sLvl(){ const x=parseInt($('e-idx').value), n=$('a-n').value, id=$('a-i').value; let nL=[...lvls]; if(x===-1) nL.push({name:n,id:id}); else nL[x]={name:n,id:id}; db.ref('levels').set(nL); rLvl(); }
-        function rLvl(){ $('e-idx').value="-1"; $('a-n').value=""; $('a-i').value=""; $('c-edit').hidden=true; }
-        function rRnk(d){ let h=""; d.forEach((l,i)=>{ h+=`<div class="lr"><div class="lr-n">#${i+1}</div><div class="lr-t">${l.name}</div><button class="bs" onclick="mL(${i},-1)">▲</button></div>`;}); $('r-list').innerHTML=h; }
-        function mL(i,d){ if((d===-1&&i===0)||(d===1&&i===lvls.length-1))return; const t=lvls[i+d]; lvls[i+d]=lvls[i]; lvls[i]=t; rRnk(lvls); }
+        function renderLvls(d){ let h=""; d.forEach((l,i)=>{ h+=`<div class="dc"><h4>#${i+1} ${l.name}</h4><button class="bs bb" onclick="eLvl(${i})">EDIT</button></div>`;}); $('r-list').innerHTML=h; }
+        function eLvl(i){ const l=lvls[i]; $('e-idx').value=i; $('a-n').value=l.name; $('a-i').value=l.id; }
+        function sLvl(){ const i=parseInt($('e-idx').value); let nL=[...lvls]; let d={name:$('a-n').value,id:$('a-i').value}; if(i===-1) nL.push(d); else nL[i]=d; db.ref('levels').set(nL); toast("Nivel OK"); }
         function pOrd(){ db.ref('levels').set(lvls); toast("Ranking Publicado"); }
 
         function sChat(){ const m=$('c-msg').value; if(m){ db.ref('staff_chat').push({user:sN,msg:m,time:Date.now()}); $('c-msg').value=''; } }
-        function rChat(d){ let h=""; Object.values(d).slice(-15).forEach(x=>{ h+=`<div class="chat-msg"><b>${x.user}</b>: ${x.msg}</div>`;}); $('c-box').innerHTML=h; $('c-box').scrollTop=$('c-box').scrollHeight; }
-        function fCPurge(){ if(confirm("¿Purgar Cache Global?")){ db.ref('system_settings/last_cache_purge').set(Date.now()); log("PURGA DE CACHE"); toast("Cache Limpio"); }}
+        function renderChat(d){ let h=""; toArr(d).slice(-15).forEach(x=>{ h+=`<div class="chat-msg"><b>${x.user}</b>: ${x.msg}</div>`;}); $('c-box').innerHTML=h; $('c-box').scrollTop=$('c-box').scrollHeight; }
+        function fCPurge(){ db.ref('system_settings/last_cache_purge').set(Date.now()); toast("Caché Purgada"); }
 
-        function sP(){ const q=$('p-s').value.trim().toLowerCase(); pIx=toArr(fD.players).findIndex(x=>x.name.toLowerCase()===q); if(pIx>-1){ $('p-res').style.display='block'; rPDat(); } }
-        function rPDat(){ const p=toArr(fD.players)[pIx]; $('pe-n').value=p.name; $('pe-b').value=p.bio||""; let h=""; toArr(p.completions).forEach((x,i)=>{ h+=`<div class="dc"><span>${x.level}</span><button onclick="dPr(${i})">X</button></div>`;}); $('p-r').innerHTML=h; }
-        function uP(){ db.ref(`players/${pIx}/name`).set($('pe-n').value); toast("Guardado"); }
-        function dPr(i){ if(confirm("Borrar?")){ const p=toArr(fD.players)[pIx]; let c=toArr(p.completions); const xp=c[i].xp||0; c.splice(i,1); db.ref(`players/${pIx}/completions`).set(c); db.ref(`players/${pIx}/totalXP`).set((p.totalXP||0)-xp); }}
-
-        function rStf(ps){ let h=""; ps.forEach(p=>{ if(p.role) h+=`<div class="dc"><h4>${p.name} [${p.role}]</h4></div>`;}); $('l-stf').innerHTML=h; }
-        function bDB(){ const d="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(fD)); const a=document.createElement('a'); a.href=d; a.download="DB.json"; a.click(); }
+        function renderStaff(ps){ let h=""; ps.forEach(p=>{ if(p.role) h+=`<div class="dc"><h4>${p.name} [${p.role}]</h4></div>`;}); $('l-stf').innerHTML=h; }
+        function sCfg(){ db.ref('system_settings/discord/url').set($('cf-dw').value); toast("Guardado"); }
     </script>
 </body>
 </html>
