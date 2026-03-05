@@ -3,86 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully Market | Mercado de Prestigio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;800&display=swap" rel="stylesheet">
+    <title>Mercado XP | Hub OMNI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&family=JetBrains+Mono:wght@800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --accent: #ff6600; --bg: #030303; --card: rgba(15,15,15,0.9); --border: rgba(255,255,255,0.05); }
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca'; margin: 0; text-align: center; }
-        header { padding: 60px 20px 20px; }
-        h1 { font-size: 3rem; margin: 0; text-transform: uppercase; font-weight: 800; letter-spacing: -1px; }
-        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 12px 24px; text-decoration: none; font-size: 0.7rem; border-radius: 50px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; cursor: pointer; transition: 0.3s; }
-        .btn-scully:hover { background: var(--accent); color: #000; }
-        .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; width: 95%; max-width: 1000px; margin: 40px auto; }
-        .market-card { background: var(--card); border: 1px solid var(--border); padding: 40px; border-radius: 30px; transition: 0.3s; }
-        .market-card:hover { border-color: var(--accent); transform: translateY(-10px); }
-        .market-card i { font-size: 3rem; color: var(--accent); margin-bottom: 20px; }
-        .xp-req { display: block; margin: 15px 0; color: #ffcc00; font-weight: 800; font-size: 0.9rem; }
+        :root { --bg: #030303; --card: rgba(15,15,15,0.9); --gold: #ffd700; --cyan: #00ffff; --border: rgba(255,255,255,0.1); }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; text-align: center; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid var(--border); max-width: 1000px; margin: 0 auto 30px; flex-wrap: wrap; gap: 15px; }
+        .header h1 { margin: 0; font-size: 1.5rem; color: var(--gold); text-transform: uppercase; font-weight: 800; }
+        
+        .user-xp-box { background: rgba(255,215,0,0.1); border: 1px solid var(--gold); padding: 10px 20px; border-radius: 10px; font-weight: 800; color: var(--gold); }
+        
+        .store-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
+        .item-card { background: var(--card); border: 1px solid var(--border); padding: 30px; border-radius: 20px; transition: 0.3s; position: relative; overflow: hidden; }
+        .item-card:hover { border-color: var(--gold); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255,215,0,0.2); }
+        
+        .item-card img { width: 80px; height: 80px; margin-bottom: 15px; object-fit: cover; }
+        .item-card h3 { margin: 0 0 10px; font-size: 1.4rem; color: #fff; font-family: 'JetBrains Mono'; }
+        .item-card .price { font-size: 1.2rem; color: var(--gold); font-weight: 800; margin-bottom: 20px; display: block; }
+        
+        .btn-buy { background: var(--gold); color: #000; border: none; padding: 12px 25px; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 100%; font-size: 0.9rem; text-transform: uppercase; }
+        .btn-buy:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(255,215,0,0.5); }
+        .btn-disabled { background: #333; color: #666; cursor: not-allowed; }
+        .btn-disabled:hover { transform: none; box-shadow: none; }
+        
+        .nav-back { display: inline-block; color: var(--cyan); text-decoration: none; font-weight: 800; margin-top: 30px; }
     </style>
 </head>
 <body>
-    <header>
-        <h1>SCULLY <span style="color:var(--accent);">MARKET</span></h1>
-        <a href="index.html" class="btn-scully">VOLVER AL HUB</a>
-    </header>
 
-    <div class="market-grid">
-        <div class="market-card">
-            <i class="fas fa-fire"></i><h3>Aura Fuego</h3><span class="xp-req">100 XP</span>
-            <button class="btn-scully" style="width:100%; justify-content:center; margin-top:0; border-color:var(--accent); color:var(--accent);" onclick="buyItem('aura_fire', 100)">SOLICITAR</button>
-        </div>
-        <div class="market-card">
-            <i class="fas fa-bolt"></i><h3>Aura Eléctrica</h3><span class="xp-req">150 XP</span>
-            <button class="btn-scully" style="width:100%; justify-content:center; margin-top:0; border-color:var(--accent); color:var(--accent);" onclick="buyItem('aura_electric', 150)">SOLICITAR</button>
-        </div>
-        <div class="market-card">
-            <i class="fas fa-rainbow"></i><h3>Nick Rainbow</h3><span class="xp-req">300 XP</span>
-            <button class="btn-scully" style="width:100%; justify-content:center; margin-top:0; border-color:var(--accent); color:var(--accent);" onclick="buyItem('name_rainbow', 300)">SOLICITAR</button>
-        </div>
+    <div class="header">
+        <h1><i class="fas fa-shopping-cart"></i> Mercado OMNI</h1>
+        <div class="user-xp-box" id="myXP">XP Disponible: CARGANDO...</div>
     </div>
 
+    <div class="store-grid" id="store-container">
+        <p style="color:#888;">Conectando con la base de datos de la tienda...</p>
+    </div>
+
+    <a href="index.html" class="nav-back"><i class="fas fa-arrow-left"></i> Volver al Hub Principal</a>
+
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+
     <script>
-        const firebaseConfig = { databaseURL: "https://scullylist-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
+        const firebaseConfig = { apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", authDomain: "scullylist.firebaseapp.com", databaseURL: "https://scullylist-default-rtdb.firebaseio.com", projectId: "scullylist", storageBucket: "scullylist.firebasestorage.app", messagingSenderId: "498548914021", appId: "1:498548914021:web:59128b5e06b36a4e81938c" };
+        firebase.initializeApp(firebaseConfig); 
+        const auth = firebase.auth(); 
         const db = firebase.database();
-        const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
-        document.documentElement.style.setProperty('--accent', savedColor);
-        
-        let fullData = {};
-        db.ref('/').on('value', s => fullData = s.val() || {});
 
-        // NUEVO MOTOR DE CÁLCULO DE XP (Fusión de Datos)
-        function buyItem(item, cost) {
-            const n = prompt("Escribe tu Nickname:"); 
-            if(!n) return;
+        let currentUserData = null;
+        let myTotalXP = 0;
+
+        // 1. CARGAR DATOS DEL USUARIO (PARA SABER CUÁNTA XP TIENE)
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                db.ref('players').on('value', snap => {
+                    const players = snap.val() || {};
+                    let me = null;
+                    const lvls = []; // Necesitamos los niveles para calcular la XP real
+
+                    // Obtener niveles para calcular XP
+                    db.ref('levels').once('value').then(lSnap => {
+                        const levelList = lSnap.val() ? Object.values(lSnap.val()) : [];
+                        
+                        for (let key in players) {
+                            if (players[key].email === user.email) {
+                                me = players[key];
+                                break;
+                            }
+                        }
+
+                        if (me) {
+                            currentUserData = me;
+                            // Calcular XP Real
+                            let realXp = 0;
+                            let comps = me.completions ? Object.values(me.completions) : [];
+                            
+                            comps.forEach(c => {
+                                let idx = levelList.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase());
+                                if(idx > -1) { 
+                                    realXp += Math.max(100 - (idx * 0.6), 5) * (levelList[idx].bounty ? 2 : 1); 
+                                } else { 
+                                    realXp += c.xp || 0; 
+                                }
+                            });
+
+                            myTotalXP = realXp + (me.totalXP || 0);
+                            document.getElementById('myXP').innerText = `XP Disponible: ${myTotalXP.toFixed(1)}`;
+                        } else {
+                            document.getElementById('myXP').innerText = "Debes crear tu perfil.";
+                        }
+                    });
+                });
+            } else {
+                document.getElementById('myXP').innerHTML = `<a href="login.html" style="color:var(--gold);">Inicia sesión para comprar</a>`;
+            }
+        });
+
+        // 2. CARGAR LOS ÍTEMS DE LA TIENDA
+        db.ref('market_items').on('value', snap => {
+            const items = snap.val() || {};
+            let html = "";
             
-            const nickL = n.toLowerCase();
-            const p = Object.values(fullData.players || {}).find(x => x.name.toLowerCase() === nickL);
-            const lvls = fullData.levels || [];
-            
-            let uniqueLevels = new Set();
-            
-            // Sumar Niveles Verificados
-            lvls.forEach(l => { if(l.first?.toLowerCase() === nickL) uniqueLevels.add(l.name); });
-            // Sumar Niveles Completados
-            p?.completions?.forEach(c => uniqueLevels.add(c.level));
-            
-            let pts = 0;
-            uniqueLevels.forEach(name => {
-                const idx = lvls.findIndex(l => l.name === name);
-                if(idx > -1) pts += parseFloat(Math.max(100 - (idx * 0.6), 5));
+            Object.values(items).forEach(item => {
+                // Iconos dinámicos si no hay imagen
+                let imgHtml = item.img ? `<img src="${item.img}">` : `<i class="fas fa-gem" style="font-size:3rem; color:var(--gold); margin-bottom:15px;"></i>`;
+                
+                html += `
+                <div class="item-card">
+                    ${imgHtml}
+                    <h3>${item.name}</h3>
+                    <span class="price">${item.price} XP</span>
+                    <button class="btn-buy" onclick="solicitarCompra('${item.name}', ${item.price})">COMPRAR</button>
+                </div>`;
             });
-
-            if(!p && uniqueLevels.size === 0) return alert("Jugador no encontrado.");
             
-            if(pts < cost) {
-                return alert(`XP insuficiente. Tienes ${pts.toFixed(1)} XP y necesitas ${cost} XP.`);
+            document.getElementById('store-container').innerHTML = html || "<p style='color:#888; width:100%;'>La tienda está vacía en este momento.</p>";
+        });
+
+        // 3. LA FUNCIÓN MÁGICA: ENVIAR PETICIÓN AL ADMIN PANEL
+        function solicitarCompra(nombreItem, precioItem) {
+            if (!currentUserData || !currentUserData.name) {
+                return alert("Error: Debes iniciar sesión para comprar en el mercado.");
+            }
+            
+            if (myTotalXP < precioItem) {
+                return alert(`Operación Denegada: Te faltan ${(precioItem - myTotalXP).toFixed(1)} XP para comprar esto.`);
             }
 
-            db.ref('market_requests').push({ nick: p?.name || n, item: item, cost: cost });
-            alert("¡Solicitud enviada al Staff con éxito!");
+            if(confirm(`¿Deseas enviar la petición de compra por ${nombreItem}? Cuesta ${precioItem} XP.`)) {
+                // Envía la petición a la bandeja 'market_requests' que lee tu Admin Panel
+                db.ref('market_requests').push({
+                    player: currentUserData.name,
+                    itemName: nombreItem,
+                    price: precioItem,
+                    time: Date.now()
+                }).then(() => {
+                    alert("¡Petición enviada al Equipo Staff!\nUn administrador la aprobará pronto y el ítem aparecerá en La Bóveda de tu Perfil.");
+                }).catch(err => {
+                    alert("Hubo un error de conexión: " + err);
+                });
+            }
         }
     </script>
 </body>
