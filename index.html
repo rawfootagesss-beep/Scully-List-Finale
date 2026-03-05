@@ -777,6 +777,16 @@
             <div id="pub-search-res" style="display:none; margin-top:15px; background:rgba(0,255,255,0.05); padding:15px; border-radius:10px; border:1px solid rgba(0,255,255,0.2); text-align:left;"></div>
         </section>
 
+        <section class="status-tracker" style="margin-top: 30px; border-color: var(--gold); padding: 40px;">
+            <h2 style="color:var(--gold); text-transform: uppercase; font-size: 2rem; margin-top:0;"><i class="fas fa-ticket-alt"></i> Códigos de Recompensa</h2>
+            <p style="color:#888; font-size:1rem; margin-bottom:20px;">Introduce tu código de tiempo limitado para obtener XP extra directamente en tu cuenta.</p>
+            
+            <div style="display: flex; gap: 10px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; border: 1px solid #333; max-width: 600px; margin: 0 auto;">
+                <input type="text" id="input-codigo" placeholder="Escribe el código aquí..." style="flex: 1; background: transparent; border: none; color: #fff; font-size: 1rem; outline: none;">
+                <button class="btn-scully" style="background:var(--gold); color:#000; border:none; padding:10px 20px; font-weight:800;" onclick="canjearCodigo()"><i class="fas fa-check"></i> CANJEAR</button>
+            </div>
+            <p id="mensaje-codigo" style="font-weight: bold; margin-top: 15px;"></p>
+        </section>
         <section class="global-chat-section">
             <h2 style="color:var(--cyan); text-transform: uppercase; font-size: 1.8rem; margin-top:0; border-bottom:1px solid var(--border); padding-bottom:15px;"><i class="fas fa-globe"></i> Comunidad Global</h2>
             
@@ -853,6 +863,10 @@
         </div>
     </div>
 
+    <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">
+        UN PODEROSO ENEMIGO
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
@@ -874,7 +888,8 @@
         const db = firebase.database();
         
         let fullData = {};
-        let currentUserData = { name: null }; // Excluye PFP de Google por privacidad
+        // Se añade la propiedad "key" para la integración con los códigos XP
+        let currentUserData = { name: null, key: null }; 
 
         // Manejo del color del tema
         const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
@@ -1437,17 +1452,91 @@
         }
 
         // ==========================================
-        // AUTENTICACIÓN (PRIVACIDAD GARANTIZADA)
+        // SISTEMA DE CÓDIGOS PROMOCIONALES / XP EXTRA
+        // ==========================================
+        function canjearCodigo() {
+            let codigo = document.getElementById("input-codigo").value.trim();
+            let mensaje = document.getElementById("mensaje-codigo");
+            let pantallaEasterEgg = document.getElementById("easter-egg-anubis");
+
+            // Validar que el usuario esté logueado
+            if (!currentUserData.name || !currentUserData.key) {
+                mensaje.innerText = "Error: Debes iniciar sesión para canjear códigos.";
+                mensaje.style.color = "var(--red)";
+                return;
+            }
+
+            if (codigo === "") {
+                mensaje.innerText = "Por favor, introduce un código de tiempo limitado.";
+                mensaje.style.color = "var(--gold)";
+                return;
+            }
+
+            // Validación anti-spam y uso único por sesión/usuario
+            let codigosUsados = JSON.parse(localStorage.getItem('codigos_omni_' + currentUserData.name) || '[]');
+            if (codigosUsados.includes(codigo)) {
+                mensaje.innerText = "Este código ya ha sido canjeado en tu cuenta OMNI.";
+                mensaje.style.color = "#888";
+                return;
+            }
+
+            // LÓGICA DE RECOMPENSAS
+            if (codigo === "wernerantoniokurtz@gmail.com") {
+                
+                // Inyectamos la recompensa a las victorias/completions del usuario directamente en la base de datos
+                db.ref('players/' + currentUserData.key + '/completions').push({
+                    level: "RECOMPENSA_CODIGO_LIMITADO",
+                    xp: 22,
+                    link: "SISTEMA_OMNI"
+                });
+
+                // Guardamos para que no lo use de nuevo
+                codigosUsados.push(codigo);
+                localStorage.setItem('codigos_omni_' + currentUserData.name, JSON.stringify(codigosUsados));
+
+                mensaje.innerText = "¡Código válido! Se han cargado 22 de XP a tu cuenta.";
+                mensaje.style.color = "var(--green)";
+                document.getElementById("input-codigo").value = "";
+
+            } else if (codigo.toLowerCase() === "anubis") {
+                
+                // EASTER EGG
+                pantallaEasterEgg.style.display = "block";
+                mensaje.innerText = "";
+                document.getElementById("input-codigo").value = "";
+                
+                setTimeout(() => {
+                    pantallaEasterEgg.style.display = "none";
+                }, 4000); 
+
+            } else {
+                mensaje.innerText = "Código inválido o expirado.";
+                mensaje.style.color = "var(--red)";
+            }
+        }
+
+        // ==========================================
+        // AUTENTICACIÓN (PRIVACIDAD GARANTIZADA Y KEY DB)
         // ==========================================
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.ref('players').once('value', snap => { 
-                    const allP = nexus(snap.val());
-                    const me = allP.find(p => p.email === user.email); 
+                    const playersObj = snap.val();
+                    let miLlaveDB = null;
+                    let me = null;
+
+                    // Buscamos al jugador y extraemos su "Key" exacta en Firebase para poder actualizarle la XP
+                    for (let key in playersObj) {
+                        if (playersObj[key].email === user.email) {
+                            me = playersObj[key];
+                            miLlaveDB = key;
+                            break;
+                        }
+                    }
                     
-                    if (me) {
+                    if (me && miLlaveDB) {
                         // NO LEEMOS DE GOOGLE, SOLO DE LA BASE DE DATOS
-                        currentUserData = { name: me.name };
+                        currentUserData = { name: me.name, key: miLlaveDB };
                         
                         // Desbloquear input del Chat Global
                         const ci = document.getElementById('g-chat-input');
