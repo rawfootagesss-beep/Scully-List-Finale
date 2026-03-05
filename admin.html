@@ -736,7 +736,7 @@
                     
                     <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-bottom:15px;">
                         <input type="text" id="a-n" placeholder="Nombre del Nivel">
-                        <input type="text" id="a-i" placeholder="Video ID de YouTube (Ej: dQw4w9WgXcQ)">
+                        <input type="text" id="a-i" placeholder="Enlace de YouTube o ID (Se recorta solo)" onblur="this.value = extraerYouTubeID(this.value)">
                         <input type="text" id="a-v" placeholder="Nombre del Verificador (Opcional)">
                     </div>
                     
@@ -965,6 +965,14 @@
         const $ = id => document.getElementById(id);
         const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
         let fD = {}, lvls = [], pIx = -1, sN = "Admin", sR = "helper", cEm = "";
+
+        // NUEVA FUNCIÓN: EXTRACTOR INTELIGENTE DE YOUTUBE
+        function extraerYouTubeID(url) {
+            if (!url) return "";
+            const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+            const match = url.match(regex);
+            return (match && match[1]) ? match[1] : url.trim();
+        }
 
         // UI HANDLERS
         function toast(m, e=false) { 
@@ -1293,7 +1301,7 @@
         }
 
         // ==========================================
-        // GESTIÓN DE NIVELES (CON BORRADO)
+        // GESTIÓN DE NIVELES (CON BORRADO Y AUTO EXTRACCIÓN YOUTUBE)
         // ==========================================
         function rLvs(d) { 
             let h = ""; 
@@ -1328,10 +1336,13 @@
         
         function sLv() { 
             const i = parseInt($('e-ix').value);
-            const n = $('a-n').value;
-            const id = $('a-i').value;
-            const v = $('a-v').value;
+            const n = $('a-n').value.trim();
+            const rawId = $('a-i').value;
+            const v = $('a-v').value.trim();
             const b = $('a-b').checked; 
+            
+            // SEGUNDO FILTRO DE SEGURIDAD PARA LA ID
+            const id = extraerYouTubeID(rawId);
             
             if(!n || !id) return toast("Error: Faltan datos", true); 
             
@@ -1714,7 +1725,7 @@
                 });
             }
         }
-
+ 
         function sCfg() { 
             db.ref('system_settings/discord/url').set($('cf-w1').value); 
             db.ref('system_settings/discord/url_sug').set($('cf-w2').value); 
