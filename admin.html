@@ -3,299 +3,299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Scully OMNI | Nexus v16.1</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>Scully OMNI | Absolute Engine v17</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Lexend+Deca:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --ac:#ff6600; --bg:#030303; --sb:#0a0a0a; --cd:#111; --bd:rgba(255,255,255,0.08); --gr:#00ff66; --rd:#ff3333; --bl:#00ccff; --gd:#ffd700; --pu:#cc00ff; --cy:#00ffff; --ow:#ff0055; }
-        * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-        body { background:var(--bg); color:#fff; font-family:'Lexend Deca',sans-serif; margin:0; display:flex; height:100vh; overflow:hidden; }
-        
-        /* MOBILE NAV */
-        .mob-header { display:none; background:var(--sb); height:60px; width:100%; position:fixed; top:0; left:0; z-index:4000; border-bottom:1px solid var(--bd); padding:0 20px; align-items:center; justify-content:space-between; }
-        .ham { font-size:1.5rem; color:var(--ac); cursor:pointer; }
-        
-        /* SIDEBAR */
-        .sidebar { width:280px; min-width:280px; background:var(--sb); border-right:1px solid var(--bd); display:flex; flex-direction:column; z-index:3500; transition:0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .brand { text-align:center; padding:25px 10px; border-bottom:1px solid var(--border); background:#000; user-select:none; }
-        .brand h1 { font-family:'JetBrains Mono'; font-size:1.4rem; margin:0; text-transform:uppercase; letter-spacing:-1px; } .brand span { color:var(--ac); }
-        
-        .nav-sc { flex:1; overflow-y:auto; padding:10px 0; }
-        .n-btn { width:100%; background:transparent; color:#777; border:none; padding:14px 25px; text-align:left; font-size:0.75rem; cursor:pointer; display:flex; align-items:center; gap:12px; font-weight:700; text-transform:uppercase; border-left:3px solid transparent; }
-        .n-btn:hover, .n-btn.active { color:#fff; background:rgba(255,102,0,0.06); border-left-color:var(--ac); }
-        .n-sec { font-size:0.55rem; color:#444; text-transform:uppercase; font-weight:900; margin:20px 25px 8px; letter-spacing:1px; display:block; }
-
-        /* MAIN CONTENT */
-        .m-wrap { flex:1; display:flex; flex-direction:column; overflow:hidden; position:relative; }
-        .staff-bar { background:#000; border-bottom:1px solid var(--bd); padding:10px; display:flex; justify-content:center; gap:15px; font-size:0.6rem; text-transform:uppercase; font-weight:800; flex-wrap:wrap; }
-        .staff-bar b { color:#fff; } .staff-bar i { color:var(--ac); margin-right:4px; }
-        
-        .m-cont { flex:1; padding:30px 40px; overflow-y:auto; background:radial-gradient(circle at 50% 0%, rgba(255,102,0,0.01) 0%, transparent 50%); }
-        .tab { display:none; } .tab.active { display:block; animation:tabFade 0.4s ease; }
-        @keyframes tabFade { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-
-        /* CARDS & PANELS */
-        .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:15px; margin-bottom:30px; }
-        .card { background:var(--cd); border:1px solid var(--bd); padding:20px; border-radius:15px; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,0.3); }
-        .card h3 { font-size:1.8rem; margin:5px 0; font-family:'JetBrains Mono'; color:var(--ac); }
-        
-        .panel { background:var(--cd); border:1px solid var(--bd); padding:25px; border-radius:15px; margin-bottom:20px; position:relative; }
-        .help { position:absolute; top:12px; right:12px; width:22px; height:22px; border-radius:50%; background:rgba(255,255,255,0.05); color:#666; display:flex; align-items:center; justify-content:center; font-size:0.65rem; cursor:pointer; border:1px solid var(--bd); }
-        .help:hover { background:var(--bl); color:#000; }
-
-        .ig { margin-bottom:15px; } label { display:block; font-size:0.7rem; color:var(--ac); font-weight:800; margin-bottom:6px; text-transform:uppercase; }
-        input, select, textarea { width:100%; background:#000; border:1px solid #222; color:#fff; padding:12px; border-radius:8px; font-family:inherit; font-size:0.85rem; outline:none; }
-        input:focus { border-color:var(--ac); }
-
-        .btn { background:var(--ac); color:#000; border:none; padding:12px 25px; border-radius:8px; font-weight:800; cursor:pointer; text-transform:uppercase; font-size:0.75rem; display:inline-flex; align-items:center; justify-content:center; gap:8px; transition:0.3s; }
-        .btn:hover { transform:translateY(-2px); box-shadow:0 5px 15px rgba(255,102,0,0.3); }
-
-        .dl { display:flex; flex-direction:column; gap:10px; max-height:400px; overflow-y:auto; padding-right:5px; }
-        .dc { background:rgba(255,255,255,0.02); border:1px solid var(--bd); padding:15px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
-        .dc h4 { margin:0; font-size:0.95rem; text-transform:uppercase; color:#fff; }
-        .bs { padding:8px 12px; border-radius:6px; font-size:0.65rem; font-weight:800; border:none; cursor:pointer; text-transform:uppercase; }
-        .bg { background:rgba(0,255,102,0.1); color:var(--gr); border:1px solid var(--gr); } 
-        .br { background:rgba(255,51,51,0.1); color:var(--rd); border:1px solid var(--rd); }
-        .bb { background:rgba(0,204,255,0.1); color:var(--bl); border:1px solid var(--bl); }
-
-        /* CHAT STAFF */
-        .chat-box { background:#000; border:1px solid #222; border-radius:12px; height:250px; overflow-y:auto; padding:15px; margin-bottom:15px; font-size:0.8rem; }
-        .chat-msg { margin-bottom:8px; border-bottom:1px solid #111; padding-bottom:5px; } 
-        .chat-msg b { color:var(--ac); } .chat-msg i { font-size:0.6rem; color:#444; margin-left:10px; }
-
-        /* MODALS */
-        .mod { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10000; backdrop-filter:blur(5px); }
-        .mc { background:var(--sb); margin:8vh auto; padding:30px; width:90%; max-width:550px; border-radius:20px; border:1px solid var(--border); position:relative; max-height:80vh; overflow-y:auto; }
-
-        #toast { visibility:hidden; min-width:220px; background:var(--gr); color:#000; text-align:center; border-radius:10px; padding:15px; position:fixed; z-index:20000; bottom:30px; left:50%; transform:translateX(-50%) translateY(50px); font-weight:800; opacity:0; transition:0.4s; }
-        #toast.show { visibility:visible; transform:translateX(-50%) translateY(0); opacity:1; }
-
-        @media(max-width:768px) {
-            .mob-header { display:flex; } .staff-bar { display:none; }
-            .sidebar { position:fixed; left:-100%; top:60px; height:calc(100vh - 60px); width:270px; }
-            .sidebar.open { left:0; box-shadow: 20px 0 50px #000; }
-            .main-wrapper { margin-top:60px; } .main-content { padding:20px; }
-            .stats-grid { grid-template-columns: 1fr 1fr; } .btn { width:100%; }
-        }
+        /* MICRO-CSS OMNI ENGINE */
+        :root{--ac:#ff6600;--bg:#030303;--sb:#0a0a0a;--cd:#111;--bd:rgba(255,255,255,0.08);--gr:#00ff66;--rd:#ff3333;--bl:#00ccff;--gd:#ffd700;--pu:#cc00ff;--cy:#00ffff;--ow:#ff0055;}
+        *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;} body{background:var(--bg);color:#fff;font-family:'Lexend Deca',sans-serif;margin:0;display:flex;height:100vh;overflow:hidden;}
+        ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--ac);border-radius:10px;}
+        .mob-nav{display:none;background:var(--sb);height:60px;width:100%;position:fixed;top:0;left:0;z-index:4000;border-bottom:1px solid var(--bd);padding:0 20px;align-items:center;justify-content:space-between;}
+        .ham{font-size:1.5rem;color:var(--ac);cursor:pointer;} .brand{text-align:center;padding:20px;background:#000;border-bottom:1px solid var(--bd);} .brand h1{font-family:'JetBrains Mono';margin:0;font-size:1.5rem;} .brand span{color:var(--ac);}
+        .sidebar{width:260px;min-width:260px;background:var(--sb);border-right:1px solid var(--bd);display:flex;flex-direction:column;z-index:3500;transition:.3s;}
+        .nav-sc{flex:1;overflow-y:auto;padding:10px 0;} .n-sec{font-size:.6rem;color:#555;font-weight:900;text-transform:uppercase;margin:15px 20px 5px;display:block;}
+        .n-btn{width:100%;background:0 0;color:#888;border:none;padding:12px 20px;text-align:left;font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:10px;font-weight:700;text-transform:uppercase;border-left:3px solid transparent;}
+        .n-btn:hover,.n-btn.active{color:#fff;background:rgba(255,102,0,.08);border-left-color:var(--ac);}
+        .m-wrap{flex:1;display:flex;flex-direction:column;position:relative;overflow:hidden;} .s-bar{background:#000;padding:10px;border-bottom:1px solid var(--bd);display:flex;justify-content:center;gap:15px;font-size:.65rem;font-weight:800;text-transform:uppercase;flex-wrap:wrap;} .s-bar i{color:var(--ac);} .s-bar b{color:#fff;}
+        .m-cont{flex:1;padding:30px;overflow-y:auto;background:radial-gradient(circle at 50% 0%,rgba(255,102,0,.02) 0%,transparent 50%);}
+        .tab{display:none;} .tab.active{display:block;animation:fade .3s ease;} @keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px;margin-bottom:20px;} .card{background:var(--cd);border:1px solid var(--bd);padding:20px;border-radius:15px;text-align:center;} .card h3{font-size:1.8rem;margin:0 0 5px;font-family:'JetBrains Mono';color:var(--ac);}
+        .panel{background:var(--cd);border:1px solid var(--bd);padding:20px;border-radius:15px;margin-bottom:20px;position:relative;} .hlp{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.05);color:#888;display:flex;align-items:center;justify-content:center;font-size:.6rem;cursor:pointer;border:1px solid var(--bd);} .hlp:hover{background:var(--bl);color:#000;}
+        .ig{margin-bottom:12px;} label{display:block;font-size:.7rem;font-weight:800;color:var(--ac);margin-bottom:5px;text-transform:uppercase;}
+        input,textarea,select{width:100%;background:#000;border:1px solid #222;color:#fff;padding:10px;border-radius:8px;font-size:.85rem;outline:none;} input:focus{border-color:var(--ac);}
+        .btn{background:var(--ac);color:#000;border:none;padding:12px 20px;border-radius:8px;font-weight:800;font-size:.75rem;cursor:pointer;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.2s;} .btn:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(255,102,0,.3);}
+        .dl{display:flex;flex-direction:column;gap:10px;max-height:350px;overflow-y:auto;padding-right:5px;} .dc{background:rgba(255,255,255,.02);border:1px solid var(--bd);padding:15px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;} .dc h4{margin:0 0 5px;font-size:.9rem;text-transform:uppercase;color:#fff;} .dc p{margin:0;font-size:.75rem;color:#aaa;}
+        .bs{padding:6px 12px;border-radius:6px;font-size:.65rem;font-weight:800;border:none;cursor:pointer;} .bg{background:rgba(0,255,102,.1);color:var(--gr);border:1px solid var(--gr);} .br{background:rgba(255,51,51,.1);color:var(--rd);border:1px solid var(--rd);} .bb{background:rgba(0,204,255,.1);color:var(--bl);border:1px solid var(--bl);} .by{background:rgba(255,215,0,.1);color:var(--gd);border:1px solid var(--gd);}
+        .cbx{background:#000;border:1px solid #222;border-radius:10px;height:200px;overflow-y:auto;padding:15px;margin-bottom:10px;font-size:.8rem;} .cm{margin-bottom:8px;border-bottom:1px solid #111;padding-bottom:5px;} .cm b{color:var(--ac);} .cm i{font-size:.6rem;color:#555;margin-left:8px;}
+        .mod{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:10000;backdrop-filter:blur(5px);} .mc{background:var(--sb);margin:5vh auto;padding:25px;width:90%;max-width:500px;border-radius:15px;border:1px solid var(--bd);position:relative;max-height:85vh;overflow-y:auto;}
+        #toast{visibility:hidden;min-width:200px;background:var(--gr);color:#000;text-align:center;border-radius:8px;padding:12px;position:fixed;z-index:20000;bottom:30px;left:50%;transform:translateX(-50%) translateY(50px);font-weight:800;opacity:0;transition:.3s;} #toast.show{visibility:visible;transform:translateX(-50%) translateY(0);opacity:1;}
+        .sw{position:relative;display:inline-block;width:40px;height:20px;} .sw input{opacity:0;width:0;height:0;} .sl{position:absolute;cursor:pointer;inset:0;background:#222;transition:.3s;border-radius:20px;} .sl:before{position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background:#fff;transition:.3s;border-radius:50%;} input:checked+.sl{background:var(--ac);} input:checked+.sl:before{transform:translateX(20px);}
+        @media(max-width:768px){.mob-nav{display:flex;}.s-bar{display:none;}.sidebar{position:fixed;left:-100%;top:60px;height:calc(100vh - 60px);box-shadow:10px 0 30px #000;}.sidebar.open{left:0;}.m-wrap{margin-top:60px;}.m-cont{padding:15px;}.grid{grid-template-columns:1fr 1fr;}.btn{width:100%;justify-content:center;}.dc{flex-direction:column;align-items:flex-start;}.dc div:last-child{width:100%;display:flex;gap:5px;margin-top:10px;}.dc button{flex:1;}}
     </style>
 </head>
 <body>
 
-    <div id="loader" style="position:fixed;inset:0;background:#000;z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;">
-        <div style="width:45px;height:45px;border:4px solid rgba(255,102,0,0.1);border-top-color:var(--ac);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:15px;"></div>
-        <h2 style="color:var(--ac);font-family:'JetBrains Mono';letter-spacing:2px;">NEXUS_CORE_V16.1</h2>
-        @keyframes spin {to{transform:rotate(360deg);}}
+    <div id="loader" style="position:fixed;inset:0;background:#000;z-index:90000;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+        <div style="width:40px;height:40px;border:3px solid rgba(255,102,0,.1);border-top-color:var(--ac);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:15px;"></div>
+        <h2 style="color:var(--ac);font-family:'JetBrains Mono';font-size:1.2rem;">OMNI_V17_SYNC</h2>
+        <style>@keyframes spin {to{transform:rotate(360deg);}}</style>
     </div>
 
-    <div id="toast">Operación Exitosa</div>
+    <div id="toast">Exito</div>
 
-    <div class="mob-header">
+    <div class="mob-nav">
         <h1>SYS.<span>OMNI</span></h1>
-        <div class="ham" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+        <div class="ham" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></div>
     </div>
 
     <div class="sidebar" id="sidebar">
-        <div class="brand">
-            <h1>SYS.<span>OMNI</span></h1>
-            <p id="badge" style="font-size:0.5rem; color:var(--gr); font-weight:800; margin-top:8px;">CONECTANDO...</p>
-        </div>
+        <div class="brand"><h1>SYS.<span>OMNI</span></h1><p id="badge" style="font-size:.5rem;color:var(--gr);font-weight:800;margin-top:5px;">ONLINE</p></div>
         <div class="nav-sc">
-            <span class="n-sec">Gestión Principal</span>
-            <button class="n-btn active" onclick="switchTab('t-dash')"><i class="fas fa-chart-line"></i> Dashboard</button>
-            <button class="n-btn" onclick="switchTab('t-recs')"><i class="fas fa-tasks"></i> Récords</button>
-            <button class="n-btn" onclick="switchTab('t-lvls')"><i class="fas fa-database"></i> Niveles</button>
-            <button class="n-btn" onclick="switchTab('t-players')"><i class="fas fa-users-cog"></i> Jugadores</button>
+            <span class="n-sec">Core Data</span>
+            <button class="n-btn active" onclick="sTab('t-dash')"><i class="fas fa-chart-pie"></i> Monitor</button>
+            <button class="n-btn" onclick="sTab('t-recs')"><i class="fas fa-inbox"></i> Récords</button>
+            <button class="n-btn" onclick="sTab('t-lvls')"><i class="fas fa-database"></i> Niveles</button>
+            <button class="n-btn" onclick="sTab('t-play')"><i class="fas fa-users-cog"></i> Jugadores</button>
+            <button class="n-btn" onclick="sTab('t-clm')"><i class="fas fa-id-badge"></i> Reclamos</button>
             
-            <span class="n-sec">Módulos Titán</span>
-            <button class="n-btn" onclick="switchTab('t-market')" style="color:var(--gd);"><i class="fas fa-store"></i> Mercado XP</button>
-            <button class="n-btn" onclick="switchTab('t-chat')" style="color:var(--bl);"><i class="fas fa-comments"></i> Staff Chat</button>
-            <button class="n-btn" onclick="switchTab('t-achange')" style="color:var(--cy);"><i class="fas fa-file-code"></i> Admin Log</button>
+            <span class="n-sec">Expansión</span>
+            <button class="n-btn" onclick="sTab('t-mkt')" style="color:var(--gd);"><i class="fas fa-store"></i> Mercado</button>
+            <button class="n-btn" onclick="sTab('t-cln')" style="color:var(--cy);"><i class="fas fa-shield-alt"></i> Clanes</button>
+            <button class="n-btn" onclick="sTab('t-bdg')" style="color:var(--pu);"><i class="fas fa-medal"></i> Medallas</button>
             
-            <span id="owner-title" class="n-sec" style="color:var(--ow); display:none;">Control Dios</span>
-            <button class="n-btn" onclick="switchTab('t-staff')" id="b-st" style="color:var(--ow);display:none;"><i class="fas fa-chess-king"></i> Personal Staff</button>
-            <button class="n-btn" onclick="switchTab('t-cfg')" id="b-cf" style="color:var(--di);display:none;"><i class="fas fa-cogs"></i> Sistema</button>
+            <span class="n-sec">Comunicaciones</span>
+            <button class="n-btn" onclick="sTab('t-chat')" style="color:var(--bl);"><i class="fas fa-comments"></i> Staff Chat</button>
+            <button class="n-btn" onclick="sTab('t-log')" style="color:var(--gd);"><i class="fas fa-file-code"></i> Admin Log</button>
+            
+            <span id="ow-t" class="n-sec" style="color:var(--ow);display:none;">Control Dios</span>
+            <button class="n-btn" onclick="sTab('t-stf')" id="b-st" style="color:var(--ow);display:none;"><i class="fas fa-chess-king"></i> Staff Rol</button>
+            <button class="n-btn" onclick="sTab('t-cfg')" id="b-cf" style="color:var(--di);display:none;"><i class="fas fa-cogs"></i> Sistema</button>
         </div>
-        <div class="sidebar-bottom">
-            <button class="n-btn" style="color:var(--rd);" onclick="location.href='index.html'">SALIR AL HUB</button>
-        </div>
+        <div style="padding:15px;border-top:1px solid var(--bd);"><button class="n-btn" style="color:var(--rd);justify-content:center;" onclick="location.href='index.html'"><i class="fas fa-power-off"></i> SALIR</button></div>
     </div>
 
-    <div class="main-wrapper">
-        <div class="staff-bar">
-            <span>TRIBUTO A 2PARX 🕊️</span> | 
-            <span><i class="fas fa-crown"></i> OWNER <b>score</b></span> | 
-            <span><i class="fas fa-code" style="color:var(--pu)"></i> DEV <b>Sopa354</b></span> | 
-            <span><i class="fas fa-user-shield" style="color:var(--bl)"></i> ADMIN <b>awrqsdt</b></span> |
-            <span><i class="fas fa-hands-helping" style="color:var(--gr)"></i> HELPER <b>Blitz</b></span> |
-            <span><i class="fas fa-hands-helping" style="color:var(--gr)"></i> HELPER <b>nico</b></span>
+    <div class="m-wrap">
+        <div class="s-bar">
+            <span>Tributo a 2Parx 🕊️</span> | <span><i class="fas fa-crown"></i> Owner <b>score</b></span> | <span><i class="fas fa-code"></i> Dev <b>Sopa354</b></span> | <span><i class="fas fa-shield-alt"></i> Admin <b>awrqsdt</b></span>
         </div>
 
         <div class="m-cont">
             
             <div id="t-dash" class="tab active">
-                <h2 class="title">Dashboard</h2>
+                <h2 style="color:var(--ac);font-family:'JetBrains Mono';margin-top:0;">DASHBOARD</h2>
                 <div class="grid">
-                    <div class="card"><h3><span id="st-p">0</span></h3><p>Usuarios</p></div>
-                    <div class="card"><h3><span id="st-l">0</span></h3><p>Niveles</p></div>
-                    <div class="card"><h3><span id="st-r">0</span></h3><p>Pendientes</p></div>
-                    <div class="card" style="border-color:var(--cy);"><h3><span id="st-t">42</span></h3><p>Visitantes</p></div>
+                    <div class="card"><h3><span id="s-p">0</span></h3><p>Ingenieros</p></div>
+                    <div class="card"><h3><span id="s-l">0</span></h3><p>Niveles</p></div>
+                    <div class="card"><h3><span id="s-r">0</span></h3><p>Pendientes</p></div>
                 </div>
                 <div class="panel" style="border-color:var(--rd);">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <div><h3 style="margin:0; color:var(--rd); font-size:1rem;">CUARENTENA GLOBAL</h3><p style="margin:5px 0 0; font-size:0.7rem; color:#666;">Cierra el index público por mantenimiento.</p></div>
-                        <label class="sw" style="position:relative;display:inline-block;width:40px;height:20px;">
-                            <input type="checkbox" id="c-lock" onchange="toggleLock(this.checked)" style="opacity:0;width:0;height:0;">
-                            <span style="position:absolute;cursor:pointer;inset:0;background:#222;transition:.3s;border-radius:20px;" id="sl-id"></span>
-                        </label>
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div><h3 style="margin:0;color:var(--rd);font-size:1rem;">LOCKDOWN</h3><p style="margin:0;font-size:.7rem;color:#888;">Pantalla negra en index.</p></div>
+                        <label class="sw"><input type="checkbox" id="c-lk" onchange="tLck(this.checked)"><span class="sl"></span></label>
                     </div>
                 </div>
-                <div class="terminal-box" id="term" style="background:#000; height:200px; padding:15px; border-radius:12px; font-family:'JetBrains Mono'; font-size:0.7rem; overflow-y:auto; border:1px solid #222;"></div>
+                <div id="term" style="background:#000;border:1px solid #222;height:200px;border-radius:10px;padding:15px;overflow-y:auto;font-family:'JetBrains Mono';font-size:.7rem;color:#aaa;"></div>
             </div>
 
             <div id="t-recs" class="tab">
-                <h2 class="title">Récords</h2>
-                <div class="dl" id="l-subs"></div>
-                <div class="panel" style="margin-top:20px; border-color:var(--ac);">
-                    <div class="help" onclick="showHelp('Inyección','Fuerza un récord. El sistema calculará la XP automáticamente según el ranking.')">?</div>
-                    <h3>Inyección Manual (Auto-XP)</h3>
-                    <div class="ig"><input type="text" id="m-p" placeholder="Jugador Exacto"></div>
+                <h2 style="color:var(--gr);font-family:'JetBrains Mono';margin-top:0;">RÉCORDS</h2>
+                <button class="bs br" style="margin-bottom:15px;" onclick="if(confirm('¿Vaciar toda la bandeja?')){db.ref('submissions').remove();toast('Bandeja Vaciada');}">PURGAR TODA LA BANDEJA</button>
+                <div id="l-sub" class="dl"></div>
+                <div class="panel" style="margin-top:20px;border-color:var(--ac);">
+                    <div class="hlp" onclick="sHlp('Auto-XP','Fuerza un récord. Busca el nivel y da XP exacta al instante.')">?</div>
+                    <h3 style="margin:0 0 15px;color:var(--ac);font-size:1rem;">Inyección Auto-XP</h3>
+                    <div class="ig"><input type="text" id="m-p" placeholder="Nick Exacto"></div>
                     <div class="ig"><input type="text" id="m-l" placeholder="Nombre Nivel"></div>
-                    <div class="ig"><input type="text" id="m-k" placeholder="URL Evidencia"></div>
-                    <button class="btn" onclick="injectRec()">EJECUTAR INYECCIÓN</button>
+                    <div class="ig"><input type="text" id="m-k" placeholder="URL Video"></div>
+                    <button class="btn" onclick="iRec()">INYECTAR</button>
                 </div>
             </div>
 
             <div id="t-lvls" class="tab">
-                <h2 class="title">Base de Datos</h2>
+                <h2 style="color:var(--pu);font-family:'JetBrains Mono';margin-top:0;">NIVELES</h2>
                 <div class="panel">
-                    <input type="hidden" id="e-idx" value="-1">
-                    <div class="ig"><label>Nombre</label><input type="text" id="a-n"></div>
-                    <div class="ig"><label>Video ID (YouTube)</label><input type="text" id="a-i"></div>
-                    <button class="btn" style="width:100%; background:var(--pu); color:#fff;" onclick="saveLvl()">GUARDAR NODO</button>
+                    <input type="hidden" id="e-ix" value="-1">
+                    <div class="ig"><input type="text" id="a-n" placeholder="Nombre"></div>
+                    <div class="ig"><input type="text" id="a-i" placeholder="Video ID (11 chars YT)"></div>
+                    <div class="ig"><input type="text" id="a-v" placeholder="Verificador"></div>
+                    <button class="btn" style="background:var(--pu);color:#fff;width:100%;" onclick="sLv()">GUARDAR</button>
+                    <button class="btn" id="c-ed" style="background:0 0;color:var(--rd);border:1px solid var(--rd);width:100%;margin-top:10px;" onclick="rLv()" hidden>CANCELAR</button>
                 </div>
-                <div id="r-list" class="dl"></div>
-                <button class="btn" style="width:100%; margin-top:15px; background:var(--bl); color:#000;" onclick="publishOrder()">PUBLICAR CAMBIOS</button>
+                <div id="l-lvl" class="dl"></div>
+                <button class="btn" style="background:var(--bl);color:#000;width:100%;margin-top:15px;" onclick="db.ref('levels').set(lvls);toast('Orden OK');">PUBLICAR ORDEN</button>
             </div>
 
-            <div id="t-players" class="tab">
-                <h2 class="title">Usuarios</h2>
-                <div style="display:flex; gap:10px; margin-bottom:20px;"><input type="text" id="p-s" placeholder="Nick exacto..."><button class="btn" onclick="searchP()"><i class="fas fa-search"></i></button></div>
-                <div id="p-res" style="display:none;" class="panel">
-                    <input type="text" id="pe-n" style="margin-bottom:10px;">
-                    <textarea id="pe-b" rows="3" placeholder="Bio..."></textarea>
-                    <button class="btn" style="width:100%; margin-top:10px;" onclick="updateP()">GUARDAR</button>
-                    <div id="p-r" class="dl" style="margin-top:20px;"></div>
+            <div id="t-play" class="tab">
+                <h2 style="color:var(--rd);font-family:'JetBrains Mono';margin-top:0;">JUGADORES</h2>
+                <div class="panel"><div style="display:flex;gap:10px;"><input type="text" id="p-s" placeholder="Nick..."><button class="btn" onclick="sP()"><i class="fas fa-search"></i></button></div></div>
+                <div id="p-res" style="display:none;" class="panel" style="border-color:var(--rd);">
+                    <div class="ig"><input type="text" id="pe-n"></div>
+                    <div class="ig"><select id="pe-c"><option value="">Sin Clan</option></select></div>
+                    <div class="ig"><select id="pe-bg"><option value="">Sin Medalla</option></select></div>
+                    <textarea id="pe-b" rows="3" placeholder="Bio..." style="margin-bottom:10px;"></textarea>
+                    <button class="btn" style="width:100%;" onclick="uP()">ACTUALIZAR</button>
+                    <div id="p-bn" style="margin-top:15px;"></div>
+                    <h4 style="color:var(--ac);margin-top:20px;">Récords (X resta XP)</h4>
+                    <div id="p-r" class="dl"></div>
                 </div>
+            </div>
+
+            <div id="t-clm" class="tab">
+                <h2 style="color:var(--cy);font-family:'JetBrains Mono';margin-top:0;">RECLAMOS</h2>
+                <button class="bs br" style="margin-bottom:15px;" onclick="if(confirm('¿Borrar todos?'))db.ref('claim_requests').remove();">PURGAR RECLAMOS</button>
+                <div id="l-clm" class="dl"></div>
+            </div>
+
+            <div id="t-mkt" class="tab">
+                <h2 style="color:var(--gd);font-family:'JetBrains Mono';margin-top:0;">MERCADO XP</h2>
+                <div id="l-mrq" class="dl" style="margin-bottom:20px;"></div>
+                <div class="panel" style="border-color:var(--gd);">
+                    <div class="ig"><input type="text" id="i-n" placeholder="Nombre Ítem"></div>
+                    <div class="ig"><input type="number" id="i-p" placeholder="Precio"></div>
+                    <div class="ig"><input type="text" id="i-i" placeholder="URL Imagen"></div>
+                    <button class="btn" style="background:var(--gd);width:100%;" onclick="aItm()">PUBLICAR</button>
+                </div>
+                <div id="l-mit" class="dl"></div>
+            </div>
+
+            <div id="t-cln" class="tab">
+                <h2 style="color:var(--cy);font-family:'JetBrains Mono';margin-top:0;">SINDICATOS</h2>
+                <div class="panel"><div class="ig"><input type="text" id="c-n" placeholder="Nombre"></div><div class="ig"><input type="text" id="c-t" placeholder="Tag"></div><button class="btn" style="width:100%;" onclick="aCln()">FUNDAR</button></div>
+                <div id="l-cln" class="dl"></div>
+            </div>
+
+            <div id="t-bdg" class="tab">
+                <h2 style="color:var(--pu);font-family:'JetBrains Mono';margin-top:0;">MEDALLAS</h2>
+                <div class="panel"><div class="ig"><input type="text" id="b-n" placeholder="Nombre"></div><div class="ig"><input type="text" id="b-i" placeholder="URL PNG"></div><button class="btn" style="background:var(--pu);color:#fff;width:100%;" onclick="aBdg()">FORJAR</button></div>
+                <div id="l-bdg" class="dl"></div>
             </div>
 
             <div id="t-chat" class="tab">
-                <h2 class="title">Staff Nexus Chat</h2>
+                <h2 style="color:var(--bl);font-family:'JetBrains Mono';margin-top:0;">STAFF CHAT</h2>
                 <div class="panel" style="border-color:var(--bl);">
-                    <div class="chat-box" id="c-box"></div>
-                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <input type="text" id="c-msg" placeholder="Mensaje..." style="flex:1;">
-                        <button class="btn bb" onclick="sendChat()">ENVIAR</button>
-                        <button class="btn br" onclick="purgeCache()" title="Purga Global"><i class="fas fa-sync"></i> PURGAR RED</button>
+                    <div class="cbx" id="c-bx"></div>
+                    <div style="display:flex;gap:10px;">
+                        <input type="text" id="c-m" placeholder="Mensaje...">
+                        <button class="btn bb" onclick="sCht()"><i class="fas fa-paper-plane"></i></button>
+                        <button class="btn br" onclick="fPrg()" title="Purga Cache Global"><i class="fas fa-sync"></i></button>
                     </div>
                 </div>
             </div>
 
-            <div id="t-staff" class="tab"><h2 class="title">Rol Nexus</h2><div class="panel" style="border-color:var(--ow);"><div class="ig"><label>Nick</label><input type="text" id="st-n"></div><div class="ig"><label>Rango</label><select id="st-r"><option value="helper">Helper</option><option value="admin">Admin</option></select></div><button class="btn" style="background:var(--ow); color:#fff; width:100%;" onclick="setStaff()">OTORGAR</button></div><div class="dl" id="l-stf"></div></div>
-            
-            <div id="t-cfg" class="tab"><h2 class="title">Config</h2><div class="panel"><div class="ig"><label>Webhook Discord</label><input type="text" id="cf-dw"></div><div class="ig"><label>CSS Live</label><textarea id="cf-cs" rows="5"></textarea></div><button class="btn" onclick="saveCfg()" style="width:100%;">GUARDAR TODO</button></div></div>
+            <div id="t-log" class="tab">
+                <h2 style="color:var(--gd);font-family:'JetBrains Mono';margin-top:0;">ADMIN LOG</h2>
+                <div class="panel" style="border-color:var(--gd);"><div class="ig"><input type="text" id="al-t" placeholder="Actualización"></div><textarea id="al-d" rows="3" placeholder="Detalles..."></textarea><button class="btn" style="width:100%;margin-top:10px;" onclick="aLog()">REGISTRAR</button></div>
+                <div id="l-alg" class="dl"></div>
+            </div>
+
+            <div id="t-stf" class="tab">
+                <h2 style="color:var(--ow);font-family:'JetBrains Mono';margin-top:0;">JERARQUÍAS</h2>
+                <div class="panel" style="border-color:var(--ow);"><div class="ig"><input type="text" id="st-n" placeholder="Nick Exacto"></div><div class="ig"><select id="st-r"><option value="helper">Helper</option><option value="admin">Admin</option></select></div><button class="btn" style="background:var(--ow);color:#fff;width:100%;" onclick="pStf()">OTORGAR</button></div>
+                <div id="l-stf" class="dl"></div>
+            </div>
+
+            <div id="t-cfg" class="tab">
+                <h2 style="color:var(--di);font-family:'JetBrains Mono';margin-top:0;">SISTEMA</h2>
+                <div class="panel">
+                    <div class="hlp" onclick="sHlp('Webhooks','El panel mandará notificaciones de nuevos récords y sugerencias directo al Discord.')">?</div>
+                    <div class="ig"><label>Webhook General (Récords/Mercado)</label><input type="text" id="cf-w1"></div>
+                    <div class="ig"><label>Webhook Sugerencias</label><input type="text" id="cf-w2"></div>
+                    <div class="ig"><label>CSS Inyector</label><textarea id="cf-cs" rows="3"></textarea></div>
+                    <button class="btn" style="width:100%;" onclick="sCfg()">GUARDAR TODO</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div id="m-rev" class="mod"><div class="mc"><h2>Revisión</h2><div id="r-v" style="margin-bottom:15px;"></div><button id="b-ac" class="btn bg" style="width:100%;">ACEPTAR</button><button onclick="closeModal('m-rev')" class="btn" style="width:100%; margin-top:10px; background:#222; color:#fff;">CERRAR</button></div></div>
-    <div id="m-hlp" class="mod"><div class="mc" style="text-align:center;"><i class="fas fa-info-circle" style="font-size:3rem; color:var(--bl);"></i><h2 id="h-t"></h2><p id="h-d"></p><button class="btn bb" style="width:100%;" onclick="closeModal('m-hlp')">OK</button></div></div>
+    <div id="m-rev" class="mod"><div class="mc"><h2 id="r-t" style="margin-top:0;color:var(--ac);">Rev</h2><div id="r-v" style="margin-bottom:15px;"></div><div style="background:rgba(255,255,255,.05);padding:10px;border-radius:8px;margin-bottom:15px;font-size:.8rem;"><p>RAW: <span id="r-rw"></span></p><p>Nota: <span id="r-cm"></span></p></div><div style="display:flex;flex-direction:column;gap:8px;"><button id="b-ac" class="btn bg">ACEPTAR (DAR XP)</button><button id="b-ap" class="btn by">APELACIÓN</button><button id="b-rj" class="btn br">RECHAZAR</button><button class="bs" onclick="cMod('m-rev')" style="padding:12px;background:transparent;border:1px solid #555;color:#aaa;">CERRAR</button></div></div></div>
+    <div id="m-hlp" class="mod"><div class="mc" style="text-align:center;"><i class="fas fa-info-circle" style="font-size:2.5rem;color:var(--bl);margin-bottom:10px;"></i><h2 id="h-t" style="color:var(--bl);">Ayuda</h2><p id="h-d" style="color:#aaa;font-size:.85rem;margin-bottom:20px;"></p><button class="btn bb" style="width:100%;" onclick="cMod('m-hlp')">OK</button></div></div>
+    <div id="m-own" class="mod"><div class="mc" style="border-color:var(--ow);text-align:center;"><h2 style="color:var(--ow);">ROOT ACCESS</h2><input type="password" id="o-k" placeholder="PIN" style="text-align:center;letter-spacing:4px;margin:20px 0;"><button class="btn" style="background:var(--ow);color:#fff;width:100%;" onclick="eOw()">ENTRAR</button></div></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-
     <script>
-        const fC = { apiKey:"AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", authDomain:"scullylist.firebaseapp.com", databaseURL:"https://scullylist-default-rtdb.firebaseio.com", projectId:"scullylist", storageBucket:"scullylist.firebasestorage.app", messagingSenderId:"498548914021", appId:"1:498548914021:web:59128b5e06b36a4e81938c" };
-        firebase.initializeApp(fC); const au = firebase.auth(), db = firebase.database();
+        const fC={apiKey:"AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",authDomain:"scullylist.firebaseapp.com",databaseURL:"https://scullylist-default-rtdb.firebaseio.com",projectId:"scullylist",storageBucket:"scullylist.firebasestorage.app",messagingSenderId:"498548914021",appId:"1:498548914021:web:59128b5e06b36a4e81938c"};
+        firebase.initializeApp(fC); const au=firebase.auth(), db=firebase.database();
         
-        // MOTOR NEXUS (Filtro seguro de Firebase)
-        const nexus = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
-        const $ = id => document.getElementById(id);
-        let fD = {}, lvls = [], pIx = -1, sN = "Admin", sR = "helper", cEm = "";
+        const $=id=>document.getElementById(id), nx=o=>o?(Array.isArray(o)?o.filter(Boolean):Object.values(o)):[];
+        let fD={}, lvls=[], pIx=-1, sN="Admin", sR="helper", cEm="";
 
+        // CORE UI
         function toast(m,e=false){ $('toast').innerText=m; $('toast').style.background=e?"var(--rd)":"var(--gr)"; $('toast').className='show'; setTimeout(()=>$('toast').className="",3000); }
-        function switchTab(id){ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); document.querySelectorAll('.n-btn').forEach(x=>x.classList.remove('active')); if($(id)) $(id).classList.add('active'); if(event && event.currentTarget) event.currentTarget.classList.add('active'); if(window.innerWidth <= 768) toggleMenu(); }
-        function closeModal(id){ if($(id)) $(id).style.display='none'; }
-        function toggleMenu(){ const sb = document.querySelector('.sidebar'); if(sb) sb.style.left = sb.style.left==='0px'?'-100%':'0px'; }
-        function showHelp(t, d) { $('h-t').innerText=t; $('h-d').innerText=d; $('m-hlp').style.display='block'; }
-        function log(m){ db.ref('staff_logs').push({staff:sN, action:m, timestamp:Date.now()}); if($('term')){ $('term').innerHTML+=`<div>> [${new Date().toLocaleTimeString()}] ${m}</div>`; $('term').scrollTop=$('term').scrollHeight; } }
+        function sTab(id){ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); document.querySelectorAll('.n-btn').forEach(x=>x.classList.remove('active')); if($(id)) $(id).classList.add('active'); if(event&&event.currentTarget) event.currentTarget.classList.add('active'); if(window.innerWidth<=768) $('sidebar').classList.remove('open'); }
+        function cMod(id){ if($(id)) $(id).style.display='none'; }
+        function sHlp(t,d){ $('h-t').innerText=t; $('h-d').innerText=d; $('m-hlp').style.display='block'; }
+        function log(m){ db.ref('staff_logs').push({staff:sN,action:m,timestamp:Date.now()}); if($('term')){ $('term').innerHTML+=`<div style="margin-bottom:4px;border-bottom:1px solid #111;padding-bottom:2px;color:${m.includes('Error')||m.includes('Rechaz')?'var(--rd)':'var(--gr)'}">> [${new Date().toLocaleTimeString()}] ${m}</div>`; $('term').scrollTop=$('term').scrollHeight; } }
 
-        // FAKER TRAFFIC
-        setInterval(() => { const t = $('st-t'); if(t) t.innerText = 40 + Math.floor(Math.random() * 20) - 10; }, 5000);
+        // OWNER (5 Taps Safe)
+        let tC=0, tT;
+        document.querySelector('.brand').addEventListener('click', ()=>{ tC++; clearTimeout(tT); tT=setTimeout(()=>{tC=0},2000); if(tC>=5){ tC=0; $('m-own').style.display='block'; } });
+        function eOw(){ if($('o-k').value==="TITAN-SCORE-OMNI-2026"){ db.ref('players').once('value',s=>{ let pL=nx(s.val()); let i=pL.findIndex(p=>p.email===cEm); if(i>-1){ pL[i].role='owner'; pL[i].name='score'; db.ref('players').set(pL).then(()=>location.reload()); } }); } else toast("ERR",true); }
 
-        // AUTH & ACCESO DIRECTO A OWNER (SIN LLAVE)
+        // API WEBHOOK
+        const api = (m,isSug=false) => { const u=isSug?fD.system_settings?.discord?.url_sug:fD.system_settings?.discord?.url; if(u) fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:m,username:"SCULLY SYSTEM"})}).catch(()=>{}); };
+
+        // AUTH & INIT
         au.onAuthStateChanged(u=>{
             if(!u) return location.href="login.html"; cEm=u.email;
             db.ref('players').once('value', s=>{
-                const me = nexus(s.val()).find(x=>x.email===u.email);
+                const me = nx(s.val()).find(x=>x.email===u.email);
                 if(me && (me.role==='admin'||me.name.toLowerCase()==='score'||me.role==='helper'||me.role==='owner')){
-                    sN = me.name; sR = me.role;
-                    // AUTO-OWNER PARA SCORE
-                    if(sN.toLowerCase() === 'score') { sR = 'owner'; }
-                    
+                    sN = me.name; sR = me.role; if(sN.toLowerCase()==='score') sR='owner';
                     $('badge').innerText=`${sR.toUpperCase()}: ${sN}`; $('loader').style.display='none';
-                    if(sR==='owner'){ $('owner-title').style.display='block'; $('b-st').style.display='flex'; $('b-cf').style.display='flex'; }
-                    initSync();
+                    if(sR==='owner'){ $('ow-t').style.display='block'; $('b-st').style.display='flex'; $('b-cf').style.display='flex'; }
+                    runSync();
                 } else location.href="index.html";
             });
         });
 
-        function initSync(){
+        function runSync(){
             db.ref('/').on('value', s=>{
-                try {
-                    fD=s.val()||{}; lvls=nexus(fD.levels);
-                    $('st-p').innerText=Object.keys(fD.players||{}).length; $('st-l').innerText=lvls.length;
-                    $('st-r').innerText=Object.keys(fD.submissions||{}).length;
-                    rRecs(fD.submissions||{}); rLvls(lvls); rStaff(nexus(fD.players)); rChat(fD.staff_chat||{});
-                    if(fD.system_settings){ $('cf-dw').value=fD.system_settings.discord?.url||""; $('cf-cs').value=fD.system_settings.custom_css||""; $('c-lock').checked=!!fD.system_settings.lockdown_active; if(fD.system_settings.lockdown_active) $('sl-id').style.background="var(--ac)"; }
-                    if(pIx!==-1) rPData();
-                } catch(e){ log("Nexus Sync Error: " + e.message); }
+                try{
+                    fD=s.val()||{}; lvls=nx(fD.levels);
+                    $('s-p').innerText=Object.keys(fD.players||{}).length; $('s-l').innerText=lvls.length; $('s-r').innerText=Object.keys(fD.submissions||{}).length;
+                    
+                    // RECS
+                    let hR=""; Object.entries(fD.submissions||{}).forEach(([id,r])=>{ hR+=`<div class="dc"><div><h4 style="color:var(--ac);margin:0;">${r.level}</h4><p style="margin:0;font-size:.7rem;">${r.player}</p></div><button class="bs bg" onclick="oRev('${id}')">REV</button></div>`;}); $('l-sub').innerHTML=hR||'<p>Vacio.</p>';
+                    
+                    // LVLS
+                    let hL=""; lvls.forEach((l,i)=>{ hL+=`<div class="dc" style="background:#000;margin-bottom:5px;"><div><h4 style="margin:0;">#${i+1} ${l.name}</h4></div><div style="display:flex;gap:5px;"><button class="bs bb" onclick="eLv(${i})">EDT</button><button class="bs" onclick="mLv(${i},-1)">▲</button><button class="bs" onclick="mLv(${i},1)">▼</button></div></div>`;}); $('l-lvl').innerHTML=hL;
+                    
+                    // MARKET
+                    let hM=""; Object.entries(fD.market_requests||{}).forEach(([id,r])=>{ hM+=`<div class="dc" style="border-left:3px solid var(--gd);"><div><h4 style="color:var(--gd);margin:0;">${r.itemName}</h4><p style="margin:0;font-size:.7rem;">${r.player} | ${r.price}XP</p></div><div><button class="bs bg" onclick="aMrk('${id}')">V</button><button class="bs br" onclick="db.ref('market_requests/${id}').remove()">X</button></div></div>`;}); $('l-mrq').innerHTML=hM||'<p>Vacio</p>';
+                    let hI=""; Object.entries(fD.market_items||{}).forEach(([id,it])=>{ hI+=`<div class="dc"><h4>${it.name}</h4><button class="bs br" onclick="db.ref('market_items/${id}').remove()">X</button></div>`;}); $('l-mit').innerHTML=hI;
+
+                    // CLAIMS
+                    let hC=""; Object.entries(fD.claim_requests||{}).forEach(([id,c])=>{ hC+=`<div class="dc"><div><h4 style="color:var(--cy);margin:0;">${c.nick}</h4><p style="margin:0;font-size:.7rem;">${c.email}</p></div><button class="bs bg" onclick="aClm('${id}')">V</button></div>`;}); $('l-clm').innerHTML=hC||'<p>Vacio</p>';
+
+                    // CLANS & BADGES
+                    let hCn=""; Object.entries(fD.clans||{}).forEach(([id,c])=>{ hCn+=`<div class="dc"><h4>[${c.tag}] ${c.name}</h4><button class="bs br" onclick="db.ref('clans/${id}').remove()">X</button></div>`;}); $('l-cln').innerHTML=hCn;
+                    let hB=""; Object.entries(fD.badges||{}).forEach(([id,b])=>{ hB+=`<div class="dc"><h4>${b.name}</h4><button class="bs br" onclick="db.ref('badges/${id}').remove()">X</button></div>`;}); $('l-bdg').innerHTML=hB;
+
+                    // CHAT
+                    let hCh=""; nx(fD.staff_chat).slice(-20).forEach(x=>{ hCh+=`<div class="cm"><b>${x.user}</b> <i>${new Date(x.time).toLocaleTimeString()}</i><br>${x.msg}</div>`;}); $('c-bx').innerHTML=hCh; $('c-bx').scrollTop=$('c-bx').scrollHeight;
+
+                    // STAFF & LOGS
+                    let hS=""; nx(fD.players).forEach(p=>{ if(p.role) hS+=`<div class="dc"><h4>${p.name} [${p.role}]</h4><button class="bs br" onclick="dStf('${p.name}')">X</button></div>`;}); $('l-stf').innerHTML=hS;
+                    let hLg=""; Object.entries(fD.admin_changelog||{}).reverse().forEach(([id,l])=>{ hLg+=`<div class="dc" style="align-items:flex-start;flex-direction:column;"><h4 style="color:var(--gd);margin:0;">${l.title}</h4><p style="font-size:.7rem;margin:0;">${l.desc}</p><button class="bs br" onclick="db.ref('admin_changelog/${id}').remove()">X</button></div>`;}); $('l-alg').innerHTML=hLg;
+
+                    // CFG
+                    if(fD.system_settings){ $('cf-w1').value=fD.system_settings.discord?.url||""; $('cf-w2').value=fD.system_settings.discord?.url_sug||""; $('cf-cs').value=fD.system_settings.custom_css||""; $('c-lk').checked=!!fD.system_settings.lockdown_active; }
+
+                    // SELECTS
+                    let sC=$('pe-c'); sC.innerHTML='<option value="">Sin Clan</option>'; Object.entries(fD.clans||{}).forEach(([id,c])=>{ sC.innerHTML+=`<option value="${id}">${c.name}</option>`;});
+                    let sB=$('pe-bg'); sB.innerHTML='<option value="">Sin Medalla</option>'; Object.entries(fD.badges||{}).forEach(([id,b])=>{ sB.innerHTML+=`<option value="${id}">${b.name}</option>`;});
+                    
+                    if(pIx!==-1) rPD();
+                } catch(e){ log("Error Sync: "+e.message); }
             });
         }
 
-        // ENGINE
-        const gXP = l => { const i=lvls.findIndex(x=>x.name.toLowerCase()===l.toLowerCase()); return i===-1?0:Math.max(100-(i*0.6),5); };
-        function rRecs(d){ let h=""; Object.entries(d).forEach(([id,r])=>{ h+=`<div class="dc"><div><h4>${r.level}</h4><p style="font-size:0.7rem; color:#aaa; margin:0;">${r.player}</p></div><button class="bs bg" onclick="oRev('${id}')">REV</button></div>`;}); $('l-subs').innerHTML=h||'<p style="color:#666;">Sin pendientes.</p>'; }
-        function oRev(id){ const r=fD.submissions[id]; $('r-v').innerHTML=`<a href="${r.link}" target="_blank" style="color:var(--bl);">VER VIDEO</a>`; $('b-ac').onclick=()=>pRec(id,'acc'); $('m-rev').style.display='block'; }
-        function pRec(id,m){
-            const r=fD.submissions[id]; if(m==='acc'){
-                const xp=gXP(r.level); let pL=nexus(fD.players); let i=pL.findIndex(x=>x.name.toLowerCase()===r.player.toLowerCase());
-                if(i===-1) pL.push({name:r.player,totalXP:xp,completions:[{level:r.level,link:r.link,xp:xp}]});
-                else{ let c=nexus(pL[i].completions); if(!c.some(x=>x.level===r.level)){c.push({level:r.level,link:r.link,xp:xp}); pL[i].completions=c; pL[i].totalXP=(pL[i].totalXP||0)+xp;} }
-                db.ref('players').set(pL); log(`Aprobó a ${r.player}`);
-            }
-            db.ref(`submissions/${id}`).remove(); closeModal('m-rev'); toast("Ejecutado");
-        }
-        function injectRec(){ const p=$('m-p').value, l=$('m-l').value; if(!p||!l)return; const xp=gXP(l); let pL=nexus(fD.players); let i=pL.findIndex(x=>x.name.toLowerCase()===p.toLowerCase()); if(i===-1) pL.push({name:p,totalXP:xp,completions:[{level:l,link:$('m-k').value,xp:xp}]}); else{ let c=nexus(pL[i].completions); c.push({level:l,link:$('m-k').value,xp:xp}); pL[i].completions=c; pL[i].totalXP=(pL[i].totalXP||0)+xp; } db.ref('players').set(pL); toast("Inyectado"); }
-
-        function rLvls(d){ let h=""; d.forEach((l,i)=>{ h+=`<div class="dc"><h4>#${i+1} ${l.name}</h4><button class="bs bb" onclick="eLvl(${i})">EDIT</button></div>`;}); $('r-list').innerHTML=h; }
-        function eLvl(i){ const l=lvls[i]; $('e-idx').value=i; $('a-n').value=l.name; $('a-i').value=l.id; }
-        function saveLvl(){ const i=parseInt($('e-idx').value); let nL=[...lvls]; let d={name:$('a-n').value,id:$('a-i').value}; if(i===-1) nL.push(d); else nL[i]=d; db.ref('levels').set(nL); toast("Guardado"); }
-        function publishOrder(){ db.ref('levels').set(lvls); toast("Ranking Sincronizado"); }
-
-        function sendChat(){ const m=$('c-msg').value; if(m){ db.ref('staff_chat').push({user:sN,msg:m,time:Date.now()}); $('c-msg').value=''; } }
-        function rChat(d){ let h=""; nexus(d).slice(-20).forEach(x=>{ h+=`<div class="chat-msg"><b>${x.user}</b> <i>${new Date(x.time).toLocaleTimeString()}</i><br>${x.msg}</div>`;}); $('c-box').innerHTML=h; $('c-box').scrollTop=$('c-box').scrollHeight; }
-        function purgeCache(){ db.ref('system_settings/last_cache_purge').set(Date.now()); log("PURGA DE CACHÉ EJECUTADA"); db.ref('staff_chat').push({user:"SYSTEM",msg:"⚠️ PURGA DE RED ACTIVADA",time:Date.now()}); toast("Purgado"); }
-
-        function searchP(){ const q=$('p-s').value.toLowerCase(); pIx=nexus(fD.players).findIndex(x=>x.name.toLowerCase()===q); if(pIx>-1){$('p-res').style.display='block'; rPData();} }
-        function rPData(){ const p=nexus(fD.players)[pIx]; $('pe-n').value=p.name; $('pe-b').value=p.bio||""; let h=""; nexus(p.completions).forEach((x,i)=>{ h+=`<div class="dc"><span>${x.level}</span><button class="bs br" onclick="dPr(${i})">X</button></div>`;}); $('p-r').innerHTML=h||'<p style="color:#666;">Sin récords.</p>'; }
-        function updateP(){ db.ref(`players/${pIx}/name`).set($('pe-n').value); db.ref(`players/${pIx}/bio`).set($('pe-b').value); toast("Perfil Guardado"); }
-        function dPr(i){ if(confirm("¿Restar XP y borrar?")){ const p=nexus(fD.players)[pIx]; let c=nexus(p.completions); const xp=c[i].xp||0; c.splice(i,1); db.ref(`players/${pIx}/completions`).set(c); db.ref(`players/${pIx}/totalXP`).set((p.totalXP||0)-xp); }}
-
-        function rStaff(ps){ let h=""; ps.forEach(p=>{ if(p.role) h+=`<div class="dc"><h4>${p.name} [${p.role}]</h4></div>`;}); $('l-stf').innerHTML=h; }
-        function setStaff(){ if(sR!=='owner') return; const n=$('st-n').value, r=$('st-r').value; let pL=nexus(fD.players); let i=pL.findIndex(x=>x.name.toLowerCase()===n.toLowerCase()); if(i>-1){ pL[i].role=r; db.ref('players').set(pL); log("Ascendió a "+n); toast("Asignado"); } }
+        // LOGIC
+        const getXP = l => { const i=lvls.findIndex(x=>x.name.toLowerCase()===l.toLowerCase()); return i===-1?0:Math.max(100-(i*0.6),5); };
         
-        function toggleLock(v){ db.ref('system_settings/lockdown_active').set(v); log("Lockdown: "+v); if(v)$('sl-id').style.background="var(--ac)"; else $('sl-id').style.background="#222"; }
-        function saveCfg(){ db.ref('system_settings/discord/url').set($('cf-dw').value); db.ref('system_settings/custom_css').set($('cf-cs').value); toast("Ok"); }
-    </script>
-</body>
-</html>
+        function oRev(id){ const r=fD.submissions[id]; $('r-t').innerText=r.level; $('r-v').innerHTML=`<a href="${r.link}" target="_blank" style="color:var(--bl);">VIDEO</a>`; $('r-rw').innerText=r.raw||"N/A"; $('r-cm').innerText=r.comments||"-"; $('b-ac').onclick=()=>pRc(id,'acc'); $('b-ap').onclick=()=>pRc(id,'app'); $('b-rj').onclick=()=>pRc(id,'rej'); $('m-rev').style.display='block'; }
+        function pRc
