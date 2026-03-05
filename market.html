@@ -25,13 +25,15 @@
         .item-card:hover { border-color: var(--gold); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255,215,0,0.2); }
         
         .item-card img { width: 80px; height: 80px; margin-bottom: 15px; object-fit: cover; }
-        .item-card h3 { margin: 0 0 10px; font-size: 1.4rem; color: #fff; font-family: 'JetBrains Mono'; }
+        .item-card h3 { margin: 0 0 10px; font-size: 1.4rem; color: #fff; font-family: 'JetBrains Mono'; text-transform: uppercase; }
         .item-card .price { font-size: 1.2rem; color: var(--gold); font-weight: 800; margin-bottom: 20px; display: block; }
         
         .btn-buy { background: var(--gold); color: #000; border: none; padding: 12px 25px; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 100%; font-size: 0.9rem; text-transform: uppercase; }
         .btn-buy:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(255,215,0,0.5); }
         
         .nav-back { display: inline-block; color: var(--cyan); text-decoration: none; font-weight: 800; margin-top: 30px; font-family: 'JetBrains Mono'; }
+        
+        #btn-restore { background: #ff3333; color: #fff; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; margin-top: 20px; display: none; }
     </style>
 </head>
 <body>
@@ -41,7 +43,9 @@
         <div class="user-xp-box" id="myXP">XP Disponible: CARGANDO...</div>
     </div>
 
-    <div class="store-grid" id="store-container">
+    <button id="btn-restore" onclick="restaurarCatalogo()"><i class="fas fa-sync"></i> RESTAURAR CATÁLOGO (ADMIN)</button>
+
+    <div class="store-grid" id="store-container" style="margin-top: 20px;">
         <p style="color:#888;">Conectando con la base de datos de la tienda...</p>
     </div>
 
@@ -56,10 +60,7 @@
             apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
             authDomain: "scullylist.firebaseapp.com", 
             databaseURL: "https://scullylist-default-rtdb.firebaseio.com", 
-            projectId: "scullylist", 
-            storageBucket: "scullylist.firebasestorage.app", 
-            messagingSenderId: "498548914021", 
-            appId: "1:498548914021:web:59128b5e06b36a4e81938c" 
+            projectId: "scullylist" 
         };
         firebase.initializeApp(firebaseConfig); 
         const auth = firebase.auth(); 
@@ -86,6 +87,13 @@
 
                         if (me) {
                             currentUserData = me;
+                            
+                            // Mostrar botón de restaurar solo si eres Owner/Admin
+                            if(me.role === 'owner' || me.role === 'admin' || me.name.toLowerCase() === 'score') {
+                                document.getElementById('btn-restore').style.display = "inline-block";
+                            }
+
+                            // Calcular XP Real
                             let realXp = 0;
                             let comps = me.completions ? Object.values(me.completions) : [];
                             
@@ -100,8 +108,6 @@
 
                             myTotalXP = realXp + (me.totalXP || 0);
                             document.getElementById('myXP').innerText = `XP Disponible: ${myTotalXP.toFixed(1)}`;
-                        } else {
-                            document.getElementById('myXP').innerText = "Debes crear tu perfil.";
                         }
                     });
                 });
@@ -110,6 +116,7 @@
             }
         });
 
+        // CARGAR LOS ÍTEMS
         db.ref('market_items').on('value', snap => {
             const items = snap.val() || {};
             let html = "";
@@ -126,14 +133,14 @@
                 </div>`;
             });
             
-            document.getElementById('store-container').innerHTML = html || "<p style='color:#888; width:100%;'>La tienda está vacía en este momento.</p>";
+            document.getElementById('store-container').innerHTML = html || "<p style='color:#888; width:100%;'>La tienda está vacía.</p>";
         });
 
+        // ENVIAR PETICIÓN DE COMPRA
         function solicitarCompra(nombreItem, precioItem) {
             if (!currentUserData || !currentUserData.name) {
-                return alert("Error: Debes iniciar sesión para comprar en el mercado.");
+                return alert("Error: Debes iniciar sesión para comprar.");
             }
-            
             if (myTotalXP < precioItem) {
                 return alert(`Operación Denegada: Te faltan ${(precioItem - myTotalXP).toFixed(1)} XP para comprar esto.`);
             }
@@ -145,9 +152,25 @@
                     price: precioItem,
                     time: Date.now()
                 }).then(() => {
-                    alert("¡Petición enviada al Equipo Staff!\nUn administrador la aprobará pronto y el ítem aparecerá en La Bóveda de tu Perfil.");
-                }).catch(err => {
-                    alert("Hubo un error de conexión: " + err);
+                    alert("¡Petición enviada al Equipo Staff!\nUn administrador la aprobará pronto y aparecerá en tu Perfil.");
+                });
+            }
+        }
+
+        // FUNCIÓN DEL BOTÓN SECRETO PARA RESTAURAR CATÁLOGO
+        function restaurarCatalogo() {
+            if(confirm("¿Restaurar todo el catálogo con los nuevos cosméticos baratos y el Rainbow?")) {
+                const nuevoCatalogo = [
+                    { name: "EFECTO FANTASMA", price: 15, img: "https://i.imgur.com/gK0r8Mh.png" },
+                    { name: "EFECTO HIELO", price: 25, img: "https://i.imgur.com/O6LWeU9.png" },
+                    { name: "EFECTO FUEGO", price: 35, img: "https://i.imgur.com/Kz8uYFw.png" },
+                    { name: "TITULO VIP", price: 50, img: "https://i.imgur.com/0gG1V1H.png" },
+                    { name: "TEXTO HACKER", price: 75, img: "https://i.imgur.com/lZ2wG7n.png" },
+                    { name: "AURA DEMONIACA", price: 100, img: "https://i.imgur.com/3q1b8Z2.png" },
+                    { name: "NOMBRE RAINBOW", price: 200, img: "https://i.imgur.com/8Q6W6u1.png" }
+                ];
+                db.ref('market_items').set(nuevoCatalogo).then(() => {
+                    alert("¡Catálogo restaurado exitosamente!");
                 });
             }
         }
