@@ -2,100 +2,209 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully | Helper Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Scully OMNI | Helper Engine v25</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        /* Variables Globales - Panel Helper usa VERDE como color principal */
         :root { 
-            --accent: #66fcf1; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #45a29e 100%);
-            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
-            --glow: 0 0 25px rgba(102, 252, 241, 0.3); --border: rgba(255, 255, 255, 0.05);
-            --green: #45a29e; --red: #f05454; --blue: #66fcf1;
+            --ac: #00ff66; /* Verde Helper */
+            --bg: #030303; 
+            --sb: #0a0a0a; 
+            --cd: #111111; 
+            --bd: rgba(255, 255, 255, 0.08); 
+            --gr: #00ff66; 
+            --rd: #ff3333; 
+            --bl: #00ccff; 
+            --gd: #ffd700; 
+            --pu: #cc00ff; 
+            --cy: #00ffff; 
+            --ow: #ff0055;
         }
-        
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; overflow-x: hidden; display: none; }
-        
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
-        .admin-header { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 25px 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border); margin-bottom: 35px; flex-wrap: wrap; gap: 15px; }
-        .admin-header h1 { font-size: 1.8rem; margin: 0; color: #fff; font-weight: 800; letter-spacing: -1px; text-transform: uppercase; }
-        .admin-header h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .header-controls { display: flex; align-items: center; gap: 15px; }
-        .btn-return { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 12px 25px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; text-transform: uppercase; }
-        .btn-return:hover { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: var(--glow); transform: translateY(-2px); }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        ::-webkit-scrollbar { width: 8px; } 
+        ::-webkit-scrollbar-track { background: var(--bg); } 
+        ::-webkit-scrollbar-thumb { background: var(--ac); border-radius: 10px; }
 
-        #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 15px; padding: 15px 20px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; transform: translate(-50%, 50px); opacity: 0; }
-        #scullyToast.show { visibility: visible; transform: translate(-50%, 0); opacity: 1; }
+        /* Menú Móvil */
+        .mob-nav { display: none; background: var(--sb); height: 60px; width: 100%; position: fixed; top: 0; left: 0; z-index: 4000; border-bottom: 1px solid var(--bd); padding: 0 20px; align-items: center; justify-content: space-between; } 
+        .mob-nav h1 { margin: 0; font-family: 'JetBrains Mono'; font-size: 1.4rem; text-transform: uppercase; } 
+        .mob-nav span { color: var(--ac); } 
+        .ham { font-size: 1.5rem; color: var(--ac); cursor: pointer; } 
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); z-index: 3000; backdrop-filter: blur(4px); }
 
-        .admin-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 25px; align-items: start; }
-        .admin-panel { background: var(--card-bg); border-radius: 25px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.3); display: flex; flex-direction: column; max-height: 700px; overflow: hidden; transition: 0.3s; }
-        .admin-panel:hover { border-color: rgba(102,252,241,0.2); box-shadow: 0 10px 35px rgba(102,252,241,0.1); }
-        .panel-header { background: rgba(0,0,0,0.4); padding: 20px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .panel-header h2 { font-size: 0.9rem; text-transform: uppercase; color: #fff; margin: 0; font-weight: 800; display: flex; align-items: center; gap: 10px; letter-spacing: 0.5px; }
-        .panel-header h2 i { color: var(--accent); }
-        .panel-content { padding: 25px; overflow-y: auto; flex-grow: 1; }
+        /* Barra Lateral */
+        .sidebar { width: 280px; min-width: 280px; background: var(--sb); border-right: 1px solid var(--bd); display: flex; flex-direction: column; z-index: 3500; transition: transform 0.3s ease; } 
+        .brand { text-align: center; padding: 25px 10px; border-bottom: 1px solid var(--bd); background: #000; } 
+        .brand h1 { font-family: 'JetBrains Mono'; font-size: 1.8rem; margin: 0; text-transform: uppercase; letter-spacing: -1px; } 
+        .brand span { color: var(--ac); }
+        .nav-sc { flex: 1; overflow-y: auto; padding: 10px 0; } 
+        .n-btn { width: 100%; background: transparent; color: #888; border: none; padding: 14px 25px; text-align: left; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 12px; font-weight: 700; text-transform: uppercase; border-left: 3px solid transparent; transition: 0.2s; } 
+        .n-btn:hover, .n-btn.active { color: #fff; background: rgba(0, 255, 102, 0.06); border-left-color: var(--ac); } 
+        .n-sec { font-size: 0.6rem; color: #444; text-transform: uppercase; font-weight: 900; margin: 20px 25px 8px; letter-spacing: 1px; display: block; }
+
+        /* Contenido Principal */
+        .m-wrap { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; } 
+        .s-bar { background: #000; border-bottom: 1px solid var(--bd); padding: 10px; display: flex; justify-content: center; gap: 15px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; flex-wrap: wrap; } 
+        .s-bar i { color: var(--ac); margin-right: 4px; } 
+        .s-bar b { color: #fff; }
+        .m-cont { flex: 1; padding: 30px 40px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, rgba(0, 255, 102, 0.02) 0%, transparent 50%); } 
+        .tab { display: none; } 
+        .tab.active { display: block; animation: fade 0.3s ease; } 
+
+        @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2.title { font-size: 1.4rem; margin-bottom: 25px; display: flex; align-items: center; gap: 15px; text-transform: uppercase; font-weight: 800; border-bottom: 1px solid var(--bd); padding-bottom: 10px; }
+
+        /* Componentes */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px; } 
+        .card { background: var(--cd); border: 1px solid var(--bd); padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); } 
+        .card h3 { font-size: 1.8rem; margin: 5px 0; font-family: 'JetBrains Mono'; color: var(--ac); } 
+        .card p { font-size: 0.6rem; color: #888; text-transform: uppercase; font-weight: 800; margin: 0; }
+
+        .panel { background: var(--cd); border: 1px solid var(--bd); padding: 20px; border-radius: 15px; margin-bottom: 20px; position: relative; } 
         
-        input { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 15px; margin-bottom: 15px; font-family: 'Lexend Deca'; font-size: 0.8rem; transition: 0.3s; outline: none; box-sizing: border-box; }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(102,252,241,0.2); }
-        button { width: 100%; font-family: 'Lexend Deca'; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; border: none; padding: 15px; border-radius: 15px; margin-bottom: 12px; transition: 0.3s; font-size: 0.75rem; }
-        button:hover { transform: translateY(-2px); filter: brightness(1.15); }
-        
-        .btn-blue { background: transparent; color: var(--blue); border: 1px solid var(--blue); }
-        .btn-blue:hover { background: var(--blue); color: #000; box-shadow: 0 5px 15px rgba(102,252,241,0.3); }
-        .btn-red { background: transparent; color: var(--red); border: 1px solid var(--red); }
-        .btn-red:hover { background: var(--red); color: #000; box-shadow: 0 5px 15px rgba(240,84,84,0.3); }
-        .btn-green { background: transparent; color: var(--green); border: 1px solid var(--green); }
-        .btn-green:hover { background: var(--green); color: #000; box-shadow: 0 5px 15px rgba(69,162,158,0.3); }
+        .ig { margin-bottom: 15px; } 
+        label { display: block; font-size: 0.7rem; font-weight: 800; color: var(--ac); margin-bottom: 5px; text-transform: uppercase; } 
+        input, select, textarea { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 12px; border-radius: 8px; font-size: 0.85rem; outline: none; transition: 0.3s; } 
+        input:focus, textarea:focus { border-color: var(--ac); }
 
-        .sub-card { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 20px; margin-bottom: 20px; border-left: 4px solid var(--accent); font-size: 0.8rem; border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-        .proof-box { display: flex; gap: 10px; margin: 15px 0; }
-        .btn-proof { flex: 1; text-decoration: none; text-align: center; font-size: 0.7rem; font-weight: 800; padding: 10px; border-radius: 12px; transition: 0.3s; }
-        .proof-yt { background: transparent; color: var(--red); border: 1px solid var(--red); }
-        .proof-yt:hover { background: var(--red); color: #000; }
-        .proof-raw { background: transparent; color: var(--blue); border: 1px solid var(--blue); }
-        .proof-raw:hover { background: var(--blue); color: #000; }
-        .flex-row { display: flex; gap: 12px; }
-        .flex-row button { margin-bottom: 0; }
+        .btn { background: var(--ac); color: #000; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 800; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; } 
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0, 255, 102, 0.3); }
+
+        .dl { display: flex; flex-direction: column; gap: 10px; max-height: 550px; overflow-y: auto; padding-right: 5px; } 
+        .dc { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--bd); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; transition: 0.2s; } 
+        .dc:hover { border-color: var(--ac); background: rgba(255, 255, 255, 0.04); } 
+        .dc h4 { margin: 0 0 5px; font-size: 0.9rem; text-transform: uppercase; color: #fff; } 
+        .dc p { margin: 0; font-size: 0.75rem; color: #aaa; }
+
+        .bs { padding: 8px 12px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; display: inline-flex; justify-content: center; align-items: center; gap: 5px; transition: 0.2s; } 
+        .bg { background: rgba(0, 255, 102, 0.1); color: var(--gr); border: 1px solid var(--gr); } .bg:hover { background: var(--gr); color: #000; } 
+        .br { background: rgba(255, 51, 51, 0.1); color: var(--rd); border: 1px solid var(--rd); } .br:hover { background: var(--rd); color: #fff; } 
+        .bb { background: rgba(0, 204, 255, 0.1); color: var(--bl); border: 1px solid var(--bl); } .bb:hover { background: var(--bl); color: #000; } 
+        .by { background: rgba(255, 215, 0, 0.1); color: var(--gd); border: 1px solid var(--gd); } .by:hover { background: var(--gd); color: #000; }
+
+        .cbx { background: #000; border: 1px solid #222; border-radius: 10px; height: 350px; overflow-y: auto; padding: 15px; margin-bottom: 15px; font-size: 0.8rem; } 
+        .cm { margin-bottom: 8px; border-bottom: 1px solid #111; padding-bottom: 5px; } 
+        .cm b { color: var(--ac); } 
+        .cm i { font-size: 0.6rem; color: #555; margin-left: 8px; }
+
+        #toast { visibility: hidden; min-width: 200px; background: var(--gr); color: #000; text-align: center; border-radius: 8px; padding: 15px; position: fixed; z-index: 20000; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(50px); font-weight: 800; opacity: 0; transition: 0.4s; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); } 
+        #toast.show { visibility: visible; transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        @media(max-width: 768px) {
+            .mob-nav { display: flex; } 
+            .s-bar { display: none; } 
+            .sidebar { position: fixed; left: -100%; top: 60px; height: calc(100vh - 60px); box-shadow: 10px 0 30px #000; } 
+            .sidebar.open { transform: translateX(100%); } 
+            .overlay.active { display: block; } 
+            .m-wrap { margin-top: 60px; height: calc(100vh - 60px); } 
+            .m-cont { padding: 20px; } 
+            .grid { grid-template-columns: 1fr 1fr; } 
+            .dc { flex-direction: column; align-items: flex-start; }
+            .dc div:last-child { display: flex; width: 100%; gap: 10px; margin-top: 10px; }
+            .dc div:last-child button { flex: 1; }
+        }
     </style>
 </head>
 <body>
-    <div id="scullyToast"><i class="fas fa-check-circle"></i> Mensaje</div>
 
-    <header class="admin-header">
-        <h1>SCULLY <span>HELPER PANEL</span></h1>
-        <div class="header-controls">
-            <input type="text" id="globalStaffSign" placeholder="Tu Firma" style="margin:0; width: 220px; border-color:var(--accent); background:#000;" readonly>
-            <a href="index.html" class="btn-return"><i class="fas fa-arrow-left"></i> Volver al Hub</a>
-        </div>
-    </header>
+    <div id="loader" style="position:fixed;inset:0;background:#000;z-index:90000;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+        <div style="width:50px;height:50px;border:3px solid rgba(0,255,102,.1);border-top-color:var(--ac);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px;"></div>
+        <h2 style="color:var(--ac);font-family:'JetBrains Mono';font-size:1.5rem;letter-spacing:2px;">HELPER_ENGINE_V25</h2>
+        <style>@keyframes spin {to{transform:rotate(360deg);}}</style>
+    </div>
+
+    <div id="toast">Exito</div>
     
-    <div class="admin-dashboard">
-        <div class="admin-panel" style="grid-column: span 2;">
-            <div class="panel-header"><h2><i class="fas fa-shield-alt"></i> Moderación de Récords</h2></div>
-            <div class="panel-content" id="submissionsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;"></div>
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div class="mob-nav">
+        <h1>SYS.<span>HELPER</span></h1>
+        <div class="ham" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="brand" style="padding: 25px; text-align: center; border-bottom: 1px solid var(--bd);">
+            <h1 style="margin:0; font-family: 'JetBrains Mono';">SYS.<span style="color:var(--ac)">HELPER</span></h1>
+            <p id="badge" style="font-size:.55rem;color:var(--ac);font-weight:800;margin-top:8px;letter-spacing:1px;">AUTENTICANDO...</p>
         </div>
-        
-        <div class="admin-panel">
-            <div class="panel-header"><h2><i class="fas fa-shopping-cart"></i> Tienda (Mercado)</h2></div>
-            <div class="panel-content" id="marketSubList"></div>
+        <div class="nav-sc">
+            <span class="n-sec">Tareas Asignadas</span>
+            <button class="n-btn active" onclick="sTab('t-dash')"><i class="fas fa-satellite-dish"></i> Dashboard</button>
+            <button class="n-btn" onclick="sTab('t-recs')"><i class="fas fa-check-circle"></i> Revisar Pruebas</button>
+            <button class="n-btn" onclick="sTab('t-chat')" style="color:var(--bl);"><i class="fas fa-comments"></i> Staff Chat</button>
         </div>
-        
-        <div class="admin-panel">
-            <div class="panel-header"><h2><i class="fas fa-image"></i> Solicitudes PFP</h2></div>
-            <div class="panel-content" id="pfpSubList"></div>
+        <div style="padding:15px; border-top:1px solid var(--bd);">
+            <button class="n-btn" style="color:var(--rd);justify-content:center;" onclick="location.href='index.html'"><i class="fas fa-power-off"></i> SALIR AL HUB</button>
+        </div>
+    </div>
+
+    <div class="m-wrap">
+        <div class="s-bar">
+            <span>Tributo a 2Parx 🕊️</span> | 
+            <span><i class="fas fa-hands-helping" style="color:var(--ac)"></i> Helper Engine</span> 
         </div>
 
-        <div class="admin-panel" style="border-color: rgba(102,252,241,0.3);">
-            <div class="panel-header" style="background: rgba(102,252,241,0.05);"><h2 style="color:var(--blue);"><i class="fab fa-youtube"></i> Auditoría YT Manual</h2></div>
-            <div class="panel-content">
-                <p style="font-size:0.8rem; color:#888; margin-top:0; margin-bottom:20px;">Compara dos videos y mira cuál se subió primero.</p>
-                <input type="text" id="audit1" placeholder="Link YT del Jugador A">
-                <input type="text" id="audit2" placeholder="Link YT del Jugador B">
-                <button onclick="analyzeYT()" class="btn-blue"><i class="fas fa-search"></i> ANALIZAR FECHAS</button>
-                <div id="auditResult" style="margin-top:20px; font-size:0.8rem; padding:20px; background:#000; border:1px solid #222; border-radius:15px; line-height:1.6;">Esperando links para auditar...</div>
+        <div class="m-cont">
+            
+            <div id="t-dash" class="tab active">
+                <h2 class="title"><i class="fas fa-satellite-dish" style="color:var(--ac);"></i> Monitor de Actividad</h2>
+                
+                <div class="grid">
+                    <div class="card"><h3><span id="s-r">0</span></h3><p>Récords en Bandeja</p></div>
+                    <div class="card" style="border-color:var(--bl);"><h3><span id="s-l">0</span></h3><p>Niveles en Sistema</p></div>
+                </div>
+
+                <div class="panel" style="border-color:var(--ac);">
+                    <h3 style="margin:0 0 15px;color:var(--ac);font-size:1rem;"><i class="fas fa-info-circle"></i> Instrucciones para Helpers</h3>
+                    <p style="font-size:0.85rem; color:#aaa; line-height: 1.6;">Bienvenido al equipo de verificación. Tu objetivo principal es revisar los videos enviados por los jugadores en la pestaña "Revisar Pruebas".</p>
+                    <ul style="font-size: 0.8rem; color: #888; padding-left: 20px;">
+                        <li style="margin-bottom: 5px;">Asegúrate de que el video no tenga cortes y muestre los clicks si es necesario.</li>
+                        <li style="margin-bottom: 5px;">Si tienes dudas sobre un récord, envíalo a "Apelación" para que un Admin lo decida.</li>
+                        <li style="margin-bottom: 5px;">Cualquier comportamiento sospechoso, repórtalo inmediatamente en el Staff Chat.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="t-recs" class="tab">
+                <h2 class="title"><i class="fas fa-check-circle" style="color:var(--ac);"></i> Revisión de Pruebas</h2>
+                <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">Recuerda ser justo. Al aceptar, el sistema otorgará la XP automáticamente.</p>
+                <div id="l-sub" class="dl" style="margin-bottom:30px;"></div>
+            </div>
+
+            <div id="t-chat" class="tab">
+                <h2 class="title"><i class="fas fa-comments" style="color:var(--bl);"></i> Canal Staff Interno</h2>
+                <div class="panel" style="border-color:var(--bl);">
+                    <div class="cbx" id="c-bx"></div>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <input type="text" id="c-m" placeholder="Comunícate con Admins y Mods..." style="flex:1; min-width:150px;" onkeypress="if(event.keyCode==13) sCht()">
+                        <button class="btn bb" onclick="sCht()"><i class="fas fa-paper-plane"></i> ENVIAR</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="m-rev" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10000; justify-content:center; align-items:center;">
+        <div style="background:#111; padding:30px; border-radius:15px; border:1px solid #333; width:90%; max-width:500px; text-align:center; position:relative;">
+            <span style="position:absolute; top:15px; right:20px; font-size:1.5rem; cursor:pointer; color: #888;" onclick="document.getElementById('m-rev').style.display='none'">✕</span>
+            <h2 id="r-t" style="color:var(--ac); margin-top:0;">Rev</h2>
+            <div id="r-v" style="margin-bottom:15px;"></div>
+            <div style="background:#000; padding:15px; border-radius:10px; font-size:0.8rem; margin-bottom:20px;">
+                <p style="color:#aaa;">RAW: <span id="r-rw" style="color:#fff;"></span></p>
+                <p style="color:#aaa;">Nota del jugador: <span id="r-cm" style="color:#fff;"></span></p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button id="b-ac" class="btn bg" style="width:100%;">APROBAR PRUEBA</button>
+                <button id="b-ap" class="btn by" style="width:100%;">ENVIAR A APELACIÓN</button>
+                <button id="b-rj" class="btn br" style="width:100%;">RECHAZAR PRUEBA</button>
             </div>
         </div>
     </div>
@@ -103,61 +212,175 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-    
-    <script>
-        const firebaseConfig = { apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", authDomain: "scullylist.firebaseapp.com", databaseURL: "https://scullylist-default-rtdb.firebaseio.com", projectId: "scullylist", storageBucket: "scullylist.firebasestorage.app", messagingSenderId: "498548914021", appId: "1:498548914021:web:59128b5e06b36a4e81938c", measurementId: "G-X3JF2DVWYH" };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
-        let fullData = {};
-        const YT_API_KEY = "AIzaSyCLeUZ_mJxJHuCCLr-GMkMdy0q-JHTUi7w";
 
-        // PROTECCIÓN AUTOMÁTICA HELPER
-        auth.onAuthStateChanged(user => {
-            if(!user) return location.href = 'index.html';
-            db.ref('players').once('value', snap => {
-                const players = Object.values(snap.val() || {});
-                const me = players.find(p => p.email === user.email);
-                if(me && (me.role === 'helper' || me.role === 'admin')) {
-                    document.body.style.display = "block";
-                    document.getElementById('globalStaffSign').value = me.name; 
-                } else {
-                    location.href = 'index.html';
+    <script>
+        // CONFIGURACIÓN FIREBASE
+        const firebaseConfig = { 
+            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
+            authDomain: "scullylist.firebaseapp.com", 
+            databaseURL: "https://scullylist-default-rtdb.firebaseio.com", 
+            projectId: "scullylist"
+        };
+        firebase.initializeApp(firebaseConfig); 
+        const db = firebase.database();
+        const auth = firebase.auth();
+
+        const $ = id => document.getElementById(id);
+        const nx = o => o ? Object.values(o) : [];
+        let fD = {}, lvls = [], sN = "Helper";
+
+        function toast(m, e=false) { 
+            const t = $('toast'); 
+            t.innerText = m; 
+            t.style.background = e ? "var(--rd)" : "var(--gr)"; 
+            t.className = 'show'; 
+            setTimeout(() => t.className = "", 3000); 
+        }
+
+        function sTab(id) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.n-btn').forEach(b => b.classList.remove('active'));
+            $(id).classList.add('active');
+            if(event && event.currentTarget) event.currentTarget.classList.add('active');
+            if(window.innerWidth <= 768) toggleMenu();
+        }
+        
+        function toggleMenu() { $('sidebar').classList.toggle('open'); $('overlay').classList.toggle('active'); }
+
+        // WEBHOOK ENGINE (Lee la base de datos principal para mandar al Discord)
+        const api = (m) => {
+            let url = fD.system_settings?.discord?.url; 
+            if(url) {
+                fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: m, username: "SCULLY HELPER" })
+                });
+            }
+        };
+
+        // AUTENTICACIÓN SEGURA (PERMITE HELPER, ADMIN, MOD Y OWNER)
+        auth.onAuthStateChanged(u => {
+            if(!u) return location.href="login.html"; 
+            
+            db.ref('players').once('value', s => {
+                const me = nx(s.val()).find(x => x.email === u.email);
+                
+                // CONDICIÓN IMPORTANTE: Permite el acceso al Owner y a los de rangos superiores.
+                if(me && (me.role === 'helper' || me.role === 'mod' || me.role === 'admin' || me.role === 'owner' || me.name.toLowerCase() === 'score')) {
+                    sN = me.name; 
+                    $('badge').innerText = `RANGO: ${(me.role || 'HELPER').toUpperCase()}`; 
+                    $('loader').style.display = 'none';
+                    initEngine();
+                } else { 
+                    alert("Acceso Denegado: No tienes rango de Helper.");
+                    location.href="index.html";
                 }
             });
         });
 
-        function showToast(message, isError = false) { const toast = document.getElementById("scullyToast"); toast.innerHTML = isError ? `<i class="fas fa-times-circle"></i> ${message}` : `<i class="fas fa-check-circle"></i> ${message}`; toast.style.backgroundColor = isError ? "var(--red)" : "var(--green)"; toast.className = "show"; setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3500); }
-
-        db.ref('/').on('value', (s) => {
-            fullData = s.val() || {}; 
-            let lvls = fullData.levels ? (Array.isArray(fullData.levels) ? fullData.levels : Object.values(fullData.levels)) : []; lvls = lvls.filter(l => l && l.name); fullData.levels = lvls;
-            renderSubmissions(fullData.submissions || {}); renderMarketModeration(fullData.market_requests || {}); renderPFPModeration(fullData.pfp_requests || {}); 
-        });
-
-        function extractYTId(url) { let match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?\n]+)/); return match ? match[1] : (url.length === 11 ? url : null); }
-        async function getYTDate(id) { if(!id) return null; try { const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${id}&key=${YT_API_KEY}`); const data = await res.json(); if(data.items && data.items.length > 0) return data.items[0].snippet.publishedAt; } catch(e) { console.error("Error YT API:", e); } return null; }
-        async function analyzeYT() { const v1 = extractYTId(document.getElementById('audit1').value); const v2 = extractYTId(document.getElementById('audit2').value); const resBox = document.getElementById('auditResult'); if(!v1 || !v2) return showToast("Faltan links para comparar", true); resBox.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analizando servidores...'; const d1Str = await getYTDate(v1); const d2Str = await getYTDate(v2); if(!d1Str || !d2Str) { resBox.innerHTML = "<span style='color:var(--red)'><i class='fas fa-exclamation-triangle'></i> Error: Video no existe o privado.</span>"; return; } const d1 = new Date(d1Str); const d2 = new Date(d2Str); let winner = d1 < d2 ? "Video Jugador A" : (d2 < d1 ? "Video Jugador B" : "Empate"); resBox.innerHTML = `<div style="margin-bottom:8px;"><b>Jugador A:</b> <span style="color:#ccc">${d1.toLocaleString()}</span></div><div style="margin-bottom:12px;"><b>Jugador B:</b> <span style="color:#ccc">${d2.toLocaleString()}</span></div><div style="color:var(--blue); font-weight:800; border-top:1px solid #222; padding-top:10px;"><i class="fas fa-trophy"></i> Antiguo: ${winner}</div>`; }
-
-        function renderSubmissions(submissionsObj) { let html = ""; const entries = Object.entries(submissionsObj); if(entries.length === 0) { document.getElementById('submissionsList').innerHTML = `<p style="grid-column: span 2; text-align:center; color:#555; font-size:0.8rem; margin-top:40px;"><i class="fas fa-glass-cheers fa-2x"></i><br><br>No hay récords pendientes.</p>`; return; } for(let i = 0; i < entries.length; i++) { const sub = entries[i][1]; html += `<div class="sub-card" style="margin-bottom:0;"><span style="color:#fff; font-weight:800; font-size:0.9rem;">${sub.player}</span> <i class="fas fa-caret-right" style="color:var(--accent); margin:0 5px;"></i> ${sub.level}<div class="proof-box"><a href="${sub.link}" target="_blank" class="btn-proof proof-yt"><i class="fab fa-youtube"></i> VER YT</a><a href="${sub.raw}" target="_blank" class="btn-proof proof-raw"><i class="fab fa-google-drive"></i> RAW</a></div><div class="flex-row"><button id="btn-ok-${entries[i][0]}" onclick="setStatus('${entries[i][0]}','Aceptado')" class="btn-green" style="background:var(--green); color:#000;"><i class="fas fa-check"></i></button><button onclick="setStatus('${entries[i][0]}','Rechazado')" class="btn-red"><i class="fas fa-times"></i></button></div></div>`; } document.getElementById('submissionsList').innerHTML = html; }
-        
-        async function setStatus(key, status) { 
-            const staff = document.getElementById('globalStaffSign').value; if(!staff) return;
-            const sub = fullData.submissions[key]; 
-            if(status === 'Aceptado') { 
-                const btnOk = document.getElementById(`btn-ok-${key}`); if(btnOk) { btnOk.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btnOk.disabled = true; }
-                try { const subVid = extractYTId(sub.link); const lvlIdx = fullData.levels.findIndex(l => l.name === sub.level); if (lvlIdx > -1 && subVid) { const lvlVid = fullData.levels[lvlIdx].id; if(lvlVid && subVid !== lvlVid) { const subDateStr = await getYTDate(subVid); const lvlDateStr = await getYTDate(lvlVid); if (subDateStr && lvlDateStr && (new Date(subDateStr) < new Date(lvlDateStr))) { if(confirm(`⚠️ ¡NUEVO FIRST VICTOR!\n¿Coronar automáticamente?`)) { db.ref(`levels/${lvlIdx}/first`).set(sub.player); db.ref(`levels/${lvlIdx}/id`).set(subVid); showToast(`${sub.player} es el nuevo First Victor`); } } } } } catch(e) { console.log("Auditoría auto fallida", e); }
-                db.ref('players').once('value', v => { let p = Object.values(v.val() || {}); let i = p.findIndex(u => u.name.toLowerCase() === sub.player.toLowerCase()); if(i > -1) { let cArr = p[i].completions ? (Array.isArray(p[i].completions) ? p[i].completions : Object.values(p[i].completions)) : []; cArr.push({level: sub.level, link: sub.link}); p[i].completions = cArr; } else { p.push({ name: sub.player, country: sub.country || 'es', completions: [{level: sub.level, link: sub.link}] }); } db.ref('players').set(p); }); 
-                db.ref('history').push({...sub, status: 'Aceptado'}); db.ref('logs').push({type: 'accept', msg: `✅ ${sub.player} -> ${sub.level} (${staff})`}); showToast("Récord Aceptado");
-            } else { db.ref('history').push({...sub, status: 'Rechazado'}); db.ref('logs').push({type: 'reject', msg: `❌ ${sub.player} RECHAZADO (${staff})`}); showToast("Récord Rechazado", true); }
-            db.ref('submissions/' + key).remove(); 
+        function initEngine() {
+            db.ref('/').on('value', snap => {
+                fD = snap.val() || {};
+                lvls = nx(fD.levels);
+                
+                $('s-r').innerText = Object.keys(fD.submissions || {}).length;
+                $('s-l').innerText = lvls.length;
+                
+                rRcs(fD.submissions || {});
+                rCht(fD.staff_chat || {});
+            });
         }
 
-        function renderMarketModeration(m) { let html = ""; Object.entries(m).forEach(([k,v]) => html += `<div class="sub-card" style="border-left-color:var(--green);"><span style="color:var(--green); font-weight:800;">${v.nick}</span> pide <b style="color:#fff">${v.item}</b><button onclick="approveCosmetic('${k}')" class="btn-green" style="margin-top:15px; background:var(--green); color:#000;"><i class="fas fa-check"></i> APROBAR</button></div>`); document.getElementById('marketSubList').innerHTML = html || `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">Sin pedidos.</p>`; }
-        function approveCosmetic(k) { const r = fullData.market_requests[k]; db.ref('players').once('value', s => { let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick); if(i > -1) { if(!p[i].cosmetics) p[i].cosmetics = {}; p[i].cosmetics[r.item] = true; db.ref('players').set(p); db.ref('market_requests/' + k).remove(); showToast("Compra Aprobada"); } }); }
+        // MOTOR DE EXPERIENCIA
+        const getXP = l => { 
+            const i = lvls.findIndex(x => x.name.toLowerCase() === l.toLowerCase()); 
+            if(i === -1) return 0; 
+            let base = Math.max(100 - (i * 0.6), 5); 
+            if(lvls[i].bounty) base = base * 2; 
+            return base; 
+        };
+
+        // GESTIÓN DE RÉCORDS
+        function rRcs(d) {
+            let h = "";
+            Object.entries(d).forEach(([id,r]) => {
+                h += `<div class="dc"><div><h4 style="margin:0; color:var(--ac);">${r.level}</h4><p style="margin:0;font-size:0.75rem;color:#aaa;">Jugador: ${r.player}</p></div><button class="bs bg" onclick="oRev('${id}')">REVISAR</button></div>`;
+            });
+            $('l-sub').innerHTML = h || '<p style="color:#666; text-align:center;">Bandeja limpia, ¡buen trabajo!</p>';
+        }
+
+        function oRev(id) { 
+            const r = fD.submissions[id]; 
+            $('r-t').innerText = r.level; 
+            const v = r.link.match(/([\w-]{11})/); 
+            $('r-v').innerHTML = v ? `<iframe width="100%" height="220" src="https://www.youtube.com/embed/${v[1]}" frameborder="0" style="border-radius:10px;"></iframe>` : `<a href="${r.link}" target="_blank" style="color:var(--ac);">Ver Link Externo</a>`; 
+            $('r-rw').innerHTML = r.raw ? `<a href="${r.raw}" target="_blank" style="color:var(--cy);">Link Raw</a>` : "N/A"; 
+            $('r-cm').innerText = r.comments || "Sin comentarios adicionales."; 
+            $('b-ac').onclick = () => pRc(id,'acc'); 
+            $('b-ap').onclick = () => pRc(id,'app'); 
+            $('b-rj').onclick = () => pRc(id,'rej'); 
+            $('m-rev').style.display = 'flex'; 
+        }
+
+        function pRc(id,m) {
+            const r = fD.submissions[id]; 
+            if(!r) return;
+            
+            if(m === 'acc') {
+                const xp = getXP(r.level); 
+                let pL = nx(fD.players); 
+                let i = pL.findIndex(x => x.name.toLowerCase() === r.player.toLowerCase());
+                
+                if(i === -1) {
+                    pL.push({name: r.player, totalXP: xp, completions: [{level: r.level, link: r.link, xp: xp, time: Date.now()}]});
+                } else { 
+                    let c = nx(pL[i].completions); 
+                    if(!c.some(x => x.level === r.level)) { 
+                        c.push({level: r.level, link: r.link, xp: xp, time: Date.now()}); 
+                        pL[i].completions = c; 
+                        pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
+                    } 
+                }
+                
+                db.ref('players').set(pL); 
+                api(`✅ **NUEVO RÉCORD:** **${r.player}** superó **${r.level}** (+${xp.toFixed(1)} XP) \n*Aprobado por el Helper:* ${sN}`);
+            } else if(m === 'app') { 
+                const n = prompt("Describe por qué mandas esto a apelación (Ej: Dudo de los clicks):"); 
+                if(n) { 
+                    db.ref('history').push({player: r.player, level: r.level, status: 'Apelacion', reason: n}); 
+                    api(`⚠️ **RÉCORD EN APELACIÓN:** **${r.player}** en **${r.level}**\n*Enviado por Helper:* ${sN}\n*Motivo:* ${n}`); 
+                } else return; 
+            } else { 
+                const n = prompt("Razón del Rechazo (Sé claro y respetuoso):"); 
+                if(n) { 
+                    api(`❌ **RÉCORD RECHAZADO:** **${r.player}** en **${r.level}**\n*Revisado por Helper:* ${sN}\n*Motivo:* ${n}`); 
+                } else return; 
+            }
+            
+            db.ref(`submissions/${id}`).remove(); 
+            $('m-rev').style.display = 'none'; 
+            toast("Prueba procesada");
+        }
+
+        // STAFF CHAT
+        function sCht() { 
+            const m = $('c-m').value; 
+            if(m) { 
+                db.ref('staff_chat').push({user: sN, msg: m, time: Date.now()}); 
+                $('c-m').value = ''; 
+            } 
+        }
         
-        function renderPFPModeration(pObj) { let html = ""; Object.entries(pObj).forEach(([k,v]) => html += `<div class="sub-card" style="text-align:center; border-left-color:var(--blue);"><b style="color:var(--blue); font-size:1rem;">${v.nick}</b><br><img src="${v.url}" style="width:70px;height:70px;border-radius:50%; margin:15px 0; object-fit:cover; border:2px solid var(--blue);"><button onclick="approvePFP('${k}')" class="btn-blue" style="background:var(--blue); color:#000;"><i class="fas fa-check"></i> APROBAR</button></div>`); document.getElementById('pfpSubList').innerHTML = html || `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">Sin solicitudes.</p>`; }
-        function approvePFP(k) { const r = fullData.pfp_requests[k]; db.ref('players').once('value', s => { let p = Object.values(s.val()); let i = p.findIndex(x => x.name === r.nick); if(i > -1) { p[i].pfp = r.url; db.ref('players').set(p); db.ref('pfp_requests/' + k).remove(); showToast("PFP Aprobada"); } }); }
+        function rCht(d) { 
+            let h = ""; 
+            nx(d).slice(-25).forEach(x => { 
+                h += `<div class="cm"><b style="color:var(--ac);">${x.user}</b> <i style="font-size:0.6rem; color:#666;">${new Date(x.time).toLocaleTimeString()}</i><br>${x.msg}</div>`; 
+            }); 
+            $('c-bx').innerHTML = h || '<p style="color:#666;">Canal vacío.</p>'; 
+            $('c-bx').scrollTop = $('c-bx').scrollHeight; 
+        }
+
     </script>
 </body>
 </html>
