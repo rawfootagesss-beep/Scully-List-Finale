@@ -3,148 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully List | Enviar Récord</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&swap" rel="stylesheet">
+    <title>Enviar Récord | Scully List</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Lexend+Deca:wght@400;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { 
-            --accent: #ff6600; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
-            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
-            --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
-            --green: #00ff66; --red: #ff3333; --blue: #00ccff;
-        }
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        :root { --ac: #ff6600; --bg: #030303; --cd: #111; --bd: rgba(255, 255, 255, 0.08); }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .box { background: var(--cd); border: 1px solid var(--bd); padding: 40px; border-radius: 20px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { text-align: center; color: var(--ac); font-family: 'JetBrains Mono'; margin-top: 0; text-transform: uppercase; }
+        .ig { margin-bottom: 20px; } label { display: block; font-size: 0.75rem; color: var(--ac); font-weight: 800; margin-bottom: 8px; text-transform: uppercase; }
+        input, textarea { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 10px; font-family: inherit; font-size: 0.9rem; outline: none; box-sizing: border-box; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: var(--ac); }
+        .btn { background: var(--ac); color: #000; border: none; padding: 15px; border-radius: 10px; font-weight: 800; width: 100%; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; transition: 0.3s; opacity: 0.5; pointer-events: none; }
+        .btn.active { opacity: 1; pointer-events: all; }
+        .btn:hover.active { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,102,0,0.3); }
         
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
-        
-        .form-container { background: var(--card-bg); padding: 40px; border-radius: 30px; border: 1px solid var(--border); width: 100%; max-width: 500px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; }
-        .form-container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--accent-grad); border-top-left-radius: 30px; border-top-right-radius: 30px; }
-        
-        h1 { margin-top: 0; text-transform: uppercase; font-weight: 800; letter-spacing: -1px; text-align: center; font-size: 2rem; }
-        h1 span { color: var(--accent); }
-        
-        label { display: block; font-size: 0.75rem; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; margin-top: 20px; letter-spacing: 1px; }
-        
-        /* Estilos unificados para inputs y el nuevo select */
-        input, textarea, select { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 12px; font-family: 'Lexend Deca'; font-size: 0.85rem; outline: none; transition: 0.3s; box-sizing: border-box; resize: vertical; appearance: none; }
-        input:focus, textarea:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 15px rgba(0, 204, 255, 0.1); }
-        
-        /* Icono para el select */
-        .select-wrapper { position: relative; }
-        .select-wrapper::after { content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; right: 20px; top: 15px; color: #444; pointer-events: none; }
-
-        .btn-submit { background: var(--accent); color: #000; width: 100%; padding: 18px; border-radius: 15px; border: none; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; margin-top: 30px; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; letter-spacing: 1px; }
-        .btn-submit:hover { transform: translateY(-3px); box-shadow: var(--glow); }
-        
-        .btn-back { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 25px; color: #666; text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: 0.3s; }
-        .btn-back:hover { color: #fff; }
-
-        #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 15px; padding: 15px 20px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; transform: translate(-50%, 50px); opacity: 0; }
-        #scullyToast.show { visibility: visible; transform: translate(-50%, 0); opacity: 1; }
-        
-        .optional-badge { font-size: 0.6rem; background: #333; color: #aaa; padding: 3px 6px; border-radius: 4px; vertical-align: middle; margin-left: 8px; }
-        .required-badge { font-size: 0.6rem; background: var(--accent); color: #000; padding: 3px 6px; border-radius: 4px; vertical-align: middle; margin-left: 8px; font-weight: 900; }
+        /* SMART SCANNER CSS */
+        #scanner-box { display: none; background: rgba(0,255,102,0.05); border: 1px solid rgba(0,255,102,0.2); padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
+        #yt-thumb { width: 100%; border-radius: 8px; margin-top: 10px; border: 1px solid #333; }
+        .btn-back { display: block; text-align: center; margin-top: 20px; color: #666; text-decoration: none; font-size: 0.8rem; text-transform: uppercase; font-weight: 800; }
     </style>
 </head>
 <body>
-    <div id="scullyToast"><i class="fas fa-check-circle"></i> Mensaje</div>
+    <div class="box">
+        <h1><i class="fas fa-upload"></i> Smart Submit</h1>
+        <p style="text-align:center; color:#888; font-size:0.8rem; margin-bottom:30px;">El sistema verificará tu enlace antes de enviarlo al Staff.</p>
+        
+        <div class="ig"><label>Nick Exacto</label><input type="text" id="s-p" placeholder="Tu nombre en la página"></div>
+        <div class="ig"><label>Nivel Superado</label><input type="text" id="s-l" placeholder="Ej: Bloodbath"></div>
+        <div class="ig"><label>Evidencia (YouTube URL)</label><input type="text" id="s-y" placeholder="https://youtube.com/watch?v=..." oninput="scanLink()"></div>
+        <div class="ig"><label>Video RAW (Opcional)</label><input type="text" id="s-r" placeholder="Link de Google Drive/Mediafire"></div>
+        <div class="ig"><label>Comentarios (Opcional)</label><textarea id="s-c" rows="2" placeholder="Nota para el staff..."></textarea></div>
 
-    <div class="form-container">
-        <h1>ENVIAR <span>RÉCORD</span></h1>
-        <p style="text-align:center; color:#888; font-size:0.85rem; margin-bottom:10px;">Asegúrate de tener tu perfil reclamado para sumar XP.</p>
-
-        <label><i class="fas fa-user"></i> Tu Identidad en la Lista</label>
-        <input type="text" id="player" placeholder="Nombre exacto del jugador">
-
-        <label><i class="fas fa-ghost"></i> Nivel Completado</label>
-        <div class="select-wrapper">
-            <select id="level">
-                <option value="" disabled selected>Cargando niveles de la lista...</option>
-            </select>
+        <div id="scanner-box">
+            <span style="color:#00ff66; font-weight:800; font-size:0.8rem;"><i class="fas fa-check-circle"></i> VIDEO VERIFICADO</span>
+            <img id="yt-thumb" src="" alt="Thumbnail">
         </div>
 
-        <label><i class="fab fa-youtube"></i> Link de YouTube</label>
-        <input type="url" id="link" placeholder="https://youtube.com/watch?v=...">
-
-        <label><i class="fas fa-video"></i> Link del RAW <span class="required-badge">Obligatorio Top 50</span></label>
-        <input type="url" id="raw" placeholder="Google Drive, Mega, etc.">
-
-        <label><i class="fas fa-comment-dots"></i> Comentarios / Detalles <span class="optional-badge">Opcional</span></label>
-        <textarea id="comments" rows="3" placeholder="Ej: Me costó 5000 intentos, lo jugué a 360fps..."></textarea>
-
-        <button onclick="submitRecord()" class="btn-submit"><i class="fas fa-paper-plane"></i> ENVIAR AL EQUIPO STAFF</button>
-        <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> VOLVER AL HUB PRINCIPAL</a>
+        <button class="btn" id="s-btn" onclick="submitRecord()"><i class="fas fa-paper-plane"></i> ENVIAR RÉCORD AL SERVIDOR</button>
+        <a href="index.html" class="btn-back">Cancelar y volver</a>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script>
-        const firebaseConfig = { 
-            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
-            authDomain: "scullylist.firebaseapp.com", 
-            databaseURL: "https://scullylist-default-rtdb.firebaseio.com", 
-            projectId: "scullylist", 
-            storageBucket: "scullylist.firebasestorage.app", 
-            messagingSenderId: "498548914021", 
-            appId: "1:498548914021:web:59128b5e06b36a4e81938c", 
-            measurementId: "G-X3JF2DVWYH" 
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        const fC = { apiKey:"AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", authDomain:"scullylist.firebaseapp.com", databaseURL:"https://scullylist-default-rtdb.firebaseio.com", projectId:"scullylist", storageBucket:"scullylist.firebasestorage.app", messagingSenderId:"498548914021", appId:"1:498548914021:web:59128b5e06b36a4e81938c" };
+        firebase.initializeApp(fC); const db = firebase.database();
+        const $ = id => document.getElementById(id);
 
-        // FUNCIÓN PARA CARGAR LOS NIVELES EN EL SELECT
-        db.ref('levels').on('value', (snap) => {
-            const rawData = snap.val() || {};
-            const levels = Array.isArray(rawData) ? rawData : Object.values(rawData);
+        // MOTOR SMART SCANNER
+        function scanLink() {
+            const url = $('s-y').value;
+            const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
             
-            // Limpiar y poblar el select
-            const select = document.getElementById('level');
-            select.innerHTML = '<option value="" disabled selected>-- Selecciona un Demon --</option>';
-            
-            // Filtrar y ordenar niveles válidos
-            const validLevels = levels.filter(l => l && l.name);
-            
-            validLevels.forEach(l => {
-                const opt = document.createElement('option');
-                opt.value = l.name;
-                opt.innerText = l.name;
-                select.appendChild(opt);
-            });
-        });
-
-        function showToast(msg, isError=false) {
-            const t = document.getElementById("scullyToast");
-            t.innerHTML = isError ? `<i class="fas fa-times-circle"></i> ${msg}` : `<i class="fas fa-check-circle"></i> ${msg}`;
-            t.style.backgroundColor = isError ? "var(--red)" : "var(--green)";
-            t.className = "show"; setTimeout(() => { t.className = t.className.replace("show", ""); }, 3500);
+            if(match && match[1]) {
+                $('yt-thumb').src = `https://img.youtube.com/vi/${match[1]}/mqdefault.jpg`;
+                $('scanner-box').style.display = 'block';
+                $('s-btn').classList.add('active'); // Habilita el botón
+            } else {
+                $('scanner-box').style.display = 'none';
+                $('s-btn').classList.remove('active'); // Deshabilita el botón
+            }
         }
 
         function submitRecord() {
-            const data = {
-                player: document.getElementById('player').value.trim(),
-                level: document.getElementById('level').value, // Lee el valor del select
-                link: document.getElementById('link').value.trim(),
-                raw: document.getElementById('raw').value.trim() || "No proporcionado",
-                comments: document.getElementById('comments').value.trim() || "Sin comentarios",
-                timestamp: Date.now()
-            };
-
-            if(!data.player || !data.level || !data.link) {
-                return showToast("Llena los campos obligatorios", true);
-            }
-
-            db.ref('submissions').push(data).then(() => {
-                showToast("¡Récord enviado con éxito!");
-                document.getElementById('player').value = "";
-                document.getElementById('level').value = "";
-                document.getElementById('link').value = "";
-                document.getElementById('raw').value = "";
-                document.getElementById('comments').value = "";
-            }).catch(e => {
-                showToast("Error de conexión al enviar.", true);
-            });
+            const p = $('s-p').value.trim(), l = $('s-l').value.trim(), y = $('s-y').value.trim(), r = $('s-r').value.trim(), c = $('s-c').value.trim();
+            if(!p || !l || !y) return alert("Faltan datos obligatorios.");
+            
+            db.ref('submissions').push({ player: p, level: l, link: y, raw: r, comments: c, timestamp: Date.now() })
+            .then(() => {
+                $('s-btn').innerHTML = "<i class='fas fa-check'></i> ENVIADO CORRECTAMENTE";
+                $('s-btn').style.background = "#00ff66";
+                setTimeout(() => location.href = "index.html", 1500);
+            }).catch(e => alert("Error de conexión."));
         }
     </script>
 </body>
