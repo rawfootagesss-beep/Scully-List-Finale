@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>The Scully List | Hub OMNI v22.5</title>
+    <title>The Scully List | Hub OMNI v23</title>
     <link rel="icon" type="image/png" href="favicon.png">
     
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -39,13 +38,14 @@
             scroll-behavior: smooth; 
         }
 
-        /* Scrollbar */
         ::-webkit-scrollbar { 
             width: 6px; 
         } 
+        
         ::-webkit-scrollbar-track { 
             background: var(--bg); 
         } 
+        
         ::-webkit-scrollbar-thumb { 
             background: var(--accent); 
             border-radius: 10px; 
@@ -78,7 +78,6 @@
             position: sticky; 
             top: 0; 
             z-index: 2000; 
-            box-shadow: 0 5px 20px rgba(255, 51, 51, 0.4); 
         }
 
         /* Ticker de Noticias */
@@ -192,7 +191,6 @@
             background: var(--accent); 
             color: #000; 
             transform: translateY(-3px); 
-            box-shadow: var(--glow); 
             border-color: var(--accent); 
         }
 
@@ -212,7 +210,6 @@
             box-shadow: 0 0 15px rgba(0,255,255,0.3); 
         }
 
-        /* Etiquetas/Badges */
         .badge-new { 
             background: var(--purple); 
             color: #fff; 
@@ -224,7 +221,6 @@
             top: -8px; 
             right: -8px; 
             animation: pulse 1.5s infinite; 
-            box-shadow: 0 0 10px var(--purple); 
         }
 
         @keyframes pulse { 
@@ -232,20 +228,30 @@
             50% { transform: scale(1.1); } 
         }
 
-        /* Contenedor Principal */
+        /* Contenedores y Acciones Superiores */
         .container { 
             width: 95%; 
             max-width: 1200px; 
             margin: 40px auto; 
         }
 
+        .top-actions { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            margin-bottom: 40px; 
+            flex-wrap: wrap; 
+            gap: 20px; 
+        }
+        
         /* Live Activity Feed */
         .live-feed { 
+            flex: 1; 
+            min-width: 300px; 
             background: rgba(10,10,10,0.9); 
             border: 1px solid var(--border); 
             border-radius: 15px; 
             padding: 20px; 
-            margin-bottom: 40px; 
             box-shadow: inset 0 0 20px rgba(0,0,0,0.8); 
         }
 
@@ -281,6 +287,23 @@
             color: #fff; 
         }
 
+        /* Caja de Sugerencias */
+        .suggest-box { 
+            background: var(--card-bg); 
+            border: 1px solid var(--purple); 
+            border-radius: 15px; 
+            padding: 20px; 
+            text-align: center; 
+            min-width: 250px; 
+        }
+
+        .suggest-box h3 { 
+            margin: 0 0 10px; 
+            color: var(--purple); 
+            font-size: 0.9rem; 
+            text-transform: uppercase; 
+        }
+
         /* Sección del Trono (Top 1) */
         .throne-section { 
             width: 90%; 
@@ -294,7 +317,6 @@
             border-radius: 30px; 
             padding: 60px; 
             border: 2px solid var(--accent); 
-            box-shadow: var(--glow); 
             display: flex; 
             align-items: center; 
             position: relative; 
@@ -306,6 +328,7 @@
 
         .throne-card:hover { 
             transform: scale(1.02); 
+            box-shadow: var(--glow);
         }
 
         .throne-card::before { 
@@ -322,7 +345,7 @@
             text-align: left; 
         }
 
-        /* Cuadrícula de Niveles (Grid) */
+        /* Grid Principal de Niveles */
         .list-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
@@ -346,7 +369,6 @@
             border-color: var(--accent); 
             transform: scale(1.02); 
             background: rgba(255,255,255,0.04); 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5); 
         }
 
         .level-card img { 
@@ -367,18 +389,7 @@
             font-family: 'JetBrains Mono'; 
         }
 
-        /* Identidad Scully (Status Tracker) */
-        .status-tracker { 
-            max-width: 800px; 
-            margin: 80px auto 40px; 
-            padding: 50px; 
-            background: var(--card-bg); 
-            border-radius: 40px; 
-            border: 1px solid var(--border); 
-            text-align: center; 
-        }
-
-        /* Chat Global (NUEVO) */
+        /* Chat Global Público */
         .global-chat-section { 
             max-width: 800px; 
             margin: 0 auto 60px; 
@@ -401,15 +412,30 @@
 
         .chat-bubble { 
             background: rgba(0,0,0,0.5); 
-            padding: 12px 18px; 
+            padding: 12px; 
             border-radius: 15px; 
             border: 1px solid #222; 
             font-size: 0.85rem; 
             line-height: 1.4; 
             animation: fadeIn 0.3s ease; 
+            display: flex; 
+            gap: 15px; 
+            align-items: flex-start; 
         }
 
-        .chat-bubble b { 
+        .chat-pfp { 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%; 
+            border: 1px solid #444; 
+            object-fit: cover; 
+        }
+
+        .chat-info { 
+            flex: 1; 
+        }
+
+        .chat-info b { 
             color: var(--cyan); 
             font-weight: 800; 
             text-transform: uppercase; 
@@ -417,19 +443,30 @@
             letter-spacing: 1px; 
         }
 
-        .chat-bubble span { 
+        .chat-info span { 
             font-size: 0.6rem; 
             color: #666; 
             margin-left: 8px; 
         }
 
-        .chat-bubble .text { 
+        .chat-info .text { 
             margin-top: 5px; 
             color: #ddd; 
             word-break: break-word; 
         }
 
-        /* Pie de Página y Color Picker */
+        /* Tracker e Identidad */
+        .status-tracker { 
+            max-width: 800px; 
+            margin: 80px auto 40px; 
+            padding: 50px; 
+            background: var(--card-bg); 
+            border-radius: 40px; 
+            border: 1px solid var(--border); 
+            text-align: center; 
+        }
+
+        /* Footer y Configuración Visual */
         .footer-credits { 
             padding: 60px 20px; 
             text-align: center; 
@@ -447,7 +484,6 @@
             color: #000; 
             border-radius: 50%; 
             cursor: pointer; 
-            box-shadow: var(--glow); 
             margin-top: 20px; 
             transition: 0.3s; 
             font-size: 1.2rem; 
@@ -455,6 +491,7 @@
 
         .color-trigger:hover { 
             transform: scale(1.1); 
+            box-shadow: var(--glow);
         }
 
         #themeColor { 
@@ -463,7 +500,7 @@
             pointer-events: none; 
         }
 
-        /* Modo Enfoque (Cinema Mode) */
+        /* Modo Cine (Cinema Mode Modal) */
         .cinema-mod { 
             display: none; 
             position: fixed; 
@@ -502,7 +539,6 @@
         .cinema-vid { 
             border-radius: 15px; 
             overflow: hidden; 
-            box-shadow: 0 0 40px rgba(255,102,0,0.2); 
             border: 2px solid var(--accent); 
             background: #000; 
         }
@@ -544,7 +580,7 @@
             background: rgba(255,255,255,0.03); 
         }
 
-        /* Modal Base AI */
+        /* Modales Generales (Sugerencias, Titan Card, AI) */
         .modal { 
             display: none; 
             position: fixed; 
@@ -564,10 +600,29 @@
             border: 1px solid var(--cyan); 
             text-align: center; 
             position: relative; 
-            box-shadow: 0 0 40px rgba(0,255,255,0.15); 
         }
 
-        /* Media Queries Móvil */
+        /* Inputs para Modales */
+        input.g-input { 
+            width: 100%; 
+            background: #000; 
+            border: 1px solid #333; 
+            color: #fff; 
+            padding: 12px; 
+            border-radius: 8px; 
+            font-family: inherit; 
+            font-size: 0.9rem; 
+            outline: none; 
+            box-sizing: border-box; 
+            margin-bottom: 15px; 
+            transition: 0.3s;
+        }
+
+        input.g-input:focus { 
+            border-color: var(--cyan); 
+        }
+        
+        /* Media Queries (Móvil) */
         @media(max-width: 900px) {
             .cinema-content { 
                 grid-template-columns: 1fr; 
@@ -582,7 +637,13 @@
                 top: 10px; 
                 right: 20px; 
                 font-size: 2rem; 
-                text-shadow: 0 0 10px #000; 
+            }
+            .top-actions {
+                flex-direction: column;
+            }
+            .live-feed, .suggest-box {
+                width: 100%;
+                box-sizing: border-box;
             }
         }
     </style>
@@ -597,9 +658,12 @@
         <p style="color: #888; max-width: 400px; line-height: 1.6;">El sistema se encuentra en Cuarentena de Ingeniería. Mantenimiento de red en progreso dictado por el Owner.</p>
     </div>
 
-    <div id="globalAlert">ALERTA DE SISTEMA COMPROMETIDO</div>
+    <div id="globalAlert">ALERTA DE SISTEMA</div>
+    
     <div class="news-ticker">
-        <div class="ticker-content" id="ticker-box">CARGANDO TRANSMISIONES GLOBALES...</div>
+        <div class="ticker-content" id="ticker-box">
+            CARGANDO TRANSMISIONES...
+        </div>
     </div>
     
     <nav class="staff-bar">
@@ -616,13 +680,15 @@
         
         <div class="main-nav">
             <a href="index.html" class="btn-scully active"><i class="fas fa-list-ol"></i> Lista</a>
-            <a href="submit.html" class="btn-scully"><i class="fas fa-upload"></i> Smart Submit <span class="badge-new" style="background:var(--green); box-shadow: 0 0 10px var(--green);">AI</span></a>
-            <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking Global</a>
+            <a href="submit.html" class="btn-scully"><i class="fas fa-upload"></i> Smart Submit <span class="badge-new" style="background:var(--green);">AI</span></a>
+            <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking</a>
             <a href="market.html" class="btn-scully" style="color:var(--gold); border-color:rgba(255,215,0,0.3);"><i class="fas fa-shopping-cart"></i> Mercado <span class="badge-new">XP</span></a>
             <a href="https://discord.gg/96W3MWrZ2P" target="_blank" class="btn-scully" style="color:var(--discord); border-color:rgba(114,137,218,0.3);"><i class="fab fa-discord"></i> Discord</a>
             <a href="changelog.html" class="btn-scully" style="color:var(--cyan); border-color:rgba(0,255,255,0.3);"><i class="fas fa-file-code"></i> Changelog</a>
             <a href="rules.html" class="btn-scully"><i class="fas fa-book"></i> Reglas</a>
+            
             <button class="btn-scully btn-ai" onclick="runScullyAI()"><i class="fas fa-brain"></i> Scully AI</button>
+            
             <a href="login.html" class="btn-scully" id="nav-login"><i class="fas fa-user"></i> Acceso</a>
             <a href="admin.html" id="adminBtn" class="btn-scully" style="display:none; background:var(--accent); color:#000; border:none; font-weight:800;"><i class="fas fa-terminal"></i> MASTER PANEL</a>
         </div>
@@ -630,11 +696,21 @@
 
     <main class="container">
         
-        <div class="live-feed">
-            <h3><i class="fas fa-satellite-dish" style="animation: pulse 2s infinite;"></i> Pulso de la Red OMNI (Live)</h3>
-            <div class="feed-scroll" id="feed-box">
-                <div class="feed-item" style="color:#666;">Conectando con el servidor base...</div>
+        <div class="top-actions">
+            
+            <div class="live-feed">
+                <h3><i class="fas fa-satellite-dish" style="animation: pulse 2s infinite;"></i> Pulso de la Red (Live)</h3>
+                <div class="feed-scroll" id="feed-box">
+                    <div class="feed-item" style="color:#666;">Conectando con el servidor base...</div>
+                </div>
             </div>
+            
+            <div class="suggest-box">
+                <h3><i class="fas fa-lightbulb"></i> Sugerir Nivel</h3>
+                <p style="font-size:0.7rem; color:#888; margin-bottom:15px;">¿Falta un demon importante en la lista?</p>
+                <button class="btn-scully" style="background:var(--purple); color:#fff; border:none; width:100%; justify-content:center;" onclick="document.getElementById('sugModal').style.display='block'">ENVIAR SUGERENCIA AL STAFF</button>
+            </div>
+
         </div>
 
         <section class="throne-section" id="throneDisplay"></section>
@@ -642,19 +718,24 @@
         <div class="list-grid" id="main-list"></div>
 
         <section class="status-tracker">
-            <h2 style="color:var(--accent); text-transform: uppercase; font-size: 1.8rem; margin-top:0;"><i class="fas fa-id-card"></i> Ecosistema de Jugador</h2>
-            <p style="color:#888; font-size:0.95rem; margin-bottom:30px; line-height:1.6;">Acumula XP superando niveles, únete a clanes y reclama recompensas. Genera tu Tarjeta Titán para presumir tus estadísticas en redes sociales.</p>
+            <h2 style="color:var(--accent); text-transform: uppercase; font-size: 1.8rem; margin-top:0;"><i class="fas fa-id-card"></i> Identidad Titán</h2>
+            <p style="color:#888; font-size:0.95rem; margin-bottom:30px; line-height:1.6;">Genera tu Tarjeta Titán para presumir tus estadísticas conectadas al Ranking Global, o gestiona tus compras de mercado.</p>
             <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
                 <a href="login.html" class="btn-scully" style="padding:15px 35px;"><i class="fas fa-user"></i> GESTIONAR CUENTA</a>
-                <button class="btn-scully" style="background:var(--accent); color:#000; border:none; padding:15px 35px; font-weight:800;" onclick="generateTitanCard()"><i class="fas fa-download"></i> GENERAR TITAN CARD</button>
+                
+                <button class="btn-scully" style="background:var(--accent); color:#000; border:none; padding:15px 35px; font-weight:800;" onclick="document.getElementById('tc-modal').style.display='block'">
+                    <i class="fas fa-download"></i> FORJAR TITAN CARD
+                </button>
             </div>
         </section>
 
         <section class="global-chat-section">
             <h2 style="color:var(--cyan); text-transform: uppercase; font-size: 1.5rem; margin-top:0; border-bottom:1px solid var(--border); padding-bottom:15px;"><i class="fas fa-globe"></i> Comunidad Global</h2>
+            
             <div class="chat-messages" id="global-chat-box">
                 <p style="text-align:center; color:#555; font-size:0.8rem; margin-top:50px;">Conectando a los servidores de comunicación...</p>
             </div>
+            
             <div style="display:flex; gap:10px; background:#000; padding:15px; border-radius:15px; border:1px solid #222;">
                 <input type="text" id="g-chat-input" placeholder="Inicia sesión para participar en el chat global..." disabled onkeypress="if(event.keyCode==13) sendGlobalChat()" style="flex:1; background:transparent; border:none; color:#fff; font-size:0.9rem; outline:none;">
                 <button id="g-chat-btn" class="btn-scully" style="background:var(--cyan); color:#000; border:none; opacity:0.5; pointer-events:none; padding:10px 20px;" onclick="sendGlobalChat()"><i class="fas fa-paper-plane"></i></button>
@@ -692,11 +773,35 @@
         </div>
     </div>
 
+    <div id="sugModal" class="modal">
+        <div class="modal-content" style="border-color:var(--purple);">
+            <span style="position:absolute; top:15px; right:20px; color:#888; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('sugModal').style.display='none'">✕</span>
+            <h2 style="color:var(--purple); margin-top:0;"><i class="fas fa-lightbulb"></i> Sugerir Nivel</h2>
+            
+            <input type="text" id="sug-n" class="g-input" placeholder="Nombre del Nivel (Obligatorio)">
+            <input type="text" id="sug-i" class="g-input" placeholder="ID del Nivel en GD (Opcional)">
+            
+            <button class="btn-scully" style="background:var(--purple); color:#fff; width:100%; justify-content:center; border:none;" onclick="sendSuggestion()">ENVIAR SUGERENCIA AL STAFF</button>
+        </div>
+    </div>
+
+    <div id="tc-modal" class="modal">
+        <div class="modal-content" style="border-color:var(--accent);">
+            <span style="position:absolute; top:15px; right:20px; color:#888; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('tc-modal').style.display='none'">✕</span>
+            <h2 style="color:var(--accent); margin-top:0;"><i class="fas fa-id-card"></i> Forjar Titan Card</h2>
+            <p style="font-size:0.8rem; color:#aaa; margin-bottom:20px;">Ingresa el Nick exacto de un jugador registrado en el Ranking Global.</p>
+            
+            <input type="text" id="tc-nick" class="g-input" placeholder="Nick del Jugador...">
+            
+            <button class="btn-scully" style="background:var(--accent); color:#000; width:100%; justify-content:center; border:none; font-weight:800;" onclick="generateTitanCard()"><i class="fas fa-download"></i> DESCARGAR IMAGEN</button>
+        </div>
+    </div>
+
     <div id="aiModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="border-color:var(--cyan);">
             <h2 style="color:var(--cyan); font-family:'JetBrains Mono'; margin-top:0;"><i class="fas fa-brain"></i> SCULLY AI ENGINE</h2>
-            <div id="aiText" style="font-size:1.1rem; margin:30px 0; color:#fff; line-height:1.6;">Iniciando escaneo de red neuronal...</div>
-            <button class="btn-scully" onclick="document.getElementById('aiModal').style.display='none'" style="background:var(--cyan); color:#000; width:100%; justify-content:center; border:none; font-weight:800;">CERRAR ANÁLISIS</button>
+            <div id="aiText" style="font-size:1.1rem; margin:30px 0; color:#fff;">Analizando red neuronal...</div>
+            <button class="btn-scully" onclick="document.getElementById('aiModal').style.display='none'" style="background:var(--cyan); color:#000; width:100%; justify-content:center; border:none;">CERRAR</button>
         </div>
     </div>
 
@@ -705,7 +810,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     
     <script>
-        // Configuración de Firebase
+        // CONFIGURACIÓN BASE DE DATOS
         const firebaseConfig = { 
             apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
             authDomain: "scullylist.firebaseapp.com", 
@@ -721,25 +826,27 @@
         const db = firebase.database();
         
         let fullData = {};
-        let currentChatUser = null; // Variable para identificar a quien escribe en el chat global
+        let currentUserData = { name: null, pfp: null };
 
-        // Manejo del color del tema
+        // Selector de Tema 
         const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600';
         updateThemeColor(savedColor);
         
-        function updateThemeColor(color) { 
-            document.documentElement.style.setProperty('--accent', color); 
-            localStorage.setItem('scully-theme-color', color); 
+        function updateThemeColor(c) { 
+            document.documentElement.style.setProperty('--accent', c); 
+            localStorage.setItem('scully-theme-color', c); 
         }
 
-        // Array Helper seguro
+        // Filtro Seguro para Base de Datos
         const nexus = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
 
-        // LECTURA MAESTRA Y RENDERIZADO PRINCIPAL
+        // ==========================================
+        // LECTURA DE EVENTOS EN TIEMPO REAL
+        // ==========================================
         db.ref('/').on('value', snap => {
             fullData = snap.val() || {};
             
-            // 1. Pantalla de Cuarentena
+            // 1. Detección de Cuarentena (Lockdown)
             if (fullData.system_settings && fullData.system_settings.lockdown_active) {
                 document.getElementById('lockdownScreen').style.display = 'flex';
                 return; 
@@ -747,25 +854,25 @@
                 document.getElementById('lockdownScreen').style.display = 'none';
             }
 
-            // 2. Extracción de Niveles
+            // 2. Procesamiento de Niveles y Trono
             const lvls = nexus(fullData.levels);
             renderThrone(lvls);
             renderLevels(lvls);
             
-            // 3. Extracción de Live Feed
+            // 3. Procesamiento del Feed de Actividad del Staff
             renderLiveFeed(fullData.staff_logs || {});
             
-            // 4. Extracción del Chat Global
+            // 4. Procesamiento del Chat Global
             renderGlobalChat(fullData.global_chat || {});
 
-            // 5. Configuración de Sistema (CSS y Alertas)
+            // 5. Configuración Global (Alertas y CSS)
             if (fullData.system_settings) {
-                const alertEl = document.getElementById('globalAlert');
+                const aE = document.getElementById('globalAlert');
                 if (fullData.system_settings.global_alert) { 
-                    alertEl.innerText = fullData.system_settings.global_alert_msg; 
-                    alertEl.style.display = 'block'; 
+                    aE.innerText = fullData.system_settings.global_alert_msg; 
+                    aE.style.display = 'block'; 
                 } else { 
-                    alertEl.style.display = 'none'; 
+                    aE.style.display = 'none'; 
                 }
 
                 if (fullData.system_settings.custom_css) {
@@ -773,263 +880,358 @@
                 }
             }
 
-            // 6. Ticker Clásico (Changelog Logs)
+            // 6. Log de Actualizaciones (Changelog Ticker)
             if (fullData.admin_changelog) {
-                const tickerHtml = Object.values(fullData.admin_changelog).reverse().slice(0, 5).map(log => `
-                    <span class="log-item"><i class="fas fa-code" style="color:var(--accent)"></i> ${log.title}</span>
-                `).join("");
-                document.getElementById('ticker-box').innerHTML = tickerHtml || "OPERANDO AL 100% DE CAPACIDAD";
+                const tH = Object.values(fullData.admin_changelog).reverse().slice(0, 5).map(log => {
+                    return `<span class="log-item"><i class="fas fa-code" style="color:var(--accent)"></i> ${log.title}</span>`;
+                }).join("");
+                document.getElementById('ticker-box').innerHTML = tH || "OPERANDO AL 100% DE CAPACIDAD";
             }
         });
 
         // ==========================================
-        // FUNCIONES DE RENDERIZADO DEL DOM
+        // FUNCIONES DE RENDERIZADO UI
         // ==========================================
 
-        // Renderizar el Jefe Top 1
         function renderThrone(lvls) { 
-            if (!lvls || !lvls[0]) return; 
-            const throne = lvls[0];
+            if (!lvls[0]) return; 
+            const t = lvls[0];
+            
             document.getElementById('throneDisplay').innerHTML = `
-                <div class="throne-card" onclick="openCinema(0)" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95) 40%, transparent), url('https://i.ytimg.com/vi/${throne.id}/maxresdefault.jpg');">
+                <div class="throne-card" onclick="openCinema(0)" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95) 40%, transparent), url('https://i.ytimg.com/vi/${t.id}/maxresdefault.jpg');">
                     <div class="throne-info">
                         <div style="background:var(--accent); color:#000; padding:6px 15px; border-radius:50px; font-size:0.6rem; font-weight:900; margin-bottom:15px; display:inline-block;">TOP #1 DEMON</div>
-                        <h2 style="font-size:clamp(2.5rem, 5vw, 4.5rem); margin:0; text-transform:uppercase; letter-spacing:-2px;">${throne.name}</h2>
-                        <p style="color:#aaa; margin:10px 0 25px;">VERIFICADOR: <b style="color:var(--accent);">${throne.first || 'Nadie'}</b></p>
+                        <h2 style="font-size:clamp(2.5rem, 5vw, 4.5rem); margin:0; text-transform:uppercase; letter-spacing:-2px;">${t.name}</h2>
+                        <p style="color:#aaa; margin:10px 0 25px;">VERIFICADOR: <b style="color:var(--accent);">${t.first || 'Nadie'}</b></p>
                         <button class="btn-scully" style="border-color:var(--accent);"><i class="fas fa-play-circle"></i> ABRIR MODO ENFOQUE</button>
                     </div>
                 </div>
             `;
         }
 
-        // Renderizar la Grid de Niveles
         function renderLevels(lvls) { 
             let htmlContent = "";
-            for(let i = 1; i < lvls.length; i++) {
+            
+            for (let i = 1; i < lvls.length; i++) {
                 const level = lvls[i];
                 let xp = Math.max(100 - (i * 0.6), 5).toFixed(1);
                 
-                let bountyStyle = ""; 
-                let bountyIcon = '<i class="fas fa-star"></i>'; 
-                let xpColor = "var(--accent)";
+                // Lógica de Contratos (Bounties)
+                let bS = ""; 
+                let bI = '<i class="fas fa-star"></i>'; 
+                let xC = "var(--accent)";
                 
-                // Aplicar estilo dorado si es un Contrato
-                if(level.bounty) {
-                    xp = (xp * 2).toFixed(1);
-                    bountyStyle = "border-color:var(--gold); box-shadow: 0 0 15px rgba(255,215,0,0.2);";
-                    bountyIcon = '<i class="fas fa-fire"></i> BOUNTY:'; 
-                    xpColor = "var(--gold)";
+                if (level.bounty) { 
+                    xp = (xp * 2).toFixed(1); 
+                    bS = "border-color:var(--gold); box-shadow: 0 0 15px rgba(255,215,0,0.2);"; 
+                    bI = '<i class="fas fa-fire"></i> BOUNTY:'; 
+                    xC = "var(--gold)"; 
                 }
                 
                 htmlContent += `
-                    <div class="level-card" onclick="openCinema(${i})" style="${bountyStyle}">
-                        <img src="https://img.youtube.com/vi/${level.id}/mqdefault.jpg" alt="Thumbnail">
+                    <div class="level-card" onclick="openCinema(${i})" style="${bS}">
+                        <img src="https://img.youtube.com/vi/${level.id}/mqdefault.jpg">
                         <div>
                             <h3 style="font-size:1rem; margin:0; text-transform:uppercase;">${level.name}</h3>
-                            <p style="color:${xpColor}; font-weight:800; font-size:0.7rem; margin-top:5px;">
-                                ${bountyIcon} +${xp} XP
+                            <p style="color:${xC}; font-weight:800; font-size:0.7rem; margin-top:5px;">
+                                ${bI} +${xp} XP
                             </p>
                         </div>
                         <div class="level-rank">#${i + 1}</div>
                     </div>
                 `;
             }
-            document.getElementById('main-list').innerHTML = htmlContent || "<p style='text-align:center;'>Red de niveles vacía.</p>"; 
+            document.getElementById('main-list').innerHTML = htmlContent || "<p style='text-align:center;'>Red vacía.</p>"; 
         }
 
-        // Renderizar el Live Activity Feed del Staff
         function renderLiveFeed(logs) {
             let logArray = Object.values(logs).reverse().slice(0, 6);
+            
             let html = logArray.map(l => {
-                let actionColor = l.action.includes('Rechazó') ? '#ff3333' : (l.action.includes('Aprobó') ? '#00ff66' : '#aaa');
-                return `<div class="feed-item"><i class="fas fa-bolt" style="color:var(--accent);"></i> [${new Date(l.timestamp).toLocaleTimeString()}] <b style="color:var(--cyan);">${l.staff}</b>: <span style="color:${actionColor}">${l.action}</span></div>`;
+                let c = l.action.includes('Rechazó') ? '#ff3333' : (l.action.includes('Aprobó') ? '#00ff66' : '#aaa');
+                return `
+                    <div class="feed-item">
+                        <i class="fas fa-bolt" style="color:var(--accent);"></i> 
+                        [${new Date(l.timestamp).toLocaleTimeString()}] 
+                        <b style="color:var(--cyan);">${l.staff}</b>: 
+                        <span style="color:${c}">${l.action}</span>
+                    </div>
+                `;
             }).join('');
-            document.getElementById('feed-box').innerHTML = html || "<div class='feed-item'>Escuchando servidores OMNI...</div>";
+            
+            document.getElementById('feed-box').innerHTML = html || "<div class='feed-item'>Escuchando servidores...</div>";
         }
 
         // ==========================================
-        // LÓGICA DEL CHAT GLOBAL PÚBLICO
+        // CHAT GLOBAL - LÓGICA Y RENDERIZADO
         // ==========================================
         function renderGlobalChat(chatData) {
             const box = document.getElementById('global-chat-box');
             let html = "";
+            const pL = nexus(fullData.players);
             
             Object.values(chatData).slice(-40).forEach(msg => {
-                let nameColor = "var(--cyan)"; 
+                let p = pL.find(x => x.name === msg.user);
+                let pfp = (msg.photo && msg.photo !== "null") ? msg.photo : "https://i.imgur.com/6D2g3wU.png";
+                
+                let nC = "var(--cyan)"; 
+                let tG = ""; 
+                let bS = "1px solid #222";
+                
+                // Efectos Especiales de Tienda
+                if (p && p.inventory) {
+                    let inv = nexus(p.inventory);
+                    if (inv.some(i => i.itemName.toUpperCase().includes("VIP") || i.itemName.toUpperCase().includes("DORADO"))) { 
+                        nC = "var(--gold)"; 
+                        bS = "1px solid var(--gold)"; 
+                    }
+                    if (inv.some(i => i.itemName.toUpperCase().includes("NEON"))) { 
+                        tG = "text-shadow: 0 0 8px var(--cyan);"; 
+                    }
+                }
+                
                 html += `
-                <div class="chat-bubble">
-                    <b style="color:${nameColor};">${msg.user}</b> 
-                    <span>${new Date(msg.time).toLocaleTimeString()}</span>
-                    <div class="text">${msg.text}</div>
+                <div class="chat-bubble" style="border:${bS};">
+                    <img src="${pfp}" class="chat-pfp">
+                    <div class="chat-info">
+                        <b style="color:${nC};">${msg.user}</b> 
+                        <span>${new Date(msg.time).toLocaleTimeString()}</span>
+                        <div class="text" style="${tG}">${msg.text}</div>
+                    </div>
                 </div>`;
             });
             
-            box.innerHTML = html || "<p style='color:#666; text-align:center; margin-top:50px;'>El chat está vacío. Sé el primero en escribir.</p>";
-            box.scrollTop = box.scrollHeight; // Auto-scroll hacia abajo
+            box.innerHTML = html || "<p style='color:#666; text-align:center;'>El chat está vacío. Sé el primero en escribir.</p>";
+            box.scrollTop = box.scrollHeight;
         }
 
         function sendGlobalChat() {
-            if (!currentChatUser) return alert("Debes iniciar sesión para participar en el chat global.");
+            if (!currentUserData.name) {
+                return alert("Debes iniciar sesión para participar en el chat global.");
+            }
             
-            const input = document.getElementById('g-chat-input');
-            const text = input.value.trim();
+            const i = document.getElementById('g-chat-input');
+            const t = i.value.trim();
             
-            if (text.length > 0) {
-                db.ref('global_chat').push({
-                    user: currentChatUser,
-                    text: text,
-                    time: Date.now()
+            if (t.length > 0) {
+                db.ref('global_chat').push({ 
+                    user: currentUserData.name, 
+                    photo: String(currentUserData.pfp), 
+                    text: t, 
+                    time: Date.now() 
                 });
-                input.value = '';
+                i.value = '';
             }
         }
 
         // ==========================================
-        // MODO ENFOQUE (CINEMA MODE)
+        // SUGERENCIAS DE NIVELES (COMUNIDAD)
+        // ==========================================
+        function sendSuggestion() {
+            const n = document.getElementById('sug-n').value.trim();
+            const id = document.getElementById('sug-i').value.trim();
+            
+            if (!n) {
+                return alert("El nombre del nivel es obligatorio.");
+            }
+            
+            db.ref('level_suggestions').push({ 
+                name: n, 
+                id: id || "N/A", 
+                user: currentUserData.name || "Anónimo", 
+                time: Date.now() 
+            });
+            
+            // Disparar Webhook al Servidor de Discord
+            const url = fullData.system_settings?.discord?.url_sug;
+            if (url) {
+                fetch(url, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({
+                        content: `💡 **NUEVA SUGERENCIA:** El usuario ha sugerido añadir el nivel **${n}** (ID: ${id||"N/A"}) a la lista.`, 
+                        username: "SCULLY SYSTEM"
+                    }) 
+                });
+            }
+            
+            document.getElementById('sugModal').style.display = 'none';
+            alert("Sugerencia enviada exitosamente al equipo OMNI.");
+        }
+
+        // ==========================================
+        // CINEMA MODE (MODO ENFOQUE)
         // ==========================================
         function openCinema(idx) {
             const lvls = nexus(fullData.levels);
-            const level = lvls[idx];
-            if (!level) return;
-
-            // Inyectar Blur de Fondo
-            document.getElementById('c-bg').style.backgroundImage = `url('https://img.youtube.com/vi/${level.id}/maxresdefault.jpg')`;
+            const l = lvls[idx];
             
-            // Inyectar Video de YouTube
-            document.getElementById('c-vid-container').innerHTML = `<iframe width="100%" height="480" src="https://www.youtube.com/embed/${level.id}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
+            if (!l) return;
             
-            // Textos
-            document.getElementById('c-title').innerText = level.name;
-            document.getElementById('c-verif').innerText = level.first || 'N/A';
-            document.getElementById('c-bounty-badge').style.display = level.bounty ? 'inline-block' : 'none';
-
-            // Generar Lista de Vencedores Confirmados
-            const players = nexus(fullData.players);
-            const victors = players.filter(p => { 
-                let comps = nexus(p.completions); 
-                return comps.some(c => c.level === level.name) && !p.hidden; 
+            // Inyectar Blur Background
+            document.getElementById('c-bg').style.backgroundImage = `url('https://img.youtube.com/vi/${l.id}/maxresdefault.jpg')`;
+            
+            // Inyectar Iframe de Video
+            document.getElementById('c-vid-container').innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${l.id}?autoplay=1" frameborder="0" allowfullscreen style="min-height:350px;"></iframe>`;
+            
+            // Meta Textos
+            document.getElementById('c-title').innerText = l.name;
+            document.getElementById('c-verif').innerText = l.first || 'N/A';
+            document.getElementById('c-bounty-badge').style.display = l.bounty ? 'inline-block' : 'none';
+            
+            // Extraer y Renderizar Vencedores del Ranking
+            const victors = nexus(fullData.players).filter(p => { 
+                let c = nexus(p.completions); 
+                return c.some(x => x.level === l.name) && !p.hidden; 
             });
-
+            
             let vHTML = "";
             victors.forEach(p => {
-                if(p.name !== level.first) {
-                    let rec = nexus(p.completions).find(x => x.level === level.name);
+                if (p.name !== l.first) {
+                    let r = nexus(p.completions).find(x => x.level === l.name);
                     vHTML += `
                         <div class="v-row">
-                            <span style="font-weight:800; font-size:0.95rem;">${p.name}</span>
-                            <a href="${rec.link}" target="_blank" style="color:var(--cyan); text-decoration:none; font-weight:800; font-size:0.65rem; background:rgba(0,255,255,0.1); padding:6px 12px; border-radius:6px; border:1px solid rgba(0,255,255,0.2); transition:0.3s;"><i class="fas fa-play"></i> EVIDENCIA</a>
-                        </div>`;
+                            <span style="font-weight:800;">${p.name}</span>
+                            <a href="${r.link}" target="_blank" style="color:var(--cyan); text-decoration:none; font-weight:800; font-size:0.65rem; background:rgba(0,255,255,0.1); padding:6px 12px; border-radius:6px; border:1px solid rgba(0,255,255,0.2);">
+                                <i class="fas fa-play"></i> EVIDENCIA
+                            </a>
+                        </div>
+                    `;
                 }
             });
-
-            document.getElementById('c-victors').innerHTML = vHTML || '<p style="padding:20px; text-align:center; color:#555; font-size:0.8rem; border:1px solid #222; border-radius:10px;">El nivel permanece invicto.</p>';
             
-            // Mostrar Modal Inmersivo
+            document.getElementById('c-victors').innerHTML = vHTML || '<p style="padding:20px; text-align:center; color:#555; border:1px solid #222; border-radius:10px;">Nivel invicto por la comunidad.</p>';
+            
+            // Activar Modal
             document.getElementById('cinemaModal').style.display = "flex";
-            document.body.style.overflow = "hidden"; // Bloquea el scroll del fondo
+            document.body.style.overflow = "hidden";
         }
 
         function closeCinema() {
             document.getElementById('cinemaModal').style.display = "none";
-            document.getElementById('c-vid-container').innerHTML = ""; // Detiene la reproducción del video
+            document.getElementById('c-vid-container').innerHTML = ""; // Detiene el audio
             document.body.style.overflow = "auto";
         }
 
         // ==========================================
-        // GENERADOR DE TARJETAS (TITAN CARDS) HTML5
+        // TITAN CARD GENERATOR V2 (CANVAS HTML5)
         // ==========================================
         function generateTitanCard() {
-            let nick = prompt("Ingresa tu Nombre exacto (tal como aparece en tu perfil) para forjar tu Tarjeta:");
-            if(!nick) return;
-
+            let nick = document.getElementById('tc-nick').value.trim();
+            
+            if (!nick) {
+                return alert("Por favor, ingresa un Nick de jugador válido.");
+            }
+            
             let pL = nexus(fullData.players);
             let p = pL.find(x => x.name.toLowerCase() === nick.toLowerCase());
             
-            if(!p) return alert("Denegado: No se ha encontrado este perfil en la Base de Datos OMNI.");
+            if (!p) {
+                return alert("Acceso Denegado: No se ha encontrado el perfil de " + nick + " en el Ranking OMNI.");
+            }
 
-            // Crear el elemento Canvas en memoria
+            // Preparar Lienzo
             const canvas = document.createElement('canvas');
-            canvas.width = 800; 
+            canvas.width = 800;
             canvas.height = 450;
             const ctx = canvas.getContext('2d');
 
-            // Pintar Fondo Oscuro
-            ctx.fillStyle = '#050505'; 
+            // Fondo Oscuro Total
+            ctx.fillStyle = '#050505';
             ctx.fillRect(0, 0, 800, 450);
             
-            // Dibujar la Cuadrícula Cyberpunk
-            ctx.strokeStyle = '#111111'; 
+            // Grid Cyberpunk
+            ctx.strokeStyle = '#111111';
             ctx.lineWidth = 1;
-            for(let i=0; i<800; i+=40) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,450); ctx.stroke(); }
-            for(let i=0; i<450; i+=40) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(800,i); ctx.stroke(); }
+            for(let i = 0; i < 800; i += 40) { 
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 450); ctx.stroke(); 
+            }
+            for(let i = 0; i < 450; i += 40) { 
+                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(800, i); ctx.stroke(); 
+            }
 
-            // Borde Exterior Neón
-            ctx.strokeStyle = '#ff6600'; 
-            ctx.lineWidth = 10; 
+            // Borde Neón
+            ctx.strokeStyle = '#ff6600';
+            ctx.lineWidth = 10;
             ctx.strokeRect(10, 10, 780, 430);
 
-            // Textos: Nombre
-            ctx.fillStyle = '#ff6600'; 
+            // Renderizar Nombre de Usuario
+            ctx.fillStyle = '#ff6600';
             ctx.font = 'bold 55px "Courier New"';
             ctx.fillText(p.name.toUpperCase(), 40, 90);
 
-            // Textos: Rango
-            ctx.fillStyle = '#aaaaaa'; 
+            // Renderizar Rol (Admin/Helper/Verifier)
+            ctx.fillStyle = '#aaaaaa';
             ctx.font = 'bold 20px "Courier New"';
-            ctx.fillText(p.role ? "ROLE: " + p.role.toUpperCase() : "CLASS: VERIFIER", 40, 125);
+            ctx.fillText(p.role ? "ROLE: " + p.role.toUpperCase() : "CLASS: ELITE VERIFIER", 40, 125);
 
-            // Textos: Estadísticas
-            ctx.fillStyle = '#ffffff'; 
+            // Renderizar Puntos XP
+            ctx.fillStyle = '#ffffff';
             ctx.font = 'bold 35px Arial';
             ctx.fillText("XP TOTAL: " + (p.totalXP || 0).toFixed(1), 40, 200);
             
+            // Renderizar Cantidad de Récords
             let comps = nexus(p.completions);
             ctx.fillText("DEMONS COMPLETADOS: " + comps.length, 40, 260);
             
-            // Textos: Sindicato
-            let clanName = "LOBO SOLITARIO";
-            if(p.clanId && fullData.clans && fullData.clans[p.clanId]) clanName = fullData.clans[p.clanId].name;
+            // Detección de Clan
+            let cN = "LOBO SOLITARIO";
+            if (p.clanId && fullData.clans && fullData.clans[p.clanId]) {
+                cN = fullData.clans[p.clanId].name;
+            }
             ctx.fillStyle = '#00ffff';
-            ctx.fillText("SINDICATO: " + clanName.toUpperCase(), 40, 320);
-
-            // Textos: Marca de Agua
-            ctx.fillStyle = '#333333'; 
+            ctx.fillText("SINDICATO: " + cN.toUpperCase(), 40, 320);
+            
+            // Renderizar Biografía Personalizada
+            if (p.bio) {
+                ctx.fillStyle = '#888888';
+                ctx.font = 'italic 15px Arial';
+                ctx.fillText('"' + p.bio.substring(0, 60) + '"', 40, 360);
+            }
+            
+            // Marca de Agua del Sistema
+            ctx.fillStyle = '#333333';
             ctx.font = 'bold 18px "Courier New"';
             ctx.fillText("SYS.OMNI - THE SCULLY LIST IDENTITY", 40, 410);
 
-            // Iniciar Descarga de la Imagen
+            // Forzar Descarga
             const link = document.createElement('a');
             link.download = `OMNI_TITAN_CARD_${p.name}.png`;
             link.href = canvas.toDataURL("image/png");
             link.click();
             
-            alert("Tu Tarjeta Titán ha sido forjada y descargada con éxito.");
+            // Limpiar Modal
+            document.getElementById('tc-modal').style.display = 'none';
+            document.getElementById('tc-nick').value = '';
         }
 
         // ==========================================
-        // SCULLY AI ENGINE
+        // SISTEMA DE IA FAKE
         // ==========================================
         function runScullyAI() {
             document.getElementById('aiModal').style.display = 'block';
-            const aiText = document.getElementById('aiText');
-            aiText.innerHTML = "Sincronizando red neuronal con base de datos...";
+            const aT = document.getElementById('aiText');
+            aT.innerHTML = "Sincronizando con base de datos...";
             
             setTimeout(() => {
                 const lvls = nexus(fullData.levels);
-                if(lvls.length < 3) { aiText.innerHTML = "Nodos insuficientes."; return; }
-                const target = lvls[Math.floor(Math.random() * (lvls.length / 1.5))].name; 
+                if(lvls.length < 3) {
+                    aT.innerHTML = "Nodos insuficientes."; 
+                    return; 
+                }
+                const t = lvls[Math.floor(Math.random() * (lvls.length / 1.5))].name; 
                 
-                aiText.innerHTML = `
+                aT.innerHTML = `
                     <span style="color:#888; font-size:0.8rem;">ANÁLISIS COMPLETADO.</span><br><br>
-                    Algoritmo sugiere enfrentarse a:<br>
-                    <b style="color:var(--cyan); font-size:2.2rem; text-transform:uppercase; display:block; margin-top:10px;">${target}</b><br>
+                    Siguiente objetivo recomendado:<br>
+                    <b style="color:var(--cyan); font-size:2.2rem; text-transform:uppercase; display:block; margin-top:10px;">${t}</b><br>
                     <span style="font-size:0.8rem; color:#aaa;">Probabilidad matemática de éxito: ${Math.floor(Math.random() * 60 + 20)}%</span>
                 `;
             }, 1800);
         }
 
         // ==========================================
-        // VERIFICACIÓN DE SESIÓN (AUTH) Y CHAT GLOBAL
+        // AUTENTICACIÓN Y DESBLOQUEO DE HERRAMIENTAS
         // ==========================================
         auth.onAuthStateChanged(user => {
             if (user) {
@@ -1038,19 +1240,21 @@
                     const me = allP.find(p => p.email === user.email); 
                     
                     if (me) {
-                        // 1. Habilitar Input del Chat Global
-                        currentChatUser = me.name;
-                        const chatInput = document.getElementById('g-chat-input');
-                        const chatBtn = document.getElementById('g-chat-btn');
+                        // Guardar datos en variable global para el Chat
+                        currentUserData = { name: me.name, pfp: user.photoURL };
                         
-                        chatInput.disabled = false;
-                        chatInput.placeholder = `Conectado como ${me.name}. Escribe un mensaje a la comunidad...`;
-                        chatBtn.style.opacity = "1";
-                        chatBtn.style.pointerEvents = "all";
-
-                        // 2. Verificar Rango para Botón de Admin
+                        // Desbloquear input del Chat Global
+                        const ci = document.getElementById('g-chat-input');
+                        const cb = document.getElementById('g-chat-btn');
+                        
+                        ci.disabled = false;
+                        ci.placeholder = `Conectado como ${me.name}. Escribe a la comunidad...`;
+                        cb.style.opacity = "1";
+                        cb.style.pointerEvents = "all";
+                        
+                        // Mostrar Botón de Master Panel si es Staff
                         if (me.role === 'admin' || me.name.toLowerCase() === 'score' || me.role === 'helper' || me.role === 'owner') {
-                            document.getElementById('adminBtn').style.display = "inline-flex"; 
+                            document.getElementById('adminBtn').style.display = "inline-flex";
                         }
                     } 
                 });
