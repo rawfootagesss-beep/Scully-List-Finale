@@ -7,84 +7,52 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { 
-            --accent: #ff6600; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
-            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
-            --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
-            --green: #00ff66; --red: #ff3333; --blue: #00ccff; --yellow: #ffff00; --gold: #ffd700;
-        }
+        :root { --accent: #ff6600; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%); --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85); --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05); --green: #00ff66; --red: #ff3333; --blue: #00ccff; --yellow: #ffff00; --gold: #ffd700; }
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; overflow-x: hidden; }
-        
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
-
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
         .profile-container { width: 100%; max-width: 800px; margin-top: 40px; }
-        
         .header { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 25px 30px; border-radius: 25px; border: 1px solid var(--border); margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); flex-wrap: wrap; gap: 15px; }
         .header h1 { margin: 0; font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; text-transform: uppercase; }
         .header h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
         .header-btns { display: flex; gap: 10px; flex-wrap: wrap; }
         .btn-hub { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 10px 20px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
         .btn-hub:hover { background: var(--border); }
         .btn-logout { background: rgba(255,51,51,0.1); color: var(--red); border: 1px solid var(--red); padding: 10px 20px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
         .btn-logout:hover { background: var(--red); color: #000; box-shadow: 0 0 15px rgba(255,51,51,0.3); }
-
         .panel { background: var(--card-bg); border-radius: 25px; border: 1px solid var(--border); padding: 35px; margin-bottom: 25px; }
         .panel h2 { margin-top: 0; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 15px; text-transform: uppercase; }
         .panel h2 i { color: var(--blue); }
-
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; font-size: 0.75rem; color: var(--accent); font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-        
         input, textarea { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 15px; font-family: 'Lexend Deca'; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: 0.3s; resize: vertical; }
         input:focus, textarea:focus { border-color: var(--blue); box-shadow: 0 0 15px rgba(0,204,255,0.1); }
-        input:read-only { background: rgba(255,255,255,0.05); color: #888; cursor: not-allowed; border-color: #222 !important; box-shadow: none !important; text-transform: uppercase; font-weight: 800; text-align: center; }
-        
+        input:read-only { background: rgba(255,255,255,0.05); color: #888; cursor: not-allowed; border-color: #222 !important; text-align: center; }
         .btn-save { background: var(--blue); color: #000; border: none; padding: 15px 30px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 100%; display: flex; justify-content: center; gap: 10px; align-items: center; text-transform: uppercase; margin-top: 10px; }
         .btn-save:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0,204,255,0.4); }
         .btn-geo { background: rgba(0,255,102,0.1); color: var(--green); border: 1px solid var(--green); margin-bottom: 15px; }
-        .btn-geo:hover { background: var(--green); color: #000; box-shadow: 0 5px 20px rgba(0,255,102,0.3); }
         .btn-pfp { background: transparent; border: 1px solid var(--green); color: var(--green); }
-        .btn-pfp:hover { background: var(--green); color: #000; box-shadow: 0 5px 20px rgba(0,255,102,0.3); }
-        
         .claim-box { text-align: center; padding: 20px; }
         .claim-box h3 { color: #fff; font-size: 1.8rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: -1px; }
-        .claim-box h3 i { color: var(--accent); }
         .claim-box p { color: #888; font-size: 0.9rem; margin-bottom: 30px; line-height: 1.6; }
-
         #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 15px; padding: 15px 20px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; transform: translate(-50%, 50px); opacity: 0; }
         #scullyToast.show { visibility: visible; transform: translate(-50%, 0); opacity: 1; }
-
         .staff-badge { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 25px; background: rgba(255,255,0,0.1); border: 2px solid var(--yellow); color: var(--yellow); border-radius: 50px; font-weight: 900; font-size: 1.2rem; letter-spacing: 1px; margin-top: 10px; }
-
         .status-list { max-height: 250px; overflow-y: auto; padding-right: 10px; margin-top: 15px; }
         .record-card { background: rgba(0,0,0,0.4); border: 1px solid var(--border); padding: 15px 20px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .record-info h4 { margin: 0 0 5px 0; font-size: 0.95rem; color: #fff; }
         .record-info p { margin: 0; font-size: 0.75rem; color: #888; display: flex; align-items: center; gap: 5px; }
         .status-badge { padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .badge-pending { background: rgba(255,255,0,0.1); color: var(--yellow); border: 1px solid var(--yellow); }
-        .badge-accepted { background: rgba(0,255,102,0.1); color: var(--green); border: 1px solid var(--green); }
-        .badge-rejected { background: rgba(255,51,51,0.1); color: var(--red); border: 1px solid var(--red); }
-
-        /* Estilos de la Bóveda y Códigos */
-        .inv-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 10px; transition: 0.3s; }
-        .inv-item.equipped { background: rgba(0, 255, 102, 0.05); border-color: var(--green); }
-        .inv-item-name { font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; }
+        
+        /* ESTILOS INVENTARIO MEJORADO */
+        .inv-item { background: rgba(0,0,0,0.5); border: 1px solid #333; padding: 20px; border-radius: 15px; margin-bottom: 15px; transition: 0.3s; text-align: center; }
+        .inv-item.equipped { border-color: var(--green); box-shadow: 0 0 20px rgba(0,255,102,0.1); background: rgba(0,255,102,0.05); }
+        .inv-item-name { font-weight: 800; font-size: 1.2rem; color: #fff; margin-bottom: 15px; }
         .inv-item.equipped .inv-item-name { color: var(--green); }
-        .btn-equip { background: var(--cyan); color: #000; border: none; padding: 8px 15px; border-radius: 8px; font-weight: 800; font-size: 0.7rem; cursor: pointer; transition: 0.2s; }
-        .btn-equip.active { background: transparent; color: var(--red); border: 1px solid var(--red); }
-        .btn-equip:hover { transform: scale(1.05); }
+        
         .code-box { display: flex; gap: 10px; margin-bottom: 10px; }
         .code-box input { margin: 0; flex: 1; }
         .code-box button { width: auto; margin: 0; background: var(--gold); }
-
-        @media(max-width: 768px) {
-            .record-card, .inv-item { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .code-box { flex-direction: column; }
-            .btn-equip { width: 100%; }
-        }
+        @media(max-width: 768px) { .record-card { flex-direction: column; align-items: flex-start; gap: 10px; } .code-box { flex-direction: column; } }
     </style>
 </head>
 <body>
@@ -105,10 +73,6 @@
                 <p>Tu cuenta no está vinculada a ningún jugador.<br>Escribe tu Nickname de GD y proporciona una prueba.</p>
                 <input type="text" id="claimNick" placeholder="Tu Nick exacto en la lista..." style="margin-bottom:15px; text-align:center;">
                 <input type="text" id="claimProof" placeholder="Link de tu YouTube o Twitter..." style="margin-bottom:20px; text-align:center;">
-                <div class="staff-code-area">
-                    <p style="font-size:0.75rem; color:var(--yellow); font-weight:800; margin-bottom:10px;"><i class="fas fa-key"></i> INGRESO STAFF</p>
-                    <input type="password" id="staffCodeClaim" placeholder="Código de Staff (Opcional)" style="margin-bottom:20px; text-align:center; border-color:var(--yellow); background:rgba(255,255,0,0.05);">
-                </div>
                 <button onclick="sendClaimRequest()" class="btn-save" style="background:var(--accent);"><i class="fas fa-paper-plane"></i> RECLAMAR PERFIL</button>
             </div>
         </div>
@@ -117,15 +81,15 @@
             
             <div class="panel" style="border-color: var(--gold); box-shadow: 0 0 20px rgba(255,215,0,0.1);">
                 <h2 style="color:var(--gold); border-bottom-color: var(--gold);"><i class="fas fa-ticket-alt"></i> Canjear Códigos</h2>
-                <p style="font-size:0.8rem; color:#888; margin-bottom: 15px;">Canjea códigos secretos para obtener XP o Cosméticos Exclusivos. Los objetos irán directo a tu Bóveda sin ensuciar tus récords.</p>
+                <p style="font-size:0.8rem; color:#888; margin-bottom: 15px;">Canjea códigos secretos para obtener XP o Cosméticos Exclusivos.</p>
                 <div class="code-box">
                     <input type="text" id="promoCode" placeholder="Ingresa tu código secreto...">
                     <button class="btn-save" onclick="redeemCode()"><i class="fas fa-unlock"></i> RECLAMAR</button>
                 </div>
 
                 <h2 style="color:var(--cyan); border-bottom-color: #333; margin-top:35px;"><i class="fas fa-box-open"></i> La Bóveda (Inventario)</h2>
-                <p style="font-size:0.8rem; color:#888; margin-bottom: 15px;">Equipa los Títulos y Efectos que has comprado o desbloqueado para lucirlos en el Chat Global.</p>
-                <div id="inventoryContainer" class="status-list">
+                <p style="font-size:0.8rem; color:#888; margin-bottom: 15px;">Equipa los Títulos y Efectos que has comprado en el Mercado o desbloqueado para lucirlos en el Chat Global.</p>
+                <div id="inventoryContainer" class="status-list" style="max-height: 400px;">
                     <p style="text-align:center; color:#555; font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i> Cargando bóveda...</p>
                 </div>
             </div>
@@ -149,18 +113,11 @@
                 <h2 style="color:var(--accent);"><i class="fas fa-clipboard-list" style="color:var(--accent);"></i> Mis Récords</h2>
                 <div class="status-list" id="myRecordsStatus"><p style="text-align:center; color:#555; font-size:0.8rem;">Cargando...</p></div>
             </div>
-
-            <div class="panel" style="border-color: rgba(0,255,102,0.2);">
-                <h2 style="color:var(--green);"><i class="fas fa-image" style="color:var(--green);"></i> Foto de Perfil</h2>
-                <input type="text" id="pfpInput" placeholder="Link de Imgur/Discord terminados en .png o .jpg" style="margin-bottom:15px;">
-                <button onclick="requestPFP()" class="btn-save btn-pfp"><i class="fas fa-upload"></i> ACTUALIZAR FOTO</button>
-            </div>
-
+            
             <div id="staffZone" class="panel" style="border-color: rgba(255,255,0,0.3); text-align:center;">
                 <h2 style="color:var(--yellow); justify-content:center; border:none; padding:0; margin-bottom:15px;"><i class="fas fa-shield-alt" style="color:var(--yellow);"></i> Autorización Staff</h2>
                 <div id="staffInputArea"></div>
             </div>
-
         </div>
     </div>
 
@@ -174,12 +131,6 @@
         
         let currentUser = null, myProfileData = null, myPlayerIndex = -1, myNick = "";
 
-        const STAFF_CODES = {
-            "ADMIN-SCORE-777": { nick: "score", role: "admin" }, "ADMIN-AWRQ-888": { nick: "awrqsdt", role: "admin" },
-            "ADMIN-MEK-999": { nick: "mek", role: "admin" }, "HELP-BLITZ-111": { nick: "Blitz", role: "helper" },
-            "HELP-SOPA-222": { nick: "Sopa354", role: "helper" }, "HELP-NICO-333": { nick: "nico", role: "helper" }
-        };
-
         function showToast(msg, isError=false) {
             const t = document.getElementById("scullyToast");
             t.innerHTML = isError ? `<i class="fas fa-times-circle"></i> ${msg}` : `<i class="fas fa-check-circle"></i> ${msg}`;
@@ -191,10 +142,7 @@
         function logout() { auth.signOut(); }
 
         async function detectCountry() {
-            try {
-                showToast("Detectando red..."); const res = await fetch('https://ipapi.co/json/'); const data = await res.json();
-                document.getElementById('hiddenCountryCode').value = data.country_code.toLowerCase(); document.getElementById('displayCountry').value = data.country_name; showToast("Detección Exitosa");
-            } catch (e) { showToast("Bloqueado por Privacidad", true); }
+            try { showToast("Detectando red..."); const res = await fetch('https://ipapi.co/json/'); const data = await res.json(); document.getElementById('hiddenCountryCode').value = data.country_code.toLowerCase(); document.getElementById('displayCountry').value = data.country_name; showToast("Detección Exitosa"); } catch (e) { showToast("Bloqueado por Privacidad", true); }
         }
 
         function loadPlayerData() {
@@ -213,17 +161,15 @@
                     document.getElementById('twInput').value = myProfileData.socials?.tw || "";
                     document.getElementById('dcInput').value = myProfileData.socials?.dc || "";
 
-                    // Cargar Inventario y Registros
+                    // Cargar Inventario
                     loadInventory(myProfileData.inventory || [], myProfileData.activeCosmetic || "");
                     loadMyRecordsStatus(fullData.submissions || {}, fullData.history || {});
 
-                    // Cargar Zona Staff
+                    // Zona Staff
                     if(myProfileData.role) {
                         let c = myProfileData.role === 'admin' ? '#ff6600' : '#66fcf1'; let ic = myProfileData.role === 'admin' ? 'fa-crown' : 'fa-shield-alt';
                         document.getElementById('staffInputArea').innerHTML = `<div class="staff-badge" style="border-color:${c}; color:${c}; background:rgba(0,0,0,0.5);"><i class="fas ${ic}"></i> RANGO: ${myProfileData.role.toUpperCase()}</div><a href="admin.html" class="btn-save" style="background:${c}; color:#000; margin-top:20px; text-decoration:none;"><i class="fas fa-terminal"></i> ENTRAR AL MASTER PANEL</a>`;
-                    } else {
-                        document.getElementById('staffInputArea').innerHTML = `<input type="password" id="staffCodeProfile" placeholder="Ingresa tu Código de Staff..." style="margin-bottom:15px; border-color:var(--yellow); background:rgba(255,255,0,0.05); text-align:center;"><button onclick="upgradeToStaff()" class="btn-save" style="background:var(--yellow); color:#000;"><i class="fas fa-key"></i> ACTIVAR RANGO STAFF</button>`;
-                    }
+                    } else { document.getElementById('staffInputArea').innerHTML = `<p style="font-size:0.8rem; color:#888;">No tienes permisos administrativos.</p>`; }
                 } else {
                     document.getElementById('viewClaim').style.display = "block"; document.getElementById('viewProfile').style.display = "none";
                 }
@@ -231,7 +177,7 @@
         }
 
         // ==========================================
-        // SISTEMA DE CÓDIGOS Y BÓVEDA (LIMPIO)
+        // SISTEMA DE CÓDIGOS Y BÓVEDA (BOTONES GIGANTES)
         // ==========================================
         function redeemCode() {
             let code = document.getElementById("promoCode").value.trim();
@@ -241,30 +187,13 @@
             let usedCodes = JSON.parse(localStorage.getItem('used_codes_' + myNick) || '[]');
             if(usedCodes.includes(code)) return showToast("Este código ya fue canjeado", true);
 
-            // Aseguramos que el inventario sea un array para la comprobación
             let invList = myProfileData.inventory ? (Array.isArray(myProfileData.inventory) ? myProfileData.inventory : Object.values(myProfileData.inventory)) : [];
             let success = false;
 
-            // Easter Egg (No gasta uso)
-            if (code.toLowerCase() === "anubis") {
-                let egg = document.createElement('div');
-                egg.style = "position:fixed;inset:0;background:black;color:darkred;font-size:8vw;font-weight:bold;display:flex;justify-content:center;align-items:center;z-index:999999;";
-                egg.innerText = "UN PODEROSO ENEMIGO";
-                document.body.appendChild(egg);
-                setTimeout(() => egg.remove(), 4000);
-                document.getElementById("promoCode").value = "";
-                return;
-            }
-
-            // Códigos de XP
             if(code === "wernerantoniokurtz@gmail.com") {
-                // Modificamos totalXP en lugar de completions para no manchar el historial
                 db.ref(`players/${myPlayerIndex}/totalXP`).set((myProfileData.totalXP || 0) + 22);
-                showToast("¡+22 XP añadidos a tu cuenta!");
-                success = true;
-            } 
-            // Códigos de Cosméticos
-            else if (code === "SCULLYVIP") {
+                showToast("¡+22 XP añadidos a tu cuenta!"); success = true;
+            } else if (code === "SCULLYVIP") {
                 if(invList.some(i => i.itemName === "TITULO VIP")) return showToast("Ya tienes este cosmético", true);
                 db.ref(`players/${myPlayerIndex}/inventory`).push({ itemName: "TITULO VIP", date: Date.now() });
                 showToast("¡Cosmético VIP desbloqueado!"); success = true;
@@ -276,15 +205,9 @@
                 if(invList.some(i => i.itemName === "AURA DEMONIACA")) return showToast("Ya tienes este cosmético", true);
                 db.ref(`players/${myPlayerIndex}/inventory`).push({ itemName: "AURA DEMONIACA", date: Date.now() });
                 showToast("¡Aura Demoníaca desbloqueada!"); success = true;
-            } else {
-                return showToast("Código inválido", true);
-            }
+            } else { return showToast("Código inválido", true); }
 
-            if(success) {
-                usedCodes.push(code);
-                localStorage.setItem('used_codes_' + myNick, JSON.stringify(usedCodes));
-                document.getElementById("promoCode").value = "";
-            }
+            if(success) { usedCodes.push(code); localStorage.setItem('used_codes_' + myNick, JSON.stringify(usedCodes)); document.getElementById("promoCode").value = ""; }
         }
 
         function loadInventory(inventoryData, activeCosmetic) {
@@ -300,14 +223,14 @@
                     if(item.itemName.toUpperCase().includes("VIP") || item.itemName.toUpperCase().includes("DORADO")) iconClass = "fa-crown";
                     if(item.itemName.toUpperCase().includes("HACKER") || item.itemName.toUpperCase().includes("MATRIX")) iconClass = "fa-terminal";
                     if(item.itemName.toUpperCase().includes("AURA") || item.itemName.toUpperCase().includes("DEMON")) iconClass = "fa-fire-alt";
-                    if(item.itemName.toUpperCase().includes("NEON")) iconClass = "fa-bolt";
-
+                    
+                    // BOTONES GIGANTES Y VISIBLES
                     html += `
                     <div class="inv-item ${isEquipped ? 'equipped' : ''}">
                         <div class="inv-item-name"><i class="fas ${iconClass}"></i> ${item.itemName}</div>
                         ${isEquipped 
-                            ? `<button class="btn-equip active" onclick="equipCosmetic('')"><i class="fas fa-times"></i> QUITAR</button>` 
-                            : `<button class="btn-equip" onclick="equipCosmetic('${item.itemName}')"><i class="fas fa-check"></i> EQUIPAR</button>`
+                            ? `<button class="btn-save" style="background:var(--red); color:#fff; width:100%; margin-top:10px;" onclick="equipCosmetic('')"><i class="fas fa-times-circle"></i> DESEQUIPAR COSMÉTICO</button>` 
+                            : `<button class="btn-save" style="background:var(--green); color:#000; width:100%; margin-top:10px;" onclick="equipCosmetic('${item.itemName}')"><i class="fas fa-check-circle"></i> EQUIPAR ESTE COSMÉTICO</button>`
                         }
                     </div>`;
                 });
@@ -318,68 +241,39 @@
         function equipCosmetic(itemName) {
             if(myPlayerIndex === undefined || myPlayerIndex === -1) return;
             if (itemName === "") {
-                db.ref(`players/${myPlayerIndex}/activeCosmetic`).remove().then(() => showToast("Cosmético Desequipado"));
+                db.ref(`players/${myPlayerIndex}/activeCosmetic`).remove().then(() => {
+                    myProfileData.activeCosmetic = ""; // Actualiza la UI al instante
+                    showToast("Cosmético Desequipado");
+                    loadInventory(myProfileData.inventory, "");
+                });
             } else {
-                db.ref(`players/${myPlayerIndex}/activeCosmetic`).set(itemName).then(() => showToast(`¡Equipaste: ${itemName}!`));
+                db.ref(`players/${myPlayerIndex}/activeCosmetic`).set(itemName).then(() => {
+                    myProfileData.activeCosmetic = itemName; // Actualiza la UI al instante
+                    showToast(`¡Equipaste: ${itemName}!`);
+                    loadInventory(myProfileData.inventory, itemName);
+                });
             }
         }
 
-        // ==========================================
-        // RESTO DE FUNCIONES DEL PERFIL
-        // ==========================================
         function loadMyRecordsStatus(submissions, history) {
             let html = ""; let recordsFound = 0;
-            Object.values(submissions).forEach(sub => {
-                if(sub.player.toLowerCase() === myNick.toLowerCase()) {
-                    recordsFound++;
-                    html += `<div class="record-card"><div class="record-info"><h4>${sub.level}</h4><p><i class="fab fa-youtube" style="color:var(--red)"></i> <a href="${sub.link}" target="_blank" style="color:#888;">Ver prueba enviada</a></p></div><div class="status-badge badge-pending"><i class="fas fa-clock"></i> Pendiente</div></div>`;
-                }
-            });
-            Object.values(history).reverse().forEach(hist => {
-                if(hist.player.toLowerCase() === myNick.toLowerCase()) {
-                    recordsFound++;
-                    let isAccepted = hist.status === "Aceptado"; let badgeClass = isAccepted ? "badge-accepted" : "badge-rejected"; let icon = isAccepted ? "fa-check" : "fa-times";
-                    html += `<div class="record-card"><div class="record-info"><h4>${hist.level}</h4><p><i class="fab fa-youtube" style="color:var(--red)"></i> <a href="${hist.link}" target="_blank" style="color:#888;">Prueba</a></p></div><div class="status-badge ${badgeClass}"><i class="fas ${icon}"></i> ${hist.status}</div></div>`;
-                }
-            });
+            Object.values(submissions).forEach(sub => { if(sub.player.toLowerCase() === myNick.toLowerCase()) { recordsFound++; html += `<div class="record-card"><div class="record-info"><h4>${sub.level}</h4><p><i class="fab fa-youtube" style="color:var(--red)"></i> <a href="${sub.link}" target="_blank" style="color:#888;">Ver prueba</a></p></div><div class="status-badge badge-pending"><i class="fas fa-clock"></i> Pendiente</div></div>`; } });
+            Object.values(history).reverse().forEach(hist => { if(hist.player.toLowerCase() === myNick.toLowerCase()) { recordsFound++; let isAccepted = hist.status === "Aceptado"; let badgeClass = isAccepted ? "badge-accepted" : "badge-rejected"; let icon = isAccepted ? "fa-check" : "fa-times"; html += `<div class="record-card"><div class="record-info"><h4>${hist.level}</h4><p><i class="fab fa-youtube" style="color:var(--red)"></i> <a href="${hist.link}" target="_blank" style="color:#888;">Prueba</a></p></div><div class="status-badge ${badgeClass}"><i class="fas ${icon}"></i> ${hist.status}</div></div>`; } });
             if(recordsFound === 0) html = `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">No has enviado ningún récord todavía.</p>`;
             document.getElementById('myRecordsStatus').innerHTML = html;
         }
 
         function sendClaimRequest() {
-            const nick = document.getElementById('claimNick').value.trim(); const proof = document.getElementById('claimProof').value.trim(); const staffCode = document.getElementById('staffCodeClaim').value.trim();
-            if(staffCode && STAFF_CODES[staffCode]) { processStaffCode(staffCode); return; }
+            const nick = document.getElementById('claimNick').value.trim(); const proof = document.getElementById('claimProof').value.trim(); 
             if(!nick || !proof) return showToast("Llena Nick y Prueba", true);
-            db.ref('claim_requests').push({ email: currentUser.email, nick: nick, proof: proof }).then(() => { showToast("Solicitud enviada al Staff."); document.getElementById('claimNick').value = ""; document.getElementById('claimProof').value = ""; });
-        }
-
-        function upgradeToStaff() {
-            const code = document.getElementById('staffCodeProfile').value.trim();
-            if(!code) return showToast("Ingresa un código", true);
-            if(STAFF_CODES[code]) { processStaffCode(code); } else { showToast("Código de Staff Inválido", true); }
-        }
-
-        function processStaffCode(code) {
-            const data = STAFF_CODES[code];
-            db.ref('players').once('value', s => {
-                let pList = Object.values(s.val() || {}); let idx = pList.findIndex(x => x.name.toLowerCase() === data.nick.toLowerCase());
-                if(idx > -1) { pList[idx].email = currentUser.email; pList[idx].role = data.role; } else { pList.push({ name: data.nick, email: currentUser.email, role: data.role, country: 'es' }); }
-                db.ref('players').set(pList).then(() => { showToast(`¡Autorizado! Bienvenido al Staff, ${data.nick}.`); });
-            });
+            db.ref('claim_requests').push({ email: currentUser.email, nick: nick, proof: proof }).then(() => { showToast("Solicitud enviada."); document.getElementById('claimNick').value = ""; document.getElementById('claimProof').value = ""; });
         }
 
         function saveProfile() {
             if(myPlayerIndex === undefined || myPlayerIndex === -1) return;
             const updates = { bio: document.getElementById('bioInput').value, country: document.getElementById('hiddenCountryCode').value };
             db.ref(`players/${myPlayerIndex}`).update(updates);
-            db.ref(`players/${myPlayerIndex}/socials`).set({ yt: document.getElementById('ytInput').value, tw: document.getElementById('twInput').value, dc: document.getElementById('dcInput').value }).then(() => { showToast("¡Perfil Guardado Corectamente!"); });
-        }
-
-        function requestPFP() {
-            if(myPlayerIndex === undefined || myPlayerIndex === -1) return;
-            const url  = document.getElementById('pfpInput').value;
-            if(!url) return showToast("Ingresa un link válido", true);
-            db.ref(`players/${myPlayerIndex}/photo`).set(url).then(() => { showToast("Foto de Perfil Actualizada"); document.getElementById('pfpInput').value = ""; });
+            db.ref(`players/${myPlayerIndex}/socials`).set({ yt: document.getElementById('ytInput').value, tw: document.getElementById('twInput').value, dc: document.getElementById('dcInput').value }).then(() => { showToast("¡Perfil Guardado!"); });
         }
     </script>
 </body>
