@@ -3,126 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully List | Acceso de Jugador</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>Acceso | Hub OMNI v25</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Lexend+Deca:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { 
-            --bg: #0b0c10; --card: #1f2833; --border: rgba(255,255,255,0.05);
-            --text-main: #c5c6c7; --text-light: #ffffff;
-            --accent: #ff6600; --accent-hover: #ff8533;
-            --blue: #66fcf1; --red: #f05454;
-        }
-        body { background: var(--bg); color: var(--text-main); font-family: 'Lexend Deca', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
+        :root { var(--accent): #ff6600; --bg: #030303; --card: rgba(15,15,15,0.9); --cyan: #00ffff; --red: #ff3333; }
+        body { background: #030303; color: #fff; font-family: 'Lexend Deca', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .login-box { background: rgba(10,10,10,0.95); padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); width: 90%; max-width: 400px; box-shadow: 0 10px 50px rgba(0,0,0,0.8); text-align: center; }
+        h1 { font-family: 'JetBrains Mono'; margin-top: 0; font-size: 2rem; text-transform: uppercase; }
+        h1 span { color: #ff6600; }
+        input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-family: inherit; outline: none; box-sizing: border-box; transition: 0.3s; }
+        input:focus { border-color: #ff6600; }
+        .btn { background: #ff6600; color: #000; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; margin-bottom: 10px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 0 15px rgba(255,102,0,0.4); }
+        .btn-alt { background: transparent; border: 1px solid #333; color: #aaa; }
+        .btn-alt:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,0.05); }
+        .links { margin-top: 20px; font-size: 0.8rem; color: #888; }
+        .links a { color: #00ffff; text-decoration: none; cursor: pointer; font-weight: 600; }
+        .links a:hover { text-decoration: underline; }
         
-        .login-container { background: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); border: 1px solid var(--border); width: 100%; max-width: 400px; text-align: center; position: relative; overflow: hidden; }
-        .login-container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: linear-gradient(90deg, var(--accent), var(--blue)); }
-        
-        h1 { color: var(--text-light); font-size: 1.8rem; margin-top: 0; margin-bottom: 10px; font-weight: 800; letter-spacing: -1px; text-transform: uppercase; }
-        h1 span { color: var(--accent); }
-        p.subtitle { font-size: 0.8rem; margin-bottom: 30px; color: #888; }
-
-        input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: var(--text-light); padding: 15px; border-radius: 12px; margin-bottom: 15px; font-family: 'Lexend Deca'; font-size: 0.85rem; transition: 0.3s; box-sizing: border-box; outline: none; }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(255,102,0,0.2); }
-        
-        button { width: 100%; padding: 15px; border-radius: 12px; font-family: 'Lexend Deca'; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; border: none; margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        button:hover { transform: translateY(-3px); }
-        
-        .btn-primary { background: var(--accent); color: #000; box-shadow: 0 5px 15px rgba(255,102,0,0.3); }
-        .btn-secondary { background: transparent; color: var(--blue); border: 1px solid var(--blue); }
-        .btn-secondary:hover { background: rgba(102,252,241,0.1); }
-        
-        .btn-return { color: #888; text-decoration: none; font-size: 0.75rem; margin-top: 20px; display: inline-block; transition: 0.3s; }
-        .btn-return:hover { color: var(--text-light); }
-
-        #errorMsg { color: var(--red); font-size: 0.75rem; margin-bottom: 15px; min-height: 15px; font-weight: 600; }
+        /* Modal de Recuperación */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: #0a0a0a; padding: 30px; border-radius: 15px; border: 1px solid #00ffff; width: 100%; max-width: 450px; position: relative; text-align: left; }
+        .close-btn { position: absolute; top: 15px; right: 20px; color: #888; font-size: 1.5rem; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="login-container">
-        <h1>Identidad <span>Scully</span></h1>
-        <p class="subtitle">Inicia sesión o crea una cuenta para personalizar tu perfil, enlazar tus redes y gestionar tus récords.</p>
+    <div class="login-box" id="login-section">
+        <h1>SYS.<span>OMNI</span></h1>
+        <p style="color:#aaa; font-size:0.85rem; margin-bottom:25px;">Identificación de Usuario</p>
         
-        <div id="errorMsg"></div>
+        <input type="email" id="log-email" placeholder="Correo Electrónico">
+        <input type="password" id="log-pass" placeholder="Contraseña">
+        
+        <button class="btn" onclick="iniciarSesion()"><i class="fas fa-sign-in-alt"></i> Entrar al Sistema</button>
+        <button class="btn btn-alt" onclick="crearCuenta()"><i class="fas fa-user-plus"></i> Crear Cuenta Nueva</button>
+        
+        <div class="links">
+            <a onclick="abrirRecuperacion()">¿Olvidaste tu contraseña o perdiste tu cuenta?</a><br><br>
+            <a href="index.html" style="color:#888;"><i class="fas fa-arrow-left"></i> Volver al Hub OMNI</a>
+        </div>
+    </div>
 
-        <input type="email" id="email" placeholder="Correo Electrónico" required>
-        <input type="password" id="password" placeholder="Contraseña (Mín. 6 caracteres)" required>
-        
-        <button onclick="loginUser()" class="btn-primary"><i class="fas fa-sign-in-alt"></i> INICIAR SESIÓN</button>
-        <button onclick="registerUser()" class="btn-secondary"><i class="fas fa-user-plus"></i> CREAR CUENTA NUEVA</button>
-        
-        <a href="index.html" class="btn-return"><i class="fas fa-arrow-left"></i> Volver al Hub Principal</a>
+    <div class="modal" id="recovery-modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('recovery-modal').style.display='none'">✕</span>
+            <h2 style="color:#00ffff; margin-top:0; font-family:'JetBrains Mono';"><i class="fas fa-shield-alt"></i> Recuperación</h2>
+            
+            <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:10px; margin-bottom:20px; border:1px solid #333;">
+                <h4 style="margin:0 0 10px; color:#fff;">Restablecimiento Rápido</h4>
+                <p style="font-size:0.75rem; color:#aaa; margin:0 0 10px;">Si recuerdas tu correo, te enviaremos un link para cambiar tu contraseña.</p>
+                <div style="display:flex; gap:10px;">
+                    <input type="email" id="rec-email" placeholder="Tu correo registrado..." style="margin:0;">
+                    <button class="btn" style="width:auto; margin:0; background:#00ffff;" onclick="enviarLinkPass()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+            <div style="background:rgba(255,51,51,0.05); padding:15px; border-radius:10px; border:1px solid rgba(255,51,51,0.3);">
+                <h4 style="margin:0 0 10px; color:#ff3333;">Protocolo de Identidad (Staff)</h4>
+                <p style="font-size:0.75rem; color:#aaa; margin:0 0 15px;">¿Perdiste acceso a tu correo? Envía una prueba al Staff para asignar un correo nuevo a tu perfil.</p>
+                
+                <input type="text" id="rec-nick" placeholder="Tu Nick exacto en el Ranking">
+                <input type="email" id="rec-new-email" placeholder="Nuevo correo a vincular">
+                <input type="text" id="rec-proof" placeholder="Link de prueba (Ej: Video de YT, Imgur, etc.)">
+                
+                <button class="btn" style="background:#ff3333; color:#fff; margin:0;" onclick="enviarReclamoStaff()">ENVIAR RECLAMO AL STAFF</button>
+            </div>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     
     <script>
-        // CONFIGURACIÓN EXACTA DE SCORE
-        const firebaseConfig = {
-            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",
-            authDomain: "scullylist.firebaseapp.com",
-            databaseURL: "https://scullylist-default-rtdb.firebaseio.com",
-            projectId: "scullylist",
-            storageBucket: "scullylist.firebasestorage.app",
-            messagingSenderId: "498548914021",
-            appId: "1:498548914021:web:59128b5e06b36a4e81938c",
-            measurementId: "G-X3JF2DVWYH"
+        const firebaseConfig = { 
+            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
+            authDomain: "scullylist.firebaseapp.com", 
+            databaseURL: "https://scullylist-default-rtdb.firebaseio.com", 
+            projectId: "scullylist", 
+            storageBucket: "scullylist.firebasestorage.app", 
+            messagingSenderId: "498548914021", 
+            appId: "1:498548914021:web:59128b5e06b36a4e81938c" 
         };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+        firebase.initializeApp(firebaseConfig); 
+        const auth = firebase.auth(); 
+        const db = firebase.database();
 
-        const emailInput = document.getElementById('email');
-        const passInput = document.getElementById('password');
-        const errorMsg = document.getElementById('errorMsg');
-
-        // Si ya está logueado, mandarlo directo a su perfil
-        auth.onAuthStateChanged(user => {
-            if (user) { window.location.href = "perfil.html"; }
-        });
-
-        function loginUser() {
-            const email = emailInput.value;
-            const pass = passInput.value;
-            if(!email || !pass) return errorMsg.innerText = "Por favor, llena ambos campos.";
+        function iniciarSesion() {
+            const e = document.getElementById('log-email').value.trim();
+            const p = document.getElementById('log-pass').value.trim();
+            if(!e || !p) return alert("Llena todos los campos.");
             
-            errorMsg.style.color = "var(--blue)";
-            errorMsg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
-
-            auth.signInWithEmailAndPassword(email, pass)
-                .then(() => { window.location.href = "perfil.html"; })
-                .catch((error) => {
-                    errorMsg.style.color = "var(--red)";
-                    errorMsg.innerText = traducirError(error.code);
-                });
+            auth.signInWithEmailAndPassword(e, p).then(() => {
+                window.location.href = "index.html";
+            }).catch(err => alert("Error: " + err.message));
         }
 
-        function registerUser() {
-            const email = emailInput.value;
-            const pass = passInput.value;
-            if(!email || !pass) return errorMsg.innerText = "Por favor, llena ambos campos para registrarte.";
-            if(pass.length < 6) return errorMsg.innerText = "La contraseña debe tener al menos 6 caracteres.";
+        function crearCuenta() {
+            const e = document.getElementById('log-email').value.trim();
+            const p = document.getElementById('log-pass').value.trim();
+            if(!e || !p) return alert("Llena todos los campos.");
+            
+            const n = prompt("Ingresa tu Nick de GD exacto (Si ya tienes récords, usa el mismo nombre para que se vinculen automáticamente):");
+            if(!n) return;
 
-            errorMsg.style.color = "var(--blue)";
-            errorMsg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando identidad...';
-
-            auth.createUserWithEmailAndPassword(email, pass)
-                .then(() => { window.location.href = "perfil.html"; })
-                .catch((error) => {
-                    errorMsg.style.color = "var(--red)";
-                    errorMsg.innerText = traducirError(error.code);
+            auth.createUserWithEmailAndPassword(e, p).then(() => {
+                db.ref('players').once('value', snap => {
+                    let pL = snap.val() ? (Array.isArray(snap.val()) ? snap.val().filter(Boolean) : Object.values(snap.val())) : [];
+                    let exist = pL.findIndex(x => x.name.toLowerCase() === n.toLowerCase());
+                    
+                    if(exist > -1) {
+                        pL[exist].email = e; // Vincula a perfil existente
+                    } else {
+                        pL.push({ name: n, email: e, totalXP: 0, completions: [] }); // Crea perfil nuevo
+                    }
+                    db.ref('players').set(pL).then(() => window.location.href = "index.html");
                 });
+            }).catch(err => alert("Error: " + err.message));
         }
 
-        function traducirError(code) {
-            switch(code) {
-                case 'auth/invalid-email': return "El formato del correo es inválido.";
-                case 'auth/user-not-found': return "No existe una cuenta con ese correo.";
-                case 'auth/wrong-password': return "Contraseña incorrecta.";
-                case 'auth/email-already-in-use': return "Ese correo ya está registrado. Inicia sesión.";
-                default: return "Error de autenticación. Inténtalo de nuevo.";
-            }
+        // FUNCIONES DE RECUPERACIÓN
+        function abrirRecuperacion() {
+            document.getElementById('recovery-modal').style.display = 'flex';
+        }
+
+        // Opción 1: Enviar correo de restablecimiento nativo
+        function enviarLinkPass() {
+            const e = document.getElementById('rec-email').value.trim();
+            if(!e) return alert("Ingresa tu correo.");
+            
+            auth.sendPasswordResetEmail(e).then(() => {
+                alert("¡Se ha enviado un enlace a tu correo para restablecer la contraseña! Revisa tu bandeja de Spam.");
+                document.getElementById('rec-email').value = "";
+            }).catch(err => alert("Error: " + err.message));
+        }
+
+        // Opción 2: Enviar reclamo al Admin Panel
+        function enviarReclamoStaff() {
+            const n = document.getElementById('rec-nick').value.trim();
+            const e = document.getElementById('rec-new-email').value.trim();
+            const p = document.getElementById('rec-proof').value.trim();
+            
+            if(!n || !e || !p) return alert("Debes llenar el Nick, el Nuevo Correo y poner un Link de Prueba.");
+
+            db.ref('claim_requests').push({
+                nick: n,
+                email: e,
+                proof: p,
+                time: Date.now()
+            }).then(() => {
+                alert("Reclamo enviado al Staff. Revisaremos tu prueba. Si es aprobada, tu perfil se desvinculará del correo viejo y podrás registrar una cuenta nueva usando este nuevo correo.");
+                document.getElementById('recovery-modal').style.display = 'none';
+            }).catch(err => alert("Error: " + err.message));
         }
     </script>
 </body>
