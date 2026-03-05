@@ -7,7 +7,12 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@800&family=Lexend+Deca:wght@400;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg: #030303; --card: rgba(15,15,15,0.9); --gold: #ffd700; --cyan: #00ffff; --border: rgba(255,255,255,0.1); }
+        :root { 
+            --bg: #030303; --card: rgba(15,15,15,0.9); --gold: #ffd700; 
+            --cyan: #00ffff; --border: rgba(255,255,255,0.1); 
+            --red: #ff3333; --green: #00ff66; --blue: #00ccff; 
+        }
+        
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; text-align: center; }
         
         .header { 
@@ -16,16 +21,24 @@
             border: 1px solid var(--border); max-width: 1000px; margin: 0 auto 30px; 
             flex-wrap: wrap; gap: 15px; 
         }
+        
         .header h1 { margin: 0; font-size: 1.5rem; color: var(--gold); text-transform: uppercase; font-weight: 800; font-family: 'JetBrains Mono'; }
         
-        .user-xp-box { background: rgba(255,215,0,0.1); border: 1px solid var(--gold); padding: 10px 20px; border-radius: 10px; font-weight: 800; color: var(--gold); }
+        .user-xp-box { background: rgba(255,215,0,0.1); border: 1px solid var(--gold); padding: 10px 20px; border-radius: 10px; font-weight: 800; color: var(--gold); font-size: 1.2rem; }
         
         .store-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
-        .item-card { background: var(--card); border: 1px solid var(--border); padding: 30px; border-radius: 20px; transition: 0.3s; position: relative; overflow: hidden; }
-        .item-card:hover { border-color: var(--gold); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255,215,0,0.2); }
         
-        .item-card img { width: 80px; height: 80px; margin-bottom: 15px; object-fit: cover; }
-        .item-card h3 { margin: 0 0 10px; font-size: 1.4rem; color: #fff; font-family: 'JetBrains Mono'; text-transform: uppercase; }
+        .item-card { background: var(--card); border: 1px solid var(--border); padding: 30px; border-radius: 20px; transition: 0.3s; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; }
+        .item-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        /* CONTENEDOR DEL ICONO GENERADO AUTOMÁTICAMENTE */
+        .item-visual { 
+            width: 80px; height: 80px; border-radius: 50%; display: flex; 
+            justify-content: center; align-items: center; margin-bottom: 15px; 
+            font-size: 2.5rem; background: rgba(0,0,0,0.5); border: 2px solid var(--border); 
+        }
+        
+        .item-card h3 { margin: 0 0 10px; font-size: 1.3rem; color: #fff; font-family: 'JetBrains Mono'; text-transform: uppercase; }
         .item-card .price { font-size: 1.2rem; color: var(--gold); font-weight: 800; margin-bottom: 20px; display: block; }
         
         .btn-buy { background: var(--gold); color: #000; border: none; padding: 12px 25px; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 100%; font-size: 0.9rem; text-transform: uppercase; }
@@ -33,14 +46,14 @@
         
         .nav-back { display: inline-block; color: var(--cyan); text-decoration: none; font-weight: 800; margin-top: 30px; font-family: 'JetBrains Mono'; }
         
-        #btn-restore { background: #ff3333; color: #fff; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; margin-top: 20px; display: none; }
+        #btn-restore { background: #ff3333; color: #fff; border: none; padding: 15px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; margin-top: 20px; display: none; width: 100%; max-width: 400px; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1><i class="fas fa-shopping-cart"></i> Mercado OMNI</h1>
-        <div class="user-xp-box" id="myXP">XP Disponible: CARGANDO...</div>
+        <div class="user-xp-box" id="myXP">Calculando XP...</div>
     </div>
 
     <button id="btn-restore" onclick="restaurarCatalogo()"><i class="fas fa-sync"></i> RESTAURAR CATÁLOGO (ADMIN)</button>
@@ -56,6 +69,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
     <script>
+        // 1. CONFIGURACIÓN FIREBASE
         const firebaseConfig = { 
             apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
             authDomain: "scullylist.firebaseapp.com", 
@@ -69,6 +83,24 @@
         let currentUserData = null;
         let myTotalXP = 0;
 
+        // 2. FUNCIÓN PARA ASIGNAR ICONOS VISUALES SEGÚN EL NOMBRE
+        function getVisual(name) {
+            let n = name.toUpperCase();
+            let icon = "fa-gem";
+            let color = "var(--cyan)";
+
+            if(n.includes("VIP") || n.includes("DORADO")) { icon = "fa-crown"; color = "var(--gold)"; }
+            else if(n.includes("HACKER") || n.includes("MATRIX")) { icon = "fa-terminal"; color = "var(--green)"; }
+            else if(n.includes("AURA") || n.includes("DEMON")) { icon = "fa-fire-alt"; color = "var(--red)"; }
+            else if(n.includes("HIELO") || n.includes("ICE")) { icon = "fa-snowflake"; color = "#aaddff"; }
+            else if(n.includes("FUEGO") || n.includes("FIRE")) { icon = "fa-fire"; color = "#ff5500"; }
+            else if(n.includes("FANTASMA") || n.includes("GHOST")) { icon = "fa-ghost"; color = "#dddddd"; }
+            else if(n.includes("RAINBOW") || n.includes("ARCOIRIS")) { icon = "fa-rainbow"; color = "#cc00ff"; }
+
+            return { icon, color };
+        }
+
+        // 3. CARGA DE USUARIO Y XP
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.ref('players').on('value', snap => {
@@ -107,7 +139,7 @@
                             });
 
                             myTotalXP = realXp + (me.totalXP || 0);
-                            document.getElementById('myXP').innerText = `XP Disponible: ${myTotalXP.toFixed(1)}`;
+                            document.getElementById('myXP').innerText = `Tu XP: ${myTotalXP.toFixed(1)}`;
                         }
                     });
                 });
@@ -116,27 +148,30 @@
             }
         });
 
-        // CARGAR LOS ÍTEMS
+        // 4. CARGAR LOS ÍTEMS Y GENERAR SUS TARJETAS
         db.ref('market_items').on('value', snap => {
             const items = snap.val() || {};
             let html = "";
             
             Object.values(items).forEach(item => {
-                let imgHtml = item.img ? `<img src="${item.img}">` : `<i class="fas fa-gem" style="font-size:3rem; color:var(--gold); margin-bottom:15px;"></i>`;
+                // Obtenemos el diseño dinámico en lugar de usar imágenes rotas
+                let visual = getVisual(item.name);
                 
                 html += `
-                <div class="item-card">
-                    ${imgHtml}
-                    <h3>${item.name}</h3>
+                <div class="item-card" style="border-color: ${visual.color};">
+                    <div class="item-visual" style="border-color: ${visual.color}; box-shadow: 0 0 15px ${visual.color};">
+                        <i class="fas ${visual.icon}" style="color: ${visual.color};"></i>
+                    </div>
+                    <h3 style="color: ${visual.color};">${item.name}</h3>
                     <span class="price">${item.price} XP</span>
                     <button class="btn-buy" onclick="solicitarCompra('${item.name}', ${item.price})">COMPRAR</button>
                 </div>`;
             });
             
-            document.getElementById('store-container').innerHTML = html || "<p style='color:#888; width:100%;'>La tienda está vacía.</p>";
+            document.getElementById('store-container').innerHTML = html || "<p style='color:#888; width:100%;'>La tienda está vacía en este momento.</p>";
         });
 
-        // ENVIAR PETICIÓN DE COMPRA
+        // 5. ENVIAR PETICIÓN DE COMPRA
         function solicitarCompra(nombreItem, precioItem) {
             if (!currentUserData || !currentUserData.name) {
                 return alert("Error: Debes iniciar sesión para comprar.");
@@ -153,24 +188,29 @@
                     time: Date.now()
                 }).then(() => {
                     alert("¡Petición enviada al Equipo Staff!\nUn administrador la aprobará pronto y aparecerá en tu Perfil.");
+                }).catch(err => {
+                    alert("Hubo un error de conexión: " + err);
                 });
             }
         }
 
-        // FUNCIÓN DEL BOTÓN SECRETO PARA RESTAURAR CATÁLOGO
+        // 6. FUNCIÓN DEL BOTÓN SECRETO PARA RESTAURAR CATÁLOGO SIN IMÁGENES
         function restaurarCatalogo() {
-            if(confirm("¿Restaurar todo el catálogo con los nuevos cosméticos baratos y el Rainbow?")) {
+            if(confirm("¿Restaurar todo el catálogo con los nuevos cosméticos generados automáticamente?")) {
                 const nuevoCatalogo = [
-                    { name: "EFECTO FANTASMA", price: 15, img: "https://i.imgur.com/gK0r8Mh.png" },
-                    { name: "EFECTO HIELO", price: 25, img: "https://i.imgur.com/O6LWeU9.png" },
-                    { name: "EFECTO FUEGO", price: 35, img: "https://i.imgur.com/Kz8uYFw.png" },
-                    { name: "TITULO VIP", price: 50, img: "https://i.imgur.com/0gG1V1H.png" },
-                    { name: "TEXTO HACKER", price: 75, img: "https://i.imgur.com/lZ2wG7n.png" },
-                    { name: "AURA DEMONIACA", price: 100, img: "https://i.imgur.com/3q1b8Z2.png" },
-                    { name: "NOMBRE RAINBOW", price: 200, img: "https://i.imgur.com/8Q6W6u1.png" }
+                    { name: "EFECTO FANTASMA", price: 15 },
+                    { name: "EFECTO HIELO", price: 25 },
+                    { name: "EFECTO FUEGO", price: 35 },
+                    { name: "TITULO VIP", price: 50 },
+                    { name: "TEXTO HACKER", price: 75 },
+                    { name: "AURA DEMONIACA", price: 100 },
+                    { name: "NOMBRE RAINBOW", price: 200 }
                 ];
+                
                 db.ref('market_items').set(nuevoCatalogo).then(() => {
                     alert("¡Catálogo restaurado exitosamente!");
+                }).catch(err => {
+                    alert("Error al restaurar: " + err);
                 });
             }
         }
