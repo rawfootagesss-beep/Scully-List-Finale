@@ -3,44 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Changelog | OMNI v19.5</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Lexend+Deca:wght@400;800&display=swap" rel="stylesheet">
+    <title>Changelog V25 | Hub OMNI</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --ac: #ff6600; --bg: #030303; --cd: #111; --bd: rgba(255, 255, 255, 0.08); }
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 40px 20px; }
+        :root { --bg: #030303; --card: rgba(20,20,20,0.9); --gold: #ffd700; --cyan: #00ffff; --border: rgba(255,255,255,0.1); --accent: #ff6600; --purple: #cc00ff; }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; }
+        
         .container { max-width: 800px; margin: 0 auto; }
-        .btn-back { color: #888; text-decoration: none; font-size: 0.8rem; text-transform: uppercase; font-weight: 800; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 30px; transition: 0.3s; }
-        .btn-back:hover { color: var(--ac); }
-        h1 { font-family: 'JetBrains Mono'; font-size: 2.5rem; margin: 0 0 10px; text-transform: uppercase; } h1 span { color: var(--ac); }
-        .update-box { background: var(--cd); border: 1px solid var(--bd); padding: 30px; border-radius: 15px; margin-bottom: 30px; position: relative; overflow: hidden; }
-        .update-box h2 { color: var(--ac); margin-top: 0; display: flex; align-items: center; gap: 10px; }
-        .tag { font-family: 'JetBrains Mono'; font-size: 0.6rem; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; font-weight: 800; background: rgba(0, 204, 255, 0.1); color: #00ccff; margin-right: 10px; }
-        .tag.new { background: rgba(0, 255, 102, 0.1); color: #00ff66; }
-        ul { list-style: none; padding: 0; }
-        li { margin-bottom: 15px; padding-left: 20px; position: relative; font-size: 0.9rem; color: #ccc; line-height: 1.5; }
-        li::before { content: '>'; position: absolute; left: 0; color: var(--ac); font-family: 'JetBrains Mono'; font-weight: 800; }
+        
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 { font-family: 'JetBrains Mono'; font-size: 2.5rem; color: var(--cyan); text-transform: uppercase; margin: 0; }
+        p.subtitle { color: #888; font-size: 1rem; margin-top: 5px; }
+
+        .update-card { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 25px; border-radius: 15px; margin-bottom: 25px; transition: 0.3s; }
+        .update-card:hover { border-left-color: var(--cyan); background: rgba(255,255,255,0.02); box-shadow: 0 10px 30px rgba(0,255,255,0.05); }
+        
+        .version-tag { display: inline-block; background: var(--accent); color: #000; padding: 5px 12px; border-radius: 5px; font-weight: 800; font-size: 0.8rem; margin-bottom: 15px; font-family: 'JetBrains Mono'; }
+        .v-mod { background: var(--purple); color: #fff; }
+        
+        .update-title { font-size: 1.5rem; margin: 0 0 15px 0; color: #fff; }
+        
+        ul { padding-left: 20px; margin: 0; color: #ccc; line-height: 1.6; font-size: 0.95rem; }
+        li { margin-bottom: 10px; }
+        li b { color: var(--cyan); }
+        
+        .nav-back { display: block; text-align: center; color: var(--cyan); text-decoration: none; font-weight: 800; margin-top: 40px; font-family: 'JetBrains Mono'; padding-bottom: 30px; }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Volver al Hub</a>
-        <header style="text-align:center; margin-bottom:50px;">
-            <h1>AUTOMATA <span>PROTOCOL</span></h1>
-            <p style="color:#666; font-family:'JetBrains Mono'; font-size:0.8rem;">ENGINEERING LOG: BUILD v19.5</p>
+        <header>
+            <h1><i class="fas fa-file-code"></i> System Log</h1>
+            <p class="subtitle">Registro de actualizaciones de la arquitectura OMNI</p>
         </header>
 
-        <div class="update-box">
-            <h2><i class="fas fa-robot"></i> v19.5 - Ecosistema Automatizado</h2>
-            <p style="color:#888; font-size:0.85rem; margin-bottom:20px;">Implementación masiva de IA y funciones de retención.</p>
+        <div class="update-card" style="border-left-color: var(--purple);">
+            <div class="version-tag v-mod">V25.3 - MODERATION ENGINE</div>
+            <h2 class="update-title">Nuevo Panel de Moderación y Webhooks</h2>
             <ul>
-                <li><span class="tag new">NUEVO</span> <b>Smart Submit Scanner:</b> La página de envíos ahora lee los links de YouTube, extrae la miniatura y verifica que el video sea real antes de permitir enviarlo al staff.</li>
-                <li><span class="tag new">NUEVO</span> <b>Sistema de Contratos (Bounties):</b> El Owner ahora puede marcar niveles como "Contratos". Completarlos otorga automáticamente el DOBLE de XP.</li>
-                <li><span class="tag new">NUEVO</span> <b>Monitor de Eficiencia:</b> El panel Admin ahora rastrea silenciosamente cuántos récords revisa cada miembro del staff para mantener el control.</li>
-                <li><span class="tag">CORE</span> <b>Auto-Limpieza de BD:</b> Algoritmo de un clic para purgar usuarios inactivos (0 XP) y liberar memoria del servidor.</li>
-                <li><span class="tag">FIX</span> <b>Anti-Freeze Engine:</b> El sistema OMNI fue reescrito para no congelar el navegador móvil, implementando lecturas asíncronas seguras.</li>
+                <li><b>Rango Moderador (Mod):</b> Se agregó la jerarquía "Mod" para delegar tareas de seguridad sin arriesgar la Base de Datos. Integración de panel exclusivo (mod.html).</li>
+                <li><b>Integración "wjos":</b> Nuevo moderador oficial añadido a la cabecera del Staff en el index.</li>
+                <li><b>Triple Webhook Discord:</b> El panel Admin ahora soporta 3 canales de alertas distintos (General, Sugerencias y Niveles).</li>
+                <li><b>Notificaciones en Vivo:</b> El sistema enviará Webhooks automáticos al añadir, editar o borrar niveles, cambiar el ranking o procesar sugerencias.</li>
+                <li><b>Traductor Nativo:</b> Se implementó la API de Google Translate con un botón sutil (EN/ES) en el Hub Principal que traduce datos estáticos y dinámicos (chat/mercado) en tiempo real.</li>
             </ul>
         </div>
+
+        <div class="update-card" style="border-left-color: var(--cyan);">
+            <div class="version-tag" style="background: var(--cyan); color: #000;">V25.2 - COSMETIC HUB</div>
+            <h2 class="update-title">Motor Universal de Cosméticos</h2>
+            <ul>
+                <li><b>Tienda sin imágenes:</b> Se eliminó la dependencia de enlaces Imgur en la tienda. Ahora se generan íconos dinámicos en base al nombre del efecto.</li>
+                <li><b>Precios Ajustados:</b> Nuevos cosméticos económicos añadidos (Efecto Fantasma, Hielo, Fuego).</li>
+                <li><b>Sincronización Total:</b> Los cosméticos equipados ahora se reflejan automáticamente en el Chat Global, el Buscador del Index y el Ranking de Titanes.</li>
+                <li><b>Bóveda Mejorada:</b> Botones gigantes en el Perfil (Verde/Rojo) para hacer la equipación de ítems más amigable en celulares.</li>
+                <li><b>Animación Rainbow:</b> Nueva lógica CSS integrada en todas las páginas para procesar el cosmético de Nick Arcoíris.</li>
+            </ul>
+        </div>
+
+        <div class="update-card">
+            <div class="version-tag">V25.1 - ABSOLUTE ENGINE</div>
+            <h2 class="update-title">Smart Submit & Códigos</h2>
+            <ul>
+                <li><b>Smart Submit:</b> La caja de sugerencias ahora extrae automáticamente el ID del video de YouTube y previsualiza la miniatura antes de enviar.</li>
+                <li><b>Fijación de Bugs de Letras:</b> El canje de códigos secretos ahora reconoce mayúsculas y minúsculas (Ej: bLoOdlUst funcionará igual que BLOODLUST).</li>
+                <li><b>Root Access:</b> Se simplificó el protocolo de emergencia de pantalla negra, usando un código rápido (score123).</li>
+                <li><b>Limpieza Visual:</b> Se eliminaron las fotos de perfil del chat global para mantener una estética más limpia, tecnológica y futurista.</li>
+            </ul>
+        </div>
+
+        <a href="index.html" class="nav-back"><i class="fas fa-arrow-left"></i> VOLVER AL HUB PRINCIPAL</a>
     </div>
+
+    <div id="google_translate_element" style="display:none;"></div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'en,es', autoDisplay: false}, 'google_translate_element'); }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>
