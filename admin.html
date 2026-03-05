@@ -27,19 +27,11 @@
         }
 
         /* Estructura Base */
-        * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; 
-        } 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
 
         body { 
-            background: var(--bg); 
-            color: #fff; 
-            font-family: 'Lexend Deca', sans-serif; 
-            margin: 0; 
-            display: flex; 
-            height: 100vh; 
-            overflow: hidden; 
+            background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; 
+            margin: 0; display: flex; height: 100vh; overflow: hidden; 
         }
 
         ::-webkit-scrollbar { width: 8px; } 
@@ -48,28 +40,18 @@
 
         /* Menú Móvil */
         .mob-nav { 
-            display: none; 
-            background: var(--sb); 
-            height: 60px; 
-            width: 100%; 
-            position: fixed; 
-            top: 0; left: 0; 
-            z-index: 4000; 
-            border-bottom: 1px solid var(--bd); 
-            padding: 0 20px; 
-            align-items: center; 
-            justify-content: space-between; 
+            display: none; background: var(--sb); height: 60px; width: 100%; 
+            position: fixed; top: 0; left: 0; z-index: 4000; border-bottom: 1px solid var(--bd); 
+            padding: 0 20px; align-items: center; justify-content: space-between; 
         } 
-
         .mob-nav h1 { margin: 0; font-family: 'JetBrains Mono'; font-size: 1.4rem; text-transform: uppercase; } 
         .mob-nav span { color: var(--ac); } 
         .ham { font-size: 1.5rem; color: var(--ac); cursor: pointer; } 
-
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); z-index: 3000; backdrop-filter: blur(4px); }
 
         /* Barra Lateral (Sidebar) */
         .sidebar { width: 280px; min-width: 280px; background: var(--sb); border-right: 1px solid var(--bd); display: flex; flex-direction: column; z-index: 3500; transition: transform 0.3s ease; } 
-        .brand { text-align: center; padding: 25px 10px; border-bottom: 1px solid var(--bd); background: #000; cursor: pointer; user-select: none; } 
+        .brand { text-align: center; padding: 25px 10px; border-bottom: 1px solid var(--bd); background: #000; cursor: pointer; touch-action: manipulation; user-select: none; } 
         .brand h1 { font-family: 'JetBrains Mono'; font-size: 1.8rem; margin: 0; text-transform: uppercase; letter-spacing: -1px; } 
         .brand span { color: var(--ac); }
 
@@ -86,10 +68,8 @@
         .s-bar b { color: #fff; }
 
         .m-cont { flex: 1; padding: 30px 40px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, rgba(255, 102, 0, 0.02) 0%, transparent 50%); } 
-
         .tab { display: none; } 
         .tab.active { display: block; animation: fade 0.3s ease; } 
-
         @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         h2.title { font-size: 1.4rem; margin-bottom: 25px; display: flex; align-items: center; gap: 15px; text-transform: uppercase; font-weight: 800; border-bottom: 1px solid var(--bd); padding-bottom: 10px; }
@@ -183,6 +163,10 @@
             <h1 style="font-size:2rem;margin:0;color:#fff;">SYS.<span style="color:var(--ac);">OMNI</span></h1>
             <p style="font-size:0.6rem;color:#666;margin:10px 0 0;">TOCA 5 VECES PARA RECUPERAR ROOT</p>
         </div>
+        <div class="ig" id="root-box" style="display:none; margin-top:15px; width:100%; max-width:300px;">
+            <input type="password" id="o-k" placeholder="Código de Recuperación..." style="text-align:center;">
+            <button class="btn" style="width:100%;" onclick="eOwC()">EJECUTAR</button>
+        </div>
         <button class="btn" style="margin-top:30px;background:var(--rd);color:#fff;" onclick="location.href='index.html'">VOLVER AL INICIO</button>
     </div>
 
@@ -232,6 +216,7 @@
             <span><i class="fas fa-crown"></i> Owner <b>score</b></span> | 
             <span><i class="fas fa-user-shield" style="color:var(--bl)"></i> Admin <b>Sopa354</b></span> | 
             <span><i class="fas fa-user-shield" style="color:var(--bl)"></i> Admin <b>awrqsdt</b></span> | 
+            <span><i class="fas fa-shield-alt" style="color:var(--pu)"></i> Mod <b>wjos</b></span> | 
             <span><i class="fas fa-hands-helping" style="color:var(--gr)"></i> Helper <b>Blitz</b></span> | 
             <span><i class="fas fa-hands-helping" style="color:var(--gr)"></i> Helper <b>nico</b></span>
         </div>
@@ -461,7 +446,11 @@
                     <div class="ig"><label>Nick del Jugador</label><input type="text" id="st-n"></div>
                     <div class="ig">
                         <label>Rango a Otorgar</label>
-                        <select id="st-r"><option value="helper">Helper</option><option value="admin">Admin</option></select>
+                        <select id="st-r">
+                            <option value="helper">Helper</option>
+                            <option value="mod">Mod</option>
+                            <option value="admin">Admin</option>
+                        </select>
                     </div>
                     <button class="btn" style="background:var(--ow);color:#fff;width:100%;" onclick="pStf()"><i class="fas fa-shield-alt"></i> OTORGAR PODER</button>
                 </div>
@@ -472,7 +461,9 @@
                 <h2 class="title"><i class="fas fa-cogs" style="color:var(--di);"></i> Configuración DB y Webhooks</h2>
                 <div class="panel" style="border-color:var(--di);">
                     <div class="ig"><label>Webhook General (Récords/Mercado)</label><input type="text" id="cf-w1"></div>
-                    <div class="ig"><label>Webhook Secundario (Sugerencias)</label><input type="text" id="cf-w2"></div>
+                    <div class="ig"><label>Webhook Sugerencias</label><input type="text" id="cf-w2"></div>
+                    <div class="ig"><label>Webhook Niveles y Ranking</label><input type="text" id="cf-w3"></div>
+                    
                     <div class="ig"><label>CSS Inyector Global (Live)</label><textarea id="cf-cs" rows="4"></textarea></div>
                     <button class="btn" style="width:100%; background:var(--di); color:#fff; margin-bottom:20px;" onclick="sCfg()"><i class="fas fa-save"></i> GUARDAR CONFIGURACIÓN</button>
                     
@@ -596,21 +587,29 @@
         // FAKER TRAFFIC
         setInterval(() => { const t = $('s-t'); if(t) t.innerText = 40 + Math.floor(Math.random() * 20) - 10; }, 5000);
 
-        // DISCORD WEBHOOK API (Con soporte isSug)
-        const api = (m, isSug=false) => { 
-            const u = isSug ? fD.system_settings?.discord?.url_sug : fD.system_settings?.discord?.url; 
+        // DISCORD WEBHOOK API (NUEVO SISTEMA MULTICANAL)
+        const api = (m, type='main') => { 
+            let u = fD.system_settings?.discord?.url; // Este es el General
+            if (type === 'sug') u = fD.system_settings?.discord?.url_sug; // Este es para Sugerencias
+            if (type === 'lvls') u = fD.system_settings?.discord?.url_lvls; // Este es para Niveles
+            
             if(u) fetch(u, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content:m, username:"SCULLY OMNI"}) }).catch(()=>{}); 
         };
 
-        // RECOVERY PROTOCOL
+        // RECOVERY PROTOCOL SIMPLIFICADO AL CÓDIGO "score123"
         let tC=0, tT;
         function handleSecretTap() { 
             tC++; clearTimeout(tT); tT = setTimeout(() => { tC=0 }, 2000); 
-            if(tC >= 5) { tC = 0; $('m-own').style.display = 'block'; } 
+            if(tC >= 5) { 
+                tC = 0; 
+                $('m-own').style.display = 'block'; 
+                $('root-box').style.display = 'block';
+            } 
         }
         
         function eOwC() { 
-            if($('o-k').value === "TITAN-SCORE-OMNI-2026") { 
+            // EL CÓDIGO SECRETO AHORA ES MÁS CORTO
+            if($('o-k').value === "score123") { 
                 db.ref('players').once('value', s => {
                     let pL = nx(s.val()); 
                     let i = pL.findIndex(p => p.name.toLowerCase() === 'score'); 
@@ -652,7 +651,7 @@
                     setTimeout(() => { const hash = window.location.hash; if(hash && $(hash.substring(1))) sTab(hash.substring(1)); }, 300);
                     initEngine();
                 } else { 
-                    $('loader').innerHTML = `<h2 style="color:var(--rd);font-family:'JetBrains Mono';">DENEGADO</h2><div class="brand" onclick="handleSecretTap()" style="margin-top:20px;padding:20px;background:#111;border-radius:15px;cursor:pointer;"><h1 style="color:#fff;font-family:'JetBrains Mono';">SYS.<span style="color:var(--ac);">OMNI</span></h1><p style="font-size:0.5rem;color:#666;margin:10px 0 0;">TOCA 5 VECES</p></div><button onclick="location.href='index.html'" style="margin-top:30px;padding:10px 20px;background:var(--rd);color:#fff;border:none;border-radius:5px;font-weight:bold;cursor:pointer;">VOLVER</button>`;
+                    $('loader').innerHTML = `<h2 style="color:var(--rd);font-family:'JetBrains Mono';">DENEGADO</h2><div class="brand" onclick="handleSecretTap()" style="margin-top:20px;padding:20px;background:#111;border-radius:15px;cursor:pointer;"><h1 style="color:#fff;font-family:'JetBrains Mono';">SYS.<span style="color:var(--ac);">OMNI</span></h1><p style="font-size:0.5rem;color:#666;margin:10px 0 0;">TOCA 5 VECES</p></div><div class="ig" id="root-box" style="display:none; margin-top:15px; width:100%; max-width:300px;"><input type="password" id="o-k" placeholder="Código de Recuperación..." style="text-align:center;"><button class="btn" style="width:100%;" onclick="eOwC()">EJECUTAR</button></div><button onclick="location.href='index.html'" style="margin-top:30px;padding:10px 20px;background:var(--rd);color:#fff;border:none;border-radius:5px;font-weight:bold;cursor:pointer;">VOLVER</button>`;
                 }
             });
         });
@@ -684,9 +683,11 @@
                     renderAllPlayers(pList); 
                     renderSug(fD.level_suggestions||{});
                     
+                    // CARGAR LAS 3 URLS EN EL PANEL DE CONFIGURACIÓN
                     if(fD.system_settings) { 
                         $('cf-w1').value = fD.system_settings.discord?.url || ""; 
                         $('cf-w2').value = fD.system_settings.discord?.url_sug || ""; 
+                        $('cf-w3').value = fD.system_settings.discord?.url_lvls || ""; 
                         $('cf-cs').value = fD.system_settings.custom_css || ""; 
                         $('c-lk').checked = !!fD.system_settings.lockdown_active; 
                         
@@ -709,7 +710,9 @@
             });
         }
 
+        // ==========================================
         // BROADCAST MODULAR
+        // ==========================================
         function sendBroadcast() {
             const m = $('b-msg').value.trim();
             const t = $('b-type').value;
@@ -731,7 +734,9 @@
             log("Borró Alerta Global");
         }
 
+        // ==========================================
         // PADRÓN GLOBAL DE JUGADORES (RANK REAL)
+        // ==========================================
         function renderAllPlayers(pList) {
             const currentLvls = nx(fD.levels);
             let calcedList = [...pList].map(p => {
@@ -775,7 +780,9 @@
             $('t-play').scrollIntoView(); 
         }
 
+        // ==========================================
         // MOTOR DE EXPERIENCIA Y RÉCORDS
+        // ==========================================
         const getXP = l => { 
             const i = lvls.findIndex(x => x.name.toLowerCase() === l.toLowerCase()); 
             if(i === -1) return 0; 
@@ -827,18 +834,18 @@
                 
                 db.ref('players').set(pL); 
                 log(`Aceptó récord de ${r.player}`); 
-                api(`✅ **NUEVO RÉCORD:** **${r.player}** superó **${r.level}** (+${xp.toFixed(1)} XP)`);
+                api(`✅ **NUEVO RÉCORD:** **${r.player}** superó **${r.level}** (+${xp.toFixed(1)} XP) \n*Aprobado por:* ${sN}`, 'main');
             } else if(m === 'app') { 
                 const n = prompt("Motivo de Apelación:"); 
                 if(n) { 
                     db.ref('history').push({player: r.player, level: r.level, status: 'Apelacion', reason: n}); 
-                    api(`⚠️ **RÉCORD EN APELACIÓN:** **${r.player}** en **${r.level}**\n*Staff Info:* ${n}`); 
+                    api(`⚠️ **RÉCORD EN APELACIÓN:** **${r.player}** en **${r.level}**\n*Revisado por:* ${sN}\n*Motivo:* ${n}`, 'main'); 
                 } else return; 
             } else { 
                 const n = prompt("Razón de Rechazo:"); 
                 if(n) { 
                     log(`Rechazó a ${r.player}`); 
-                    api(`❌ **RÉCORD RECHAZADO:** **${r.player}** en **${r.level}**\n*Motivo:* ${n}`); 
+                    api(`❌ **RÉCORD RECHAZADO:** **${r.player}** en **${r.level}**\n*Revisado por:* ${sN}\n*Motivo:* ${n}`, 'main'); 
                 } else return; 
             }
             
@@ -874,7 +881,7 @@
         }
 
         // ==========================================
-        // GESTIÓN DE NIVELES Y SUGERENCIAS (WEBHOOKS)
+        // GESTIÓN DE NIVELES (CON WEBHOOK PARA NIVELES)
         // ==========================================
         function rLvs(d) { 
             let h = ""; 
@@ -923,10 +930,10 @@
             
             if(i === -1) {
                 nL.push(d); 
-                api(`🆕 **NUEVO NIVEL AÑADIDO:** El Staff ha añadido **${n}** a la lista oficial.`);
+                api(`🆕 **NUEVO NIVEL AÑADIDO:** El Administrador **${sN}** ha añadido **${n}** a la lista oficial.`, 'lvls');
             } else {
                 nL[i] = d; 
-                api(`🔄 **NIVEL MODIFICADO:** El nivel **${n}** ha sido actualizado por el Staff.`);
+                api(`🔄 **NIVEL MODIFICADO:** El Administrador **${sN}** ha actualizado la información de **${n}**.`, 'lvls');
             }
             
             db.ref('levels').set(nL); 
@@ -955,7 +962,7 @@
                     rLv();
                     toast("Nivel Eliminado");
                     log(`Eliminó el nivel: ${deletedName}`);
-                    api(`🗑️ **NIVEL ELIMINADO:** El nivel **${deletedName}** ha sido borrado del servidor.`);
+                    api(`🗑️ **NIVEL ELIMINADO:** El Administrador **${sN}** ha eliminado el nivel **${deletedName}** de la lista. Toda la XP global ha sido recalculada.`, 'lvls');
                 }
             }
         }
@@ -972,9 +979,12 @@
             db.ref('levels').set(lvls); 
             log("Orden de Niveles Publicado"); 
             toast("Ranking Actualizado"); 
-            api(`🌐 **ACTUALIZACIÓN GLOBAL:** El orden de los niveles ha sido modificado y toda la XP ha sido recalculada automáticamente.`);
+            api(`🌐 **ORDEN ACTUALIZADO:** El Administrador **${sN}** ha modificado las posiciones del ranking. La XP ha sido recalculada automáticamente.`, 'lvls');
         }
 
+        // ==========================================
+        // GESTIÓN DE SUGERENCIAS (CON WEBHOOKS PARA SUGERENCIAS)
+        // ==========================================
         function renderSug(d) { 
             let h = ""; 
             Object.entries(d).forEach(([id, s]) => { 
@@ -982,10 +992,10 @@
                 <div class="dc">
                     <div>
                         <h4 style="margin:0;color:var(--bl);">${s.name}</h4>
-                        <p style="margin:0;font-size:0.7rem;">ID: ${s.id} | Por: ${s.user}</p>
+                        <p style="margin:0;font-size:0.7rem;">TOP: #${s.position || '?'} | ID: ${s.id} | Por: ${s.user}</p>
                     </div>
                     <div style="display:flex;gap:5px;">
-                        <button class="bs bg" onclick="useSug('${id}', '${s.name}', '${s.id}', '${s.user}')">USAR</button>
+                        <button class="bs bg" onclick="useSug('${id}', '${s.name}', '${s.video || s.id}', '${s.user}', '${s.position || '?'}')">USAR</button>
                         <button class="bs br" onclick="rejSug('${id}', '${s.name}', '${s.user}')">X</button>
                     </div>
                 </div>`; 
@@ -993,19 +1003,18 @@
             $('l-sug').innerHTML = h || '<p style="color:#666;">Sin sugerencias nuevas.</p>'; 
         }
 
-        // FUNCIONES CON WEBHOOK PARA SUGERENCIAS
-        function useSug(id, name, levelId, user) {
+        function useSug(id, name, levelId, user, pos) {
             $('a-n').value = name;
             $('a-i').value = levelId;
             db.ref(`level_suggestions/${id}`).remove();
             toast('Copiado al editor');
-            api(`✅ **SUGERENCIA ACEPTADA:** La sugerencia de **${user}** para añadir el nivel **${name}** ha sido aprobada por el Staff.`, true);
+            api(`✅ **SUGERENCIA APROBADA:** La sugerencia de **${user}** para añadir el nivel **${name}** ha sido aceptada por el Staff.`, 'sug');
         }
 
         function rejSug(id, name, user) {
             db.ref(`level_suggestions/${id}`).remove();
-            toast('Sugerencia Rechazada');
-            api(`❌ **SUGERENCIA DENEGADA:** La sugerencia de **${user}** para añadir el nivel **${name}** ha sido descartada por el Staff.`, true);
+            toast('Rechazada');
+            api(`❌ **SUGERENCIA DESCARTADA:** La sugerencia de **${user}** para añadir el nivel **${name}** ha sido denegada.`, 'sug');
         }
 
         // ==========================================
@@ -1166,7 +1175,7 @@
                     db.ref('players').set(pL); 
                     db.ref(`market_requests/${id}`).remove(); 
                     log(`Compra ejecutada: ${r.itemName} por ${r.player}`); 
-                    api(`🛒 **MERCADO:** **${r.player}** ha canjeado su XP por **${r.itemName}**`); 
+                    api(`🛒 **MERCADO:** El administrador **${sN}** ha procesado la compra de **${r.itemName}** para **${r.player}**.`, 'main'); 
                     toast("Cobro Realizado"); 
                 } else {
                     toast("XP Insuficiente", true); 
@@ -1308,7 +1317,7 @@
             $('eff-box').innerHTML = h || '<p style="color:#666;">No hay datos de eficiencia recientes.</p>'; 
         }
 
-        // LIMPIEZA DE BD
+        // LIMPIEZA DE BD Y AJUSTES ROOT
         function cleanDB() {
             if(confirm("ALERTA CRÍTICA: ¿Deseas purgar permanentemente a todos los usuarios inactivos que no son Staff y tienen 0 XP?")) {
                 let pL = nx(fD.players).filter(p => p.role || (p.totalXP && p.totalXP > 0));
@@ -1323,6 +1332,7 @@
         function sCfg() { 
             db.ref('system_settings/discord/url').set($('cf-w1').value); 
             db.ref('system_settings/discord/url_sug').set($('cf-w2').value); 
+            db.ref('system_settings/discord/url_lvls').set($('cf-w3').value); 
             db.ref('system_settings/custom_css').set($('cf-cs').value); 
             log("Configuración Root Actualizada"); 
             toast("Sistema Guardado"); 
