@@ -3,39 +3,597 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Scully OMNI | Absolute Engine v23</title>
+    
+    <title>Scully OMNI | Absolute Engine v25</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        /* CSS OMNI ENGINE - COMPRIMIDO PARA ESTABILIDAD */
-        :root{--ac:#ff6600;--bg:#030303;--sb:#0a0a0a;--cd:#111;--bd:rgba(255,255,255,0.08);--gr:#00ff66;--rd:#ff3333;--bl:#00ccff;--gd:#ffd700;--pu:#cc00ff;--cy:#00ffff;--ow:#ff0055;}
-        *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;} body{background:var(--bg);color:#fff;font-family:'Lexend Deca',sans-serif;margin:0;display:flex;height:100vh;overflow:hidden;}
-        ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--ac);border-radius:10px;}
-        .mob-nav{display:none;background:var(--sb);height:60px;width:100%;position:fixed;top:0;left:0;z-index:4000;border-bottom:1px solid var(--bd);padding:0 20px;align-items:center;justify-content:space-between;} .mob-nav h1{margin:0;font-family:'JetBrains Mono';font-size:1.4rem;text-transform:uppercase;} .mob-nav span{color:var(--ac);} .ham{font-size:1.5rem;color:var(--ac);cursor:pointer;} .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:3000;backdrop-filter:blur(4px);}
-        .sidebar{width:280px;min-width:280px;background:var(--sb);border-right:1px solid var(--bd);display:flex;flex-direction:column;z-index:3500;transition:transform 0.3s ease;} .brand{text-align:center;padding:25px 10px;border-bottom:1px solid var(--bd);background:#000;cursor:pointer;touch-action:manipulation;user-select:none;} .brand h1{font-family:'JetBrains Mono';font-size:1.8rem;margin:0;text-transform:uppercase;letter-spacing:-1px;} .brand span{color:var(--ac);}
-        .nav-sc{flex:1;overflow-y:auto;padding:10px 0;} .n-btn{width:100%;background:transparent;color:#888;border:none;padding:14px 25px;text-align:left;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:12px;font-weight:700;text-transform:uppercase;border-left:3px solid transparent;transition:0.2s;} .n-btn:hover,.n-btn.active{color:#fff;background:rgba(255,102,0,0.06);border-left-color:var(--ac);} .n-sec{font-size:0.6rem;color:#444;text-transform:uppercase;font-weight:900;margin:20px 25px 8px;letter-spacing:1px;display:block;}
-        .m-wrap{flex:1;display:flex;flex-direction:column;position:relative;overflow:hidden;} .s-bar{background:#000;border-bottom:1px solid var(--bd);padding:10px;display:flex;justify-content:center;gap:15px;font-size:0.65rem;font-weight:800;text-transform:uppercase;flex-wrap:wrap;} .s-bar i{color:var(--ac);margin-right:4px;} .s-bar b{color:#fff;}
-        .m-cont{flex:1;padding:30px 40px;overflow-y:auto;background:radial-gradient(circle at 50% 0%, rgba(255,102,0,0.02) 0%, transparent 50%);} .tab{display:none;} .tab.active{display:block;animation:fade 0.3s ease;} @keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-        h2.title{font-size:1.4rem;margin-bottom:25px;display:flex;align-items:center;gap:15px;text-transform:uppercase;font-weight:800;border-bottom:1px solid var(--bd);padding-bottom:10px;}
-        .grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:15px;margin-bottom:25px;} .card{background:var(--cd);border:1px solid var(--bd);padding:20px;border-radius:15px;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,0.3);} .card h3{font-size:1.8rem;margin:5px 0;font-family:'JetBrains Mono';color:var(--ac);} .card p{font-size:0.6rem;color:#888;text-transform:uppercase;font-weight:800;margin:0;}
-        .panel{background:var(--cd);border:1px solid var(--bd);padding:20px;border-radius:15px;margin-bottom:20px;position:relative;} .hlp{position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.05);color:#888;display:flex;align-items:center;justify-content:center;font-size:0.65rem;cursor:pointer;border:1px solid var(--bd);transition:0.2s;font-weight:800;} .hlp:hover{background:var(--bl);color:#000;border-color:var(--bl);}
-        .ig{margin-bottom:15px;} label{display:block;font-size:0.7rem;font-weight:800;color:var(--ac);margin-bottom:5px;text-transform:uppercase;} input, select, textarea{width:100%;background:#000;border:1px solid #222;color:#fff;padding:12px;border-radius:8px;font-size:0.85rem;outline:none;transition:0.3s;} input:focus, textarea:focus{border-color:var(--ac);}
-        .btn{background:var(--ac);color:#000;border:none;padding:12px 25px;border-radius:8px;font-weight:800;font-size:0.75rem;cursor:pointer;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:0.2s;} .btn:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(255,102,0,0.3);}
-        .dl{display:flex;flex-direction:column;gap:10px;max-height:400px;overflow-y:auto;padding-right:5px;} .dc{background:rgba(255,255,255,0.02);border:1px solid var(--bd);padding:15px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;transition:0.2s;} .dc:hover{border-color:var(--ac);background:rgba(255,255,255,0.04);} .dc h4{margin:0 0 5px;font-size:0.9rem;text-transform:uppercase;color:#fff;} .dc p{margin:0;font-size:0.75rem;color:#aaa;}
-        .bs{padding:8px 12px;border-radius:6px;font-size:0.65rem;font-weight:800;border:none;cursor:pointer;text-transform:uppercase;display:inline-flex;justify-content:center;align-items:center;gap:5px;transition:0.2s;} .bg{background:rgba(0,255,102,0.1);color:var(--gr);border:1px solid var(--gr);} .bg:hover{background:var(--gr);color:#000;} .br{background:rgba(255,51,51,0.1);color:var(--rd);border:1px solid var(--rd);} .br:hover{background:var(--rd);color:#fff;} .bb{background:rgba(0,204,255,0.1);color:var(--bl);border:1px solid var(--bl);} .bb:hover{background:var(--bl);color:#000;} .by{background:rgba(255,215,0,0.1);color:var(--gd);border:1px solid var(--gd);} .by:hover{background:var(--gd);color:#000;}
-        .cbx{background:#000;border:1px solid #222;border-radius:10px;height:250px;overflow-y:auto;padding:15px;margin-bottom:15px;font-size:0.8rem;} .cm{margin-bottom:8px;border-bottom:1px solid #111;padding-bottom:5px;} .cm b{color:var(--ac);} .cm i{font-size:0.6rem;color:#555;margin-left:8px;}
-        .term{background:#000;border:1px solid #222;border-radius:10px;padding:15px;font-family:'JetBrains Mono';font-size:0.7rem;height:200px;overflow-y:auto;color:#aaa;} .tl{margin-bottom:4px;border-bottom:1px solid #111;padding-bottom:2px;}
-        .sw{position:relative;display:inline-block;width:44px;height:22px;} .sw input{opacity:0;width:0;height:0;} .sl{position:absolute;cursor:pointer;inset:0;background:#222;transition:.3s;border-radius:20px;} .sl:before{position:absolute;content:"";height:14px;width:14px;left:4px;bottom:4px;background:#fff;transition:.3s;border-radius:50%;} input:checked+.sl{background:var(--rd);} input:checked+.sl:before{transform:translateX(22px);}
-        .mod{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:10000;backdrop-filter:blur(8px);overflow-y:auto;} .mc{background:var(--sb);margin:5vh auto;padding:30px;width:90%;max-width:550px;border-radius:15px;border:1px solid var(--bd);position:relative;box-shadow:0 20px 50px rgba(0,0,0,0.8);}
-        #toast{visibility:hidden;min-width:200px;background:var(--gr);color:#000;text-align:center;border-radius:8px;padding:15px;position:fixed;z-index:20000;bottom:30px;left:50%;transform:translateX(-50%) translateY(50px);font-weight:800;opacity:0;transition:0.4s;box-shadow:0 10px 30px rgba(0,0,0,0.5);} #toast.show{visibility:visible;transform:translateX(-50%) translateY(0);opacity:1;}
-        @media(max-width:768px){ .mob-nav{display:flex;} .s-bar{display:none;} .sidebar{position:fixed;left:-100%;top:60px;height:calc(100vh - 60px);box-shadow:10px 0 30px #000;} .sidebar.open{transform:translateX(100%);} .overlay.active{display:block;} .m-wrap{margin-top:60px;height:calc(100vh - 60px);} .m-cont{padding:20px;} .grid{grid-template-columns:1fr 1fr;} .btn{width:100%;justify-content:center;} .dc{flex-direction:column;align-items:flex-start;} .dc div:last-child{width:100%;display:flex;gap:8px;margin-top:10px;} .dc button{flex:1;justify-content:center;} }
+        /* Variables Globales */
+        :root { 
+            --ac: #ff6600; 
+            --bg: #030303; 
+            --sb: #0a0a0a; 
+            --cd: #111111; 
+            --bd: rgba(255, 255, 255, 0.08); 
+            --gr: #00ff66; 
+            --rd: #ff3333; 
+            --bl: #00ccff; 
+            --gd: #ffd700; 
+            --pu: #cc00ff; 
+            --cy: #00ffff; 
+            --ow: #ff0055; 
+        }
+
+        /* Estructura Base */
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+        } 
+
+        body { 
+            background: var(--bg); 
+            color: #fff; 
+            font-family: 'Lexend Deca', sans-serif; 
+            margin: 0; 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        ::-webkit-scrollbar { 
+            width: 8px; 
+        } 
+
+        ::-webkit-scrollbar-track { 
+            background: var(--bg); 
+        } 
+
+        ::-webkit-scrollbar-thumb { 
+            background: var(--ac); 
+            border-radius: 10px; 
+        }
+
+        /* Menú Móvil */
+        .mob-nav { 
+            display: none; 
+            background: var(--sb); 
+            height: 60px; 
+            width: 100%; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            z-index: 4000; 
+            border-bottom: 1px solid var(--bd); 
+            padding: 0 20px; 
+            align-items: center; 
+            justify-content: space-between; 
+        } 
+
+        .mob-nav h1 { 
+            margin: 0; 
+            font-family: 'JetBrains Mono'; 
+            font-size: 1.4rem; 
+            text-transform: uppercase; 
+        } 
+
+        .mob-nav span { 
+            color: var(--ac); 
+        } 
+
+        .ham { 
+            font-size: 1.5rem; 
+            color: var(--ac); 
+            cursor: pointer; 
+        } 
+
+        .overlay { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0, 0, 0, 0.7); 
+            z-index: 3000; 
+            backdrop-filter: blur(4px); 
+        }
+
+        /* Barra Lateral (Sidebar) */
+        .sidebar { 
+            width: 280px; 
+            min-width: 280px; 
+            background: var(--sb); 
+            border-right: 1px solid var(--bd); 
+            display: flex; 
+            flex-direction: column; 
+            z-index: 3500; 
+            transition: transform 0.3s ease; 
+        } 
+
+        .brand { 
+            text-align: center; 
+            padding: 25px 10px; 
+            border-bottom: 1px solid var(--bd); 
+            background: #000; 
+            cursor: pointer; 
+            touch-action: manipulation; 
+            user-select: none; 
+        } 
+
+        .brand h1 { 
+            font-family: 'JetBrains Mono'; 
+            font-size: 1.8rem; 
+            margin: 0; 
+            text-transform: uppercase; 
+            letter-spacing: -1px; 
+        } 
+
+        .brand span { 
+            color: var(--ac); 
+        }
+
+        /* Navegación Interna */
+        .nav-sc { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 10px 0; 
+        } 
+
+        .n-btn { 
+            width: 100%; 
+            background: transparent; 
+            color: #888; 
+            border: none; 
+            padding: 14px 25px; 
+            text-align: left; 
+            font-size: 0.75rem; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            border-left: 3px solid transparent; 
+            transition: 0.2s; 
+        } 
+
+        .n-btn:hover, .n-btn.active { 
+            color: #fff; 
+            background: rgba(255, 102, 0, 0.06); 
+            border-left-color: var(--ac); 
+        } 
+
+        .n-sec { 
+            font-size: 0.6rem; 
+            color: #444; 
+            text-transform: uppercase; 
+            font-weight: 900; 
+            margin: 20px 25px 8px; 
+            letter-spacing: 1px; 
+            display: block; 
+        }
+
+        /* Contenido Principal y Staff Bar */
+        .m-wrap { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            overflow: hidden; 
+        } 
+
+        .s-bar { 
+            background: #000; 
+            border-bottom: 1px solid var(--bd); 
+            padding: 10px; 
+            display: flex; 
+            justify-content: center; 
+            gap: 15px; 
+            font-size: 0.65rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            flex-wrap: wrap; 
+        } 
+
+        .s-bar i { 
+            color: var(--ac); 
+            margin-right: 4px; 
+        } 
+
+        .s-bar b { 
+            color: #fff; 
+        }
+
+        .m-cont { 
+            flex: 1; 
+            padding: 30px 40px; 
+            overflow-y: auto; 
+            background: radial-gradient(circle at 50% 0%, rgba(255, 102, 0, 0.02) 0%, transparent 50%); 
+        } 
+
+        .tab { 
+            display: none; 
+        } 
+
+        .tab.active { 
+            display: block; 
+            animation: fade 0.3s ease; 
+        } 
+
+        @keyframes fade { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        h2.title { 
+            font-size: 1.4rem; 
+            margin-bottom: 25px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            text-transform: uppercase; 
+            font-weight: 800; 
+            border-bottom: 1px solid var(--bd); 
+            padding-bottom: 10px; 
+        }
+
+        /* Componentes: Grids, Cards y Paneles */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+            gap: 15px; 
+            margin-bottom: 25px; 
+        } 
+
+        .card { 
+            background: var(--cd); 
+            border: 1px solid var(--bd); 
+            padding: 20px; 
+            border-radius: 15px; 
+            text-align: center; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); 
+        } 
+
+        .card h3 { 
+            font-size: 1.8rem; 
+            margin: 5px 0; 
+            font-family: 'JetBrains Mono'; 
+            color: var(--ac); 
+        } 
+
+        .card p { 
+            font-size: 0.6rem; 
+            color: #888; 
+            text-transform: uppercase; 
+            font-weight: 800; 
+            margin: 0; 
+        }
+
+        .panel { 
+            background: var(--cd); 
+            border: 1px solid var(--bd); 
+            padding: 20px; 
+            border-radius: 15px; 
+            margin-bottom: 20px; 
+            position: relative; 
+        } 
+
+        .hlp { 
+            position: absolute; 
+            top: 12px; 
+            right: 12px; 
+            width: 22px; 
+            height: 22px; 
+            border-radius: 50%; 
+            background: rgba(255, 255, 255, 0.05); 
+            color: #888; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 0.65rem; 
+            cursor: pointer; 
+            border: 1px solid var(--bd); 
+            transition: 0.2s; 
+            font-weight: 800; 
+        } 
+
+        .hlp:hover { 
+            background: var(--bl); 
+            color: #000; 
+            border-color: var(--bl); 
+        }
+
+        /* Formularios y Botones */
+        .ig { 
+            margin-bottom: 15px; 
+        } 
+
+        label { 
+            display: block; 
+            font-size: 0.7rem; 
+            font-weight: 800; 
+            color: var(--ac); 
+            margin-bottom: 5px; 
+            text-transform: uppercase; 
+        } 
+
+        input, select, textarea { 
+            width: 100%; 
+            background: #000; 
+            border: 1px solid #222; 
+            color: #fff; 
+            padding: 12px; 
+            border-radius: 8px; 
+            font-size: 0.85rem; 
+            outline: none; 
+            transition: 0.3s; 
+        } 
+
+        input:focus, textarea:focus { 
+            border-color: var(--ac); 
+        }
+
+        .btn { 
+            background: var(--ac); 
+            color: #000; 
+            border: none; 
+            padding: 12px 25px; 
+            border-radius: 8px; 
+            font-weight: 800; 
+            font-size: 0.75rem; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+            transition: 0.2s; 
+        } 
+
+        .btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3); 
+        }
+
+        /* Listas de Datos (Data Lists) */
+        .dl { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            max-height: 450px; 
+            overflow-y: auto; 
+            padding-right: 5px; 
+        } 
+
+        .dc { 
+            background: rgba(255, 255, 255, 0.02); 
+            border: 1px solid var(--bd); 
+            padding: 15px; 
+            border-radius: 12px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            transition: 0.2s; 
+        } 
+
+        .dc:hover { 
+            border-color: var(--ac); 
+            background: rgba(255, 255, 255, 0.04); 
+        } 
+
+        .dc h4 { 
+            margin: 0 0 5px; 
+            font-size: 0.9rem; 
+            text-transform: uppercase; 
+            color: #fff; 
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        } 
+
+        .dc p { 
+            margin: 0; 
+            font-size: 0.75rem; 
+            color: #aaa; 
+        }
+
+        /* Botones de Acción Rápida (Small Buttons) */
+        .bs { 
+            padding: 8px 12px; 
+            border-radius: 6px; 
+            font-size: 0.65rem; 
+            font-weight: 800; 
+            border: none; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            display: inline-flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 5px; 
+            transition: 0.2s; 
+        } 
+
+        .bg { background: rgba(0, 255, 102, 0.1); color: var(--gr); border: 1px solid var(--gr); } 
+        .bg:hover { background: var(--gr); color: #000; } 
+
+        .br { background: rgba(255, 51, 51, 0.1); color: var(--rd); border: 1px solid var(--rd); } 
+        .br:hover { background: var(--rd); color: #fff; } 
+
+        .bb { background: rgba(0, 204, 255, 0.1); color: var(--bl); border: 1px solid var(--bl); } 
+        .bb:hover { background: var(--bl); color: #000; } 
+
+        .by { background: rgba(255, 215, 0, 0.1); color: var(--gd); border: 1px solid var(--gd); } 
+        .by:hover { background: var(--gd); color: #000; }
+
+        /* Chat y Terminal */
+        .cbx { 
+            background: #000; 
+            border: 1px solid #222; 
+            border-radius: 10px; 
+            height: 250px; 
+            overflow-y: auto; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            font-size: 0.8rem; 
+        } 
+
+        .cm { 
+            margin-bottom: 8px; 
+            border-bottom: 1px solid #111; 
+            padding-bottom: 5px; 
+        } 
+
+        .cm b { 
+            color: var(--ac); 
+        } 
+
+        .cm i { 
+            font-size: 0.6rem; 
+            color: #555; 
+            margin-left: 8px; 
+        }
+
+        .term { 
+            background: #000; 
+            border: 1px solid #222; 
+            border-radius: 10px; 
+            padding: 15px; 
+            font-family: 'JetBrains Mono'; 
+            font-size: 0.7rem; 
+            height: 200px; 
+            overflow-y: auto; 
+            color: #aaa; 
+        } 
+
+        .tl { 
+            margin-bottom: 4px; 
+            border-bottom: 1px solid #111; 
+            padding-bottom: 2px; 
+        }
+
+        /* Interruptores (Switches) */
+        .sw { 
+            position: relative; 
+            display: inline-block; 
+            width: 44px; 
+            height: 22px; 
+        } 
+
+        .sw input { 
+            opacity: 0; 
+            width: 0; 
+            height: 0; 
+        } 
+
+        .sl { 
+            position: absolute; 
+            cursor: pointer; 
+            inset: 0; 
+            background: #222; 
+            transition: .3s; 
+            border-radius: 20px; 
+        } 
+
+        .sl:before { 
+            position: absolute; 
+            content: ""; 
+            height: 14px; 
+            width: 14px; 
+            left: 4px; 
+            bottom: 4px; 
+            background: #fff; 
+            transition: .3s; 
+            border-radius: 50%; 
+        } 
+
+        input:checked + .sl { 
+            background: var(--rd); 
+        } 
+
+        input:checked + .sl:before { 
+            transform: translateX(22px); 
+        }
+
+        /* Modales Globales */
+        .mod { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0, 0, 0, 0.9); 
+            z-index: 10000; 
+            backdrop-filter: blur(8px); 
+            overflow-y: auto; 
+        } 
+
+        .mc { 
+            background: var(--sb); 
+            margin: 5vh auto; 
+            padding: 30px; 
+            width: 90%; 
+            max-width: 550px; 
+            border-radius: 15px; 
+            border: 1px solid var(--bd); 
+            position: relative; 
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8); 
+        }
+
+        #toast { 
+            visibility: hidden; 
+            min-width: 200px; 
+            background: var(--gr); 
+            color: #000; 
+            text-align: center; 
+            border-radius: 8px; 
+            padding: 15px; 
+            position: fixed; 
+            z-index: 20000; 
+            bottom: 30px; 
+            left: 50%; 
+            transform: translateX(-50%) translateY(50px); 
+            font-weight: 800; 
+            opacity: 0; 
+            transition: 0.4s; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
+        } 
+
+        #toast.show { 
+            visibility: visible; 
+            transform: translateX(-50%) translateY(0); 
+            opacity: 1; 
+        }
+
+        /* Media Queries (Móvil) */
+        @media(max-width: 768px) {
+            .mob-nav { display: flex; } 
+            .s-bar { display: none; } 
+            .sidebar { 
+                position: fixed; 
+                left: -100%; 
+                top: 60px; 
+                height: calc(100vh - 60px); 
+                box-shadow: 10px 0 30px #000; 
+            } 
+            .sidebar.open { transform: translateX(100%); } 
+            .overlay.active { display: block; } 
+            .m-wrap { 
+                margin-top: 60px; 
+                height: calc(100vh - 60px); 
+            } 
+            .m-cont { padding: 20px; } 
+            .grid { grid-template-columns: 1fr 1fr; } 
+            .btn { width: 100%; justify-content: center; } 
+            .dc { flex-direction: column; align-items: flex-start; } 
+            .dc div:last-child { width: 100%; display: flex; gap: 8px; margin-top: 10px; } 
+            .dc button { flex: 1; justify-content: center; } 
+        }
     </style>
 </head>
 <body>
 
     <div id="loader" style="position:fixed;inset:0;background:#000;z-index:90000;display:flex;flex-direction:column;justify-content:center;align-items:center;">
         <div style="width:50px;height:50px;border:3px solid rgba(255,102,0,.1);border-top-color:var(--ac);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px;"></div>
-        <h2 style="color:var(--ac);font-family:'JetBrains Mono';font-size:1.5rem;letter-spacing:2px;">OMNI_V23_ENGINE</h2>
+        <h2 style="color:var(--ac);font-family:'JetBrains Mono';font-size:1.5rem;letter-spacing:2px;">OMNI_V25_SYNC</h2>
         <style>@keyframes spin {to{transform:rotate(360deg);}}</style>
     </div>
 
@@ -43,16 +601,18 @@
         <h2 style="color:var(--rd);font-family:'JetBrains Mono';">ACCESO DENEGADO</h2>
         <p style="color:#aaa;font-size:0.85rem;max-width:400px;">Cuenta no vinculada al Staff. Si eres el Owner, ejecuta el protocolo.</p>
         <div class="brand" onclick="handleSecretTap()" style="margin-top:20px;padding:20px;background:#111;border:1px solid #333;border-radius:15px;width:100%;max-width:300px;">
-            <h1 style="font-size:2rem;margin:0;color:#fff;">SYS.<span style="color:var(--ac);">OMNI</span></h1><p style="font-size:0.6rem;color:#666;margin:10px 0 0;">TOCA 5 VECES PARA ROOT</p>
+            <h1 style="font-size:2rem;margin:0;color:#fff;">SYS.<span style="color:var(--ac);">OMNI</span></h1>
+            <p style="font-size:0.6rem;color:#666;margin:10px 0 0;">TOCA 5 VECES PARA RECUPERAR ROOT</p>
         </div>
         <button class="btn" style="margin-top:30px;background:var(--rd);color:#fff;" onclick="location.href='index.html'">VOLVER AL INICIO</button>
     </div>
 
     <div id="toast">Exito</div>
+    
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
     <div class="mob-nav">
-        <h1>SYS.<span>OMNI</span></h1><div class="ham" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+        <h1>SYS.<span>OMNI</span></h1>
+        <div class="ham" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
     </div>
 
     <div class="sidebar" id="sidebar">
@@ -65,7 +625,7 @@
             <button class="n-btn active" onclick="sTab('t-dash')"><i class="fas fa-satellite-dish"></i> Dashboard</button>
             <button class="n-btn" onclick="sTab('t-recs')"><i class="fas fa-inbox"></i> Récords</button>
             <button class="n-btn" onclick="sTab('t-lvls')"><i class="fas fa-database"></i> Editor de Niveles</button>
-            <button class="n-btn" onclick="sTab('t-play')"><i class="fas fa-users-cog"></i> Jugadores (Rank)</button>
+            <button class="n-btn" onclick="sTab('t-play')"><i class="fas fa-users-cog"></i> Jugadores y Ranking</button>
             <button class="n-btn" onclick="sTab('t-clm')"><i class="fas fa-id-badge"></i> Reclamos</button>
             
             <span class="n-sec">Módulos Titán</span>
@@ -83,7 +643,7 @@
             <button class="n-btn" onclick="sTab('t-aud')" id="b-au" style="color:var(--bl);display:none;"><i class="fas fa-terminal"></i> Auditoría</button>
         </div>
         <div style="padding:15px; border-top:1px solid var(--bd);">
-            <button class="n-btn" style="color:var(--rd);justify-content:center;" onclick="location.href='index.html'"><i class="fas fa-power-off"></i> SALIR</button>
+            <button class="n-btn" style="color:var(--rd);justify-content:center;" onclick="location.href='index.html'"><i class="fas fa-power-off"></i> SALIR AL HUB</button>
         </div>
     </div>
 
@@ -101,6 +661,7 @@
             
             <div id="t-dash" class="tab active">
                 <h2 class="title"><i class="fas fa-satellite-dish" style="color:var(--ac);"></i> Monitor Analítico</h2>
+                
                 <div class="grid">
                     <div class="card"><h3><span id="s-p">0</span></h3><p>Usuarios Rankeados</p></div>
                     <div class="card"><h3><span id="s-l">0</span></h3><p>Niveles Activos</p></div>
@@ -109,11 +670,18 @@
                 </div>
 
                 <div class="panel" style="border-color:var(--gd);">
-                    <h3 style="margin:0 0 15px;color:var(--gd);font-size:1rem;"><i class="fas fa-bullhorn"></i> Transmitir Alerta Global</h3>
+                    <h3 style="margin:0 0 15px;color:var(--gd);font-size:1rem;"><i class="fas fa-bullhorn"></i> Transmitir Alerta Global al Index</h3>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
+                        <input type="text" id="b-msg" placeholder="Escribe el mensaje de alerta para todos los visitantes..." style="flex:1; min-width:250px;">
+                        <select id="b-type" style="width:150px;">
+                            <option value="red">PELIGRO (Rojo)</option>
+                            <option value="yellow">AVISO (Dorado)</option>
+                            <option value="blue">INFO (Cyan)</option>
+                        </select>
+                    </div>
                     <div style="display:flex; gap:10px;">
-                        <input type="text" id="b-msg" placeholder="Escribe un mensaje para todos los visitantes..." style="flex:1;">
-                        <button class="btn" style="background:var(--gd);color:#000;" onclick="sendBroadcast()">TRANSMITIR</button>
-                        <button class="btn" style="background:var(--rd);color:#fff;" onclick="clearBroadcast()">BORRAR</button>
+                        <button class="btn" style="background:var(--gd);color:#000;flex:1;" onclick="sendBroadcast()"><i class="fas fa-paper-plane"></i> TRANSMITIR</button>
+                        <button class="btn" style="background:transparent;border:1px solid var(--rd);color:var(--rd);flex:1;" onclick="clearBroadcast()"><i class="fas fa-times"></i> APAGAR ALERTA</button>
                     </div>
                 </div>
                 
@@ -121,12 +689,19 @@
                 <div class="panel" id="eff-box" style="display:flex; gap:15px; flex-wrap:wrap; border-color:var(--bl); padding:15px;"></div>
 
                 <div class="panel" style="border-color:var(--rd);">
-                    <div class="hlp" onclick="sHlp('Lockdown', 'Muestra una pantalla negra de mantenimiento en el Index público.')">?</div>
+                    <div class="hlp" onclick="sHlp('Lockdown', 'Muestra una pantalla negra de mantenimiento en el Index público impidiendo el acceso a todos.')">?</div>
                     <div style="display:flex;justify-content:space-between;align-items:center;">
-                        <div><h3 style="margin:0;color:var(--rd);font-size:1rem;"><i class="fas fa-lock"></i> MODO CUARENTENA</h3><p style="margin:5px 0 0;font-size:.7rem;color:#888;">Cierra el index público.</p></div>
-                        <label class="sw"><input type="checkbox" id="c-lk" onchange="tLck(this.checked)"><span class="sl"></span></label>
+                        <div>
+                            <h3 style="margin:0;color:var(--rd);font-size:1rem;"><i class="fas fa-lock"></i> MODO CUARENTENA (LOCKDOWN)</h3>
+                            <p style="margin:5px 0 0;font-size:.7rem;color:#888;">Cierra completamente el index público.</p>
+                        </div>
+                        <label class="sw">
+                            <input type="checkbox" id="c-lk" onchange="tLck(this.checked)">
+                            <span class="sl" id="sl-id"></span>
+                        </label>
                     </div>
                 </div>
+                
                 <h3 style="color:var(--ac); font-size:0.9rem; text-transform:uppercase; margin-top:30px;"><i class="fas fa-terminal"></i> Terminal de Eventos</h3>
                 <div id="term" class="term"></div>
             </div>
@@ -137,12 +712,12 @@
                 <div id="l-sub" class="dl" style="margin-bottom:30px;"></div>
                 
                 <div class="panel" style="border-color:var(--ac);">
-                    <div class="hlp" onclick="sHlp('Auto-XP', 'Fuerza la creación de un récord. Calcula XP según posición.')">?</div>
-                    <h3 style="margin:0 0 15px;color:var(--ac);font-size:1rem;"><i class="fas fa-bolt"></i> Inyección Manual</h3>
+                    <div class="hlp" onclick="sHlp('Auto-XP', 'Fuerza la creación de un récord. Calcula XP según posición exacta del nivel en la lista.')">?</div>
+                    <h3 style="margin:0 0 15px;color:var(--ac);font-size:1rem;"><i class="fas fa-bolt"></i> Inyección Manual (Bypass)</h3>
                     <div class="ig"><input type="text" id="m-p" placeholder="Nick Exacto del Jugador"></div>
                     <div class="ig"><input type="text" id="m-l" placeholder="Nombre del Nivel"></div>
                     <div class="ig"><input type="text" id="m-k" placeholder="URL del Video (Opcional)"></div>
-                    <button class="btn" style="width:100%;" onclick="iRec()"><i class="fas fa-syringe"></i> EJECUTAR INYECCIÓN</button>
+                    <button class="btn" style="width:100%;" onclick="iRec()"><i class="fas fa-syringe"></i> EJECUTAR INYECCIÓN DE RÉCORD</button>
                 </div>
             </div>
 
@@ -152,55 +727,84 @@
                 <div class="panel" style="border-color:var(--bl);">
                     <h3 style="margin:0 0 15px;color:var(--bl);font-size:1rem;"><i class="fas fa-lightbulb"></i> Sugerencias de la Comunidad</h3>
                     <div id="l-sug" class="dl"></div>
-                    <button class="btn" style="background:var(--rd);color:#fff;margin-top:10px;" onclick="pList('level_suggestions')">LIMPIAR SUGERENCIAS</button>
+                    <button class="btn" style="background:transparent; border:1px solid var(--rd); color:var(--rd); margin-top:15px; width:100%;" onclick="pList('level_suggestions')"><i class="fas fa-trash"></i> VACIAR BANDEJA DE SUGERENCIAS</button>
                 </div>
 
                 <div class="panel">
-                    <div class="hlp" onclick="sHlp('Contratos', 'Marca un nivel como Contrato para que otorgue el Doble de XP al ser aceptado.')">?</div>
+                    <div class="hlp" onclick="sHlp('Contratos y Borrado', 'Puedes marcar contratos (Doble XP) o eliminar niveles defectuosos por completo.')">?</div>
                     <input type="hidden" id="e-ix" value="-1">
+                    
                     <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-bottom:15px;">
                         <input type="text" id="a-n" placeholder="Nombre del Nivel">
-                        <input type="text" id="a-i" placeholder="Video ID (Ej: dQw4w9WgXcQ)">
-                        <input type="text" id="a-v" placeholder="Verificador (Opcional)">
+                        <input type="text" id="a-i" placeholder="Video ID de YouTube (Ej: dQw4w9WgXcQ)">
+                        <input type="text" id="a-v" placeholder="Nombre del Verificador (Opcional)">
                     </div>
+                    
                     <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px; background:rgba(255,215,0,0.1); padding:10px; border-radius:8px; border:1px solid var(--gd);">
                         <input type="checkbox" id="a-b" style="width:auto; margin:0;"> 
-                        <label style="margin:0; color:var(--gd); font-size:0.8rem;">Marcar como Contrato Activo (DOBLE XP)</label>
+                        <label style="margin:0; color:var(--gd); font-size:0.8rem;">Activar Contrato Bounty (DOBLE XP al verificar)</label>
                     </div>
-                    <button class="btn" style="background:var(--pu);color:#fff;width:100%;" onclick="sLv()"><i class="fas fa-save"></i> GUARDAR NIVEL</button>
-                    <button class="btn" id="c-ed" style="background:transparent;color:var(--rd);border:1px solid var(--rd);width:100%;margin-top:10px;" onclick="rLv()" hidden><i class="fas fa-times"></i> CANCELAR EDICIÓN</button>
+                    
+                    <button class="btn" style="background:var(--pu);color:#fff;width:100%;" onclick="sLv()"><i class="fas fa-save"></i> GUARDAR NIVEL EN BASE DE DATOS</button>
+                    
+                    <div id="edit-action-btns" style="display:none; gap:10px; margin-top:10px;">
+                        <button class="btn" style="background:transparent;color:var(--ac);border:1px solid var(--ac);flex:1;" onclick="rLv()"><i class="fas fa-times"></i> CANCELAR EDICIÓN</button>
+                        <button class="btn" style="background:var(--rd);color:#fff;flex:1;" onclick="delLv()"><i class="fas fa-trash"></i> ELIMINAR NIVEL</button>
+                    </div>
                 </div>
                 
-                <h3 style="color:var(--bl);font-size:1rem;margin-top:30px; border-bottom:1px solid #333; padding-bottom:10px;">Estructura OMNI Ranking</h3>
+                <h3 style="color:var(--bl);font-size:1rem;margin-top:30px; border-bottom:1px solid #333; padding-bottom:10px;">Estructura OMNI Ranking (Arrastra con flechas)</h3>
                 <div id="l-lvl" class="dl" style="background:#000; padding:15px; border-radius:10px; border:1px solid #222;"></div>
-                <button class="btn" style="background:var(--bl);color:#000;width:100%;margin-top:15px;" onclick="pOrd()"><i class="fas fa-globe"></i> PUBLICAR ORDEN Y RECALCULAR XP</button>
+                
+                <button class="btn" style="background:var(--bl);color:#000;width:100%;margin-top:15px;" onclick="pOrd()"><i class="fas fa-globe"></i> PUBLICAR NUEVO ORDEN Y RECALCULAR XP</button>
             </div>
 
             <div id="t-play" class="tab">
                 <h2 class="title"><i class="fas fa-users-cog" style="color:var(--rd);"></i> Base de Jugadores</h2>
+                
                 <div class="panel" style="border-color:rgba(255,51,51,0.3);">
                     <div style="display:flex;gap:10px; flex-wrap:wrap;">
-                        <input type="text" id="p-s" placeholder="Buscar por Nick..." style="flex:1; min-width:200px;">
+                        <input type="text" id="p-s" placeholder="Buscar por Nick exacto..." style="flex:1; min-width:200px;">
                         <button class="btn" style="background:var(--rd); color:#fff;" onclick="sP()"><i class="fas fa-search"></i> BUSCAR</button>
                     </div>
                 </div>
                 
                 <div id="p-res" style="display:none; margin-bottom:30px;">
                     <div class="panel" style="border-color:var(--rd);">
-                        <div class="hlp" onclick="sHlp('Editor', 'Edita biografías, asigna Clanes o Medallas. Si borras un récord, se restará su XP matemáticamente.')">?</div>
+                        <div class="hlp" onclick="sHlp('Editor Avanzado', 'Cambia la foto de perfil pegando un link de Imgur o Discord. Activa la verificación para darles un Check Azul. El Index y la Titan Card leerán los datos de aquí.')">?</div>
+                        
                         <div class="ig"><label>Nombre Público</label><input type="text" id="pe-n"></div>
-                        <div class="ig"><label>Sindicato (Clan)</label><select id="pe-c"><option value="">Ninguno</option></select></div>
+                        
+                        <div class="ig">
+                            <label>URL Foto de Perfil (Privacidad OMNI)</label>
+                            <input type="text" id="pe-pfp" placeholder="Ej: https://i.imgur.com/foto.png">
+                        </div>
+                        
+                        <div class="ig">
+                            <label>Estado de Verificación (Check Azul)</label>
+                            <select id="pe-ver">
+                                <option value="false">Usuario Normal</option>
+                                <option value="true">Usuario Verificado (Oficial)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="ig"><label>Sindicato Asignado</label><select id="pe-c"><option value="">Ninguno</option></select></div>
                         <div class="ig"><label>Medalla de Honor</label><select id="pe-bg"><option value="">Sin Medalla</option></select></div>
                         <div class="ig"><label>Biografía</label><textarea id="pe-b" rows="3"></textarea></div>
+                        
                         <button class="btn" style="width:100%; background:var(--bl); color:#000; margin-bottom:20px;" onclick="uP()"><i class="fas fa-save"></i> GUARDAR CAMBIOS DE PERFIL</button>
+                        
                         <div id="p-bn" style="margin-bottom:30px; padding:15px; background:rgba(0,0,0,0.5); border-radius:10px; border:1px solid #333;"></div>
-                        <h4 style="color:var(--ac); margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">Récords Acumulados</h4>
+                        
+                        <h4 style="color:var(--ac); margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">Récords Acumulados (Borrar resta XP)</h4>
                         <div id="p-r" class="dl"></div>
+                        
                         <button class="btn" style="background:#222; color:#fff; width:100%; margin-top:20px;" onclick="closeEditorP()">CERRAR EDITOR</button>
                     </div>
                 </div>
 
-                <h3 style="color:var(--rd);font-size:1rem;margin-top:0;">Todos los Registros (Orden XP)</h3>
+                <h3 style="color:var(--rd);font-size:1rem;margin-top:0;"><i class="fas fa-list"></i> Padrón Global de Registros</h3>
+                <p style="font-size:0.75rem; color:#888;">Calculado por XP real en base al estado actual del ranking de niveles.</p>
                 <div id="all-players-list" class="dl" style="background:#000; border:1px solid #222; padding:10px; border-radius:10px; max-height:500px;"></div>
             </div>
 
@@ -216,47 +820,46 @@
                 <div id="l-mrq" class="dl" style="margin-bottom:30px;"></div>
                 
                 <div class="panel" style="border-color:var(--gd);">
-                    <div class="hlp" onclick="sHlp('Tienda', 'Crea cosméticos, roles o beneficios. Pon un precio en XP y aparecerá en el Index público.')">?</div>
-                    <h3 style="color:var(--gd); font-size:1rem; margin-top:0;">Publicar Cosmético</h3>
+                    <h3 style="color:var(--gd); font-size:1rem; margin-top:0;">Publicar Ítem/Cosmético</h3>
                     <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-bottom:15px;">
-                        <input type="text" id="i-n" placeholder="Nombre Ítem (Ej: Letras Neón)">
-                        <input type="number" id="i-p" placeholder="Precio XP">
+                        <input type="text" id="i-n" placeholder="Nombre Ítem (Ej: Letras Neón, Rol VIP)">
+                        <input type="number" id="i-p" placeholder="Precio en XP">
                         <input type="text" id="i-i" placeholder="URL Imagen/Icono">
                     </div>
-                    <button class="btn" style="background:var(--gd);color:#000;width:100%;" onclick="aItm()"><i class="fas fa-upload"></i> PUBLICAR</button>
+                    <button class="btn" style="background:var(--gd);color:#000;width:100%;" onclick="aItm()"><i class="fas fa-upload"></i> PUBLICAR EN TIENDA</button>
                 </div>
                 <h3 style="font-size:1rem; border-bottom:1px solid #333; padding-bottom:5px;">Catálogo Activo</h3>
                 <div id="l-mit" class="dl"></div>
             </div>
 
             <div id="t-cln" class="tab">
-                <h2 class="title"><i class="fas fa-shield-alt" style="color:var(--cy);"></i> Sindicatos</h2>
+                <h2 class="title"><i class="fas fa-shield-alt" style="color:var(--cy);"></i> Sindicatos (Clanes)</h2>
                 <div class="panel" style="border-color:var(--cy);">
                     <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-bottom:15px;">
                         <input type="text" id="c-n" placeholder="Nombre Completo (Ej: Elite Verifiers)">
                         <input type="text" id="c-t" placeholder="TAG (Ej: EV)">
                     </div>
-                    <button class="btn" style="width:100%; background:var(--cy); color:#000;" onclick="aCln()"><i class="fas fa-flag"></i> FUNDAR</button>
+                    <button class="btn" style="width:100%; background:var(--cy); color:#000;" onclick="aCln()"><i class="fas fa-flag"></i> FUNDAR SINDICATO</button>
                 </div>
                 <div id="l-cln" class="dl"></div>
             </div>
 
             <div id="t-bdg" class="tab">
-                <h2 class="title"><i class="fas fa-medal" style="color:var(--pu);"></i> Medallas</h2>
+                <h2 class="title"><i class="fas fa-medal" style="color:var(--pu);"></i> Medallas de Honor</h2>
                 <div class="panel" style="border-color:var(--pu);">
-                    <div class="ig"><input type="text" id="b-n" placeholder="Nombre (Ej: Godslayer)"></div>
-                    <div class="ig"><input type="text" id="b-i" placeholder="URL Icono PNG"></div>
-                    <button class="btn" style="background:var(--pu);color:#fff;width:100%;" onclick="aBdg()"><i class="fas fa-hammer"></i> FORJAR</button>
+                    <div class="ig"><input type="text" id="b-n" placeholder="Nombre de la Medalla (Ej: Godslayer)"></div>
+                    <div class="ig"><input type="text" id="b-i" placeholder="URL Icono PNG transparente"></div>
+                    <button class="btn" style="background:var(--pu);color:#fff;width:100%;" onclick="aBdg()"><i class="fas fa-hammer"></i> FORJAR MEDALLA</button>
                 </div>
                 <div id="l-bdg" class="dl"></div>
             </div>
 
             <div id="t-chat" class="tab">
-                <h2 class="title"><i class="fas fa-comments" style="color:var(--bl);"></i> Canal Staff</h2>
+                <h2 class="title"><i class="fas fa-comments" style="color:var(--bl);"></i> Canal Staff Interno</h2>
                 <div class="panel" style="border-color:var(--bl);">
                     <div class="cbx" id="c-bx"></div>
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                        <input type="text" id="c-m" placeholder="Escribe un mensaje..." style="flex:1; min-width:150px;" onkeypress="if(event.keyCode==13) sCht()">
+                        <input type="text" id="c-m" placeholder="Escribe un mensaje encriptado..." style="flex:1; min-width:150px;" onkeypress="if(event.keyCode==13) sCht()">
                         <button class="btn bb" onclick="sCht()"><i class="fas fa-paper-plane"></i></button>
                         <button class="btn br" onclick="fPrg()" title="Purga Caché Global Index"><i class="fas fa-sync-alt"></i> PURGAR RED</button>
                     </div>
@@ -266,8 +869,8 @@
             <div id="t-log" class="tab">
                 <h2 class="title"><i class="fas fa-file-code" style="color:var(--gd);"></i> Admin Changelog</h2>
                 <div class="panel" style="border-color:var(--gd);">
-                    <div class="ig"><input type="text" id="al-t" placeholder="Título (Ej: Update v20)"></div>
-                    <div class="ig"><textarea id="al-d" rows="3" placeholder="Detalles..."></textarea></div>
+                    <div class="ig"><input type="text" id="al-t" placeholder="Título (Ej: Actualización V25)"></div>
+                    <div class="ig"><textarea id="al-d" rows="3" placeholder="Detalles de lo modificado en la web..."></textarea></div>
                     <button class="btn" style="background:var(--gd);color:#000;width:100%;" onclick="aLog()"><i class="fas fa-save"></i> REGISTRAR LOG</button>
                 </div>
                 <div id="l-alg" class="dl"></div>
@@ -287,17 +890,17 @@
             </div>
 
             <div id="t-cfg" class="tab">
-                <h2 class="title"><i class="fas fa-cogs" style="color:var(--di);"></i> Configuración DB</h2>
+                <h2 class="title"><i class="fas fa-cogs" style="color:var(--di);"></i> Configuración DB y Webhooks</h2>
                 <div class="panel" style="border-color:var(--di);">
                     <div class="ig"><label>Webhook General (Récords/Mercado)</label><input type="text" id="cf-w1"></div>
                     <div class="ig"><label>Webhook Secundario (Sugerencias)</label><input type="text" id="cf-w2"></div>
-                    <div class="ig"><label>CSS Inyector Global (Live)</label><textarea id="cf-cs" rows="3"></textarea></div>
-                    <button class="btn" style="width:100%; background:var(--di); color:#fff; margin-bottom:20px;" onclick="sCfg()"><i class="fas fa-save"></i> GUARDAR SISTEMA</button>
+                    <div class="ig"><label>CSS Inyector Global (Live)</label><textarea id="cf-cs" rows="4"></textarea></div>
+                    <button class="btn" style="width:100%; background:var(--di); color:#fff; margin-bottom:20px;" onclick="sCfg()"><i class="fas fa-save"></i> GUARDAR CONFIGURACIÓN</button>
                     
-                    <h3 style="color:var(--gd); font-size:1rem; border-top:1px solid #333; padding-top:15px;"><i class="fas fa-database"></i> Motor JSON</h3>
+                    <h3 style="color:var(--gd); font-size:1rem; border-top:1px solid #333; padding-top:15px;"><i class="fas fa-database"></i> Motor JSON (Respaldo)</h3>
                     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
-                        <button class="btn" style="flex:1; background:var(--gd); color:#000;" onclick="bDB()"><i class="fas fa-download"></i> EXPORTAR DB</button>
-                        <button class="btn" style="flex:1; background:transparent; border:1px solid var(--gr); color:var(--gr);" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> RESTAURAR</button>
+                        <button class="btn" style="flex:1; background:var(--gd); color:#000;" onclick="bDB()"><i class="fas fa-download"></i> EXPORTAR DB COMPLETA</button>
+                        <button class="btn" style="flex:1; background:transparent; border:1px solid var(--gr); color:var(--gr);" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> RESTAURAR DB</button>
                         <input type="file" id="importFile" style="display:none" accept=".json" onchange="rDB(event)">
                     </div>
                     
@@ -307,73 +910,159 @@
 
             <div id="t-aud" class="tab">
                 <h2 class="title"><i class="fas fa-terminal" style="color:var(--bl);"></i> Auditoría Root</h2>
-                <button class="bs br" style="margin-bottom:15px;" onclick="pList('staff_logs')">BORRAR HISTORIAL</button>
+                <button class="bs br" style="margin-bottom:15px;" onclick="pList('staff_logs')">BORRAR HISTORIAL COMPLETO</button>
                 <div class="panel" style="background:#000; padding:15px;"><div id="l-aud" style="max-height:500px; overflow-y:auto;"></div></div>
             </div>
 
         </div>
     </div>
 
-    <div id="m-rev" class="mod"><div class="mc"><span style="position:absolute; top:15px; right:20px; font-size:1.5rem; color:#888; cursor:pointer;" onclick="cMod('m-rev')">✕</span><h2 id="r-t" style="margin-top:0; color:var(--ac);">Rev</h2><div id="r-v" style="margin-bottom:15px;"></div><div style="background:rgba(255,255,255,.02); padding:15px; border-radius:10px; margin-bottom:20px; font-size:0.8rem; border:1px solid var(--bd);"><p>RAW: <span id="r-rw"></span></p><p>Nota: <span id="r-cm"></span></p></div><div style="display:flex; flex-direction:column; gap:10px;"><button id="b-ac" class="btn bg" style="width:100%;">ACEPTAR (+XP)</button><button id="b-ap" class="btn by" style="width:100%;">APELACIÓN</button><button id="b-rj" class="btn br" style="width:100%;">RECHAZAR</button></div></div></div>
-    <div id="m-hlp" class="mod"><div class="mc" style="text-align:center; border-color:var(--bl);"><i class="fas fa-info-circle" style="font-size:3rem; color:var(--bl); margin-bottom:15px;"></i><h2 id="h-t" style="color:var(--bl); margin-top:0;">Ayuda</h2><p id="h-d" style="color:#aaa; font-size:0.85rem; line-height:1.6; margin-bottom:25px;"></p><button class="btn bb" style="width:100%;" onclick="cMod('m-hlp')">ENTENDIDO</button></div></div>
-    <div id="m-own" class="mod"><div class="mc" style="border-color:var(--ow); text-align:center;"><h2 style="color:var(--ow);"><i class="fas fa-skull"></i> PROTOCOLO ROOT</h2><p style="color:#aaa; font-size:0.8rem;">Vinculación forzada a Owner.</p><input type="password" id="o-k" placeholder="Código Titán" style="text-align:center; letter-spacing:3px; margin:20px 0;"><button class="btn" style="background:var(--ow); color:#fff; width:100%;" onclick="eOwC()">RECLAMAR PROPIEDAD</button><button class="btn" style="margin-top:10px; background:transparent; color:#666; width:100%;" onclick="cMod('m-own')">CANCELAR</button></div></div>
+    <div id="m-rev" class="mod">
+        <div class="mc">
+            <span style="position:absolute; top:15px; right:20px; font-size:1.5rem; color:#888; cursor:pointer;" onclick="cMod('m-rev')">✕</span>
+            <h2 id="r-t" style="margin-top:0; color:var(--ac);">Rev</h2>
+            <div id="r-v" style="margin-bottom:15px;"></div>
+            <div style="background:rgba(255,255,255,.02); padding:15px; border-radius:10px; margin-bottom:20px; font-size:0.8rem; border:1px solid var(--bd);">
+                <p>RAW: <span id="r-rw"></span></p>
+                <p>Nota: <span id="r-cm"></span></p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button id="b-ac" class="btn bg" style="width:100%;">ACEPTAR (DAR XP)</button>
+                <button id="b-ap" class="btn by" style="width:100%;">APELACIÓN</button>
+                <button id="b-rj" class="btn br" style="width:100%;">RECHAZAR</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="m-hlp" class="mod">
+        <div class="mc" style="text-align:center; border-color:var(--bl);">
+            <i class="fas fa-info-circle" style="font-size:3rem; color:var(--bl); margin-bottom:15px;"></i>
+            <h2 id="h-t" style="color:var(--bl); margin-top:0;">Ayuda</h2>
+            <p id="h-d" style="color:#aaa; font-size:0.85rem; line-height:1.6; margin-bottom:25px;"></p>
+            <button class="btn bb" style="width:100%;" onclick="cMod('m-hlp')">ENTENDIDO</button>
+        </div>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
     <script>
-        const fC = { apiKey:"AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", authDomain:"scullylist.firebaseapp.com", databaseURL:"https://scullylist-default-rtdb.firebaseio.com", projectId:"scullylist", storageBucket:"scullylist.firebasestorage.app", messagingSenderId:"498548914021", appId:"1:498548914021:web:59128b5e06b36a4e81938c" };
-        firebase.initializeApp(fC); const au = firebase.auth(), db = firebase.database();
+        // CONFIGURACIÓN FIREBASE
+        const firebaseConfig = { 
+            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
+            authDomain: "scullylist.firebaseapp.com", 
+            databaseURL: "https://scullylist-default-rtdb.firebaseio.com", 
+            projectId: "scullylist", 
+            storageBucket: "scullylist.firebasestorage.app", 
+            messagingSenderId: "498548914021", 
+            appId: "1:498548914021:web:59128b5e06b36a4e81938c" 
+        };
+        firebase.initializeApp(firebaseConfig); 
+        const auth = firebase.auth(); 
+        const db = firebase.database();
         
         const $ = id => document.getElementById(id);
         const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
         let fD = {}, lvls = [], pIx = -1, sN = "Admin", sR = "helper", cEm = "";
 
         // UI HANDLERS
-        function toast(m, e=false){ const t=$('toast'); t.innerText=m; t.style.background=e?"var(--rd)":"var(--gr)"; t.style.color=e?"#fff":"#000"; t.className='show'; setTimeout(()=>t.className="",3000); }
-        function sTab(id){ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); document.querySelectorAll('.n-btn').forEach(x=>x.classList.remove('active')); if($(id)) $(id).classList.add('active'); if(event && event.currentTarget) event.currentTarget.classList.add('active'); if(window.innerWidth <= 768) toggleMenu(); window.location.hash = id; }
-        function cMod(id){ if($(id)) $(id).style.display='none'; }
-        function toggleMenu(){ $('sidebar').classList.toggle('open'); $('overlay').classList.toggle('active'); }
-        function sHlp(t, d){ $('h-t').innerText=t; $('h-d').innerText=d; $('m-hlp').style.display='block'; }
-        
-        // LOGGER (SIN BUCLES)
-        function log(m){ 
-            db.ref('staff_logs').push({staff:sN, action:m, timestamp:Date.now()}); 
-            if($('term')){ $('term').innerHTML+=`<div style="margin-bottom:5px; border-bottom:1px solid #222; padding-bottom:3px; color:${m.includes('Error')?'var(--rd)':'var(--gr)'}">> [${new Date().toLocaleTimeString()}] ${m}</div>`; $('term').scrollTop=$('term').scrollHeight; } 
+        function toast(m, e=false) { 
+            const t = $('toast'); 
+            t.innerText = m; 
+            t.style.background = e ? "var(--rd)" : "var(--gr)"; 
+            t.style.color = e ? "#fff" : "#000"; 
+            t.className = 'show'; 
+            setTimeout(() => t.className = "", 3000); 
         }
-        function pList(p) { if(confirm("¿Eliminar todos los registros permanentemente?")) { db.ref(p).remove(); toast("Vaciada"); log(`Purgó base: ${p}`); } }
+        
+        function sTab(id) { 
+            document.querySelectorAll('.tab').forEach(x => x.classList.remove('active')); 
+            document.querySelectorAll('.n-btn').forEach(x => x.classList.remove('active')); 
+            if($(id)) $(id).classList.add('active'); 
+            if(event && event.currentTarget) event.currentTarget.classList.add('active'); 
+            if(window.innerWidth <= 768) toggleMenu(); 
+            window.location.hash = id; 
+        }
+        
+        function cMod(id) { if($(id)) $(id).style.display = 'none'; }
+        function toggleMenu() { $('sidebar').classList.toggle('open'); $('overlay').classList.toggle('active'); }
+        function sHlp(t, d) { $('h-t').innerText = t; $('h-d').innerText = d; $('m-hlp').style.display = 'block'; }
+        
+        // LOGGER SEGURO
+        function log(m) { 
+            db.ref('staff_logs').push({staff: sN, action: m, timestamp: Date.now()}); 
+            if($('term')) { 
+                $('term').innerHTML += `<div style="margin-bottom:5px; border-bottom:1px solid #222; padding-bottom:3px; color:${m.includes('Error')?'var(--rd)':'var(--gr)'}">> [${new Date().toLocaleTimeString()}] ${m}</div>`; 
+                $('term').scrollTop = $('term').scrollHeight; 
+            } 
+        }
+        
+        function pList(p) { 
+            if(confirm("¿Eliminar permanentemente todos los registros?")) { 
+                db.ref(p).remove(); 
+                toast("Vaciada"); 
+                log(`Purgó base: ${p}`); 
+            } 
+        }
 
+        // FAKER TRAFFIC
         setInterval(() => { const t = $('s-t'); if(t) t.innerText = 40 + Math.floor(Math.random() * 20) - 10; }, 5000);
 
         // DISCORD WEBHOOK API
-        const api = (m, isSug=false) => { const u = isSug ? fD.system_settings?.discord?.url_sug : fD.system_settings?.discord?.url; if(u) fetch(u, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content:m, username:"SCULLY OMNI"}) }).catch(()=>{}); };
+        const api = (m, isSug=false) => { 
+            const u = isSug ? fD.system_settings?.discord?.url_sug : fD.system_settings?.discord?.url; 
+            if(u) fetch(u, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content:m, username:"SCULLY OMNI"}) }).catch(()=>{}); 
+        };
 
-        // RECOVERY
+        // RECOVERY PROTOCOL
         let tC=0, tT;
-        function handleSecretTap(){ tC++; clearTimeout(tT); tT=setTimeout(()=>{tC=0}, 2000); if(tC>=5){ tC=0; $('m-own').style.display='block'; } }
-        function eOwC(){ 
-            if($('o-k').value==="TITAN-SCORE-OMNI-2026"){ 
-                db.ref('players').once('value', s=>{
-                    let pL=nx(s.val()); let i=pL.findIndex(p=>p.name.toLowerCase()==='score'); 
-                    if(i > -1){ pL[i].email=cEm; pL[i].role='owner'; db.ref('players').set(pL).then(()=>location.reload()); } 
-                    else { pL.push({name:'score', email:cEm, role:'owner', totalXP:0}); db.ref('players').set(pL).then(()=>location.reload()); }
+        function handleSecretTap() { 
+            tC++; clearTimeout(tT); tT = setTimeout(() => { tC=0 }, 2000); 
+            if(tC >= 5) { tC = 0; $('m-own').style.display = 'block'; } 
+        }
+        
+        function eOwC() { 
+            if($('o-k').value === "TITAN-SCORE-OMNI-2026") { 
+                db.ref('players').once('value', s => {
+                    let pL = nx(s.val()); 
+                    let i = pL.findIndex(p => p.name.toLowerCase() === 'score'); 
+                    if(i > -1) { 
+                        pL[i].email = cEm; pL[i].role = 'owner'; 
+                        db.ref('players').set(pL).then(() => location.reload()); 
+                    } else { 
+                        pL.push({name:'score', email:cEm, role:'owner', totalXP:0}); 
+                        db.ref('players').set(pL).then(() => location.reload()); 
+                    }
                 }); 
-            } else toast("INVÁLIDO", true); 
+            } else { 
+                toast("CÓDIGO INVÁLIDO", true); 
+            } 
         }
 
-        // AUTH
-        au.onAuthStateChanged(u=>{
-            if(!u) return location.href="login.html"; cEm = u.email;
-            db.ref('players').once('value', s=>{
-                const me = nx(s.val()).find(x=>x.email===u.email);
-                if(me && (me.role==='admin' || me.name.trim().toLowerCase()==='score' || me.role==='helper' || me.role==='owner')){
-                    sN = me.name; sR = me.role || 'helper';
+        // AUTENTICACIÓN
+        auth.onAuthStateChanged(user => {
+            if(!user) return location.href="login.html"; 
+            cEm = user.email;
+            
+            db.ref('players').once('value', s => {
+                const me = nx(s.val()).find(x => x.email === user.email);
+                if(me && (me.role === 'admin' || me.name.trim().toLowerCase() === 'score' || me.role === 'helper' || me.role === 'owner')) {
+                    sN = me.name; 
+                    sR = me.role || 'helper';
                     if(sN.trim().toLowerCase() === 'score') sR = 'owner';
                     
-                    $('badge').innerText = `${sR.toUpperCase()}`; $('loader').style.display='none';
-                    if(sR==='owner'){ $('ow-t').style.display='block'; $('b-st').style.display='flex'; $('b-cf').style.display='flex'; $('b-au').style.display='flex'; }
-                    setTimeout(()=>{ const hash = window.location.hash; if(hash && $(hash.substring(1))) sTab(hash.substring(1)); }, 300);
+                    $('badge').innerText = `${sR.toUpperCase()}`; 
+                    $('loader').style.display = 'none';
+                    
+                    if(sR === 'owner') { 
+                        $('ow-t').style.display = 'block'; 
+                        $('b-st').style.display = 'flex'; 
+                        $('b-cf').style.display = 'flex'; 
+                        $('b-au').style.display = 'flex'; 
+                    }
+                    
+                    setTimeout(() => { const hash = window.location.hash; if(hash && $(hash.substring(1))) sTab(hash.substring(1)); }, 300);
                     initEngine();
                 } else { 
                     $('loader').innerHTML = `<h2 style="color:var(--rd);font-family:'JetBrains Mono';">DENEGADO</h2><div class="brand" onclick="handleSecretTap()" style="margin-top:20px;padding:20px;background:#111;border-radius:15px;cursor:pointer;"><h1 style="color:#fff;font-family:'JetBrains Mono';">SYS.<span style="color:var(--ac);">OMNI</span></h1><p style="font-size:0.5rem;color:#666;margin:10px 0 0;">TOCA 5 VECES</p></div><button onclick="location.href='index.html'" style="margin-top:30px;padding:10px 20px;background:var(--rd);color:#fff;border:none;border-radius:5px;font-weight:bold;cursor:pointer;">VOLVER</button>`;
@@ -381,140 +1070,691 @@
             });
         });
 
-        // SYNC (ANTI-FREEZE)
-        function initEngine(){
-            db.ref('/').on('value', s=>{
+        // SINCRONIZACIÓN DE DATOS MAESTRA
+        function initEngine() {
+            db.ref('/').on('value', s => {
                 try {
-                    fD = s.val() || {}; lvls = nx(fD.levels);
+                    fD = s.val() || {}; 
+                    lvls = nx(fD.levels);
                     const pList = nx(fD.players);
-                    $('s-p').innerText = pList.length; $('s-l').innerText = lvls.length; $('s-r').innerText = Object.keys(fD.submissions||{}).length;
                     
-                    rRcs(fD.submissions||{}); rLvs(lvls); rMReq(fD.market_requests||{}); rMIt(fD.market_items||{});
-                    rClm(fD.claim_requests||{}); rCln(fD.clans||{}); rBdg(fD.badges||{}); rCht(fD.staff_chat||{});
-                    rACh(fD.admin_changelog||{}); rStf(pList); renderEff(fD.staff_logs||{});
+                    $('s-p').innerText = pList.length; 
+                    $('s-l').innerText = lvls.length; 
+                    $('s-r').innerText = Object.keys(fD.submissions||{}).length;
                     
-                    renderAllPlayers(pList); // RENDERIZA TODOS LOS JUGADORES EN RANKING
-                    renderSug(fD.level_suggestions||{}); // RENDERIZA SUGERENCIAS
+                    rRcs(fD.submissions||{}); 
+                    rLvs(lvls); 
+                    rMReq(fD.market_requests||{}); 
+                    rMIt(fD.market_items||{});
+                    rClm(fD.claim_requests||{}); 
+                    rCln(fD.clans||{}); 
+                    rBdg(fD.badges||{}); 
+                    rCht(fD.staff_chat||{});
+                    rACh(fD.admin_changelog||{}); 
+                    rStf(pList); 
+                    renderEff(fD.staff_logs||{});
                     
-                    if(fD.system_settings){ $('cf-w1').value = fD.system_settings.discord?.url||""; $('cf-w2').value = fD.system_settings.discord?.url_sug||""; $('cf-cs').value = fD.system_settings.custom_css||""; $('c-lk').checked = !!fD.system_settings.lockdown_active; if(fD.system_settings.lockdown_active) $('sl-id').style.background="var(--ac)"; else $('sl-id').style.background="#222"; }
+                    renderAllPlayers(pList); 
+                    renderSug(fD.level_suggestions||{});
                     
-                    let cS = $('pe-c'); cS.innerHTML='<option value="">Ninguno</option>'; Object.entries(fD.clans||{}).forEach(([id,c])=>{ cS.innerHTML+=`<option value="${id}">${c.name}</option>`; });
-                    let bS = $('pe-bg'); bS.innerHTML='<option value="">Sin Medalla</option>'; Object.entries(fD.badges||{}).forEach(([id,b])=>{ bS.innerHTML+=`<option value="${id}">${b.name}</option>`; });
+                    if(fD.system_settings) { 
+                        $('cf-w1').value = fD.system_settings.discord?.url || ""; 
+                        $('cf-w2').value = fD.system_settings.discord?.url_sug || ""; 
+                        $('cf-cs').value = fD.system_settings.custom_css || ""; 
+                        $('c-lk').checked = !!fD.system_settings.lockdown_active; 
+                        
+                        if(fD.system_settings.lockdown_active) $('sl-id').style.background = "var(--ac)"; 
+                        else $('sl-id').style.background = "#222"; 
+                    }
+                    
+                    let cS = $('pe-c'); 
+                    cS.innerHTML = '<option value="">Ninguno</option>'; 
+                    Object.entries(fD.clans||{}).forEach(([id,c]) => { cS.innerHTML += `<option value="${id}">${c.name}</option>`; });
+                    
+                    let bS = $('pe-bg'); 
+                    bS.innerHTML = '<option value="">Sin Medalla</option>'; 
+                    Object.entries(fD.badges||{}).forEach(([id,b]) => { bS.innerHTML += `<option value="${id}">${b.name}</option>`; });
                     
                     if(pIx !== -1) rPD();
-                } catch(e) { console.error("Sync Err:", e); }
+                } catch(e) { 
+                    console.error("Sync Err:", e); 
+                }
             });
         }
 
         // ==========================================
-        // NUEVO: BROADCAST (ALERTAS DESDE PANEL)
+        // BROADCAST MODULAR
         // ==========================================
         function sendBroadcast() {
             const m = $('b-msg').value.trim();
+            const t = $('b-type').value;
             if(m) {
                 db.ref('system_settings/global_alert').set(true);
                 db.ref('system_settings/global_alert_msg').set(m);
-                toast("Alerta Transmitida"); log(`Transmitió Alerta: ${m}`); $('b-msg').value="";
+                db.ref('system_settings/global_alert_type').set(t); 
+                toast("Alerta Transmitida"); 
+                log(`Transmitió Alerta: ${m}`); 
+                $('b-msg').value = "";
+            } else {
+                toast("Escribe un mensaje", true);
             }
         }
+        
         function clearBroadcast() {
             db.ref('system_settings/global_alert').set(false);
-            toast("Alerta Eliminada"); log("Borró Alerta Global");
+            toast("Alerta Apagada"); 
+            log("Borró Alerta Global");
         }
 
         // ==========================================
-        // NUEVO: LISTA TOTAL DE JUGADORES
+        // PADRÓN GLOBAL DE JUGADORES (RANK REAL)
         // ==========================================
         function renderAllPlayers(pList) {
-            let sorted = [...pList].sort((a,b) => (b.totalXP||0) - (a.totalXP||0));
-            let h = "";
-            sorted.forEach((p, i) => {
-                let st = p.hidden ? '<span style="color:var(--rd)">[BANEADO]</span>' : `<span style="color:var(--gd)">Rank #${i+1}</span>`;
-                h += `<div class="dc" style="border-bottom:1px solid #222; padding-bottom:10px; margin-bottom:5px;"><div><h4 style="margin:0;color:#fff;">${p.name}</h4><p style="margin:0;font-size:0.75rem;">${st} | XP: ${(p.totalXP||0).toFixed(1)}</p></div><button class="bs bb" onclick="editDirectP('${p.name}')">EDITAR</button></div>`;
+            const currentLvls = nx(fD.levels);
+            let calcedList = [...pList].map(p => {
+                let comps = nx(p.completions);
+                let realXp = 0;
+                comps.forEach(c => {
+                    let lIdx = currentLvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase());
+                    if(lIdx > -1) {
+                        let base = Math.max(100 - (lIdx * 0.6), 5);
+                        if(currentLvls[lIdx].bounty) base *= 2;
+                        realXp += base;
+                    } else {
+                        realXp += c.xp || 0; 
+                    }
+                });
+                return {...p, calcXp: realXp};
             });
-            $('all-players-list').innerHTML = h || '<p style="color:#666;text-align:center;">No hay usuarios en la base de datos.</p>';
+
+            calcedList.sort((a,b) => b.calcXp - a.calcXp);
+            
+            let h = "";
+            calcedList.forEach((p, i) => {
+                let st = p.hidden ? '<span style="color:var(--rd);font-weight:800;">[BANEADO]</span>' : `<span style="color:var(--gd);font-weight:800;">Rank #${i+1}</span>`;
+                let verTick = p.verified ? `<i class="fas fa-check-circle" style="color:var(--bl);"></i>` : "";
+                
+                h += `
+                <div class="dc" style="border-bottom:1px solid #222; padding-bottom:10px; margin-bottom:5px;">
+                    <div>
+                        <h4 style="margin:0;color:#fff;display:flex;align-items:center;gap:5px;">${p.name} ${verTick}</h4>
+                        <p style="margin:0;font-size:0.75rem;">${st} | XP Real: ${p.calcXp.toFixed(1)}</p>
+                    </div>
+                    <button class="bs bb" onclick="editDirectP('${p.name}')">EDITAR</button>
+                </div>`;
+            });
+            $('all-players-list').innerHTML = h || '<p style="color:#666;text-align:center;">No hay usuarios registrados.</p>';
         }
-        function editDirectP(name) { $('p-s').value = name; searchP(); $('t-play').scrollIntoView(); }
-
-        // ==========================================
-        // LÓGICA ENGINE (CONTRATOS, XP, RECS)
-        // ==========================================
-        const getXP = l => { const i = lvls.findIndex(x=>x.name.toLowerCase()===l.toLowerCase()); if(i===-1) return 0; let base = Math.max(100-(i*0.6),5); if(lvls[i].bounty) base = base * 2; return base; };
         
-        function rRcs(d){ let h=""; Object.entries(d).forEach(([id,r])=>{ h+=`<div class="dc"><div><h4 style="color:var(--ac);margin:0;">${r.level}</h4><p style="margin:0;font-size:.75rem;color:#aaa;">Por: ${r.player}</p></div><button class="bs bb" onclick="oRev('${id}')">REVISAR</button></div>`; }); $('l-sub').innerHTML=h||'<p style="color:#666;">Bandeja limpia.</p>'; }
-        function oRev(id){ const r=fD.submissions[id]; $('r-t').innerText=r.level; const v=r.link.match(/([\w-]{11})/); $('r-v').innerHTML=v?`<iframe width="100%" height="220" src="https://www.youtube.com/embed/${v[1]}" frameborder="0" style="border-radius:10px;"></iframe>`:`<a href="${r.link}" target="_blank" style="color:var(--bl);font-weight:800;">VER VIDEO URL</a>`; $('r-rw').innerHTML=r.raw?`<a href="${r.raw}" target="_blank" style="color:var(--cy);">Link Raw</a>`:"N/A"; $('r-cm').innerText=r.comments||"---"; $('b-ac').onclick=()=>pRc(id,'acc'); $('b-ap').onclick=()=>pRc(id,'app'); $('b-rj').onclick=()=>pRc(id,'rej'); $('m-rev').style.display='block'; }
-        
-        function pRc(id,m){
-            const r=fD.submissions[id]; if(!r) return;
-            if(m==='acc'){
-                const xp=getXP(r.level); let pL=nx(fD.players); let i=pL.findIndex(x=>x.name.toLowerCase()===r.player.toLowerCase());
-                if(i===-1) pL.push({name:r.player, country:'es', totalXP:xp, completions:[{level:r.level,link:r.link,xp:xp}]});
-                else { let c=nx(pL[i].completions); if(!c.some(x=>x.level===r.level)){ c.push({level:r.level,link:r.link,xp:xp}); pL[i].completions=c; pL[i].totalXP=(pL[i].totalXP||0)+xp; } }
-                db.ref('players').set(pL); log(`Aceptó récord de ${r.player}`); api(`✅ **NUEVO RÉCORD:** **${r.player}** superó **${r.level}** (+${xp.toFixed(1)} XP)`);
-            } else if(m==='app'){ const n=prompt("Motivo de Apelación:"); if(n){ db.ref('history').push({player:r.player,level:r.level,status:'Apelacion',reason:n}); api(`⚠️ **RÉCORD EN APELACIÓN:** **${r.player}** en **${r.level}**\n*Staff Info:* ${n}`); } else return; } 
-            else { const n=prompt("Razón de Rechazo:"); if(n) { log(`Rechazó a ${r.player}`); api(`❌ **RÉCORD RECHAZADO:** **${r.player}** en **${r.level}**\n*Motivo:* ${n}`); } else return; }
-            db.ref(`submissions/${id}`).remove(); cMod('m-rev'); toast("Procesado");
+        function editDirectP(name) { 
+            $('p-s').value = name; 
+            searchP(); 
+            $('t-play').scrollIntoView(); 
         }
 
-        function iRec(){ const p=$('m-p').value.trim(), l=$('m-l').value.trim(), k=$('m-k').value.trim(); if(!p||!l) return toast("Faltan datos",true); const xp=getXP(l); let pL=nx(fD.players); let i=pL.findIndex(x=>x.name.toLowerCase()===p.toLowerCase()); if(i===-1) pL.push({name:p, totalXP:xp, completions:[{level:l,link:k||'Inyectado',xp:xp}]}); else { let c=nx(pL[i].completions); c.push({level:l,link:k||'Inyectado',xp:xp}); pL[i].completions=c; pL[i].totalXP=(pL[i].totalXP||0)+xp; } db.ref('players').set(pL); log(`Inyección manual: ${p} en ${l}`); toast("Récord Inyectado"); $('m-p').value=""; $('m-l').value=""; $('m-k').value=""; }
-
-        function rLvs(d){ let h=""; let h2=""; d.forEach((l,i)=>{ h+=`<div class="dc" style="background:#000; margin-bottom:5px; border-color:${l.bounty?'var(--gd)':'#222'};"><div><span style="color:var(--ac);font-weight:800;">#${i+1}</span> ${l.name} ${l.bounty?'<i class="fas fa-fire" style="color:var(--gd)"></i>':''}</div><div><button class="bs bb" onclick="eLv(${i})">EDT</button><button class="bs" onclick="mLv(${i},-1)">▲</button><button class="bs" onclick="mLv(${i},1)">▼</button></div></div>`; }); $('l-lvl').innerHTML=h; }
-        function eLv(i){ const l=lvls[i]; $('e-ix').value=i; $('a-n').value=l.name; $('a-i').value=l.id; $('a-v').value=l.first||""; $('a-b').checked=l.bounty||false; $('c-ed').hidden=false; $('t-lvls').scrollIntoView(); }
-        function sLv(){ const i=parseInt($('e-ix').value), n=$('a-n').value, id=$('a-i').value, v=$('a-v').value, b=$('a-b').checked; if(!n||!id) return toast("Error",true); let nL=[...lvls]; let d={name:n,id:id,first:v,bounty:b}; if(i===-1) nL.push(d); else nL[i]=d; db.ref('levels').set(nL); rLv(); toast("Nodo Guardado"); }
-        function rLv(){ $('e-ix').value="-1"; $('a-n').value=""; $('a-i').value=""; $('a-v').value=""; $('a-b').checked=false; $('c-ed').hidden=true; }
-        function mLv(i,d){ if((d===-1&&i===0)||(d===1&&i===lvls.length-1)) return; const t=lvls[i+d]; lvls[i+d]=lvls[i]; lvls[i]=t; rLvs(lvls); }
-        function pOrd(){ db.ref('levels').set(lvls); log("Orden Publicado"); toast("Ranking Actualizado"); }
-
         // ==========================================
-        // NUEVO: SUGERENCIAS DE NIVELES
+        // MOTOR DE EXPERIENCIA Y RÉCORDS
         // ==========================================
-        function renderSug(d) { let h=""; Object.entries(d).forEach(([id, s])=>{ h+=`<div class="dc"><div><h4 style="margin:0;color:var(--bl);">${s.name}</h4><p style="margin:0;font-size:0.7rem;">ID: ${s.id} | Por: ${s.user}</p></div><div style="display:flex;gap:5px;"><button class="bs bg" onclick="$('a-n').value='${s.name}';$('a-i').value='${s.id}';db.ref('level_suggestions/${id}').remove();toast('Copiado al editor');">USAR</button><button class="bs br" onclick="db.ref('level_suggestions/${id}').remove()">X</button></div></div>`; }); $('l-sug').innerHTML=h||'<p style="color:#666;">Sin sugerencias.</p>'; }
-
-        // JUGADORES
-        function sP(){ const q=$('p-s').value.trim().toLowerCase(); pIx=nx(fD.players).findIndex(x=>x.name.toLowerCase()===q); if(pIx>-1){ $('p-res').style.display='block'; rPD(); } else toast("No existe",true); }
-        function rPD(){ const p=nx(fD.players)[pIx]; $('pe-n').value=p.name; $('pe-b').value=p.bio||""; $('pe-c').value=p.clanId||""; $('pe-bg').value=p.badgeId||""; $('p-bn').innerHTML=p.hidden?`<button class="btn bg" style="width:100%" onclick="bN(false)">LEVANTAR BAN</button>`:`<button class="btn br" style="width:100%" onclick="bN(true)">APLICAR BLACKLIST</button>`; let h=""; nx(p.completions).forEach((x,i)=>{ h+=`<div class="dc"><div><span style="font-weight:800;color:var(--ac);">${x.level}</span><br><small style="color:#888;">XP: ${x.xp||0}</small></div><button class="bs br" onclick="dPr(${i})"><i class="fas fa-trash"></i></button></div>`; }); $('p-r').innerHTML=h||'<p style="color:#666;">Sin récords.</p>'; }
-        function uP(){ db.ref(`players/${pIx}/name`).set($('pe-n').value); db.ref(`players/${pIx}/bio`).set($('pe-b').value); db.ref(`players/${pIx}/clanId`).set($('pe-c').value); db.ref(`players/${pIx}/badgeId`).set($('pe-bg').value); toast("Guardado"); }
-        function bN(v){ if(v){ const r=prompt("Razón:"); if(r){ db.ref(`players/${pIx}/hidden`).set(true); db.ref(`players/${pIx}/banReason`).set(r); log(`BAN: ${$('pe-n').value}`); } } else { db.ref(`players/${pIx}/hidden`).remove(); log(`UNBAN: ${$('pe-n').value}`); } rPD(); }
-        function dPr(i){ if(confirm("¿Restar XP y borrar récord?")){ const p=nx(fD.players)[pIx]; let c=nx(p.completions); const xp=c[i].xp||0; c.splice(i,1); db.ref(`players/${pIx}/completions`).set(c); db.ref(`players/${pIx}/totalXP`).set((p.totalXP||0)-xp); log("Restó XP en editor"); } }
-        function closeEditorP() { $('p-res').style.display='none'; $('p-s').value=''; pIx=-1; }
-
-        function rClm(c){ let h=""; Object.entries(c).forEach(([k,v])=>{ h+=`<div class="dc"><div><h4 style="margin:0;color:var(--cy);">${v.nick}</h4><p style="margin:0;font-size:.7rem;">${v.email}</p></div><div style="display:flex;gap:5px;"><button class="bs bg" onclick="aClm('${k}')">VINCULAR</button></div></div>`; }); $('l-clm').innerHTML=h||'<p style="color:#666;">Bandeja limpia.</p>'; }
-        function aClm(k){ const r=fD.claim_requests[k]; let pL=nx(fD.players); let i=pL.findIndex(p=>p.name.toLowerCase()===r.nick.toLowerCase()); if(i>-1){ pL[i].email=r.email; db.ref('players').set(pL); db.ref(`claim_requests/${k}`).remove(); log(`Vinculó: ${r.nick}`); toast("Cuenta Enlazada"); } else toast("Inexistente",true); }
-
-        function aItm(){ const n=$('i-n').value, p=$('i-p').value, i=$('i-i').value; if(n&&p) { db.ref('market_items').push({name:n, price:parseInt(p), img:i}); log(`Publicó en Mercado: ${n}`); toast("Tienda Actualizada"); } }
-        function rMIt(d){ let h=""; Object.entries(d).forEach(([id,it])=>{ h+=`<div class="dc"><h4>${it.name}</h4><button class="bs br" onclick="db.ref('market_items/${id}').remove()">X</button></div>`; }); $('l-mit').innerHTML=h; }
-        function rMReq(reqs) { let h=""; Object.entries(reqs).forEach(([id, r])=>{ h+=`<div class="dc" style="border-left:3px solid var(--gd);"><div><h4 style="color:var(--gd);margin:0;">${r.itemName}</h4><p style="margin:0;font-size:.8rem;">Para: ${r.player} | ${r.price}XP</p></div><div style="display:flex;flex-direction:column;gap:5px;"><button class="bs bg" onclick="aPur('${id}')">APROBAR</button><button class="bs br" onclick="db.ref('market_requests/${id}').remove()">DENEGAR</button></div></div>`; }); $('l-mrq').innerHTML=h||'<p style="color:#666;">Sin peticiones.</p>'; }
-        function aPur(id){ const r=fD.market_requests[id]; let pL=nx(fD.players); let i=pL.findIndex(p=>p.name.toLowerCase()===r.player.toLowerCase()); if(i>-1){ const cxp=pL[i].totalXP||0; if(cxp>=r.price){ pL[i].totalXP=cxp-r.price; let iv=nx(pL[i].inventory); iv.push({itemName:r.itemName, date:Date.now()}); pL[i].inventory=iv; db.ref('players').set(pL); db.ref(`market_requests/${id}`).remove(); log(`Compra: ${r.itemName} -> ${r.player}`); api(`🛒 **MERCADO GLOBAL:** **${r.player}** ha canjeado su XP por **${r.itemName}**`); toast("Cobrado"); } else toast("XP Insuficiente",true); } }
-
-        function aCln(){ const n=$('c-n').value, t=$('c-t').value; if(n&&t) { db.ref('clans').push({name:n, tag:t, totalXP:0}); log(`Sindicato: ${n}`); toast("Fundado"); } }
-        function rCln(d){ let h=""; Object.entries(d).forEach(([id,c])=>{ h+=`<div class="dc"><div><h4 style="margin:0;color:var(--cy);">[${c.tag}] ${c.name}</h4><p style="margin:0;font-size:.7rem;">XP: ${c.totalXP||0}</p></div><button class="bs br" onclick="if(confirm('Borrar?')) db.ref('clans/${id}').remove()">X</button></div>`; }); $('l-cln').innerHTML=h; }
-        function aBdg(){ const n=$('b-n').value, i=$('b-i').value; if(n) { db.ref('badges').push({name:n, img:i}); log(`Medalla forjada: ${n}`); toast("Forjada"); } }
-        function rBdg(d){ let h=""; Object.entries(d).forEach(([id,b])=>{ h+=`<div class="dc"><h4 style="margin:0;">${b.name}</h4><button class="bs br" onclick="db.ref('badges/${id}').remove()">X</button></div>`; }); $('l-bdg').innerHTML=h; }
-
-        function sCht(){ const m=$('c-m').value; if(m) { db.ref('staff_chat').push({user:sN, msg:m, time:Date.now()}); $('c-m').value=''; } }
-        function rCht(d){ let h=""; nx(d).slice(-20).forEach(x=>{ h+=`<div class="cm"><b>${x.user}</b> <i>${new Date(x.time).toLocaleTimeString()}</i><br>${x.msg}</div>`; }); $('c-bx').innerHTML=h||'<p style="color:#666;">Sin mensajes.</p>'; $('c-bx').scrollTop=$('c-bx').scrollHeight; }
-        function fPrg(){ db.ref('system_settings/last_cache_purge').set(Date.now()); db.ref('staff_chat').push({user:"SYSTEM", msg:"⚠️ PURGA DE RED EJECUTADA POR "+sN.toUpperCase(), time:Date.now()}); toast("Red Purgada"); }
-
-        function aLog(){ const t=$('al-t').value, d=$('al-d').value; if(t) { db.ref('admin_changelog').push({title:t, desc:d, author:sN, date:Date.now()}); toast("Registrado"); } }
-        function rACh(d){ let h=""; Object.entries(d).reverse().forEach(([id,l])=>{ h+=`<div class="dc" style="align-items:flex-start;flex-direction:column;"><h4 style="margin:0;color:var(--gd);">${l.title}</h4><p style="margin:0;font-size:.65rem;color:#888;">Por: ${l.author}</p><p style="margin-top:5px;font-size:.8rem;">${l.desc}</p><button class="bs br" style="margin-top:5px;" onclick="db.ref('admin_changelog/${id}').remove()">BORRAR</button></div>`; }); $('l-alg').innerHTML=h; }
-
-        function rStf(ps){ let h=""; ps.forEach(p=>{ if(p.role) h+=`<div class="dc"><div><h4 style="margin:0;color:var(--ow);">${p.name}</h4><p style="margin:0;font-size:.7rem;">${p.role.toUpperCase()}</p></div><button class="bs br" onclick="dStf('${p.name}')">X</button></div>`; }); $('l-stf').innerHTML=h; }
-        function pStf(){ if(sR!=='owner') return; const n=$('st-n').value, r=$('st-r').value; let pL=nx(fD.players); let i=pL.findIndex(p=>p.name.toLowerCase()===n.toLowerCase()); if(i>-1){ pL[i].role=r; db.ref('players').set(pL); log(`Ascendió a ${n}`); toast("Rol Asignado"); } else toast("No existe",true); }
-        function dStf(n){ if(sR!=='owner') return; let pL=nx(fD.players); let i=pL.findIndex(p=>p.name===n); if(i>-1){ delete pL[i].role; db.ref('players').set(pL); log(`Degradó a ${n}`); toast("Revocado"); } }
+        const getXP = l => { 
+            const i = lvls.findIndex(x => x.name.toLowerCase() === l.toLowerCase()); 
+            if(i === -1) return 0; 
+            let base = Math.max(100 - (i * 0.6), 5); 
+            if(lvls[i].bounty) base = base * 2; 
+            return base; 
+        };
         
-        function renderEff(logs){ let c={}; Object.values(logs).forEach(x=>{ if(x.action.includes('Aprobó')||x.action.includes('Rechazó')) c[x.staff]=(c[x.staff]||0)+1; }); let h=""; Object.entries(c).forEach(([s,v])=>{ h+=`<div style="background:#000; padding:10px; border-radius:8px; border:1px solid #222;"><b>${s}</b>: <span style="color:var(--gr);">${v} Récords</span></div>`; }); $('eff-box').innerHTML=h||'<p style="color:#666;">No hay datos recientes.</p>'; }
+        function rRcs(d) { 
+            let h = ""; 
+            Object.entries(d).forEach(([id,r]) => { 
+                h += `<div class="dc"><div><h4 style="color:var(--ac);margin:0;">${r.level}</h4><p style="margin:0;font-size:.75rem;color:#aaa;">Por: ${r.player}</p></div><button class="bs bb" onclick="oRev('${id}')">REVISAR</button></div>`; 
+            }); 
+            $('l-sub').innerHTML = h || '<p style="color:#666;">Bandeja limpia.</p>'; 
+        }
+        
+        function oRev(id) { 
+            const r = fD.submissions[id]; 
+            $('r-t').innerText = r.level; 
+            const v = r.link.match(/([\w-]{11})/); 
+            $('r-v').innerHTML = v ? `<iframe width="100%" height="220" src="https://www.youtube.com/embed/${v[1]}" frameborder="0" style="border-radius:10px;"></iframe>` : `<a href="${r.link}" target="_blank" style="color:var(--bl);font-weight:800;">VER VIDEO URL</a>`; 
+            $('r-rw').innerHTML = r.raw ? `<a href="${r.raw}" target="_blank" style="color:var(--cy);">Link Raw</a>` : "N/A"; 
+            $('r-cm').innerText = r.comments || "---"; 
+            $('b-ac').onclick = () => pRc(id,'acc'); 
+            $('b-ap').onclick = () => pRc(id,'app'); 
+            $('b-rj').onclick = () => pRc(id,'rej'); 
+            $('m-rev').style.display = 'block'; 
+        }
+        
+        function pRc(id,m) {
+            const r = fD.submissions[id]; 
+            if(!r) return;
+            
+            if(m === 'acc') {
+                const xp = getXP(r.level); 
+                let pL = nx(fD.players); 
+                let i = pL.findIndex(x => x.name.toLowerCase() === r.player.toLowerCase());
+                
+                if(i === -1) {
+                    pL.push({name: r.player, totalXP: xp, completions: [{level: r.level, link: r.link, xp: xp}]});
+                } else { 
+                    let c = nx(pL[i].completions); 
+                    if(!c.some(x => x.level === r.level)) { 
+                        c.push({level: r.level, link: r.link, xp: xp}); 
+                        pL[i].completions = c; 
+                        pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
+                    } 
+                }
+                
+                db.ref('players').set(pL); 
+                log(`Aceptó récord de ${r.player}`); 
+                api(`✅ **NUEVO RÉCORD:** **${r.player}** superó **${r.level}** (+${xp.toFixed(1)} XP)`);
+            } else if(m === 'app') { 
+                const n = prompt("Motivo de Apelación:"); 
+                if(n) { 
+                    db.ref('history').push({player: r.player, level: r.level, status: 'Apelacion', reason: n}); 
+                    api(`⚠️ **RÉCORD EN APELACIÓN:** **${r.player}** en **${r.level}**\n*Staff Info:* ${n}`); 
+                } else return; 
+            } else { 
+                const n = prompt("Razón de Rechazo:"); 
+                if(n) { 
+                    log(`Rechazó a ${r.player}`); 
+                    api(`❌ **RÉCORD RECHAZADO:** **${r.player}** en **${r.level}**\n*Motivo:* ${n}`); 
+                } else return; 
+            }
+            
+            db.ref(`submissions/${id}`).remove(); 
+            cMod('m-rev'); 
+            toast("Procesado");
+        }
 
-        function cleanDB(){
-            if(confirm("¿ELIMINAR TODOS LOS USUARIOS QUE TIENEN 0 XP Y NO TIENEN ROL DE STAFF? ESTO NO SE PUEDE DESHACER.")){
-                let pL = nx(fD.players).filter(p => p.role || (p.totalXP && p.totalXP > 0));
-                db.ref('players').set(pL).then(()=>{ log("Limpieza de BD Ejecutada"); toast("Inactivos Eliminados"); location.reload(); });
+        function iRec() { 
+            const p = $('m-p').value.trim();
+            const l = $('m-l').value.trim();
+            const k = $('m-k').value.trim(); 
+            
+            if(!p || !l) return toast("Faltan datos", true); 
+            
+            const xp = getXP(l); 
+            let pL = nx(fD.players); 
+            let i = pL.findIndex(x => x.name.toLowerCase() === p.toLowerCase()); 
+            
+            if(i === -1) {
+                pL.push({name: p, totalXP: xp, completions: [{level: l, link: k||'Inyectado', xp: xp}]});
+            } else { 
+                let c = nx(pL[i].completions); 
+                c.push({level: l, link: k||'Inyectado', xp: xp}); 
+                pL[i].completions = c; 
+                pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
+            } 
+            
+            db.ref('players').set(pL); 
+            log(`Inyección manual: ${p} en ${l}`); 
+            toast("Récord Inyectado"); 
+            $('m-p').value = ""; $('m-l').value = ""; $('m-k').value = ""; 
+        }
+
+        // ==========================================
+        // GESTIÓN DE NIVELES (CON BORRADO)
+        // ==========================================
+        function rLvs(d) { 
+            let h = ""; 
+            d.forEach((l,i) => { 
+                let bS = l.bounty ? 'var(--gd)' : '#222';
+                let bIcon = l.bounty ? '<i class="fas fa-fire" style="color:var(--gd)"></i>' : '';
+                h += `
+                <div class="dc" style="background:#000; margin-bottom:5px; border-color:${bS};">
+                    <div>
+                        <span style="color:var(--ac);font-weight:800;">#${i+1}</span> ${l.name} ${bIcon}
+                    </div>
+                    <div>
+                        <button class="bs bb" onclick="eLv(${i})">EDT</button>
+                        <button class="bs" onclick="mLv(${i},-1)">▲</button>
+                        <button class="bs" onclick="mLv(${i},1)">▼</button>
+                    </div>
+                </div>`; 
+            }); 
+            $('l-lvl').innerHTML = h; 
+        }
+        
+        function eLv(i) { 
+            const l = lvls[i]; 
+            $('e-ix').value = i; 
+            $('a-n').value = l.name; 
+            $('a-i').value = l.id; 
+            $('a-v').value = l.first || ""; 
+            $('a-b').checked = l.bounty || false; 
+            $('edit-action-btns').style.display = 'flex'; 
+            $('t-lvls').scrollIntoView(); 
+        }
+        
+        function sLv() { 
+            const i = parseInt($('e-ix').value);
+            const n = $('a-n').value;
+            const id = $('a-i').value;
+            const v = $('a-v').value;
+            const b = $('a-b').checked; 
+            
+            if(!n || !id) return toast("Error: Faltan datos", true); 
+            
+            let nL = [...lvls]; 
+            let d = {name: n, id: id, first: v, bounty: b}; 
+            
+            if(i === -1) nL.push(d); 
+            else nL[i] = d; 
+            
+            db.ref('levels').set(nL); 
+            rLv(); 
+            toast("Nodo Guardado"); 
+            log(`Modificó Nivel: ${n}`);
+        }
+        
+        function rLv() { 
+            $('e-ix').value = "-1"; 
+            $('a-n').value = ""; 
+            $('a-i').value = ""; 
+            $('a-v').value = ""; 
+            $('a-b').checked = false; 
+            $('edit-action-btns').style.display = 'none'; 
+        }
+        
+        function delLv() {
+            const i = parseInt($('e-ix').value);
+            if(i > -1) {
+                if(confirm("¿Eliminar este nivel de la base de datos? Esto recalculará la XP de todos en tiempo real.")) {
+                    let nL = [...lvls];
+                    let deletedName = nL[i].name;
+                    nL.splice(i, 1);
+                    db.ref('levels').set(nL);
+                    rLv();
+                    toast("Nivel Eliminado");
+                    log(`Eliminó el nivel: ${deletedName}`);
+                }
             }
         }
 
-        function sCfg(){ db.ref('system_settings/discord/url').set($('cf-w1').value); db.ref('system_settings/discord/url_sug').set($('cf-w2').value); db.ref('system_settings/custom_css').set($('cf-cs').value); log("Ajustes DB Guardados"); toast("Guardado"); }
-        function tLck(v){ db.ref('system_settings/lockdown_active').set(v); log(`LOCKDOWN GLOBAL: ${v}`); if(v)$('sl-id').style.background="var(--ac)"; else $('sl-id').style.background="#222"; }
-        function bDB(){ const d="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(fD)); const a=document.createElement('a'); a.href=d; a.download=`SCULLY_DB_${Date.now()}.json`; a.click(); log("Exportó DB JSON"); }
-        function rDB(e){ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=function(ev){ try{ const j=JSON.parse(ev.target.result); if(confirm("¿SOBREESCRIBIR TODA LA DB?")) db.ref('/').set(j).then(()=>location.reload()); } catch(er){ toast("JSON Inválido",true); }}; r.readAsText(f); }
+        function mLv(i,d) { 
+            if((d === -1 && i === 0) || (d === 1 && i === lvls.length-1)) return; 
+            const t = lvls[i+d]; 
+            lvls[i+d] = lvls[i]; 
+            lvls[i] = t; 
+            rLvs(lvls); 
+        }
+        
+        function pOrd() { 
+            db.ref('levels').set(lvls); 
+            log("Orden de Niveles Publicado"); 
+            toast("Ranking Actualizado"); 
+        }
+
+        function renderSug(d) { 
+            let h = ""; 
+            Object.entries(d).forEach(([id, s]) => { 
+                h += `
+                <div class="dc">
+                    <div>
+                        <h4 style="margin:0;color:var(--bl);">${s.name}</h4>
+                        <p style="margin:0;font-size:0.7rem;">ID: ${s.id} | Por: ${s.user}</p>
+                    </div>
+                    <div style="display:flex;gap:5px;">
+                        <button class="bs bg" onclick="$('a-n').value='${s.name}';$('a-i').value='${s.id}';db.ref('level_suggestions/${id}').remove();toast('Copiado al editor');">USAR</button>
+                        <button class="bs br" onclick="db.ref('level_suggestions/${id}').remove()">X</button>
+                    </div>
+                </div>`; 
+            }); 
+            $('l-sug').innerHTML = h || '<p style="color:#666;">Sin sugerencias nuevas.</p>'; 
+        }
+
+        // ==========================================
+        // EDITOR DE JUGADORES (PFP Y VERIFICADO)
+        // ==========================================
+        function sP() { 
+            const q = $('p-s').value.trim().toLowerCase(); 
+            pIx = nx(fD.players).findIndex(x => x.name.toLowerCase() === q); 
+            
+            if(pIx > -1) { 
+                $('p-res').style.display = 'block'; 
+                rPD(); 
+            } else {
+                toast("Jugador no encontrado", true); 
+            }
+        }
+        
+        function rPD() { 
+            const p = nx(fD.players)[pIx]; 
+            
+            $('pe-n').value = p.name; 
+            $('pe-b').value = p.bio || ""; 
+            $('pe-c').value = p.clanId || ""; 
+            $('pe-bg').value = p.badgeId || ""; 
+            
+            $('pe-pfp').value = (p.photo && p.photo !== "null" && p.photo !== "undefined") ? p.photo : "";
+            $('pe-ver').value = p.verified ? "true" : "false";
+            
+            $('p-bn').innerHTML = p.hidden 
+                ? `<button class="btn bg" style="width:100%" onclick="bN(false)">LEVANTAR BAN</button>` 
+                : `<button class="btn br" style="width:100%" onclick="bN(true)">APLICAR BLACKLIST</button>`; 
+                
+            let h = ""; 
+            nx(p.completions).forEach((x,i) => { 
+                h += `
+                <div class="dc">
+                    <div>
+                        <span style="font-weight:800;color:var(--ac);">${x.level}</span><br>
+                        <small style="color:#888;">XP Original: ${x.xp||0}</small>
+                    </div>
+                    <button class="bs br" onclick="dPr(${i})"><i class="fas fa-trash"></i></button>
+                </div>`; 
+            }); 
+            $('p-r').innerHTML = h || '<p style="color:#666;">Sin récords.</p>'; 
+        }
+        
+        function uP() { 
+            db.ref(`players/${pIx}/name`).set($('pe-n').value); 
+            db.ref(`players/${pIx}/bio`).set($('pe-b').value); 
+            db.ref(`players/${pIx}/clanId`).set($('pe-c').value); 
+            db.ref(`players/${pIx}/badgeId`).set($('pe-bg').value); 
+            
+            db.ref(`players/${pIx}/photo`).set($('pe-pfp').value);
+            db.ref(`players/${pIx}/verified`).set($('pe-ver').value === "true");
+
+            toast("Perfil Guardado"); 
+            log(`Modificó perfil de: ${$('pe-n').value}`);
+        }
+        
+        function bN(v) { 
+            if(v) { 
+                const r = prompt("Razón de Blacklist:"); 
+                if(r) { 
+                    db.ref(`players/${pIx}/hidden`).set(true); 
+                    db.ref(`players/${pIx}/banReason`).set(r); 
+                    log(`BAN APLICADO: ${$('pe-n').value}`); 
+                } 
+            } else { 
+                db.ref(`players/${pIx}/hidden`).remove(); 
+                log(`BAN LEVANTADO: ${$('pe-n').value}`); 
+            } 
+            rPD(); 
+        }
+        
+        function dPr(i) { 
+            if(confirm("¿Eliminar récord del perfil?")) { 
+                const p = nx(fD.players)[pIx]; 
+                let c = nx(p.completions); 
+                const xp = c[i].xp || 0; 
+                c.splice(i,1); 
+                db.ref(`players/${pIx}/completions`).set(c); 
+                db.ref(`players/${pIx}/totalXP`).set((p.totalXP || 0) - xp); 
+                log(`Récord borrado a ${p.name}`);
+                rPD();
+            } 
+        }
+        
+        function closeEditorP() { 
+            $('p-res').style.display = 'none'; 
+            $('p-s').value = ''; 
+            pIx = -1; 
+        }
+
+        // ==========================================
+        // MÓDULOS RESTANTES (MERCADO, CLANES, CHAT)
+        // ==========================================
+        function rClm(c) { 
+            let h = ""; 
+            Object.entries(c).forEach(([k,v]) => { 
+                h += `<div class="dc"><div><h4 style="margin:0;color:var(--cy);">${v.nick}</h4><p style="margin:0;font-size:.7rem;">${v.email}</p></div><div style="display:flex;gap:5px;"><button class="bs bg" onclick="aClm('${k}')">VINCULAR</button></div></div>`; 
+            }); 
+            $('l-clm').innerHTML = h || '<p style="color:#666;">Bandeja limpia.</p>'; 
+        }
+        
+        function aClm(k) { 
+            const r = fD.claim_requests[k]; 
+            let pL = nx(fD.players); 
+            let i = pL.findIndex(p => p.name.toLowerCase() === r.nick.toLowerCase()); 
+            if(i > -1) { 
+                pL[i].email = r.email; 
+                db.ref('players').set(pL); 
+                db.ref(`claim_requests/${k}`).remove(); 
+                log(`Vinculó cuenta de: ${r.nick}`); 
+                toast("Cuenta Enlazada"); 
+            } else {
+                toast("Perfil Inexistente", true); 
+            }
+        }
+
+        function aItm() { 
+            const n = $('i-n').value; 
+            const p = $('i-p').value; 
+            const i = $('i-i').value; 
+            if(n && p) { 
+                db.ref('market_items').push({name: n, price: parseInt(p), img: i}); 
+                log(`Publicó ítem: ${n}`); 
+                toast("Tienda Actualizada"); 
+            } 
+        }
+        
+        function rMIt(d) { 
+            let h = ""; 
+            Object.entries(d).forEach(([id,it]) => { 
+                h += `<div class="dc"><h4>${it.name}</h4><button class="bs br" onclick="db.ref('market_items/${id}').remove()">X</button></div>`; 
+            }); 
+            $('l-mit').innerHTML = h; 
+        }
+        
+        function rMReq(reqs) { 
+            let h = ""; 
+            Object.entries(reqs).forEach(([id, r]) => { 
+                h += `<div class="dc" style="border-left:3px solid var(--gd);"><div><h4 style="color:var(--gd);margin:0;">${r.itemName}</h4><p style="margin:0;font-size:.8rem;">Para: ${r.player} | ${r.price}XP</p></div><div style="display:flex;flex-direction:column;gap:5px;"><button class="bs bg" onclick="aPur('${id}')">APROBAR</button><button class="bs br" onclick="db.ref('market_requests/${id}').remove()">DENEGAR</button></div></div>`; 
+            }); 
+            $('l-mrq').innerHTML = h || '<p style="color:#666;">Sin peticiones.</p>'; 
+        }
+        
+        function aPur(id) { 
+            const r = fD.market_requests[id]; 
+            let pL = nx(fD.players); 
+            let i = pL.findIndex(p => p.name.toLowerCase() === r.player.toLowerCase()); 
+            if(i > -1) { 
+                const cxp = pL[i].totalXP || 0; 
+                if(cxp >= r.price) { 
+                    pL[i].totalXP = cxp - r.price; 
+                    let inv = nx(pL[i].inventory); 
+                    inv.push({itemName: r.itemName, date: Date.now()}); 
+                    pL[i].inventory = inv; 
+                    db.ref('players').set(pL); 
+                    db.ref(`market_requests/${id}`).remove(); 
+                    log(`Compra ejecutada: ${r.itemName} por ${r.player}`); 
+                    api(`🛒 **MERCADO:** **${r.player}** ha canjeado su XP por **${r.itemName}**`); 
+                    toast("Cobro Realizado"); 
+                } else {
+                    toast("XP Insuficiente", true); 
+                }
+            } 
+        }
+
+        function aCln() { 
+            const n = $('c-n').value; 
+            const t = $('c-t').value; 
+            if(n && t) { 
+                db.ref('clans').push({name: n, tag: t, totalXP: 0}); 
+                log(`Creó Sindicato: ${n}`); 
+                toast("Fundado"); 
+            } 
+        }
+        
+        function rCln(d) { 
+            let h = ""; 
+            Object.entries(d).forEach(([id,c]) => { 
+                h += `<div class="dc"><div><h4 style="margin:0;color:var(--cy);">[${c.tag}] ${c.name}</h4><p style="margin:0;font-size:.7rem;">XP Global: ${c.totalXP||0}</p></div><button class="bs br" onclick="if(confirm('¿Borrar sindicato?')) db.ref('clans/${id}').remove()">X</button></div>`; 
+            }); 
+            $('l-cln').innerHTML = h; 
+        }
+        
+        function aBdg() { 
+            const n = $('b-n').value; 
+            const i = $('b-i').value; 
+            if(n) { 
+                db.ref('badges').push({name: n, img: i}); 
+                log(`Medalla forjada: ${n}`); 
+                toast("Forjada"); 
+            } 
+        }
+        
+        function rBdg(d) { 
+            let h = ""; 
+            Object.entries(d).forEach(([id,b]) => { 
+                h += `<div class="dc"><h4 style="margin:0;">${b.name}</h4><button class="bs br" onclick="db.ref('badges/${id}').remove()">X</button></div>`; 
+            }); 
+            $('l-bdg').innerHTML = h; 
+        }
+
+        function sCht() { 
+            const m = $('c-m').value; 
+            if(m) { 
+                db.ref('staff_chat').push({user: sN, msg: m, time: Date.now()}); 
+                $('c-m').value = ''; 
+            } 
+        }
+        
+        function rCht(d) { 
+            let h = ""; 
+            nx(d).slice(-25).forEach(x => { 
+                h += `<div class="cm"><b>${x.user}</b> <i>${new Date(x.time).toLocaleTimeString()}</i><br>${x.msg}</div>`; 
+            }); 
+            $('c-bx').innerHTML = h || '<p style="color:#666;">Canal vacío.</p>'; 
+            $('c-bx').scrollTop = $('c-bx').scrollHeight; 
+        }
+        
+        function fPrg() { 
+            db.ref('system_settings/last_cache_purge').set(Date.now()); 
+            db.ref('staff_chat').push({user: "SYSTEM", msg: "⚠️ PURGA DE RED EJECUTADA POR " + sN.toUpperCase(), time: Date.now()}); 
+            toast("Red Purgada"); 
+        }
+
+        function aLog() { 
+            const t = $('al-t').value; 
+            const d = $('al-d').value; 
+            if(t) { 
+                db.ref('admin_changelog').push({title: t, desc: d, author: sN, date: Date.now()}); 
+                toast("Log Publicado"); 
+            } 
+        }
+        
+        function rACh(d) { 
+            let h = ""; 
+            Object.entries(d).reverse().forEach(([id,l]) => { 
+                h += `
+                <div class="dc" style="align-items:flex-start;flex-direction:column;">
+                    <h4 style="margin:0;color:var(--gd);">${l.title}</h4>
+                    <p style="margin:0;font-size:.65rem;color:#888;">Por: ${l.author}</p>
+                    <p style="margin-top:5px;font-size:.8rem;">${l.desc}</p>
+                    <button class="bs br" style="margin-top:5px;" onclick="db.ref('admin_changelog/${id}').remove()">BORRAR</button>
+                </div>`; 
+            }); 
+            $('l-alg').innerHTML = h; 
+        }
+
+        function rStf(ps) { 
+            let h = ""; 
+            ps.forEach(p => { 
+                if(p.role) {
+                    h += `<div class="dc"><div><h4 style="margin:0;color:var(--ow);">${p.name}</h4><p style="margin:0;font-size:.7rem;">${p.role.toUpperCase()}</p></div><button class="bs br" onclick="dStf('${p.name}')">REVOCAR</button></div>`; 
+                }
+            }); 
+            $('l-stf').innerHTML = h; 
+        }
+        
+        function pStf() { 
+            if(sR !== 'owner') return; 
+            const n = $('st-n').value; 
+            const r = $('st-r').value; 
+            let pL = nx(fD.players); 
+            let i = pL.findIndex(p => p.name.toLowerCase() === n.toLowerCase()); 
+            if(i > -1) { 
+                pL[i].role = r; 
+                db.ref('players').set(pL); 
+                log(`Otorgó rango ${r} a ${n}`); 
+                toast("Poder Asignado"); 
+            } else {
+                toast("Usuario Inexistente", true); 
+            }
+        }
+        
+        function dStf(n) { 
+            if(sR !== 'owner') return; 
+            let pL = nx(fD.players); 
+            let i = pL.findIndex(p => p.name === n); 
+            if(i > -1) { 
+                delete pL[i].role; 
+                db.ref('players').set(pL); 
+                log(`Revocó rango a ${n}`); 
+                toast("Revocado"); 
+            } 
+        }
+        
+        function renderEff(logs) { 
+            let c = {}; 
+            Object.values(logs).forEach(x => { 
+                if(x.action.includes('Aprobó') || x.action.includes('Rechazó')) {
+                    c[x.staff] = (c[x.staff] || 0) + 1; 
+                }
+            }); 
+            let h = ""; 
+            Object.entries(c).forEach(([s,v]) => { 
+                h += `<div style="background:#000; padding:10px 15px; border-radius:8px; border:1px solid #222;"><b>${s}</b>: <span style="color:var(--gr);">${v} Acciones</span></div>`; 
+            }); 
+            $('eff-box').innerHTML = h || '<p style="color:#666;">No hay datos de eficiencia recientes.</p>'; 
+        }
+
+        // LIMPIEZA DE BD
+        function cleanDB() {
+            if(confirm("ALERTA CRÍTICA: ¿Deseas purgar permanentemente a todos los usuarios inactivos que no son Staff y tienen 0 XP?")) {
+                let pL = nx(fD.players).filter(p => p.role || (p.totalXP && p.totalXP > 0));
+                db.ref('players').set(pL).then(() => { 
+                    log("PURGA DE INACTIVOS EJECUTADA EN LA BD"); 
+                    toast("Purga Completada"); 
+                    location.reload(); 
+                });
+            }
+        }
+
+        function sCfg() { 
+            db.ref('system_settings/discord/url').set($('cf-w1').value); 
+            db.ref('system_settings/discord/url_sug').set($('cf-w2').value); 
+            db.ref('system_settings/custom_css').set($('cf-cs').value); 
+            log("Configuración Root Actualizada"); 
+            toast("Sistema Guardado"); 
+        }
+        
+        function tLck(v) { 
+            db.ref('system_settings/lockdown_active').set(v); 
+            log(`LOCKDOWN ACTIVADO: ${v}`); 
+            if(v) $('sl-id').style.background = "var(--ac)"; 
+            else $('sl-id').style.background = "#222"; 
+        }
+        
+        function bDB() { 
+            const d = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fD)); 
+            const a = document.createElement('a'); 
+            a.href = d; 
+            a.download = `SCULLY_DB_BACKUP_${Date.now()}.json`; 
+            a.click(); 
+            log("Backup JSON Descargado"); 
+        }
+        
+        function rDB(e) { 
+            const f = e.target.files[0]; 
+            if(!f) return; 
+            const r = new FileReader(); 
+            r.onload = function(ev) { 
+                try { 
+                    const j = JSON.parse(ev.target.result); 
+                    if(confirm("PELIGRO: ¿Estás seguro de que quieres sobrescribir toda la Base de Datos OMNI con este archivo?")) {
+                        db.ref('/').set(j).then(() => location.reload()); 
+                    }
+                } catch(er) { 
+                    toast("JSON Corrupto/Inválido", true); 
+                }
+            }; 
+            r.readAsText(f); 
+        }
     </script>
 </body>
 </html>
