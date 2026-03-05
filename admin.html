@@ -3,198 +3,388 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scully List | Master Panel OMNI - GOD MODE</title>
+    <title>Scully List | Admin Panel OMNI v8.5</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Lexend+Deca:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        /* CSS MINIFICADO PARA DAR ESPACIO AL MOTOR JS */
-        :root { --accent:#ff6600; --bg:#030303; --sidebar:#070707; --card-bg:rgba(15,15,15,0.98); --border:rgba(255,255,255,0.05); --green:#00ff66; --red:#ff3333; --blue:#00ccff; --gold:#ffd700; --discord:#7289da; --purple:#cc00ff; --cyan:#00ffff; --owner:#ff0055; }
-        body { background:var(--bg); color:#fff; font-family:'Lexend Deca'; margin:0; display:flex; height:100vh; overflow:hidden; }
-        ::-webkit-scrollbar { width:6px; } ::-webkit-scrollbar-track { background:var(--bg); } ::-webkit-scrollbar-thumb { background:var(--accent); }
-        .sidebar { width:280px; background:var(--sidebar); border-right:1px solid var(--border); display:flex; flex-direction:column; padding:20px 0; overflow-y:auto; z-index:10; }
-        .brand { text-align:center; padding-bottom:20px; border-bottom:1px solid var(--border); margin-bottom:10px; }
-        .brand h1 { font-family:'JetBrains Mono'; font-size:1.8rem; margin:0; text-transform:uppercase; } .brand span { color:var(--accent); }
-        .nav-btn { background:transparent; color:#888; border:none; padding:12px 25px; text-align:left; font-size:0.75rem; cursor:pointer; display:flex; align-items:center; gap:12px; font-weight:600; text-transform:uppercase; border-left:3px solid transparent; transition:0.2s; }
-        .nav-btn:hover, .nav-btn.active { color:#fff; background:rgba(255,102,0,0.05); border-left-color:var(--accent); }
-        .main-content { flex:1; padding:40px; overflow-y:auto; background-image:radial-gradient(circle at 50% 0%, rgba(255,102,0,0.03) 0%, transparent 50%); }
-        .tab-content { display:none; animation:fadeIn 0.3s ease; } .tab-content.active { display:block; }
-        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-        h2.section-title { font-size:1.8rem; margin-bottom:30px; display:flex; align-items:center; gap:15px; text-transform:uppercase; font-weight:800; border-bottom:1px solid var(--border); padding-bottom:15px; }
-        .stats-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:15px; margin-bottom:30px; }
-        .stat-card { background:var(--card-bg); border:1px solid var(--border); padding:20px; border-radius:15px; text-align:center; }
-        .stat-card h3 { font-size:2rem; margin:5px 0; font-family:'JetBrains Mono'; } .stat-card p { font-size:0.6rem; color:#888; text-transform:uppercase; font-weight:800; }
-        .terminal-box { background:#000; border:1px solid #222; border-radius:12px; padding:15px; font-family:'JetBrains Mono'; font-size:0.7rem; height:150px; overflow-y:auto; color:#aaa; box-shadow:inset 0 0 20px #000; }
-        .term-line { border-bottom:1px solid #111; padding-bottom:4px; margin-bottom:4px; } .term-sys { color:var(--blue); } .term-ok { color:var(--green); } .term-err { color:var(--red); }
-        .admin-panel { background:var(--card-bg); border:1px solid var(--border); padding:25px; border-radius:15px; margin-bottom:25px; box-shadow:0 10px 30px rgba(0,0,0,0.5); }
-        .input-group { margin-bottom:15px; } label { display:block; font-size:0.7rem; color:var(--accent); font-weight:800; margin-bottom:5px; text-transform:uppercase; }
-        input, select, textarea { width:100%; background:#000; border:1px solid #333; color:#fff; padding:12px; border-radius:8px; font-family:inherit; font-size:0.8rem; box-sizing:border-box; outline:none; transition:0.3s; }
-        input:focus, textarea:focus { border-color:var(--accent); }
-        .btn-action { background:var(--accent); color:#000; border:none; padding:12px 25px; border-radius:8px; font-weight:800; cursor:pointer; text-transform:uppercase; transition:0.2s; display:inline-flex; align-items:center; justify-content:center; gap:8px; }
-        .btn-action:hover { transform:translateY(-2px); box-shadow:0 5px 15px rgba(255,102,0,0.3); }
-        .data-list { display:flex; flex-direction:column; gap:10px; max-height:400px; overflow-y:auto; padding-right:10px; }
-        .data-card { background:rgba(255,255,255,0.02); border:1px solid var(--border); padding:15px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; }
-        .data-info h4 { margin:0 0 5px; font-size:0.9rem; text-transform:uppercase; } .data-info p { margin:0; font-size:0.75rem; color:#aaa; }
-        .btn-small { padding:6px 12px; border-radius:6px; font-size:0.65rem; font-weight:800; border:none; cursor:pointer; text-transform:uppercase; display:inline-flex; gap:5px; }
-        .btn-green { background:rgba(0,255,102,0.1); color:var(--green); border:1px solid var(--green); } .btn-red { background:rgba(255,51,51,0.1); color:var(--red); border:1px solid var(--red); } .btn-blue { background:rgba(0,204,255,0.1); color:var(--blue); border:1px solid var(--blue); }
-        .switch { position:relative; display:inline-block; width:40px; height:20px; } .switch input { opacity:0; width:0; height:0; }
-        .slider { position:absolute; cursor:pointer; inset:0; background:#222; transition:.4s; border-radius:34px; } .slider:before { position:absolute; content:""; height:14px; width:14px; left:3px; bottom:3px; background:#fff; transition:.4s; border-radius:50%; }
-        input:checked + .slider { background:var(--accent); } input:checked + .slider:before { transform:translateX(20px); }
-        .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:10000; }
-        .modal-content { background:var(--sidebar); margin:5vh auto; padding:30px; width:90%; max-width:600px; border-radius:20px; border:1px solid var(--border); }
-        #scullyToast { visibility:hidden; min-width:250px; background-color:var(--green); color:#000; text-align:center; border-radius:10px; padding:15px; position:fixed; z-index:30000; right:30px; bottom:30px; font-weight:800; box-shadow:0 10px 30px rgba(0,0,0,0.5); transform:translateY(50px); opacity:0; transition:0.4s; }
-        #scullyToast.show { visibility:visible; transform:translateY(0); opacity:1; }
+        /* === VARIABLES DEL SISTEMA === */
+        :root { 
+            --accent: #ff6600; 
+            --bg: #030303; 
+            --sidebar: #0a0a0a; 
+            --card-bg: #111111; 
+            --border: rgba(255, 255, 255, 0.08); 
+            --green: #00ff66; 
+            --red: #ff3333; 
+            --blue: #00ccff; 
+            --gold: #ffd700; 
+            --discord: #7289da; 
+            --purple: #cc00ff; 
+            --cyan: #00ffff; 
+            --owner: #ff0055; 
+        }
+
+        /* === ESTILOS BASE === */
+        body { 
+            background: var(--bg); 
+            color: #fff; 
+            font-family: 'Lexend Deca', sans-serif; 
+            margin: 0; 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+        
+        ::-webkit-scrollbar { width: 6px; } 
+        ::-webkit-scrollbar-track { background: var(--bg); } 
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+        /* === MENU MÓVIL (NUEVO) === */
+        .mobile-header {
+            display: none;
+            background: var(--sidebar);
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2000;
+        }
+        .mobile-header h1 { margin: 0; font-family: 'JetBrains Mono'; font-size: 1.2rem; }
+        .mobile-header h1 span { color: var(--accent); }
+        .hamburger-btn { background: transparent; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+
+        /* === SIDEBAR === */
+        .sidebar { 
+            width: 280px; 
+            min-width: 280px; 
+            background: var(--sidebar); 
+            border-right: 1px solid var(--border); 
+            display: flex; 
+            flex-direction: column; 
+            padding: 20px 0; 
+            overflow-y: auto; 
+            z-index: 1500; 
+            transition: left 0.3s ease;
+        }
+
+        .brand { 
+            text-align: center; 
+            padding-bottom: 20px; 
+            border-bottom: 1px solid var(--border); 
+            margin-bottom: 10px; 
+            cursor: pointer; /* Para el triple tap */
+        }
+        .brand h1 { font-family: 'JetBrains Mono'; font-size: 1.8rem; margin: 0; text-transform: uppercase; } 
+        .brand span { color: var(--accent); }
+        
+        .nav-btn { 
+            background: transparent; color: #888; border: none; padding: 15px 25px; 
+            text-align: left; font-size: 0.8rem; cursor: pointer; display: flex; 
+            align-items: center; gap: 12px; font-weight: 600; text-transform: uppercase; 
+            border-left: 3px solid transparent; transition: 0.2s; 
+        }
+        .nav-btn:hover, .nav-btn.active { color: #fff; background: rgba(255,102,0,0.05); border-left-color: var(--accent); }
+        
+        .sidebar-bottom { margin-top: auto; padding: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+
+        /* === MAIN CONTENT === */
+        .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .main-content { 
+            flex: 1; padding: 40px; overflow-y: auto; 
+            background-image: radial-gradient(circle at 50% 0%, rgba(255,102,0,0.03) 0%, transparent 50%); 
+        }
+        
+        .tab-content { display: none; animation: fadeIn 0.3s ease; } 
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        h2.section-title { font-size: 1.5rem; margin-bottom: 30px; display: flex; align-items: center; gap: 15px; text-transform: uppercase; font-weight: 800; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+
+        /* === WIDGETS Y CARDS === */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border); padding: 25px; border-radius: 15px; text-align: center; }
+        .stat-card h3 { font-size: 2rem; margin: 5px 0; font-family: 'JetBrains Mono'; } 
+        .stat-card p { font-size: 0.7rem; color: #888; text-transform: uppercase; font-weight: 800; }
+        
+        .terminal-box { background: #000; border: 1px solid #222; border-radius: 12px; padding: 15px; font-family: 'JetBrains Mono'; font-size: 0.75rem; height: 200px; overflow-y: auto; color: #aaa; box-shadow: inset 0 0 20px #000; }
+        .term-line { border-bottom: 1px solid #111; padding-bottom: 5px; margin-bottom: 5px; word-wrap: break-word; } 
+        .term-sys { color: var(--blue); } .term-ok { color: var(--green); } .term-err { color: var(--red); }
+
+        /* === FORMULARIOS Y PANELES === */
+        .admin-panel { background: var(--card-bg); border: 1px solid var(--border); padding: 30px; border-radius: 20px; margin-bottom: 25px; }
+        .input-group { margin-bottom: 20px; } 
+        label { display: block; font-size: 0.8rem; color: var(--accent); font-weight: 800; margin-bottom: 8px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 15px; border-radius: 10px; font-family: inherit; font-size: 0.9rem; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: var(--accent); }
+        
+        .btn-action { background: var(--accent); color: #000; border: none; padding: 15px 30px; border-radius: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.85rem; }
+        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,102,0,0.3); }
+
+        .data-list { display: flex; flex-direction: column; gap: 15px; max-height: 500px; overflow-y: auto; padding-right: 5px; }
+        .data-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .data-info h4 { margin: 0 0 5px; font-size: 1rem; text-transform: uppercase; } 
+        .data-info p { margin: 0; font-size: 0.85rem; color: #aaa; }
+        
+        .btn-small { padding: 10px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; display: inline-flex; gap: 5px; }
+        .btn-green { background: rgba(0,255,102,0.1); color: var(--green); border: 1px solid var(--green); } 
+        .btn-red { background: rgba(255,51,51,0.1); color: var(--red); border: 1px solid var(--red); } 
+        .btn-blue { background: rgba(0,204,255,0.1); color: var(--blue); border: 1px solid var(--blue); }
+        .btn-gold { background: rgba(255,215,0,0.1); color: var(--gold); border: 1px solid var(--gold); }
+
+        /* === REORDENAMIENTO === */
+        .level-row { display: flex; align-items: center; background: #000; padding: 15px; border-radius: 10px; border: 1px solid #222; margin-bottom: 10px; gap: 15px; }
+        .level-rank { font-family: 'JetBrains Mono'; color: var(--accent); font-weight: 800; width: 50px; font-size: 1.2rem; } 
+        .level-name { flex: 1; font-weight: 800; text-transform: uppercase; }
+        .level-controls button { background: #222; color: #fff; border: 1px solid #444; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; }
+
+        /* === SWITCH TOGGLE === */
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; } 
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background: #333; transition: .4s; border-radius: 34px; } 
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background: #fff; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background: var(--accent); box-shadow: 0 0 10px var(--accent); } 
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        /* === MODALES === */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000; overflow-y: auto; }
+        .modal-content { background: var(--sidebar); margin: 5vh auto; padding: 30px; width: 90%; max-width: 600px; border-radius: 20px; border: 1px solid var(--border); position: relative; }
+        
+        #loadingScreen { position: fixed; inset: 0; background: var(--bg); z-index: 20000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .spinner { border: 4px solid rgba(255,102,0,0.1); border-top-color: var(--accent); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 10px; padding: 15px; position: fixed; z-index: 30000; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(50px); font-weight: 800; box-shadow: 0 10px 30px rgba(0,0,0,0.8); opacity: 0; transition: 0.4s; }
+        #scullyToast.show { visibility: visible; transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        /* === RESPONSIVE (MÓVILES) === */
+        @media (max-width: 768px) {
+            .mobile-header { display: flex; }
+            .sidebar { position: fixed; left: -100%; top: 0; height: 100%; z-index: 3000; width: 260px; background: #000; border-right: 1px solid #333; }
+            .sidebar.open { left: 0; }
+            .main-content { padding: 20px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .admin-panel { padding: 20px; }
+            .btn-action { width: 100%; justify-content: center; margin-bottom: 10px; }
+            .data-card { flex-direction: column; align-items: flex-start; }
+            .data-card button { width: 100%; margin-top: 10px; justify-content: center; }
+            .level-row { flex-direction: column; align-items: flex-start; }
+            .level-controls { align-self: flex-end; }
+        }
     </style>
 </head>
 <body>
 
-    <div id="scullyToast">Exito</div>
+    <div id="loadingScreen"><div class="spinner"></div><h2 style="font-family:'JetBrains Mono'; color:var(--accent);">SISTEMA OMNI</h2><p style="color:#666; font-size:0.8rem;">Estableciendo conexión...</p></div>
+    <div id="scullyToast">Operación Exitosa</div>
 
-    <div class="sidebar">
-        <div class="brand" ondblclick="triggerOwnerProtocol()">
+    <div class="mobile-header">
+        <h1 style="margin:0;">SYS.<span>OMNI</span></h1>
+        <button class="hamburger-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
+    </div>
+
+    <div class="sidebar" id="mainSidebar">
+        <div class="brand" onclick="handleSecretTap()">
             <h1>SYS.<span>OMNI</span></h1>
-            <p id="authBadge" style="font-size:0.5rem; color:var(--green); font-weight:800;">INICIANDO...</p>
+            <p id="authBadge" style="font-size:0.6rem; color:var(--green); font-weight:800; margin-top:10px;">INICIANDO...</p>
         </div>
         
-        <span style="font-size:0.6rem; color:#555; text-transform:uppercase; font-weight:800; margin:10px 25px; display:block;">Gestión Principal</span>
-        <button class="nav-btn active" onclick="switchTab('tab-dash')"><i class="fas fa-satellite-dish"></i> Centro Monitoreo</button>
+        <span style="font-size:0.65rem; color:#666; text-transform:uppercase; font-weight:800; margin:10px 25px; display:block;">Gestión Principal</span>
+        <button class="nav-btn active" onclick="switchTab('tab-dash')"><i class="fas fa-satellite-dish"></i> Dashboard</button>
         <button class="nav-btn" onclick="switchTab('tab-recs')"><i class="fas fa-inbox"></i> Bandeja Récords</button>
         <button class="nav-btn" onclick="switchTab('tab-lvls')"><i class="fas fa-database"></i> Gestión Niveles</button>
         <button class="nav-btn" onclick="switchTab('tab-players')"><i class="fas fa-users-cog"></i> Editor Jugadores</button>
         <button class="nav-btn" onclick="switchTab('tab-claims')"><i class="fas fa-id-badge"></i> Reclamos Perfil</button>
         
-        <span style="font-size:0.6rem; color:#555; text-transform:uppercase; font-weight:800; margin:15px 25px 10px; display:block; border-top:1px solid var(--border); padding-top:10px;">God Mode</span>
+        <span style="font-size:0.65rem; color:#666; text-transform:uppercase; font-weight:800; margin:20px 25px 10px; display:block; border-top:1px solid var(--border); padding-top:15px;">Expansión Titán</span>
         <button class="nav-btn" onclick="switchTab('tab-market')" style="color:var(--gold);"><i class="fas fa-store"></i> Mercado XP</button>
-        <button class="nav-btn" onclick="switchTab('tab-staff')" style="color:var(--owner);" id="btn-staff-tab"><i class="fas fa-chess-king"></i> Jerarquías Staff</button>
-        <button class="nav-btn" onclick="switchTab('tab-config')" style="color:var(--discord);"><i class="fab fa-discord"></i> Webhooks & API</button>
+        <button class="nav-btn" onclick="switchTab('tab-clans')" style="color:var(--cyan);"><i class="fas fa-shield-alt"></i> Sindicatos</button>
+        
+        <span style="font-size:0.65rem; color:#666; text-transform:uppercase; font-weight:800; margin:20px 25px 10px; display:block; border-top:1px solid var(--border); padding-top:15px;" id="owner-menu-title" style="display:none;">Control Owner</span>
+        <button class="nav-btn" onclick="switchTab('tab-staff')" style="color:var(--owner); display:none;" id="btn-staff-tab"><i class="fas fa-chess-king"></i> Jerarquías Staff</button>
+        <button class="nav-btn" onclick="switchTab('tab-config')" style="color:var(--discord);"><i class="fas fa-cogs"></i> Webhooks & API</button>
         <button class="nav-btn" onclick="switchTab('tab-audit')" style="color:var(--blue);"><i class="fas fa-terminal"></i> Auditoría Root</button>
 
         <div class="sidebar-bottom">
-            <button class="nav-btn" style="color:var(--red); border:1px solid #222; justify-content:center;" onclick="location.href='index.html'">CERRAR SESIÓN</button>
+            <button class="nav-btn" style="color:var(--red); border:1px solid #222; justify-content:center;" onclick="location.href='index.html'"><i class="fas fa-power-off"></i> SALIR</button>
         </div>
     </div>
 
-    <div class="main-content">
-        <div id="tab-dash" class="tab-content active">
-            <h2 class="section-title"><i class="fas fa-satellite-dish" style="color:var(--accent);"></i> Consola OMNI God Mode</h2>
-            <div class="stats-grid">
-                <div class="stat-card"><h3><i class="fas fa-users" style="color:var(--blue);"></i> <span id="s-players">0</span></h3><p>Jugadores</p></div>
-                <div class="stat-card"><h3><i class="fas fa-ghost" style="color:var(--purple);"></i> <span id="s-levels">0</span></h3><p>Niveles</p></div>
-                <div class="stat-card"><h3><i class="fas fa-inbox" style="color:var(--yellow);"></i> <span id="s-pending">0</span></h3><p>Récords Pend.</p></div>
-                <div class="stat-card"><h3><i class="fas fa-id-badge" style="color:var(--cyan);"></i> <span id="s-claims">0</span></h3><p>Reclamos Pend.</p></div>
-            </div>
-            <div class="terminal-box" id="term"></div>
-        </div>
-
-        <div id="tab-recs" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-tasks" style="color:var(--green);"></i> Bandeja de Récords</h2>
-            <div class="data-list" id="list-subs" style="margin-bottom:30px;"></div>
-            <div class="admin-panel" style="border-color:var(--accent);">
-                <h3 style="color:var(--accent); margin-top:0;">Inyección Manual de Ingeniería</h3>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:10px;">
-                    <div class="input-group"><label>Jugador (Exacto)</label><input type="text" id="m-player"></div>
-                    <div class="input-group"><label>Nivel</label><input type="text" id="m-lvl"></div>
+    <div class="main-wrapper">
+        <div class="main-content" onclick="closeMobileMenuOnClick()">
+            
+            <div id="tab-dash" class="tab-content active">
+                <h2 class="section-title"><i class="fas fa-chart-line" style="color:var(--accent);"></i> Consola OMNI</h2>
+                <div class="stats-grid">
+                    <div class="stat-card"><h3><i class="fas fa-users" style="color:var(--blue);"></i> <span id="s-players">0</span></h3><p>Jugadores</p></div>
+                    <div class="stat-card"><h3><i class="fas fa-ghost" style="color:var(--purple);"></i> <span id="s-levels">0</span></h3><p>Niveles</p></div>
+                    <div class="stat-card"><h3><i class="fas fa-inbox" style="color:var(--yellow);"></i> <span id="s-pending">0</span></h3><p>Pendientes</p></div>
+                    <div class="stat-card" style="border-color:var(--cyan);"><h3><i class="fas fa-id-badge" style="color:var(--cyan);"></i> <span id="s-claims">0</span></h3><p>Reclamos</p></div>
                 </div>
-                <div class="input-group"><label>Evidencia (Link)</label><input type="text" id="m-link"></div>
-                <button class="btn-action" style="width:100%;" onclick="injectManualRec()"><i class="fas fa-syringe"></i> INYECTAR Y ASIGNAR XP</button>
+                <h3 style="color:var(--accent); font-size:1rem; text-transform:uppercase; margin-bottom:15px;"><i class="fas fa-terminal"></i> Terminal del Servidor</h3>
+                <div class="terminal-box" id="term"></div>
             </div>
-        </div>
 
-        <div id="tab-lvls" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-database"></i> Gestión y Estructura</h2>
-            <div class="admin-panel">
-                <input type="hidden" id="edit-idx" value="-1">
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:10px;">
-                    <div class="input-group"><label>Nombre del Nivel</label><input type="text" id="add-n"></div>
-                    <div class="input-group"><label>Video ID (YouTube)</label><input type="text" id="add-id"></div>
+            <div id="tab-recs" class="tab-content">
+                <h2 class="section-title"><i class="fas fa-tasks" style="color:var(--green);"></i> Bandeja de Récords</h2>
+                <div class="data-list" id="list-subs" style="margin-bottom:40px;"></div>
+                
+                <div class="admin-panel" style="border-color:var(--accent);">
+                    <h3 style="color:var(--accent); margin-top:0;"><i class="fas fa-bolt"></i> Inyección Manual (Engine Auto-XP)</h3>
+                    <p style="color:#aaa; font-size:0.85rem; margin-bottom:20px;">Fuerza la adición de un récord. El sistema asignará la XP automáticamente.</p>
+                    <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-bottom:15px;">
+                        <div class="input-group"><label>Nombre del Jugador</label><input type="text" id="m-player" placeholder="Debe ser exacto"></div>
+                        <div class="input-group"><label>Nombre del Nivel</label><input type="text" id="m-lvl" placeholder="Debe existir en la lista"></div>
+                        <div class="input-group"><label>Link del Video (Evidencia)</label><input type="text" id="m-link" placeholder="https://youtube.com/..."></div>
+                    </div>
+                    <button class="btn-action" style="width:100%;" onclick="injectManualRec()"><i class="fas fa-syringe"></i> EJECUTAR INYECCIÓN</button>
                 </div>
-                <div class="input-group"><label>Verificador</label><input type="text" id="add-v"></div>
-                <button class="btn-action" style="width:100%" onclick="saveLvl()">GUARDAR NIVEL</button>
             </div>
-            <h3 style="color:var(--blue);">Estructura del Ranking (Reordenamiento)</h3>
-            <div id="rank-sort-list" class="data-list" style="background:#000; padding:15px; border-radius:15px;"></div>
-            <button class="btn-action" style="width:100%; margin-top:15px; background:var(--blue);" onclick="publishOrder()">PUBLICAR ORDEN</button>
-        </div>
 
-        <div id="tab-claims" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-id-badge" style="color:var(--cyan);"></i> Centro de Reclamos de Perfil</h2>
-            <p style="color:#aaa; font-size:0.8rem; margin-bottom:20px;">Acepta a los usuarios que reclaman ser dueños de un perfil de GD. Se vinculará su correo al perfil existente.</p>
-            <div class="data-list" id="list-claims"></div>
-        </div>
+            <div id="tab-lvls" class="tab-content">
+                <h2 class="section-title"><i class="fas fa-database" style="color:var(--purple);"></i> Gestión de Base de Datos</h2>
+                <div class="admin-panel">
+                    <h3 style="margin-top:0; color:var(--purple);">Compilador de Niveles</h3>
+                    <input type="hidden" id="edit-idx" value="-1">
+                    <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-bottom:15px;">
+                        <div class="input-group"><label>Nombre del Nivel</label><input type="text" id="add-n" placeholder="Ej: Bloodbath"></div>
+                        <div class="input-group"><label>ID del Video de Youtube</label><input type="text" id="add-id" placeholder="Ej: d9DF2... (11 Caracteres)"></div>
+                        <div class="input-group"><label>Primer Vencedor / Verificador</label><input type="text" id="add-v" placeholder="Opcional"></div>
+                    </div>
+                    <button class="btn-action" style="width:100%; background:var(--purple); color:#fff; margin-bottom:10px;" onclick="saveLvl()"><i class="fas fa-save"></i> GUARDAR NIVEL EN DB</button>
+                    <button class="btn-action" id="cancel-edit" style="width:100%; background:transparent; border:1px solid var(--red); color:var(--red);" onclick="resetLvlForm()" hidden>CANCELAR EDICIÓN</button>
+                </div>
 
-        <div id="tab-staff" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-chess-king" style="color:var(--owner);"></i> Control Absoluto de Jerarquías</h2>
-            <div class="admin-panel" style="border-color:var(--owner);">
-                <p style="color:#aaa; font-size:0.8rem;">Como Owner, tienes el poder de nombrar Administradores o Helpers, y revocar sus privilegios instantáneamente.</p>
-                <div style="display:grid; grid-template-columns:2fr 1fr; gap:15px;">
-                    <div class="input-group"><label>Nombre del Jugador</label><input type="text" id="staff-n" placeholder="Debe existir en la DB"></div>
+                <h3 style="color:var(--blue); font-size:1.2rem; text-transform:uppercase; margin-top:40px; border-bottom:1px solid #333; padding-bottom:10px;">Estructura del Ranking (Reordenamiento)</h3>
+                <p style="color:#888; font-size:0.85rem;">Sube o baja los niveles. Al publicar, la XP de todos se recalculará automáticamente.</p>
+                <div id="rank-sort-list" class="data-list" style="background:#000; padding:15px; border-radius:15px; margin-bottom:20px;"></div>
+                <button class="btn-action" style="width:100%; background:var(--blue); color:#000;" onclick="publishOrder()"><i class="fas fa-globe"></i> PUBLICAR ORDEN ESTRUCTURAL</button>
+            </div>
+
+            <div id="tab-claims" class="tab-content">
+                <h2 class="section-title"><i class="fas fa-id-badge" style="color:var(--cyan);"></i> Centro de Reclamos</h2>
+                <p style="color:#aaa; font-size:0.9rem; margin-bottom:25px;">Aquí aparecen los usuarios que quieren vincular su cuenta de Google con un perfil de jugador ya existente en la lista.</p>
+                <div class="data-list" id="list-claims"></div>
+            </div>
+
+            <div id="tab-staff" class="tab-content">
+                <h2 class="section-title"><i class="fas fa-chess-king" style="color:var(--owner);"></i> Protocolo Owner: Jerarquías</h2>
+                <div class="admin-panel" style="border-color:var(--owner);">
+                    <p style="color:#aaa; font-size:0.9rem; margin-bottom:20px;">Otorga privilegios de Administración o Helper a los jugadores registrados.</p>
+                    <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-bottom:20px;">
+                        <div class="input-group"><label>Nombre del Jugador</label><input type="text" id="staff-n" placeholder="Escribe el nombre exacto"></div>
+                        <div class="input-group">
+                            <label>Rango de Autoridad</label>
+                            <select id="staff-r">
+                                <option value="helper">Helper (Revisión básica)</option>
+                                <option value="admin">Administrador (Acceso Total)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn-action" style="background:var(--owner); color:#fff; width:100%;" onclick="promoteStaff()"><i class="fas fa-shield-alt"></i> OTORGAR PRIVILEGIOS</button>
+                </div>
+                <h3 style="color:#fff; text-transform:uppercase;">Personal Activo</h3>
+                <div class="data-list" id="list-staff"></div>
+            </div>
+
+            <div id="tab-market" class="tab-content">
+                <h2 class="section-title"><i class="fas fa-store" style="color:var(--gold);"></i> Mercado Global de XP</h2>
+                
+                <h3 style="color:var(--gold); text-transform:uppercase; margin-top:0;"><i class="fas fa-shopping-basket"></i> Peticiones de Compra</h3>
+                <p style="color:#aaa; font-size:0.85rem; margin-bottom:20px;">Al aprobar, el sistema restará la XP automáticamente al jugador.</p>
+                <div class="data-list" id="market-requests-list" style="margin-bottom:40px;"></div>
+
+                <div class="admin-panel" style="border-color:var(--gold);">
+                    <h3 style="color:var(--gold); margin-top:0;"><i class="fas fa-plus-circle"></i> Publicar Nuevo Cosmético</h3>
+                    <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-bottom:20px;">
+                        <div class="input-group"><label>Nombre del Ítem</label><input type="text" id="item-n" placeholder="Ej: Rol VIP Discord"></div>
+                        <div class="input-group"><label>Precio (XP)</label><input type="number" id="item-p" placeholder="Ej: 500"></div>
+                        <div class="input-group"><label>URL Icono/Imagen</label><input type="text" id="item-i" placeholder="https://..."></div>
+                    </div>
+                    <button class="btn-action" style="background:var(--gold); color:#000; width:100%;" onclick="addMarketItem()"><i class="fas fa-upload"></i> PUBLICAR EN TIENDA</button>
+                </div>
+            </div>
+
+            <div id="tab-clans" class="tab-content">
+                <h2 class="section-title"><i class="fas fa-shield-alt" style="color:var(--cyan);"></i> Gestión de Sindicatos</h2>
+                <div class="admin-panel" style="border-color:var(--cyan);">
+                    <h3 style="color:var(--cyan); margin-top:0;">Fundar Sindicato (Clan)</h3>
+                    <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-bottom:20px;">
+                        <div class="input-group"><label>Nombre Completo</label><input type="text" id="clan-n" placeholder="Ej: Elite Verifiers"></div>
+                        <div class="input-group"><label>Etiqueta Oficial (Tag)</label><input type="text" id="clan-t" placeholder="Ej: EV"></div>
+                    </div>
+                    <button class="btn-action" style="background:var(--cyan); color:#000; width:100%;" onclick="addClan()"><i class="fas fa-flag"></i> CREAR SINDICATO</button>
+                </div>
+                <h3 style="color:#fff; text-transform:uppercase;">Alianzas Registradas</h3>
+                <div class="data-list" id="list-clans"></div>
+            </div>
+
+            <div id="tab-players" class="tab-content">
+                <h2 class="section-title"><i class="fas fa-users-cog" style="color:var(--red);"></i> Editor de Entidades</h2>
+                <div class="admin-panel" style="border-color:rgba(255,51,51,0.3);">
                     <div class="input-group">
-                        <label>Rango a Asignar</label>
-                        <select id="staff-r">
-                            <option value="helper">Helper</option>
-                            <option value="admin">Admin</option>
-                        </select>
+                        <label style="color:var(--red);">Localizar Jugador</label>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            <input type="text" id="p-search" placeholder="Nick exacto..." style="flex:1; min-width:200px;">
+                            <button class="btn-action" style="background:var(--red); color:#fff;" onclick="searchP()"><i class="fas fa-search"></i> BUSCAR</button>
+                        </div>
                     </div>
                 </div>
-                <button class="btn-action" style="background:var(--owner); color:#fff; width:100%; margin-top:10px;" onclick="promoteStaff()">OTORGAR PRIVILEGIOS</button>
-            </div>
-            <h3 style="color:#fff;">Personal Autorizado</h3>
-            <div class="data-list" id="list-staff"></div>
-        </div>
-
-        <div id="tab-market" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-store" style="color:var(--gold);"></i> Mercado Global</h2>
-            <h3 style="color:var(--gold);">Bandeja de Compras</h3>
-            <div class="data-list" id="market-requests-list" style="margin-bottom:30px;"></div>
-            <div class="admin-panel" style="border-color:var(--gold);">
-                <h3 style="color:var(--gold); margin-top:0;">Publicar Ítem</h3>
-                <div style="display:grid; grid-template-columns:2fr 1fr; gap:15px;">
-                    <input type="text" id="item-n" placeholder="Nombre Ítem">
-                    <input type="number" id="item-p" placeholder="Precio XP">
-                </div>
-                <button class="btn-action" style="background:var(--gold); margin-top:15px; width:100%;" onclick="addMarketItem()">PUBLICAR</button>
-            </div>
-        </div>
-
-        <div id="tab-players" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-users-cog" style="color:var(--red);"></i> Editor Maestro</h2>
-            <div class="admin-panel">
-                <div style="display:flex; gap:10px;"><input type="text" id="p-search" placeholder="Nick exacto..."><button class="btn-action" style="background:var(--red); color:#fff;" onclick="searchP()"><i class="fas fa-search"></i> BUSCAR</button></div>
-            </div>
-            <div id="p-result" style="display:none;">
-                <div class="admin-panel" style="border-color:var(--red);">
-                    <input type="text" id="pe-n" style="margin-bottom:10px;">
-                    <textarea id="pe-b" rows="2" style="margin-bottom:10px;" placeholder="Biografía"></textarea>
-                    <button class="btn-small btn-blue" onclick="updateP()">GUARDAR PERFIL</button>
-                    <div id="p-ban-box" style="margin-top:20px; border-top:1px solid #333; padding-top:15px;"></div>
-                    <div id="p-recs" class="data-list" style="margin-top:20px;"></div>
+                
+                <div id="p-result" style="display:none;">
+                    <div class="admin-panel" style="border-color:var(--red); background:rgba(255,51,51,0.02);">
+                        <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-bottom:20px;">
+                            <div class="input-group"><label>Nombre Público</label><input type="text" id="pe-n"></div>
+                            <div class="input-group"><label>Asignación de Clan</label>
+                                <select id="pe-clan"><option value="">Ninguno</option></select>
+                            </div>
+                            <div class="input-group"><label>Biografía</label><textarea id="pe-b" rows="3"></textarea></div>
+                        </div>
+                        <button class="btn-action" style="background:var(--blue); color:#000; width:100%; margin-bottom:20px;" onclick="updateP()"><i class="fas fa-save"></i> GUARDAR DATOS</button>
+                        
+                        <div id="p-ban-box" style="margin-bottom:30px; padding:20px; background:rgba(0,0,0,0.5); border-radius:10px; border:1px solid #333;"></div>
+                        
+                        <h4 style="color:var(--accent); text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:10px;">Récords Acumulados</h4>
+                        <p style="color:#aaa; font-size:0.8rem; margin-bottom:15px;">Al borrar un récord, la XP equivalente será retirada de la cuenta del jugador.</p>
+                        <div id="p-recs" class="data-list"></div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="tab-config" class="tab-content">
-            <h2 class="section-title"><i class="fab fa-discord" style="color:var(--discord);"></i> Webhooks Multi-Canal</h2>
-            <div class="admin-panel" style="border-color:var(--discord);">
-                <p style="color:#aaa; font-size:0.8rem; margin-bottom:20px;">El sistema OMNI interceptará envíos del cliente y disparará alertas al servidor de Discord.</p>
-                <div class="input-group"><label>Webhook (Récords y Mercado)</label><input type="text" id="conf-disc"></div>
-                <div class="input-group"><label>Webhook (Sugerencias de Niveles)</label><input type="text" id="conf-disc-sug" placeholder="Canal separado para sugerencias"></div>
-                <button class="btn-action" style="background:var(--discord); color:#fff; width:100%; margin-top:10px;" onclick="saveConfig()">GUARDAR API KEYS</button>
+            <div id="tab-config" class="tab-content">
+                <h2 class="section-title"><i class="fab fa-discord" style="color:var(--discord);"></i> API & Webhooks</h2>
+                <div class="admin-panel" style="border-color:var(--discord);">
+                    <p style="color:#aaa; font-size:0.85rem; margin-bottom:20px;">Configura las conexiones con tu servidor de Discord.</p>
+                    <div class="input-group"><label>Webhook Principal (Récords/Mercado)</label><input type="text" id="conf-disc" placeholder="https://discord.com/api/webhooks/..."></div>
+                    <div class="input-group"><label>Webhook Secundario (Sugerencias)</label><input type="text" id="conf-disc-sug" placeholder="URL opcional para sugerencias de niveles"></div>
+                    <button class="btn-action" style="background:var(--discord); color:#fff; width:100%; margin-top:15px;" onclick="saveConfig()"><i class="fas fa-save"></i> GUARDAR RUTAS API</button>
+                </div>
             </div>
-        </div>
 
-        <div id="tab-audit" class="tab-content">
-            <h2 class="section-title"><i class="fas fa-terminal"></i> Auditoría Root</h2>
-            <div class="admin-panel" style="padding:10px; background:#000;"><div id="audit-list" style="max-height:500px; overflow-y:auto;"></div></div>
+            <div id="tab-audit" class="tab-content">
+                <h2 class="section-title"><i class="fas fa-terminal" style="color:var(--blue);"></i> Auditoría Root</h2>
+                <div class="admin-panel" style="padding:15px; background:#000;">
+                    <div id="audit-list" style="max-height:600px; overflow-y:auto; display:flex; flex-direction:column; gap:5px;"></div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <div id="modal-rev" class="modal">
         <div class="modal-content">
-            <span style="position:absolute; top:20px; right:20px; cursor:pointer;" onclick="closeModal('modal-rev')">✕</span>
-            <h2 id="rev-t" style="margin:0 0 20px; color:var(--accent);">Revisión</h2>
-            <div id="rev-vid" style="margin-bottom:20px; border-radius:15px; overflow:hidden;"></div>
-            <div style="display:flex; gap:10px;">
-                <button id="b-acc" class="btn-action" style="background:var(--green); flex:1;">ACEPTAR</button>
-                <button id="b-rej" class="btn-action" style="background:var(--red); color:#fff; flex:1;">RECHAZAR</button>
+            <span style="position:absolute; top:20px; right:20px; cursor:pointer; font-size:1.5rem; color:#888;" onclick="closeModal('modal-rev')">✕</span>
+            <h2 id="rev-t" style="margin:0 0 20px; color:var(--accent); text-transform:uppercase;">Revisión</h2>
+            <div id="rev-vid" style="margin-bottom:20px; border-radius:15px; overflow:hidden; border:1px solid #333;"></div>
+            <div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:15px; margin-bottom:20px; font-size:0.85rem;">
+                <p><b>Video RAW:</b> <span id="rev-raw"></span></p>
+                <p><b>Comentarios:</b> <span id="rev-comm"></span></p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button id="b-acc" class="btn-action" style="background:var(--green); width:100%;">ACEPTAR Y DAR XP</button>
+                <button id="b-rej" class="btn-action" style="background:var(--red); color:#fff; width:100%;">RECHAZAR</button>
+                <button class="btn-action" style="background:transparent; border:1px solid #555; color:#aaa; width:100%;" onclick="closeModal('modal-rev')">CERRAR</button>
             </div>
         </div>
     </div>
@@ -202,10 +392,10 @@
     <div id="modal-owner" class="modal">
         <div class="modal-content" style="border-color:var(--owner); text-align:center;">
             <h2 style="color:var(--owner); font-family:'JetBrains Mono';"><i class="fas fa-skull"></i> PROTOCOLO OWNER</h2>
-            <p style="color:#aaa; font-size:0.8rem;">Introduce la llave criptográfica para reclamar el control absoluto del panel y la base de datos.</p>
-            <input type="password" id="owner-key" placeholder="Ingresar Código..." style="text-align:center; font-family:'JetBrains Mono'; font-size:1.5rem; letter-spacing:5px; margin:20px 0;">
+            <p style="color:#aaa; font-size:0.9rem;">Introduce la llave criptográfica de Root.</p>
+            <input type="password" id="owner-key" placeholder="Código Secreto" style="text-align:center; font-family:'JetBrains Mono'; font-size:1.2rem; letter-spacing:3px; margin:20px 0;">
             <button class="btn-action" style="background:var(--owner); color:#fff; width:100%;" onclick="executeOwnerClaim()">RECLAMAR TITULARIDAD</button>
-            <button class="btn-small" style="margin-top:15px; background:transparent; color:#666;" onclick="closeModal('modal-owner')">CANCELAR</button>
+            <button class="btn-action" style="margin-top:15px; background:transparent; color:#666; width:100%;" onclick="closeModal('modal-owner')">CANCELAR</button>
         </div>
     </div>
 
@@ -217,13 +407,60 @@
         // CONFIGURACIÓN FIREBASE
         const firebaseConfig = { apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", authDomain: "scullylist.firebaseapp.com", databaseURL: "https://scullylist-default-rtdb.firebaseio.com", projectId: "scullylist", storageBucket: "scullylist.firebasestorage.app", messagingSenderId: "498548914021", appId: "1:498548914021:web:59128b5e06b36a4e81938c" };
         firebase.initializeApp(firebaseConfig); const auth = firebase.auth(), db = firebase.database();
+        
         let fullData = {}, levelsArr = [], selPIdx = -1, staffName = "Admin", staffRole = "helper", currentUserEmail = "";
 
-        // UI HELPERS
-        function toast(m, e=false){ const t=document.getElementById('scullyToast'); t.innerText=m; t.style.backgroundColor=e?"var(--red)":"var(--green)"; t.style.display='block'; t.className='show'; setTimeout(()=>t.className="",3000); }
-        function switchTab(id){ document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active')); document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active')); document.getElementById(id).classList.add('active'); event.currentTarget.classList.add('active'); }
+        // UI HELPERS & MOBILE MENU
+        function toast(m, e=false){ const t=document.getElementById('scullyToast'); t.innerText=m; t.style.backgroundColor=e?"var(--red)":"var(--green)"; t.style.color=e?"#fff":"#000"; t.style.display='block'; t.className='show'; setTimeout(()=>t.className="",3500); }
+        function switchTab(id){ 
+            document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active')); 
+            document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active')); 
+            document.getElementById(id).classList.add('active'); 
+            if(event) event.currentTarget.classList.add('active');
+            if(window.innerWidth <= 768) closeMobileMenuOnClick();
+        }
         function closeModal(id){ document.getElementById(id).style.display='none'; }
-        function log(m){ db.ref('staff_logs').push({staff:staffName, action:m, timestamp:Date.now()}); const t=document.getElementById('term'); t.innerHTML+=`<div class="term-line">> [${new Date().toLocaleTimeString()}] ${m}</div>`; t.scrollTop=t.scrollHeight; }
+        
+        // Mobile Sidebar Toggle
+        function toggleMobileMenu() { document.getElementById('mainSidebar').classList.toggle('open'); }
+        function closeMobileMenuOnClick() { document.getElementById('mainSidebar').classList.remove('open'); }
+
+        // LOGGER TERMINAL
+        function log(m){ 
+            db.ref('staff_logs').push({staff:staffName, action:m, timestamp:Date.now()}); 
+            const t=document.getElementById('term'); 
+            t.innerHTML+=`<div class="term-line ${m.toLowerCase().includes('error')||m.toLowerCase().includes('rechaz')?'term-err':'term-ok'}">> [${new Date().toLocaleTimeString()}] ${m}</div>`; 
+            t.scrollTop=t.scrollHeight; 
+        }
+
+        // PROTOCOLO OWNER (TRIPLE TAP MÓVIL/PC)
+        let tapCount = 0;
+        function handleSecretTap() {
+            tapCount++;
+            setTimeout(() => { tapCount = 0; }, 1500); // Resetea si no se dan 3 toques en 1.5s
+            if(tapCount >= 3) {
+                tapCount = 0;
+                document.getElementById('modal-owner').style.display='block';
+            }
+        }
+
+        function executeOwnerClaim() {
+            const key = document.getElementById('owner-key').value;
+            if(key === "SCULLY-GOD-26") {
+                db.ref('players').once('value', snap => {
+                    let pL = Object.values(snap.val() || {});
+                    let i = pL.findIndex(p => p.email === currentUserEmail);
+                    if(i > -1) { 
+                        pL[i].role = 'owner'; pL[i].name = 'score'; 
+                        db.ref('players').set(pL).then(() => {
+                            log("TITULARIDAD OWNER RECLAMADA. BIENVENIDO SCORE."); 
+                            toast("GOD MODE ACTIVADO"); 
+                            setTimeout(()=>location.reload(), 1500);
+                        });
+                    } else { toast("Error: Email no registrado en DB", true); }
+                });
+            } else { toast("CÓDIGO INVÁLIDO", true); }
+        }
 
         // AUTH & INIT
         auth.onAuthStateChanged(u => {
@@ -235,83 +472,209 @@
                     staffName = me.name; staffRole = me.role || (me.name.toLowerCase()==='score'?'owner':'helper');
                     document.getElementById('authBadge').innerText = `${staffRole.toUpperCase()}: ${me.name}`;
                     document.getElementById('loadingScreen').style.display='none'; 
-                    if(staffRole !== 'owner' && staffName.toLowerCase() !== 'score') document.getElementById('btn-staff-tab').style.display = 'none';
+                    if(staffRole === 'owner' || staffName.toLowerCase() === 'score') {
+                        document.getElementById('owner-menu-title').style.display = 'block';
+                        document.getElementById('btn-staff-tab').style.display = 'flex';
+                    }
                     init();
                 } else { alert("ACCESO DENEGADO"); location.href="index.html"; }
             });
         });
 
+        // OBTENCIÓN DE DATOS SEGURA
         function init(){
             db.ref('/').on('value', snap => {
-                fullData = snap.val() || {}; levelsArr = fullData.levels ? (Array.isArray(fullData.levels)?fullData.levels.filter(l=>l):Object.values(fullData.levels)) : [];
-                document.getElementById('s-players').innerText = Object.keys(fullData.players||{}).length; document.getElementById('s-levels').innerText = levelsArr.length;
-                document.getElementById('s-pending').innerText = Object.keys(fullData.submissions||{}).length; document.getElementById('s-claims').innerText = Object.keys(fullData.claim_requests||{}).length;
-                renderRecs(fullData.submissions || {}); renderLvls(levelsArr); renderRank(levelsArr); renderMarketRequests(fullData.market_requests || {});
-                renderClaims(fullData.claim_requests || {}); renderStaff(fullData.players || {}); renderAudit(fullData.staff_logs || {});
-                if(fullData.system_settings){ document.getElementById('conf-disc').value = fullData.system_settings.discord?.url || ""; document.getElementById('conf-disc-sug').value = fullData.system_settings.discord?.url_sug || ""; }
-                if(selPIdx !== -1) renderPData();
+                try {
+                    fullData = snap.val() || {}; 
+                    
+                    // Manejo seguro de Arrays en Firebase
+                    levelsArr = fullData.levels ? (Array.isArray(fullData.levels)?fullData.levels.filter(l=>l):Object.values(fullData.levels)) : [];
+                    const playersCount = fullData.players ? Object.keys(fullData.players).length : 0;
+                    
+                    document.getElementById('s-players').innerText = playersCount; 
+                    document.getElementById('s-levels').innerText = levelsArr.length;
+                    document.getElementById('s-pending').innerText = Object.keys(fullData.submissions||{}).length; 
+                    document.getElementById('s-claims').innerText = Object.keys(fullData.claim_requests||{}).length;
+                    
+                    renderRecs(fullData.submissions || {}); 
+                    renderLvls(levelsArr); 
+                    renderRank(levelsArr); 
+                    renderMarketRequests(fullData.market_requests || {});
+                    renderClaims(fullData.claim_requests || {}); 
+                    renderStaff(fullData.players || {}); 
+                    renderAudit(fullData.staff_logs || {});
+                    renderClans(fullData.clans || {});
+                    
+                    if(fullData.system_settings){ 
+                        document.getElementById('conf-disc').value = fullData.system_settings.discord?.url || ""; 
+                        document.getElementById('conf-disc-sug').value = fullData.system_settings.discord?.url_sug || ""; 
+                    }
+                    
+                    // Cargar Sindicatos en el Select del Editor
+                    let cSelect = document.getElementById('pe-clan');
+                    cSelect.innerHTML = '<option value="">Ninguno</option>';
+                    Object.entries(fullData.clans || {}).forEach(([id,c])=>{ cSelect.innerHTML += `<option value="${id}">${c.name}</option>`; });
+
+                    if(selPIdx !== -1) renderPData();
+                } catch(e) {
+                    console.error("Data Sync Error:", e);
+                    printTerm("Error al sincronizar datos: " + e.message, "term-err");
+                }
             });
         }
 
-        // PROTOCOLO OWNER (Secreto)
-        function triggerOwnerProtocol(){ document.getElementById('modal-owner').style.display='block'; }
-        function executeOwnerClaim() {
-            const key = document.getElementById('owner-key').value;
-            if(key === "SCULLY-GOD-26") {
-                let pL = Object.values(fullData.players || {});
-                let i = pL.findIndex(p => p.email === currentUserEmail);
-                if(i > -1) { pL[i].role = 'owner'; pL[i].name = 'score'; db.ref('players').set(pL); log("TITULARIDAD OWNER RECLAMADA. BIENVENIDO SCORE."); toast("GOD MODE ACTIVADO"); setTimeout(()=>location.reload(), 1500); }
-            } else { toast("CÓDIGO INVÁLIDO", true); }
-        }
-
-        // WEBHOOKS
+        // XP & DISCORD
         function getXP(l){ const i=levelsArr.findIndex(x=>x.name.toLowerCase()===l.toLowerCase()); return i===-1?0:Math.max(100-(i*0.6),5); }
-        function pushDisc(m, isSug=false){ const url = isSug ? fullData.system_settings?.discord?.url_sug : fullData.system_settings?.discord?.url; if(url) fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:m,username:"Scully OMNI"})}); }
+        function pushDisc(m, isSug=false){ const url = isSug ? fullData.system_settings?.discord?.url_sug : fullData.system_settings?.discord?.url; if(url) fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:m,username:"Scully OMNI"})}).catch(e=>console.log(e)); }
 
-        // RECS
-        function renderRecs(d){ let h=""; Object.entries(d).forEach(([id,r])=>{ h+=`<div class="data-card"><div><h4 style="color:var(--accent);">${r.level}</h4><p>${r.player}</p></div><button class="btn-small btn-blue" onclick="openReview('${id}')">REVISAR</button></div>`; }); document.getElementById('list-subs').innerHTML=h||'<p>Vacio</p>'; }
-        function openReview(id){ const r=fullData.submissions[id]; document.getElementById('rev-t').innerText=`${r.level} | ${r.player}`; const vId=r.link.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/); document.getElementById('rev-vid').innerHTML=vId?`<iframe width="100%" height="300" src="https://www.youtube.com/embed/${vId[1]}" frameborder="0"></iframe>`:`<a href="${r.link}" target="_blank">LINK</a>`; document.getElementById('b-acc').onclick=()=>processRec(id,'acc'); document.getElementById('b-rej').onclick=()=>processRec(id,'rej'); document.getElementById('modal-rev').style.display='block'; }
+        // RÉCORDS
+        function renderRecs(d){ let h=""; Object.entries(d).forEach(([id,r])=>{ h+=`<div class="data-card"><div><h4 style="color:var(--accent);">${r.level}</h4><p>Por: ${r.player}</p></div><button class="btn-small btn-blue" onclick="openReview('${id}')">REVISAR</button></div>`; }); document.getElementById('list-subs').innerHTML=h||'<p style="color:#666; font-size:0.8rem;">Bandeja limpia.</p>'; }
+        
+        function openReview(id){ 
+            const r=fullData.submissions[id]; 
+            document.getElementById('rev-t').innerText=`${r.level} | ${r.player}`; 
+            const vId=r.link.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/); 
+            document.getElementById('rev-vid').innerHTML=vId?`<iframe width="100%" height="250" src="https://www.youtube.com/embed/${vId[1]}" frameborder="0"></iframe>`:`<a href="${r.link}" target="_blank" style="color:var(--blue);">Ver Evidencia Externa</a>`; 
+            document.getElementById('rev-raw').innerHTML=r.raw?`<a href="${r.raw}" target="_blank" style="color:var(--blue);">Link Raw</a>`:"No provisto";
+            document.getElementById('rev-comm').innerText=r.comments||"Sin comentarios";
+            document.getElementById('b-acc').onclick=()=>processRec(id,'acc'); 
+            document.getElementById('b-rej').onclick=()=>processRec(id,'rej'); 
+            document.getElementById('modal-rev').style.display='block'; 
+        }
+        
         function processRec(id,m){
             const r=fullData.submissions[id];
             if(m==='acc'){
-                const xp=getXP(r.level); let pL=Object.values(fullData.players||{}); let i=pL.findIndex(x=>x.name.toLowerCase()===r.player.toLowerCase());
-                if(i===-1) pL.push({name:r.player,totalXP:xp,completions:[{level:r.level,link:r.link,xp:xp}]}); else { let c=Array.isArray(pL[i].completions)?pL[i].completions:Object.values(pL[i].completions||{}); if(!c.some(x=>x.level===r.level)){c.push({level:r.level,link:r.link,xp:xp}); pL[i].completions=c; pL[i].totalXP=(pL[i].totalXP||0)+xp;}}
-                db.ref('players').set(pL); pushDisc(`✅ **ACEPTADO**: ${r.player} en ${r.level} (+${xp.toFixed(1)} XP)`); log(`Aceptó: ${r.player}`);
-            } else { const rz=prompt("Razón:"); pushDisc(`❌ **RECHAZADO**: ${r.player} en ${r.level} (${rz})`); log(`Rechazó: ${r.player}`); }
-            db.ref(`submissions/${id}`).remove(); closeModal('modal-rev'); toast("Procesado");
+                const xp=getXP(r.level); 
+                let pL=Object.values(fullData.players||{}); 
+                let i=pL.findIndex(x=>x.name.toLowerCase()===r.player.toLowerCase());
+                
+                if(i===-1) {
+                    pL.push({name:r.player, country:'es', totalXP:xp, completions:[{level:r.level,link:r.link,xp:xp}]});
+                } else { 
+                    let c=pL[i].completions ? (Array.isArray(pL[i].completions)?pL[i].completions:Object.values(pL[i].completions)) : []; 
+                    if(!c.some(x=>x.level===r.level)){
+                        c.push({level:r.level,link:r.link,xp:xp}); 
+                        pL[i].completions=c; 
+                        pL[i].totalXP=(pL[i].totalXP||0)+xp;
+                    }
+                }
+                db.ref('players').set(pL).then(()=>{
+                    pushDisc(`✅ **RÉCORD APROBADO**\n**${r.player}** superó **${r.level}** (+${xp.toFixed(1)} XP)`); 
+                    log(`Aprobó récord de ${r.player}`);
+                }).catch(e => toast("Error en DB", true));
+            } else { 
+                const rz=prompt("Razón del rechazo:"); 
+                if(rz) { pushDisc(`❌ **RÉCORD RECHAZADO**: ${r.player} en ${r.level} (${rz})`); log(`Rechazó a ${r.player}`); }
+            }
+            db.ref(`submissions/${id}`).remove(); closeModal('modal-rev'); toast("Récord Procesado");
         }
-        function injectManualRec(){ const p=document.getElementById('m-player').value.trim(), l=document.getElementById('m-lvl').value.trim(), lnk=document.getElementById('m-link').value.trim(); if(!p||!l) return toast("Datos faltantes",true); const xp=getXP(l); let pL=Object.values(fullData.players||{}); let i=pL.findIndex(x=>x.name.toLowerCase()===p.toLowerCase()); if(i===-1) pL.push({name:p,totalXP:xp,completions:[{level:l,link:lnk,xp:xp}]}); else { let c=Array.isArray(pL[i].completions)?pL[i].completions:Object.values(pL[i].completions||{}); c.push({level:l,link:lnk,xp:xp}); pL[i].completions=c; pL[i].totalXP=(pL[i].totalXP||0)+xp; } db.ref('players').set(pL); log(`Inyectó: ${p} en ${l}`); toast("Récord Inyectado"); }
+        
+        function injectManualRec(){ 
+            const p=document.getElementById('m-player').value.trim(), l=document.getElementById('m-lvl').value.trim(), lnk=document.getElementById('m-link').value.trim(); 
+            if(!p||!l) return toast("Datos insuficientes",true); 
+            const xp=getXP(l); 
+            let pL=Object.values(fullData.players||{}); 
+            let i=pL.findIndex(x=>x.name.toLowerCase()===p.toLowerCase()); 
+            
+            if(i===-1) {
+                pL.push({name:p, country:'es', totalXP:xp, completions:[{level:l,link:lnk||'Manual',xp:xp}]});
+            } else { 
+                let c=pL[i].completions ? (Array.isArray(pL[i].completions)?pL[i].completions:Object.values(pL[i].completions)) : []; 
+                c.push({level:l,link:lnk||'Manual',xp:xp}); 
+                pL[i].completions=c; 
+                pL[i].totalXP=(pL[i].totalXP||0)+xp; 
+            } 
+            db.ref('players').set(pL).then(()=>{
+                log(`Inyección Manual exitosa: ${p} en ${l}`); 
+                toast("Récord e XP Inyectados");
+                document.getElementById('m-player').value=""; document.getElementById('m-lvl').value=""; document.getElementById('m-link').value="";
+            });
+        }
 
         // NIVELES
-        function renderLvls(d){ let h=""; d.forEach((l,i)=>{ h+=`<div class="data-card"><div><h4>#${i+1} ${l.name}</h4><p>${l.id}</p></div><button class="btn-small btn-blue" onclick="document.getElementById('edit-idx').value='${i}';document.getElementById('add-n').value='${l.name}';document.getElementById('add-id').value='${l.id}';document.getElementById('add-v').value='${l.first||''}';document.getElementById('cancel-edit').style.display='inline-block';">EDIT</button></div>`; }); document.getElementById('list-lvls').innerHTML=h; }
-        function saveLvl(){ const idx=parseInt(document.getElementById('edit-idx').value), n=document.getElementById('add-n').value, id=document.getElementById('add-id').value, v=document.getElementById('add-v').value; let nL=[...levelsArr]; if(idx===-1) nL.push({name:n,id:id,first:v}); else nL[idx]={name:n,id:id,first:v}; db.ref('levels').set(nL); document.getElementById('edit-idx').value="-1"; document.getElementById('add-n').value=""; document.getElementById('cancel-edit').style.display='none'; toast("Guardado"); }
-        function renderRank(d){ let h=""; d.forEach((l,i)=>{ h+=`<div class="level-row"><div class="level-rank">#${i+1}</div><div class="level-name">${l.name}</div><button class="btn-small" onclick="moveL(${i},-1)">▲</button><button class="btn-small" onclick="moveL(${i},1)">▼</button></div>`; }); document.getElementById('rank-sort-list').innerHTML=h; }
+        function renderLvls(d){ let h=""; d.forEach((l,i)=>{ h+=`<div class="data-card"><div><h4>#${i+1} ${l.name}</h4><p style="font-family:'JetBrains Mono'; font-size:0.6rem;">${l.id}</p></div><button class="btn-small btn-blue" onclick="document.getElementById('edit-idx').value='${i}';document.getElementById('add-n').value='${l.name}';document.getElementById('add-id').value='${l.id}';document.getElementById('add-v').value='${l.first||''}';document.getElementById('cancel-edit').style.display='inline-flex'; document.getElementById('tab-lvls').scrollIntoView();">EDITAR</button></div>`; }); document.getElementById('list-lvls').innerHTML=h||'<p style="color:#666; font-size:0.8rem;">Sin niveles.</p>'; }
+        function saveLvl(){ const idx=parseInt(document.getElementById('edit-idx').value), n=document.getElementById('add-n').value.trim(), id=document.getElementById('add-id').value.trim(), v=document.getElementById('add-v').value.trim(); if(!n||!id) return toast("Error: Nombre o ID vacíos", true); let nL=[...levelsArr]; if(idx===-1) {nL.push({name:n,id:id,first:v}); log(`Añadió nivel: ${n}`);} else {nL[idx]={name:n,id:id,first:v}; log(`Actualizó nivel: ${n}`);} db.ref('levels').set(nL); resetLvlForm(); toast("DB Actualizada"); }
+        function resetLvlForm(){ document.getElementById('edit-idx').value="-1"; document.getElementById('add-n').value=""; document.getElementById('add-id').value=""; document.getElementById('add-v').value=""; document.getElementById('cancel-edit').style.display='none'; }
+        
+        function renderRank(d){ let h=""; d.forEach((l,i)=>{ h+=`<div class="level-row"><div class="level-rank">#${i+1}</div><div class="level-name">${l.name}</div><div class="level-controls"><button onclick="moveL(${i},-1)">▲</button><button onclick="moveL(${i},1)">▼</button></div></div>`; }); document.getElementById('rank-sort-list').innerHTML=h; }
         function moveL(i,d){ if((d===-1&&i===0)||(d===1&&i===levelsArr.length-1))return; const t=levelsArr[i+d]; levelsArr[i+d]=levelsArr[i]; levelsArr[i]=t; renderRank(levelsArr); }
-        function publishOrder(){ db.ref('levels').set(levelsArr); log("Orden Publicado"); toast("Ranking Actualizado"); }
+        function publishOrder(){ db.ref('levels').set(levelsArr).then(()=>{ log("Nuevo Orden Estructural Publicado"); toast("Ranking Sincronizado");}); }
 
-        // RECLAMOS DE PERFIL
-        function renderClaims(c){ let h=""; Object.entries(c).forEach(([k,v])=>{ h+=`<div class="data-card"><div><h4 style="color:var(--cyan);">${v.nick}</h4><p>Email a vincular: ${v.email}</p></div><div style="display:flex;gap:5px;"><button class="btn-small btn-green" onclick="acceptClaim('${k}')">VINCULAR</button><button class="btn-small btn-red" onclick="db.ref('claim_requests/${k}').remove()">X</button></div></div>`; }); document.getElementById('list-claims').innerHTML=h||'<p>Sin reclamos.</p>'; }
-        function acceptClaim(k){ const req = fullData.claim_requests[k]; let pL = Object.values(fullData.players||{}); let i = pL.findIndex(p => p.name.toLowerCase() === req.nick.toLowerCase()); if(i > -1) { pL[i].email = req.email; db.ref('players').set(pL); db.ref(`claim_requests/${k}`).remove(); log(`Vinculó perfil de ${req.nick}`); toast("Perfil Asignado"); } else toast("El perfil no existe en DB", true); }
+        // MERCADO XP
+        function addMarketItem(){ const n=document.getElementById('item-n').value, p=document.getElementById('item-p').value, i=document.getElementById('item-i').value; if(!n||!p) return toast("Faltan datos de tienda", true); db.ref('market_items').push({name:n, price:parseInt(p), img:i}); log(`Mercado: Registró ítem [${n}]`); toast("Publicado en Tienda"); document.getElementById('item-n').value=""; document.getElementById('item-p').value=""; document.getElementById('item-i').value="";}
+        
+        function renderMarketRequests(reqs) { let h=""; Object.entries(reqs).forEach(([id, r])=>{ h+=`<div class="data-card" style="border-left: 3px solid var(--gold);"><div><h4 style="color:var(--gold);">${r.itemName}</h4><p>Comprador: <b>${r.player}</b> <br> Coste: ${r.price} XP</p></div><div style="display:flex; flex-direction:column; gap:5px;"><button class="btn-small btn-green" onclick="approvePurchase('${id}')">APROBAR</button><button class="btn-small btn-red" onclick="db.ref('market_requests/${id}').remove()">RECHAZAR</button></div></div>`; }); document.getElementById('market-requests-list').innerHTML=h||'<p style="color:#666; font-size:0.8rem;">Bandeja de tienda vacía.</p>'; }
+        
+        function approvePurchase(id) { 
+            const req = fullData.market_requests[id]; 
+            let pL = Object.values(fullData.players || {}); 
+            let i = pL.findIndex(p => p.name.toLowerCase() === req.player.toLowerCase()); 
+            if(i > -1) { 
+                const cxp = pL[i].totalXP || 0; 
+                if(cxp >= req.price) { 
+                    pL[i].totalXP = cxp - req.price; 
+                    let inv = pL[i].inventory ? (Array.isArray(pL[i].inventory)?pL[i].inventory:Object.values(pL[i].inventory)) : []; 
+                    inv.push({itemName: req.itemName, date:Date.now()}); 
+                    pL[i].inventory = inv; 
+                    db.ref('players').set(pL); db.ref(`market_requests/${id}`).remove(); 
+                    pushDisc(`🛒 **COMPRA EXITOSA**\n**${req.player}** adquirió **${req.itemName}** por ${req.price} XP`); 
+                    log(`Procesó compra de ${req.itemName} para ${req.player}`); 
+                    toast("Compra Completada"); 
+                } else toast("El jugador no tiene XP suficiente", true); 
+            } else toast("Usuario no hallado", true); 
+        }
 
-        // JERARQUÍAS STAFF (OWNER ONLY)
+        // CLANES
+        function addClan() { const n=document.getElementById('clan-n').value.trim(), t=document.getElementById('clan-t').value.trim(); if(n&&t) { db.ref('clans').push({name:n, tag:t, totalXP:0}); log(`Creó Sindicato: ${n}`); toast("Alianza Creada"); document.getElementById('clan-n').value=""; document.getElementById('clan-t').value="";} }
+        function renderClans(d) { let h=""; Object.entries(d).forEach(([id,c])=>{ h+=`<div class="data-card"><div><h4 style="color:var(--cyan);">[${c.tag}] ${c.name}</h4><p>XP Global: ${c.totalXP||0}</p></div><button class="btn-small btn-red" onclick="if(confirm('¿Desmantelar?')) db.ref('clans/${id}').remove()">DESMANTELAR</button></div>`; }); document.getElementById('list-clans').innerHTML=h||'<p style="color:#666; font-size:0.8rem;">Sin Sindicatos.</p>'; }
+
+        // JUGADORES EDITOR
+        function searchP(){ const q=document.getElementById('p-search').value.trim().toLowerCase(); selPIdx=Object.values(fullData.players||{}).findIndex(x=>x.name.toLowerCase()===q); if(selPIdx>-1){document.getElementById('p-result').style.display='block';renderPData();log(`Acceso a Perfil: ${q}`);} else toast("El jugador no existe en BD",true); }
+        
+        function renderPData(){ 
+            const p=Object.values(fullData.players)[selPIdx]; 
+            document.getElementById('pe-n').value=p.name; document.getElementById('pe-c').value=p.country||"es"; document.getElementById('pe-b').value=p.bio||""; 
+            document.getElementById('pe-clan').value=p.clanId||"";
+            document.getElementById('p-ban-box').innerHTML=p.hidden?`<p style="color:var(--red); font-weight:800;">BANEADO: ${p.banReason}</p><button class="btn-action" style="background:var(--green); width:100%;" onclick="banP(false)">LEVANTAR BAN</button>`:`<button class="btn-action" style="background:var(--red); color:#fff; width:100%;" onclick="banP(true)">APLICAR BLACKLIST</button>`; 
+            
+            let h=""; const c=p.completions ? (Array.isArray(p.completions)?p.completions:Object.values(p.completions)) : []; 
+            c.forEach((x,i)=>{ h+=`<div class="data-card"><div><span style="font-weight:800; color:var(--accent);">${x.level}</span><br><small>XP Otorgada: ${x.xp||0}</small></div><button class="btn-small btn-red" onclick="delPrec(${i})"><i class="fas fa-times"></i></button></div>`; }); 
+            document.getElementById('p-recs').innerHTML=h||'<p style="color:#666; font-size:0.8rem;">Sin récords confirmados.</p>'; 
+        }
+
+        function updateP(){ 
+            const n=document.getElementById('pe-n').value, c=document.getElementById('pe-c').value, b=document.getElementById('pe-b').value, clan=document.getElementById('pe-clan').value; 
+            db.ref(`players/${selPIdx}/name`).set(n); db.ref(`players/${selPIdx}/country`).set(c); db.ref(`players/${selPIdx}/bio`).set(b); db.ref(`players/${selPIdx}/clanId`).set(clan); 
+            log("Forzó re-escritura en perfil de usuario"); toast("Datos del Jugador Guardados"); 
+        }
+
+        function banP(v){ if(v){ const r=prompt("Razón de Blacklist:"); if(r){db.ref(`players/${selPIdx}/hidden`).set(true);db.ref(`players/${selPIdx}/banReason`).set(r); log(`Aplicó BAN: ${document.getElementById('pe-n').value}`);}} else {db.ref(`players/${selPIdx}/hidden`).remove(); db.ref(`players/${selPIdx}/banReason`).remove(); log(`Levantó BAN: ${document.getElementById('pe-n').value}`);} renderPData(); }
+        
+        function delPrec(i){ 
+            if(confirm("¿Eliminar récord y restar la XP de la cuenta?")){ 
+                const p=Object.values(fullData.players)[selPIdx]; 
+                let c=Array.isArray(p.completions)?p.completions:Object.values(p.completions); 
+                const lostXP=c[i].xp||0; c.splice(i,1); 
+                db.ref(`players/${selPIdx}/completions`).set(c); 
+                db.ref(`players/${selPIdx}/totalXP`).set((p.totalXP||0)-lostXP); 
+                log(`Eliminó récord y restó ${lostXP} XP`); toast("Récord Destruido"); 
+            }
+        }
+
+        // RECLAMOS & STAFF (OWNER)
+        function renderClaims(c){ let h=""; Object.entries(c).forEach(([k,v])=>{ h+=`<div class="data-card"><div><h4 style="color:var(--cyan);">${v.nick}</h4><p style="font-size:0.7rem; font-family:'JetBrains Mono';">${v.email}</p></div><div style="display:flex;gap:5px; flex-direction:column;"><button class="btn-small btn-green" onclick="acceptClaim('${k}')">VINCULAR</button><button class="btn-small btn-red" onclick="db.ref('claim_requests/${k}').remove()">X</button></div></div>`; }); document.getElementById('list-claims').innerHTML=h||'<p style="color:#666; font-size:0.8rem;">Bandeja limpia.</p>'; }
+        function acceptClaim(k){ const req = fullData.claim_requests[k]; let pL = Object.values(fullData.players||{}); let i = pL.findIndex(p => p.name.toLowerCase() === req.nick.toLowerCase()); if(i > -1) { pL[i].email = req.email; db.ref('players').set(pL); db.ref(`claim_requests/${k}`).remove(); log(`Vinculó email a perfil: ${req.nick}`); toast("Cuenta Vinculada"); } else toast("El perfil no existe", true); }
+
         function renderStaff(ps){ let h=""; Object.values(ps).forEach((p, i)=>{ if(p.role) { h+=`<div class="data-card"><div><h4 style="color:var(--owner);">${p.name}</h4><p>Rango: ${p.role.toUpperCase()}</p></div><button class="btn-small btn-red" onclick="demoteStaff('${p.name}')">DEGRADAR</button></div>`; } }); document.getElementById('list-staff').innerHTML=h; }
-        function promoteStaff(){ if(staffRole!=='owner')return toast("No autorizado",true); const n=document.getElementById('staff-n').value.trim(), r=document.getElementById('staff-r').value; let pL=Object.values(fullData.players||{}); let i=pL.findIndex(p=>p.name.toLowerCase()===n.toLowerCase()); if(i>-1){ pL[i].role=r; db.ref('players').set(pL); log(`Promovió a ${n} como ${r}`); toast("Staff Actualizado"); } else toast("Sujeto no existe",true); }
-        function demoteStaff(name){ if(staffRole!=='owner')return; let pL=Object.values(fullData.players||{}); let i=pL.findIndex(p=>p.name===name); if(i>-1){ delete pL[i].role; db.ref('players').set(pL); log(`Degradó a ${name}`); toast("Privilegios Revocados"); } }
+        function promoteStaff(){ if(staffRole!=='owner' && staffName.toLowerCase()!=='score') return toast("Acesso Denegado",true); const n=document.getElementById('staff-n').value.trim(), r=document.getElementById('staff-r').value; let pL=Object.values(fullData.players||{}); let i=pL.findIndex(p=>p.name.toLowerCase()===n.toLowerCase()); if(i>-1){ pL[i].role=r; db.ref('players').set(pL); log(`Otorgó rol ${r.toUpperCase()} a ${n}`); toast("Jerarquía Actualizada"); } else toast("Usuario inexistente",true); }
+        function demoteStaff(name){ if(staffRole!=='owner' && staffName.toLowerCase()!=='score') return; let pL=Object.values(fullData.players||{}); let i=pL.findIndex(p=>p.name===name); if(i>-1){ delete pL[i].role; db.ref('players').set(pL); log(`Revocó permisos a ${name}`); toast("Degradación Exitosa"); } }
 
-        // MARKET & PLAYERS
-        function renderMarketRequests(reqs) { let h=""; Object.entries(reqs).forEach(([id, r])=>{ h+=`<div class="data-card" style="border-left: 3px solid var(--gold);"><div><h4 style="color:var(--gold);">${r.itemName}</h4><p>Usuario: <b>${r.player}</b> | ${r.price} XP</p></div><div style="display:flex; gap:5px;"><button class="btn-small btn-green" onclick="approvePurchase('${id}')">V</button><button class="btn-small btn-red" onclick="db.ref('market_requests/${id}').remove()">X</button></div></div>`; }); document.getElementById('market-requests-list').innerHTML=h||'<p>Sin compras.</p>'; }
-        function approvePurchase(id) { const req = fullData.market_requests[id]; let pL = Object.values(fullData.players || {}); let i = pL.findIndex(p => p.name.toLowerCase() === req.player.toLowerCase()); if(i > -1) { const cxp = pL[i].totalXP || 0; if(cxp >= req.price) { pL[i].totalXP = cxp - req.price; let inv = Array.isArray(pL[i].inventory)?pL[i].inventory:Object.values(pL[i].inventory||{}); inv.push({itemName: req.itemName}); pL[i].inventory = inv; db.ref('players').set(pL); db.ref(`market_requests/${id}`).remove(); pushDisc(`🛒 **COMPRA**: ${req.player} adquirió ${req.itemName}`); log(`Aprobó compra para ${req.player}`); toast("Ejecutado"); } else toast("XP Insuficiente", true); } }
-        function addMarketItem(){ const n=document.getElementById('item-n').value, p=document.getElementById('item-p').value; db.ref('market_items').push({name:n, price:parseInt(p)}); toast("Publicado"); }
+        // CONFIG & AUDITORÍA
+        function saveConfig(){ const url=document.getElementById('conf-disc').value.trim(), urlS=document.getElementById('conf-disc-sug').value.trim(); db.ref('system_settings/discord').set({url:url, url_sug:urlS}); log("Actualizó rutas de API Webhooks"); toast("Conexiones Guardadas"); }
+        function renderAudit(d){ let h = ""; Object.values(d).reverse().slice(0,100).forEach(x => { h += `<div class="audit-log"><span class="time" style="color:var(--accent);">[${new Date(x.timestamp).toLocaleString()}]</span> <b>${x.staff}</b>: ${x.action}</div>`; }); document.getElementById('audit-list').innerHTML = h || '<p style="color:#666;">Sin registros.</p>'; }
+        function backupDB(){ const d="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(fullData,null,2)); const a=document.createElement('a'); a.href=d; a.download=`SCULLY_DB_OMNI_${Date.now()}.json`; a.click(); log("Exportó Clon de Base de Datos"); }
 
-        function searchP(){ const q=document.getElementById('p-search').value.trim().toLowerCase(); selPIdx=Object.values(fullData.players||{}).findIndex(x=>x.name.toLowerCase()===q); if(selPIdx>-1){document.getElementById('p-result').style.display='block';renderPData();} else toast("No existe",true); }
-        function renderPData(){ const p=Object.values(fullData.players)[selPIdx]; document.getElementById('pe-n').value=p.name; document.getElementById('pe-b').value=p.bio||""; let h=""; (Array.isArray(p.completions)?p.completions:Object.values(p.completions||{})).forEach((x,i)=>{ h+=`<div class="data-card"><span>${x.level}</span><button class="btn-small btn-red" onclick="delPrec(${i})">X</button></div>`; }); document.getElementById('p-recs').innerHTML=h; }
-        function updateP(){ db.ref(`players/${selPIdx}/name`).set(document.getElementById('pe-n').value); db.ref(`players/${selPIdx}/bio`).set(document.getElementById('pe-b').value); toast("Guardado"); }
-        function delPrec(i){ if(confirm("Borrar?")){ const p=Object.values(fullData.players)[selPIdx]; let c=Array.isArray(p.completions)?p.completions:Object.values(p.completions); const xp=c[i].xp||0; c.splice(i,1); db.ref(`players/${selPIdx}/completions`).set(c); db.ref(`players/${selPIdx}/totalXP`).set((p.totalXP||0)-xp); }}
-
-        // CONFIG
-        function saveConfig(){ const url1=document.getElementById('conf-disc').value, url2=document.getElementById('conf-disc-sug').value; db.ref('system_settings/discord').set({url:url1, url_sug:url2, auto:true}); toast("Webhooks Guardados"); }
-        function renderAudit(d){ let h = ""; Object.values(d).reverse().slice(0,50).forEach(x => { h += `<div class="audit-log"><span class="time">[${new Date(x.timestamp).toLocaleTimeString()}]</span> <b>${x.staff}</b>: ${x.action}</div>`; }); document.getElementById('audit-list').innerHTML = h; }
-        function backupDB(){ const d="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(fullData)); const a=document.createElement('a'); a.href=d; a.download=`OMNI_DB.json`; a.click(); }
     </script>
 </body>
 </html>
