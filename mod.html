@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Variables Globales - Panel Mod usa MORADO como color principal */
+        /* Variables Globales - Panel Mod usa MORADO como principal */
         :root { 
             --ac: #cc00ff; 
             --bg: #030303; 
@@ -26,6 +26,7 @@
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
         body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
         ::-webkit-scrollbar { width: 8px; } 
         ::-webkit-scrollbar-track { background: var(--bg); } 
         ::-webkit-scrollbar-thumb { background: var(--ac); border-radius: 10px; }
@@ -39,7 +40,7 @@
 
         /* Barra Lateral */
         .sidebar { width: 280px; min-width: 280px; background: var(--sb); border-right: 1px solid var(--bd); display: flex; flex-direction: column; z-index: 3500; transition: transform 0.3s ease; } 
-        .brand { text-align: center; padding: 25px 10px; border-bottom: 1px solid var(--bd); background: #000; } 
+        .brand { text-align: center; padding: 25px 10px; border-bottom: 1px solid var(--bd); background: #000; cursor: pointer; user-select: none; } 
         .brand h1 { font-family: 'JetBrains Mono'; font-size: 1.8rem; margin: 0; text-transform: uppercase; letter-spacing: -1px; } 
         .brand span { color: var(--ac); }
         .nav-sc { flex: 1; overflow-y: auto; padding: 10px 0; } 
@@ -53,14 +54,14 @@
         .s-bar i { color: var(--ac); margin-right: 4px; } 
         .s-bar b { color: #fff; }
         .m-cont { flex: 1; padding: 30px 40px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, rgba(204, 0, 255, 0.02) 0%, transparent 50%); } 
+        
         .tab { display: none; } 
         .tab.active { display: block; animation: fade 0.3s ease; } 
-
         @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         h2.title { font-size: 1.4rem; margin-bottom: 25px; display: flex; align-items: center; gap: 15px; text-transform: uppercase; font-weight: 800; border-bottom: 1px solid var(--bd); padding-bottom: 10px; }
 
-        /* Componentes */
+        /* Componentes: Grids, Cards y Paneles */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px; } 
         .card { background: var(--cd); border: 1px solid var(--bd); padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); } 
         .card h3 { font-size: 1.8rem; margin: 5px 0; font-family: 'JetBrains Mono'; color: var(--ac); } 
@@ -76,7 +77,7 @@
         .btn { background: var(--ac); color: #000; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 800; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; } 
         .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(204, 0, 255, 0.3); }
 
-        .dl { display: flex; flex-direction: column; gap: 10px; max-height: 450px; overflow-y: auto; padding-right: 5px; } 
+        .dl { display: flex; flex-direction: column; gap: 10px; max-height: 500px; overflow-y: auto; padding-right: 5px; } 
         .dc { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--bd); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; transition: 0.2s; } 
         .dc:hover { border-color: var(--ac); background: rgba(255, 255, 255, 0.04); } 
         .dc h4 { margin: 0 0 5px; font-size: 0.9rem; text-transform: uppercase; color: #fff; } 
@@ -86,8 +87,9 @@
         .bg { background: rgba(0, 255, 102, 0.1); color: var(--gr); border: 1px solid var(--gr); } .bg:hover { background: var(--gr); color: #000; } 
         .br { background: rgba(255, 51, 51, 0.1); color: var(--rd); border: 1px solid var(--rd); } .br:hover { background: var(--rd); color: #fff; } 
         .bb { background: rgba(0, 204, 255, 0.1); color: var(--bl); border: 1px solid var(--bl); } .bb:hover { background: var(--bl); color: #000; } 
+        .by { background: rgba(255, 215, 0, 0.1); color: var(--gd); border: 1px solid var(--gd); } .by:hover { background: var(--gd); color: #000; }
 
-        .cbx { background: #000; border: 1px solid #222; border-radius: 10px; height: 250px; overflow-y: auto; padding: 15px; margin-bottom: 15px; font-size: 0.8rem; } 
+        .cbx { background: #000; border: 1px solid #222; border-radius: 10px; height: 300px; overflow-y: auto; padding: 15px; margin-bottom: 15px; font-size: 0.8rem; } 
         .cm { margin-bottom: 8px; border-bottom: 1px solid #111; padding-bottom: 5px; } 
         .cm b { color: var(--ac); } 
         .cm i { font-size: 0.6rem; color: #555; margin-left: 8px; }
@@ -107,7 +109,6 @@
             .m-wrap { margin-top: 60px; height: calc(100vh - 60px); } 
             .m-cont { padding: 20px; } 
             .grid { grid-template-columns: 1fr 1fr; } 
-            .btn { width: 100%; justify-content: center; } 
             .dc { flex-direction: column; align-items: flex-start; } 
             .dc div:last-child { width: 100%; display: flex; gap: 8px; margin-top: 10px; } 
             .dc button { flex: 1; justify-content: center; } 
@@ -122,6 +123,20 @@
         <style>@keyframes spin {to{transform:rotate(360deg);}}</style>
     </div>
 
+    <div id="recovery-screen" style="display:none;position:fixed;inset:0;background:#000;z-index:80000;flex-direction:column;justify-content:center;align-items:center;padding:20px;text-align:center;">
+        <h2 style="color:var(--rd);font-family:'JetBrains Mono';">ACCESO DENEGADO</h2>
+        <p style="color:#aaa;font-size:0.85rem;max-width:400px;">No cuentas con permisos de Moderador.</p>
+        <div class="brand" onclick="handleSecretTap()" style="margin-top:20px;padding:20px;background:#111;border:1px solid #333;border-radius:15px;width:100%;max-width:300px; cursor:pointer;">
+            <h1 style="font-size:2rem;margin:0;color:#fff;">SYS.<span style="color:var(--ac);">MOD</span></h1>
+            <p style="font-size:0.6rem;color:#666;margin:10px 0 0;">TOCA 5 VECES PARA ACCESO ROOT</p>
+        </div>
+        <div class="ig" id="root-box" style="display:none; margin-top:15px; width:100%; max-width:300px;">
+            <input type="password" id="o-k" placeholder="Código Secreto..." style="text-align:center;">
+            <button class="btn" style="width:100%; background:var(--ac);" onclick="eOwC()">EJECUTAR ROOT</button>
+        </div>
+        <button class="btn" style="margin-top:30px;background:var(--rd);color:#fff;" onclick="location.href='index.html'">VOLVER AL HUB</button>
+    </div>
+
     <div id="toast">Exito</div>
     
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
@@ -131,7 +146,7 @@
     </div>
 
     <div class="sidebar" id="sidebar">
-        <div class="brand">
+        <div class="brand" onclick="handleSecretTap()">
             <h1>SYS.<span>MOD</span></h1>
             <p id="badge" style="font-size:.55rem;color:var(--ac);font-weight:800;margin-top:8px;letter-spacing:1px;">AUTENTICANDO...</p>
         </div>
@@ -139,7 +154,7 @@
             <span class="n-sec">Moderación Diaria</span>
             <button class="n-btn active" onclick="sTab('t-dash')"><i class="fas fa-satellite-dish"></i> Dashboard</button>
             <button class="n-btn" onclick="sTab('t-recs')"><i class="fas fa-inbox"></i> Revisar Récords</button>
-            <button class="n-btn" onclick="sTab('t-sug')"><i class="fas fa-lightbulb"></i> Limpiar Sugerencias</button>
+            <button class="n-btn" onclick="sTab('t-sug')"><i class="fas fa-lightbulb"></i> Sugerencias (Bounty)</button>
             
             <span class="n-sec">Gestión Comunidad</span>
             <button class="n-btn" onclick="sTab('t-play')"><i class="fas fa-users-cog"></i> Moderar Jugadores</button>
@@ -153,7 +168,7 @@
     <div class="m-wrap">
         <div class="s-bar">
             <span>Tributo a 2Parx 🕊️</span> | 
-            <span><i class="fas fa-shield-alt" style="color:var(--ac)"></i> Moderador Activo</span> 
+            <span><i class="fas fa-shield-alt" style="color:var(--ac)"></i> Session Mod: <b id="top-user"></b></span> 
         </div>
 
         <div class="m-cont">
@@ -172,21 +187,19 @@
                     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
                         <input type="text" id="b-msg" placeholder="Escribe el aviso para el index público..." style="flex:1; min-width:250px;">
                     </div>
-                    <div style="display:flex; gap:10px;">
-                        <button class="btn" style="background:var(--bl);color:#000;flex:1;" onclick="sendBroadcast()"><i class="fas fa-paper-plane"></i> ENVIAR AVISO</button>
-                    </div>
+                    <button class="btn" style="background:var(--bl);color:#000;width:100%;" onclick="sendBroadcast()"><i class="fas fa-paper-plane"></i> ENVIAR AVISO A TODOS</button>
                 </div>
             </div>
 
             <div id="t-recs" class="tab">
                 <h2 class="title"><i class="fas fa-inbox" style="color:var(--gr);"></i> Bandeja de Récords</h2>
-                <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">Revisa las pruebas con cuidado. Al aceptar, la XP se suma automáticamente al jugador y se envía notificación a Discord.</p>
+                <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">Revisa las pruebas con cuidado. Al aceptar, los Puntos Titán se suman automáticamente al jugador.</p>
                 <div id="l-sub" class="dl" style="margin-bottom:30px;"></div>
             </div>
 
             <div id="t-sug" class="tab">
-                <h2 class="title"><i class="fas fa-lightbulb" style="color:var(--gd);"></i> Limpieza de Sugerencias</h2>
-                <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">Elimina las sugerencias que sean "trolls", enlaces falsos o spam. Solo los Admins pueden añadir niveles oficiales.</p>
+                <h2 class="title"><i class="fas fa-lightbulb" style="color:var(--gd);"></i> Sugerencias (Bounty System)</h2>
+                <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">Si la sugerencia es buena y útil, presiona "USAR". Esto le otorgará <b>+10 Billetera XP</b> al jugador que la sugirió. Tú NO añadirás el nivel a la lista oficial, solo le darás la recompensa por el aporte.</p>
                 <div id="l-sug" class="dl"></div>
             </div>
 
@@ -249,12 +262,12 @@
             <h2 id="r-t" style="margin-top:0; color:var(--ac);">Rev</h2>
             <div id="r-v" style="margin-bottom:15px;"></div>
             <div style="background:rgba(255,255,255,.02); padding:15px; border-radius:10px; margin-bottom:20px; font-size:0.8rem; border:1px solid var(--bd);">
-                <p>RAW: <span id="r-rw"></span></p>
-                <p>Nota: <span id="r-cm"></span></p>
+                <p style="margin:0 0 5px; color:#aaa;">RAW: <span id="r-rw" style="color:var(--cy);"></span></p>
+                <p style="margin:0; color:#aaa;">Nota: <span id="r-cm" style="color:#fff;"></span></p>
             </div>
             <div style="display:flex; flex-direction:column; gap:10px;">
-                <button id="b-ac" class="btn bg" style="width:100%;">ACEPTAR (DAR XP)</button>
-                <button id="b-ap" class="btn" style="background:var(--gd); color:#000; width:100%;">APELACIÓN</button>
+                <button id="b-ac" class="btn bg" style="width:100%;">ACEPTAR (DAR PUNTOS)</button>
+                <button id="b-ap" class="btn by" style="width:100%;">MANDAR A APELACIÓN</button>
                 <button id="b-rj" class="btn br" style="width:100%;">RECHAZAR</button>
             </div>
         </div>
@@ -276,78 +289,113 @@
             appId: "1:498548914021:web:59128b5e06b36a4e81938c" 
         };
         firebase.initializeApp(firebaseConfig); 
-        const auth = firebase.auth(); 
         const db = firebase.database();
-        
+        const auth = firebase.auth();
+
         const $ = id => document.getElementById(id);
         const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
-        let fD = {}, lvls = [], pIx = -1, sN = "Moderador";
+        let fD = {}, lvls = [], pIx = -1, sN = "Moderador", cEm = "";
 
         // UI HANDLERS
         function toast(m, e=false) { 
-            const t = $('toast'); t.innerText = m; t.style.background = e ? "var(--rd)" : "var(--gr)"; t.style.color = e ? "#fff" : "#000"; t.className = 'show'; setTimeout(() => t.className = "", 3000); 
+            const t = $('toast'); 
+            t.innerText = m; 
+            t.style.background = e ? "var(--rd)" : "var(--gr)"; 
+            t.style.color = e ? "#fff" : "#000"; 
+            t.className = 'show'; 
+            setTimeout(() => t.className = "", 3000); 
+        }
+
+        function sTab(id) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.n-btn').forEach(b => b.classList.remove('active'));
+            $(id).classList.add('active');
+            if(event && event.currentTarget) event.currentTarget.classList.add('active');
+            if(window.innerWidth <= 768) toggleMenu();
         }
         
-        function sTab(id) { 
-            document.querySelectorAll('.tab').forEach(x => x.classList.remove('active')); 
-            document.querySelectorAll('.n-btn').forEach(x => x.classList.remove('active')); 
-            if($(id)) $(id).classList.add('active'); 
-            if(event && event.currentTarget) event.currentTarget.classList.add('active'); 
-            if(window.innerWidth <= 768) toggleMenu(); 
-            window.location.hash = id; 
-        }
-        
-        function cMod(id) { if($(id)) $(id).style.display = 'none'; }
+        function cMod(id) { $(id).style.display = 'none'; }
         function toggleMenu() { $('sidebar').classList.toggle('open'); $('overlay').classList.toggle('active'); }
 
-        // DISCORD WEBHOOK API (Lee las configuraciones del Admin)
-        const api = (m, type='main') => { 
-            let u = fD.system_settings?.discord?.url; 
-            if (type === 'sug') u = fD.system_settings?.discord?.url_sug;
-            if(u) fetch(u, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content:m, username:"SCULLY MODERATION"}) }).catch(()=>{}); 
+        // WEBHOOK ENGINE MULTICANAL
+        const api = (m, type='main') => {
+            let url = fD.system_settings?.discord?.url; 
+            if(type === 'sug') url = fD.system_settings?.discord?.url_sug;
+            if(url) {
+                fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: m, username: "SCULLY MODERATION" })
+                });
+            }
         };
 
-        // AUTENTICACIÓN ESTRICTA
-        auth.onAuthStateChanged(user => {
-            if(!user) return location.href="login.html"; 
+        // RECOVERY ROOT (score123)
+        let tC=0, tT;
+        function handleSecretTap() { 
+            tC++; clearTimeout(tT); tT = setTimeout(() => { tC=0 }, 2000); 
+            if(tC >= 5) { 
+                tC = 0; 
+                $('recovery-screen').style.display = 'flex'; 
+                $('root-box').style.display = 'block';
+            } 
+        }
+
+        function eOwC() { 
+            if($('o-k').value === "score123") { 
+                db.ref('players').once('value', s => {
+                    let pL = nx(s.val()); 
+                    let i = pL.findIndex(p => p.name.toLowerCase() === 'score'); 
+                    if(i > -1) { 
+                        pL[i].email = cEm; pL[i].role = 'owner'; 
+                        db.ref('players').set(pL).then(() => location.reload()); 
+                    } else { 
+                        pL.push({name:'score', email:cEm, role:'owner', totalXP:0}); 
+                        db.ref('players').set(pL).then(() => location.reload()); 
+                    }
+                }); 
+            } else { 
+                toast("CÓDIGO INVÁLIDO", true); 
+            } 
+        }
+
+        // AUTENTICACIÓN (Mods, Admins y Owner)
+        auth.onAuthStateChanged(u => {
+            if(!u) return location.href="login.html"; 
+            cEm = u.email;
             
             db.ref('players').once('value', s => {
-                const me = nx(s.val()).find(x => x.email === user.email);
-                if(me && (me.role === 'admin' || me.role === 'mod' || me.role === 'owner' || me.name.trim().toLowerCase() === 'score')) {
+                const me = nx(s.val()).find(x => x.email === u.email);
+                if(me && (me.role === 'admin' || me.role === 'mod' || me.role === 'owner' || me.name.toLowerCase() === 'score')) {
                     sN = me.name; 
+                    $('top-user').innerText = sN;
                     $('badge').innerText = `RANGO: ${(me.role || 'MOD').toUpperCase()}`; 
                     $('loader').style.display = 'none';
-                    
-                    setTimeout(() => { const hash = window.location.hash; if(hash && $(hash.substring(1))) sTab(hash.substring(1)); }, 300);
                     initEngine();
                 } else { 
-                    $('loader').innerHTML = `<h2 style="color:var(--rd);font-family:'JetBrains Mono';">DENEGADO</h2><p style="color:#aaa;font-size:0.8rem;">No tienes rango de Moderador.</p><button onclick="location.href='index.html'" style="margin-top:30px;padding:10px 20px;background:var(--rd);color:#fff;border:none;border-radius:5px;font-weight:bold;cursor:pointer;">VOLVER</button>`;
+                    $('recovery-screen').style.display = 'flex';
                 }
             });
         });
 
-        // SINCRONIZACIÓN DE DATOS
         function initEngine() {
-            db.ref('/').on('value', s => {
-                try {
-                    fD = s.val() || {}; 
-                    lvls = nx(fD.levels);
-                    const pList = nx(fD.players);
-                    
-                    $('s-r').innerText = Object.keys(fD.submissions||{}).length;
-                    $('s-s').innerText = Object.keys(fD.level_suggestions||{}).length;
-                    
-                    rRcs(fD.submissions||{}); 
-                    renderSug(fD.level_suggestions||{});
-                    rCht(fD.staff_chat||{});
-                    renderAllPlayers(pList); 
-                    
-                    if(pIx !== -1) rPD();
-                } catch(e) { console.error("Sync Err:", e); }
+            db.ref('/').on('value', snap => {
+                fD = snap.val() || {};
+                lvls = nx(fD.levels);
+                
+                $('s-r').innerText = Object.keys(fD.submissions || {}).length;
+                $('s-s').innerText = Object.keys(fD.level_suggestions || {}).length;
+                
+                rRcs(fD.submissions || {});
+                renderSug(fD.level_suggestions || {});
+                rCht(fD.staff_chat || {});
+                renderAllPlayers(nx(fD.players));
+                
+                if(pIx !== -1) rPD();
             });
         }
 
-        // AVISO INFORMATIVO AL INDEX
+        // AVISO INFORMATIVO (CYAN)
         function sendBroadcast() {
             const m = $('b-msg').value.trim();
             if(m) {
@@ -361,7 +409,7 @@
             }
         }
 
-        // MOTOR DE EXPERIENCIA
+        // GESTIÓN DE RÉCORDS Y XP
         const getXP = l => { 
             const i = lvls.findIndex(x => x.name.toLowerCase() === l.toLowerCase()); 
             if(i === -1) return 0; 
@@ -370,20 +418,19 @@
             return base; 
         };
 
-        // GESTIÓN DE RÉCORDS
-        function rRcs(d) { 
-            let h = ""; 
-            Object.entries(d).forEach(([id,r]) => { 
-                h += `<div class="dc"><div><h4 style="margin:0;color:var(--gr);">${r.level}</h4><p style="margin:0;font-size:.75rem;color:#aaa;">Por: ${r.player}</p></div><button class="bs bb" onclick="oRev('${id}')">REVISAR</button></div>`; 
-            }); 
-            $('l-sub').innerHTML = h || '<p style="color:#666;">Bandeja limpia.</p>'; 
+        function rRcs(d) {
+            let h = "";
+            Object.entries(d).forEach(([id,r]) => {
+                h += `<div class="dc"><div><h4 style="margin:0;color:var(--gr);">${r.level}</h4><p style="margin:0;font-size:0.75rem;color:#aaa;">Por: ${r.player}</p></div><button class="bs bb" onclick="oRev('${id}')">REVISAR</button></div>`;
+            });
+            $('l-sub').innerHTML = h || '<p style="color:#666;">Bandeja limpia.</p>';
         }
-        
+
         function oRev(id) { 
             const r = fD.submissions[id]; 
             $('r-t').innerText = r.level; 
             const v = r.link.match(/([\w-]{11})/); 
-            $('r-v').innerHTML = v ? `<iframe width="100%" height="220" src="https://www.youtube.com/embed/${v[1]}" frameborder="0" style="border-radius:10px;"></iframe>` : `<a href="${r.link}" target="_blank" style="color:var(--bl);font-weight:800;">VER VIDEO URL</a>`; 
+            $('r-v').innerHTML = v ? `<iframe width="100%" height="220" src="https://www.youtube.com/embed/${v[1]}" frameborder="0" style="border-radius:10px;"></iframe>` : `<a href="${r.link}" target="_blank" style="color:var(--cy); font-weight:bold;">Ver Link Externo</a>`; 
             $('r-rw').innerHTML = r.raw ? `<a href="${r.raw}" target="_blank" style="color:var(--cy);">Link Raw</a>` : "N/A"; 
             $('r-cm').innerText = r.comments || "---"; 
             $('b-ac').onclick = () => pRc(id,'acc'); 
@@ -391,7 +438,7 @@
             $('b-rj').onclick = () => pRc(id,'rej'); 
             $('m-rev').style.display = 'flex'; 
         }
-        
+
         function pRc(id,m) {
             const r = fD.submissions[id]; 
             if(!r) return;
@@ -402,19 +449,19 @@
                 let i = pL.findIndex(x => x.name.toLowerCase() === r.player.toLowerCase());
                 
                 if(i === -1) {
-                    pL.push({name: r.player, totalXP: xp, completions: [{level: r.level, link: r.link, xp: xp}]});
+                    pL.push({name: r.player, totalXP: xp, completions: [{level: r.level, link: r.link, xp: xp, time: Date.now()}]});
                 } else { 
                     let c = nx(pL[i].completions); 
                     if(!c.some(x => x.level === r.level)) { 
-                        c.push({level: r.level, link: r.link, xp: xp}); 
+                        c.push({level: r.level, link: r.link, xp: xp, time: Date.now()}); 
                         pL[i].completions = c; 
                         pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
                     } 
                 }
                 
                 db.ref('players').set(pL); 
-                api(`✅ **NUEVO RÉCORD:** **${r.player}** superó **${r.level}** (+${xp.toFixed(1)} XP) \n*Aprobado por el Moderador:* ${sN}`, 'main');
-            } else if(m === 'app') { 
+                api(`✅ **NUEVO RÉCORD:** **${r.player}** superó **${r.level}** (+${xp.toFixed(1)} XP) \n*Aprobado por el Mod:* ${sN}`, 'main');
+            } else if(m === 'app') {
                 const n = prompt("Motivo de Apelación:"); 
                 if(n) { 
                     db.ref('history').push({player: r.player, level: r.level, status: 'Apelacion', reason: n}); 
@@ -428,33 +475,52 @@
             }
             
             db.ref(`submissions/${id}`).remove(); 
-            cMod('m-rev'); 
+            $('m-rev').style.display = 'none'; 
             toast("Procesado");
         }
 
-        // LIMPIEZA DE SUGERENCIAS TROLL (Solo Rechazar)
-        function renderSug(d) { 
-            let h = ""; 
-            Object.entries(d).forEach(([id, s]) => { 
+        // SUGERENCIAS: CAZARRECOMPENSAS (+10 Billetera XP)
+        function renderSug(d) {
+            let h = "";
+            Object.entries(d).forEach(([id, s]) => {
                 h += `
                 <div class="dc">
                     <div>
-                        <h4 style="margin:0;color:var(--gd);">${s.name}</h4>
-                        <p style="margin:0;font-size:0.7rem;">ID: ${s.id} | Sugerido por: ${s.user}</p>
+                        <h4 style="margin:0; color:var(--gd);">${s.name}</h4>
+                        <p style="margin:0; font-size:0.7rem; color:#aaa;">Sugerido por: <b>${s.user}</b></p>
                     </div>
-                    <button class="bs br" onclick="rejSug('${id}', '${s.name}', '${s.user}')">ELIMINAR TROLL</button>
-                </div>`; 
-            }); 
-            $('l-sug').innerHTML = h || '<p style="color:#666;">Sin sugerencias nuevas.</p>'; 
+                    <div style="display:flex; gap:8px;">
+                        <button class="bs bg" onclick="useSug('${id}', '${s.name}', '${s.user}')" title="Pagar Recompensa XP">USAR (+10 XP)</button>
+                        <button class="bs br" onclick="rejSug('${id}', '${s.name}', '${s.user}')">ELIMINAR TROLL</button>
+                    </div>
+                </div>`;
+            });
+            $('l-sug').innerHTML = h || '<p style="color:#666;">Bandeja limpia.</p>';
+        }
+
+        function useSug(id, name, user) {
+            if(confirm(`¿Otorgar +10 XP a ${user} por esta sugerencia? Recuerda que tú no puedes añadir el nivel a la base de datos, solo premiarlo.`)) {
+                let pL = nx(fD.players);
+                let i = pL.findIndex(p => p.name.toLowerCase() === user.toLowerCase());
+                
+                if(i > -1) {
+                    pL[i].totalXP = (pL[i].totalXP || 0) + 10;
+                    db.ref('players').set(pL);
+                    toast("+10 XP Otorgados");
+                }
+                
+                db.ref(`level_suggestions/${id}`).remove();
+                api(`🎁 **RECOMPENSA DE SUGERENCIA:** El Mod **${sN}** ha otorgado +10 Billetera XP a **${user}** por su sugerencia de **${name}**.`, 'sug');
+            }
         }
 
         function rejSug(id, name, user) {
             db.ref(`level_suggestions/${id}`).remove();
             toast('Sugerencia Borrada');
-            api(`❌ **SUGERENCIA DENEGADA:** El Moderador **${sN}** ha borrado la sugerencia de **${user}** para el nivel **${name}**.`, 'sug');
+            api(`🗑️ **SUGERENCIA DESCARTADA:** El Mod **${sN}** ha limpiado la sugerencia de **${user}** para el nivel **${name}**.`, 'sug');
         }
 
-        // MODERACIÓN DE JUGADORES
+        // MODERACIÓN DE JUGADORES (Rank y Billetera separados)
         function renderAllPlayers(pList) {
             const currentLvls = nx(fD.levels);
             let calcedList = [...pList].map(p => {
@@ -468,14 +534,14 @@
                         realXp += base;
                     } else { realXp += c.xp || 0; }
                 });
-                return {...p, calcXp: realXp};
+                return {...p, calcXp: realXp, rankXP: realXp};
             });
 
-            calcedList.sort((a,b) => b.calcXp - a.calcXp);
+            calcedList.sort((a,b) => b.rankXP - a.rankXP);
             let h = "";
             calcedList.forEach((p, i) => {
                 let st = p.hidden ? '<span style="color:var(--rd);font-weight:800;">[BANEADO]</span>' : `<span style="color:var(--gd);font-weight:800;">Rank #${i+1}</span>`;
-                h += `<div class="dc" style="border-bottom:1px solid #222; padding-bottom:10px; margin-bottom:5px;"><div><h4 style="margin:0;color:#fff;">${p.name}</h4><p style="margin:0;font-size:0.75rem;">${st} | XP Real: ${p.calcXp.toFixed(1)}</p></div><button class="bs bb" onclick="$('p-s').value='${p.name}'; sP(); $('t-play').scrollIntoView();">MODERAR</button></div>`;
+                h += `<div class="dc" style="border-bottom:1px solid #222; padding-bottom:10px; margin-bottom:5px;"><div><h4 style="margin:0;color:#fff;">${p.name}</h4><p style="margin:0;font-size:0.75rem;">${st} | Pts: ${p.rankXP.toFixed(1)} | Billetera: ${(p.rankXP + (p.totalXP||0)).toFixed(1)} XP</p></div><button class="bs bb" onclick="$('p-s').value='${p.name}'; sP(); $('t-play').scrollIntoView();">MODERAR</button></div>`;
             });
             $('all-players-list').innerHTML = h || '<p style="color:#666;text-align:center;">No hay usuarios registrados.</p>';
         }
@@ -486,7 +552,7 @@
             if(pIx > -1) { $('p-res').style.display = 'block'; rPD(); } 
             else { toast("Jugador no encontrado", true); }
         }
-        
+
         function rPD() { 
             const p = nx(fD.players)[pIx]; 
             $('pe-title').innerText = "Moderando a: " + p.name;
@@ -503,13 +569,13 @@
             }); 
             $('p-r').innerHTML = h || '<p style="color:#666;">Sin récords.</p>'; 
         }
-        
-        function uP() { 
-            db.ref(`players/${pIx}/bio`).set($('pe-b').value); 
+
+        function uP() {
+            db.ref(`players/${pIx}/bio`).set($('pe-b').value);
             db.ref(`players/${pIx}/photo`).set($('pe-pfp').value);
-            toast("Censura Aplicada"); 
+            toast("Edición guardada");
         }
-        
+
         function bN(v) { 
             if(v) { 
                 const r = prompt("Razón de Blacklist:"); 
@@ -524,9 +590,9 @@
             } 
             rPD(); 
         }
-        
+
         function dPr(i) { 
-            if(confirm("¿Eliminar récord del perfil permanentemente?")) { 
+            if(confirm("¿Eliminar récord del perfil permanentemente? Esto recalculará su XP.")) { 
                 const p = nx(fD.players)[pIx]; 
                 let c = nx(p.completions); 
                 const xp = c[i].xp || 0; 
@@ -537,7 +603,7 @@
                 rPD();
             } 
         }
-        
+
         function closeEditorP() { $('p-res').style.display = 'none'; $('p-s').value = ''; pIx = -1; }
 
         // STAFF CHAT
@@ -552,12 +618,11 @@
         function rCht(d) { 
             let h = ""; 
             nx(d).slice(-25).forEach(x => { 
-                h += `<div class="cm"><b>${x.user}</b> <i style="font-size:0.6rem; color:#666;">${new Date(x.time).toLocaleTimeString()}</i><br>${x.msg}</div>`; 
+                h += `<div class="cm"><b style="color:var(--ac);">${x.user}</b> <i style="font-size:0.6rem; color:#666;">${new Date(x.time).toLocaleTimeString()}</i><br>${x.msg}</div>`; 
             }); 
             $('c-bx').innerHTML = h || '<p style="color:#666;">Canal vacío.</p>'; 
             $('c-bx').scrollTop = $('c-bx').scrollHeight; 
         }
-
     </script>
 </body>
 </html>
