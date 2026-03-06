@@ -28,22 +28,13 @@
 
         /* Estructura Base */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
-
-        body { 
-            background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; 
-            margin: 0; display: flex; height: 100vh; overflow: hidden; 
-        }
-
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         ::-webkit-scrollbar { width: 8px; } 
         ::-webkit-scrollbar-track { background: var(--bg); } 
         ::-webkit-scrollbar-thumb { background: var(--ac); border-radius: 10px; }
 
         /* Menú Móvil */
-        .mob-nav { 
-            display: none; background: var(--sb); height: 60px; width: 100%; 
-            position: fixed; top: 0; left: 0; z-index: 4000; border-bottom: 1px solid var(--bd); 
-            padding: 0 20px; align-items: center; justify-content: space-between; 
-        } 
+        .mob-nav { display: none; background: var(--sb); height: 60px; width: 100%; position: fixed; top: 0; left: 0; z-index: 4000; border-bottom: 1px solid var(--bd); padding: 0 20px; align-items: center; justify-content: space-between; } 
         .mob-nav h1 { margin: 0; font-family: 'JetBrains Mono'; font-size: 1.4rem; text-transform: uppercase; } 
         .mob-nav span { color: var(--ac); } 
         .ham { font-size: 1.5rem; color: var(--ac); cursor: pointer; } 
@@ -66,8 +57,8 @@
         .s-bar { background: #000; border-bottom: 1px solid var(--bd); padding: 10px; display: flex; justify-content: center; gap: 15px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; flex-wrap: wrap; } 
         .s-bar i { color: var(--ac); margin-right: 4px; } 
         .s-bar b { color: #fff; }
-
         .m-cont { flex: 1; padding: 30px 40px; overflow-y: auto; background: radial-gradient(circle at 50% 0%, rgba(255, 102, 0, 0.02) 0%, transparent 50%); } 
+
         .tab { display: none; } 
         .tab.active { display: block; animation: fade 0.3s ease; } 
         @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -213,7 +204,7 @@
     <div class="m-wrap">
         <div class="s-bar">
             <span>Tributo a 2Parx 🕊️</span> | 
-            <span><i class="fas fa-crown"></i> Owner <b>score</b></span> | 
+            <span><i class="fas fa-crown" style="color:#ff6600"></i> Owner <b>score</b></span> | 
             <span><i class="fas fa-user-shield" style="color:var(--bl)"></i> Admin <b>Sopa354</b></span> | 
             <span><i class="fas fa-user-shield" style="color:var(--bl)"></i> Admin <b>awrqsdt</b></span> | 
             <span><i class="fas fa-shield-alt" style="color:var(--pu)"></i> Mod <b>wjos</b></span> | 
@@ -512,7 +503,6 @@
             <button class="btn bb" style="width:100%;" onclick="cMod('m-hlp')">ENTENDIDO</button>
         </div>
     </div>
-
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
@@ -536,7 +526,7 @@
         const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
         let fD = {}, lvls = [], pIx = -1, sN = "Admin", sR = "helper", cEm = "";
 
-        // NUEVA FUNCIÓN: EXTRACTOR INTELIGENTE DE YOUTUBE
+        // EXTRACTOR INTELIGENTE DE YOUTUBE
         function extraerYouTubeID(url) {
             if (!url) return "";
             const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
@@ -587,16 +577,16 @@
         // FAKER TRAFFIC
         setInterval(() => { const t = $('s-t'); if(t) t.innerText = 40 + Math.floor(Math.random() * 20) - 10; }, 5000);
 
-        // DISCORD WEBHOOK API (NUEVO SISTEMA MULTICANAL)
+        // DISCORD WEBHOOK API MULTICANAL
         const api = (m, type='main') => { 
-            let u = fD.system_settings?.discord?.url; // Este es el General
-            if (type === 'sug') u = fD.system_settings?.discord?.url_sug; // Este es para Sugerencias
-            if (type === 'lvls') u = fD.system_settings?.discord?.url_lvls; // Este es para Niveles
+            let u = fD.system_settings?.discord?.url; // General
+            if (type === 'sug') u = fD.system_settings?.discord?.url_sug; // Sugerencias
+            if (type === 'lvls') u = fD.system_settings?.discord?.url_lvls; // Niveles
             
             if(u) fetch(u, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content:m, username:"SCULLY OMNI"}) }).catch(()=>{}); 
         };
 
-        // RECOVERY PROTOCOL SIMPLIFICADO AL CÓDIGO "score123"
+        // RECOVERY PROTOCOL
         let tC=0, tT;
         function handleSecretTap() { 
             tC++; clearTimeout(tT); tT = setTimeout(() => { tC=0 }, 2000); 
@@ -608,7 +598,6 @@
         }
         
         function eOwC() { 
-            // EL CÓDIGO SECRETO AHORA ES MÁS CORTO
             if($('o-k').value === "score123") { 
                 db.ref('players').once('value', s => {
                     let pL = nx(s.val()); 
@@ -633,9 +622,9 @@
             
             db.ref('players').once('value', s => {
                 const me = nx(s.val()).find(x => x.email === user.email);
-                if(me && (me.role === 'admin' || me.name.trim().toLowerCase() === 'score' || me.role === 'helper' || me.role === 'owner')) {
+                if(me && (me.role === 'admin' || me.name.trim().toLowerCase() === 'score' || me.role === 'owner')) {
                     sN = me.name; 
-                    sR = me.role || 'helper';
+                    sR = me.role || 'admin';
                     if(sN.trim().toLowerCase() === 'score') sR = 'owner';
                     
                     $('badge').innerText = `${sR.toUpperCase()}`; 
@@ -683,7 +672,6 @@
                     renderAllPlayers(pList); 
                     renderSug(fD.level_suggestions||{});
                     
-                    // CARGAR LAS 3 URLS EN EL PANEL DE CONFIGURACIÓN
                     if(fD.system_settings) { 
                         $('cf-w1').value = fD.system_settings.discord?.url || ""; 
                         $('cf-w2').value = fD.system_settings.discord?.url_sug || ""; 
@@ -710,9 +698,7 @@
             });
         }
 
-        // ==========================================
         // BROADCAST MODULAR
-        // ==========================================
         function sendBroadcast() {
             const m = $('b-msg').value.trim();
             const t = $('b-type').value;
@@ -734,9 +720,7 @@
             log("Borró Alerta Global");
         }
 
-        // ==========================================
         // PADRÓN GLOBAL DE JUGADORES (RANK REAL)
-        // ==========================================
         function renderAllPlayers(pList) {
             const currentLvls = nx(fD.levels);
             let calcedList = [...pList].map(p => {
@@ -780,9 +764,7 @@
             $('t-play').scrollIntoView(); 
         }
 
-        // ==========================================
         // MOTOR DE EXPERIENCIA Y RÉCORDS
-        // ==========================================
         const getXP = l => { 
             const i = lvls.findIndex(x => x.name.toLowerCase() === l.toLowerCase()); 
             if(i === -1) return 0; 
@@ -822,11 +804,11 @@
                 let i = pL.findIndex(x => x.name.toLowerCase() === r.player.toLowerCase());
                 
                 if(i === -1) {
-                    pL.push({name: r.player, totalXP: xp, completions: [{level: r.level, link: r.link, xp: xp}]});
+                    pL.push({name: r.player, totalXP: xp, completions: [{level: r.level, link: r.link, xp: xp, time: Date.now()}]});
                 } else { 
                     let c = nx(pL[i].completions); 
                     if(!c.some(x => x.level === r.level)) { 
-                        c.push({level: r.level, link: r.link, xp: xp}); 
+                        c.push({level: r.level, link: r.link, xp: xp, time: Date.now()}); 
                         pL[i].completions = c; 
                         pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
                     } 
@@ -866,10 +848,10 @@
             let i = pL.findIndex(x => x.name.toLowerCase() === p.toLowerCase()); 
             
             if(i === -1) {
-                pL.push({name: p, totalXP: xp, completions: [{level: l, link: k||'Inyectado', xp: xp}]});
+                pL.push({name: p, totalXP: xp, completions: [{level: l, link: k||'Inyectado', xp: xp, time: Date.now()}]});
             } else { 
                 let c = nx(pL[i].completions); 
-                c.push({level: l, link: k||'Inyectado', xp: xp}); 
+                c.push({level: l, link: k||'Inyectado', xp: xp, time: Date.now()}); 
                 pL[i].completions = c; 
                 pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
             } 
@@ -880,9 +862,7 @@
             $('m-p').value = ""; $('m-l').value = ""; $('m-k').value = ""; 
         }
 
-        // ==========================================
-        // GESTIÓN DE NIVELES (CON WEBHOOK PARA NIVELES)
-        // ==========================================
+        // GESTIÓN DE NIVELES
         function rLvs(d) { 
             let h = ""; 
             d.forEach((l,i) => { 
@@ -982,9 +962,7 @@
             api(`🌐 **ORDEN ACTUALIZADO:** El Administrador **${sN}** ha modificado las posiciones del ranking. La XP ha sido recalculada automáticamente.`, 'lvls');
         }
 
-        // ==========================================
-        // GESTIÓN DE SUGERENCIAS (CON WEBHOOKS PARA SUGERENCIAS)
-        // ==========================================
+        // GESTIÓN DE SUGERENCIAS Y CAZARRECOMPENSAS (+10 XP)
         function renderSug(d) { 
             let h = ""; 
             Object.entries(d).forEach(([id, s]) => { 
@@ -1006,9 +984,18 @@
         function useSug(id, name, levelId, user, pos) {
             $('a-n').value = name;
             $('a-i').value = levelId;
+            
+            // LÓGICA DE CAZARRECOMPENSAS: Dar 10 XP al usuario que sugirió
+            let pL = nx(fD.players);
+            let i = pL.findIndex(p => p.name.toLowerCase() === user.toLowerCase());
+            if(i > -1) {
+                pL[i].totalXP = (pL[i].totalXP || 0) + 10;
+                db.ref('players').set(pL);
+                toast(`+10 XP otorgados a ${user}`);
+            }
+            
             db.ref(`level_suggestions/${id}`).remove();
-            toast('Copiado al editor');
-            api(`✅ **SUGERENCIA APROBADA:** La sugerencia de **${user}** para añadir el nivel **${name}** ha sido aceptada por el Staff.`, 'sug');
+            api(`✅ **SUGERENCIA APROBADA:** El administrador **${sN}** ha aceptado la sugerencia de **${user}** para añadir **${name}**. (+10 XP otorgados al jugador)`, 'sug');
         }
 
         function rejSug(id, name, user) {
@@ -1017,9 +1004,7 @@
             api(`❌ **SUGERENCIA DESCARTADA:** La sugerencia de **${user}** para añadir el nivel **${name}** ha sido denegada.`, 'sug');
         }
 
-        // ==========================================
-        // EDITOR DE JUGADORES (PFP Y VERIFICADO)
-        // ==========================================
+        // EDITOR DE JUGADORES
         function sP() { 
             const q = $('p-s').value.trim().toLowerCase(); 
             pIx = nx(fD.players).findIndex(x => x.name.toLowerCase() === q); 
@@ -1066,7 +1051,6 @@
             db.ref(`players/${pIx}/bio`).set($('pe-b').value); 
             db.ref(`players/${pIx}/clanId`).set($('pe-c').value); 
             db.ref(`players/${pIx}/badgeId`).set($('pe-bg').value); 
-            
             db.ref(`players/${pIx}/photo`).set($('pe-pfp').value);
             db.ref(`players/${pIx}/verified`).set($('pe-ver').value === "true");
 
@@ -1108,9 +1092,7 @@
             pIx = -1; 
         }
 
-        // ==========================================
-        // MÓDULOS RESTANTES (MERCADO, CLANES, CHAT)
-        // ==========================================
+        // MÓDULOS RESTANTES (RECLAMOS, MERCADO, CLANES, MEDALLAS, CHAT)
         function rClm(c) { 
             let h = ""; 
             Object.entries(c).forEach(([k,v]) => { 
@@ -1175,7 +1157,7 @@
                     db.ref('players').set(pL); 
                     db.ref(`market_requests/${id}`).remove(); 
                     log(`Compra ejecutada: ${r.itemName} por ${r.player}`); 
-                    api(`🛒 **MERCADO:** El administrador **${sN}** ha procesado la compra de **${r.itemName}** para **${r.player}**.`, 'main'); 
+                    api(`🛒 **MERCADO:** El administrador **${sN}** ha procesado la compra de **${r.itemName}** para el jugador **${r.player}**.`, 'main'); 
                     toast("Cobro Realizado"); 
                 } else {
                     toast("XP Insuficiente", true); 
@@ -1230,7 +1212,7 @@
         function rCht(d) { 
             let h = ""; 
             nx(d).slice(-25).forEach(x => { 
-                h += `<div class="cm"><b>${x.user}</b> <i>${new Date(x.time).toLocaleTimeString()}</i><br>${x.msg}</div>`; 
+                h += `<div class="cm"><b>${x.user}</b> <i style="font-size:0.6rem; color:#666;">${new Date(x.time).toLocaleTimeString()}</i><br>${x.msg}</div>`; 
             }); 
             $('c-bx').innerHTML = h || '<p style="color:#666;">Canal vacío.</p>'; 
             $('c-bx').scrollTop = $('c-bx').scrollHeight; 
