@@ -93,13 +93,11 @@
         .chat-info .text { margin-top: 6px; color: #eee; word-break: break-word; }
         .verified-tick { color: var(--blue); font-size: 0.75rem; }
 
-        /* FOOTER (Aquí está el color-changer restaurado) */
         .footer-credits { padding: 80px 20px; text-align: center; background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); }
         .color-trigger { display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: var(--accent); color: #000; border-radius: 50%; cursor: pointer; box-shadow: var(--glow); margin-top: 25px; transition: 0.3s ease; font-size: 1.4rem; position: relative; overflow: hidden; }
         .color-trigger:hover { transform: scale(1.15); }
         #themeColor { opacity: 0; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; }
 
-        /* MODALES */
         .cinema-mod { display: none; position: fixed; inset: 0; z-index: 100000; justify-content: center; align-items: center; overflow: hidden; }
         .cinema-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: blur(25px) brightness(0.25); transform: scale(1.1); z-index: 1; }
         .cinema-content { position: relative; z-index: 2; width: 95%; max-width: 1200px; display: grid; grid-template-columns: 2fr 1fr; gap: 35px; background: rgba(0,0,0,0.7); padding: 45px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 80px rgba(0,0,0,0.9); }
@@ -120,7 +118,7 @@
         @media(max-width: 900px) { 
             .mobile-menu-btn { display: block; } 
             .main-nav { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); flex-direction: column; align-items: center; justify-content:center; z-index: 2000; gap:15px; } 
-            .main-nav.active { display: flex; } 
+            .main-nav.active { display: flex; animation: fadeIn 0.3s ease; } 
             .main-nav .btn-scully { width: 80%; padding: 18px; text-align:center;} 
             .staff-bar { margin-top: 60px; }
             .top-actions { flex-direction: column; }
@@ -162,19 +160,15 @@
     </nav>
     
     <header>
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-            <i class="fas fa-bars" id="mob-icon"></i>
-        </button>
-        
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars" id="mob-icon"></i></button>
         <h1 class="notranslate">THE SCULLY <span>LIST</span></h1>
         
         <div class="main-nav" id="mainNavigation">
             <a href="index.html" class="btn-scully active" style="border-color:var(--accent); color:var(--accent);"><i class="fas fa-list-ol"></i> Lista OMNI</a>
             <a href="leaderboards.html" class="btn-scully"><i class="fas fa-trophy"></i> Ranking Global</a>
             <a href="market.html" class="btn-scully" style="color:var(--gold); border-color:rgba(255,215,0,0.3);"><i class="fas fa-shopping-cart"></i> Mercado <span class="badge-new">XP</span></a>
-            <a href="https://discord.gg/96W3MWrZ2P" target="_blank" class="btn-scully" style="color:var(--discord); border-color:rgba(114,137,218,0.3);"><i class="fab fa-discord"></i> Discord</a>
+            <a href="rules.html" class="btn-scully" style="color:var(--green); border-color:rgba(0,255,102,0.3);"><i class="fas fa-book"></i> Manual Titán</a>
             <a href="changelog.html" class="btn-scully" style="color:var(--cyan); border-color:rgba(0,255,255,0.3);"><i class="fas fa-file-code"></i> Changelog</a>
-            <a href="rules.html" class="btn-scully"><i class="fas fa-book"></i> Reglas</a>
             
             <button class="btn-scully btn-ai" onclick="runScullyAI(); if(window.innerWidth <= 900) toggleMobileMenu();">
                 <i class="fas fa-brain"></i> Scully AI
@@ -182,15 +176,9 @@
             
             <a href="login.html" class="btn-scully" id="nav-login"><i class="fas fa-user"></i> Acceso</a>
             
-            <a href="admin.html" id="adminBtn" class="btn-scully" style="display:none; background:var(--accent); color:#000; border:none; font-weight:800;">
-                <i class="fas fa-terminal"></i> MASTER PANEL
-            </a>
-            <a href="mod.html" id="modBtn" class="btn-scully" style="display:none; background:var(--purple); color:#fff; border:none; font-weight:800;">
-                <i class="fas fa-shield-alt"></i> MOD PANEL
-            </a>
-            <a href="helper.html" id="helperBtn" class="btn-scully" style="display:none; background:var(--green); color:#000; border:none; font-weight:800;">
-                <i class="fas fa-hands-helping"></i> HELPER PANEL
-            </a>
+            <a href="admin.html" id="adminBtn" class="btn-scully" style="display:none; background:var(--accent); color:#000; border:none;"><i class="fas fa-terminal"></i> MASTER PANEL</a>
+            <a href="mod.html" id="modBtn" class="btn-scully" style="display:none; background:var(--purple); color:#fff; border:none;"><i class="fas fa-shield-alt"></i> MOD PANEL</a>
+            <a href="helper.html" id="helperBtn" class="btn-scully" style="display:none; background:var(--green); color:#000; border:none;"><i class="fas fa-hands-helping"></i> HELPER PANEL</a>
         </div>
     </header>
 
@@ -206,7 +194,7 @@
             
             <div class="suggest-box">
                 <h3><i class="fas fa-lightbulb"></i> Sugerir Nivel</h3>
-                <p style="font-size:0.75rem; color:#888; margin-bottom:20px;">¿Falta un demon importante en la lista?</p>
+                <p style="font-size:0.75rem; color:#888; margin-bottom:20px;">¿Falta un demon en la lista? Gana +10 XP en tu billetera si es aceptado.</p>
                 <button class="btn-scully" style="background:var(--purple); color:#fff; border:none; width:100%; justify-content:center;" onclick="document.getElementById('sugModal').style.display='flex'">
                     ENVIAR SUGERENCIA
                 </button>
@@ -240,25 +228,35 @@
         </section>
 
         <section class="status-tracker" style="margin-top: 30px; border-color: var(--gold); padding: 40px 20px;">
-            <h2 style="color:var(--gold); text-transform: uppercase; font-size: clamp(1.5rem, 5vw, 2rem); margin-top:0;"><i class="fas fa-ticket-alt"></i> Códigos de Recompensa</h2>
-            <p style="color:#888; font-size:clamp(0.85rem, 3vw, 1rem); margin-bottom:20px;">Introduce tu código de tiempo limitado para obtener XP o Cosméticos Exclusivos.</p>
+            <h2 style="color:var(--gold); text-transform: uppercase; font-size: clamp(1.5rem, 5vw, 2rem); margin-top:0;"><i class="fas fa-coins"></i> Economía Titán</h2>
+            <p style="color:#888; font-size:clamp(0.85rem, 3vw, 1rem); margin-bottom:30px;">Consigue Billetera XP extra para comprar cosméticos en el mercado (No afecta tu Ranking Global).</p>
             
-            <div style="display: flex; flex-wrap: wrap; gap: 10px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; border: 1px solid #333; max-width: 600px; margin: 0 auto;">
-                <input type="text" id="input-codigo" placeholder="Escribe el código aquí..." style="flex: 1; min-width: 200px; background: transparent; border: none; color: #fff; font-size: 1rem; outline: none;">
-                <button class="btn-scully" style="background:var(--gold); color:#000; border:none; padding:10px 20px; font-weight:800; flex-grow: 1; max-width: 150px;" onclick="canjearCodigo()">
-                    <i class="fas fa-check"></i> CANJEAR
-                </button>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; text-align:left;">
+                
+                <div style="background: rgba(0,0,0,0.5); padding: 25px; border-radius: 15px; border: 1px solid var(--green);">
+                    <h3 style="color:var(--green); margin-top:0;"><i class="fas fa-calendar-check"></i> Suministro Diario</h3>
+                    <p style="font-size:0.85rem; color:#aaa; margin-bottom:15px;">Inicia sesión todos los días y obtén +5 XP gratis para gastar en el Mercado OMNI.</p>
+                    <button class="btn-scully" style="background:var(--green); color:#000; border:none; width:100%; justify-content:center; font-weight:800;" onclick="claimDailyXP()">
+                        <i class="fas fa-box-open"></i> RECLAMAR +5 XP
+                    </button>
+                    <p id="daily-claim-msg" style="font-weight: bold; font-size:0.8rem; margin-top: 15px; text-align:center;"></p>
+                </div>
+
+                <div style="background: rgba(0,0,0,0.5); padding: 25px; border-radius: 15px; border: 1px solid var(--gold);">
+                    <h3 style="color:var(--gold); margin-top:0;"><i class="fas fa-ticket-alt"></i> Canje de Códigos</h3>
+                    <p style="font-size:0.85rem; color:#aaa; margin-bottom:15px;">Ingresa códigos ocultos que el Staff comparte en Discord o en eventos especiales.</p>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="input-codigo" placeholder="Escribe el código..." style="flex:1; background:transparent; border:1px solid #333; color:#fff; padding:10px; border-radius:8px; outline:none;">
+                        <button class="btn-scully" style="background:var(--gold); color:#000; border:none; padding:10px 20px;" onclick="canjearCodigo()"><i class="fas fa-check"></i></button>
+                    </div>
+                    <p id="mensaje-codigo" style="font-weight: bold; font-size:0.8rem; margin-top: 15px; text-align:center;"></p>
+                </div>
             </div>
-            <p id="mensaje-codigo" style="font-weight: bold; margin-top: 15px;"></p>
         </section>
 
         <section class="global-chat-section">
             <h2 style="color:var(--cyan); text-transform: uppercase; font-size: clamp(1.2rem, 4vw, 1.8rem); margin-top:0; border-bottom:1px solid var(--border); padding-bottom:15px;"><i class="fas fa-globe"></i> Comunidad Global</h2>
-            
-            <div class="chat-messages" id="global-chat-box">
-                <p style="text-align:center; color:#555; margin-top:50px;">Conectando...</p>
-            </div>
-            
+            <div class="chat-messages" id="global-chat-box"><p style="text-align:center; color:#555; margin-top:50px;">Conectando...</p></div>
             <div style="display:flex; gap:10px; background:#000; padding:15px; border-radius:15px; border:1px solid #222; flex-wrap:wrap;">
                 <input type="text" id="g-chat-input" placeholder="Inicia sesión para participar en el chat global..." disabled onkeypress="if(event.keyCode==13) sendGlobalChat()" style="flex:1; min-width:200px; background:transparent; border:none; color:#fff; outline:none;">
                 <button id="g-chat-btn" class="btn-scully" style="background:var(--cyan); color:#000; border:none; opacity:0.5; pointer-events:none; padding:15px 25px; flex-grow:1; max-width:100px;" onclick="sendGlobalChat()">
@@ -296,18 +294,15 @@
     <div id="sugModal" class="modal">
         <div class="modal-content" style="border-color:var(--purple);">
             <span style="position:absolute; top:15px; right:20px; color:#888; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('sugModal').style.display='none'">✕</span>
-            <h2 style="color:var(--purple); margin-top:0;"><i class="fas fa-lightbulb"></i> Smart Submit (Niveles)</h2>
-            
+            <h2 style="color:var(--purple); margin-top:0;"><i class="fas fa-lightbulb"></i> Smart Submit</h2>
             <input type="text" id="sug-n" class="g-input" placeholder="Nombre del Nivel (Obligatorio)">
             <input type="number" id="sug-pos" class="g-input" placeholder="Posición sugerida en la lista (Ej: 10)" min="1">
             <input type="text" id="sug-v" class="g-input" placeholder="Link del Video de YouTube (Obligatorio)" oninput="previewSugThumb()">
-            
             <div id="sug-thumb-box" style="display:none; margin-bottom: 20px; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 15px; border: 1px dashed var(--purple);">
                 <p style="margin: 0 0 10px; font-size: 0.75rem; color: #aaa; text-transform: uppercase;">Vista Previa</p>
                 <img id="sug-thumb-img" src="" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; border: 1px solid #333;">
             </div>
-            
-            <button class="btn-scully" style="background:var(--purple); color:#fff; width:100%; justify-content:center; border:none;" onclick="sendSuggestion()">ENVIAR SUGERENCIA INTELIGENTE</button>
+            <button class="btn-scully" style="background:var(--purple); color:#fff; width:100%; justify-content:center; border:none;" onclick="sendSuggestion()">ENVIAR SUGERENCIA (+10 XP si se aprueba)</button>
         </div>
     </div>
 
@@ -329,9 +324,7 @@
         </div>
     </div>
 
-    <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">
-        UN PODEROSO ENEMIGO
-    </div>
+    <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">UN PODEROSO ENEMIGO</div>
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'en,es', autoDisplay: false}, 'google_translate_element');
@@ -372,7 +365,6 @@
         let currentUserData = { name: null, key: null }; 
         const nexus = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
 
-        // UI & TEMA
         const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600'; 
         updateThemeColor(savedColor);
         
@@ -403,28 +395,28 @@
             return (match && match[1]) ? match[1] : url.trim(); 
         }
 
-        // MOTOR UNIVERSAL DE COSMÉTICOS
+        // MOTOR DE COSMÉTICOS
         function getCosmetic(ac) {
             let nC = "var(--cyan)", tG = "", bS = "4px solid var(--cyan)", eC = "";
-            if(!ac) return {nC, tG, bS, eC};
+            if(!ac) return {nC, tG, bS, eC}; 
             ac = ac.toUpperCase();
             
             if(ac.includes("VIP")||ac.includes("DORADO")){ nC="var(--gold)"; bS="4px solid var(--gold)"; }
             else if(ac.includes("HACKER")||ac.includes("MATRIX")){ nC="var(--green)"; tG="color:var(--green); text-shadow:0 0 5px var(--green); font-family:'JetBrains Mono';"; bS="4px solid var(--green)"; }
             else if(ac.includes("AURA")||ac.includes("DEMON")){ nC="var(--red)"; bS="4px dashed var(--red)"; tG="color:#ffaaaa; text-shadow:0 0 5px var(--red);"; }
-            else if(ac.includes("HIELO")||ac.includes("ICE")){ nC="#aaddff"; tG="text-shadow: 0 0 8px #00aaff;"; bS="4px solid #00aaff"; }
-            else if(ac.includes("FUEGO")||ac.includes("FIRE")){ nC="#ff5500"; tG="text-shadow: 0 0 8px #ff2200;"; bS="4px solid #ff5500"; }
-            else if(ac.includes("FANTASMA")||ac.includes("GHOST")){ nC="#ddd"; tG="opacity:0.8; text-shadow: 0 0 5px #fff;"; bS="4px solid #ccc"; }
+            else if(ac.includes("HIELO")||ac.includes("ICE")){ nC="#aaddff"; tG="color:#aaddff; text-shadow: 0 0 8px #00aaff;"; bS="4px solid #00aaff"; }
+            else if(ac.includes("FUEGO")||ac.includes("FIRE")){ nC="#ff5500"; tG="color:#ff5500; text-shadow: 0 0 8px #ff2200;"; bS="4px solid #ff5500"; }
+            else if(ac.includes("FANTASMA")||ac.includes("GHOST")){ nC="#ddd"; tG="color:#fff; opacity:0.8; text-shadow: 0 0 5px #fff;"; bS="4px solid #ccc"; }
             else if(ac.includes("RAINBOW")||ac.includes("ARCOIRIS")){ eC="rbw-text"; bS="4px solid #ff00ff"; }
             
             return {nC, tG, bS, eC};
         }
 
-        // SINCRONIZACIÓN MAESTRA DE DATOS
+        // CARGA MAESTRA DE DATOS
         db.ref('/').on('value', snap => {
             fullData = snap.val() || {};
             
-            if (fullData.system_settings && fullData.system_settings.lockdown_active) { 
+            if (fullData.system_settings?.lockdown_active) { 
                 document.getElementById('lockdownScreen').style.display = 'flex'; 
                 return; 
             } else { 
@@ -454,7 +446,7 @@
             }
         });
 
-        // RENDERIZADO DEL INDEX
+        // RENDERIZADO DEL DOM
         function renderThrone(lvls) { 
             if(!lvls[0]) return; 
             document.getElementById('throneDisplay').innerHTML = `
@@ -501,6 +493,7 @@
             }).join('') || "Escuchando señales..."; 
         }
 
+        // BUSCADOR Y CHAT
         function searchPublicPlayer() {
             const q = document.getElementById('pub-search').value.trim().toLowerCase(); 
             const res = document.getElementById('pub-search-res'); 
@@ -533,7 +526,7 @@
 
                 res.innerHTML = `
                 <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
-                    <div style="flex:1; padding: 15px; border-left: ${cos.bS}; background: #111; border-radius: 10px;">
+                    <div style="flex:1; padding:15px; border-left:${cos.bS}; border-radius:10px; background:#111;">
                         <h3 class="${cos.eC} notranslate" style="margin:0; color:${cos.nC}; text-transform:uppercase; display:flex; align-items:center; gap:5px; ${cos.tG}">
                             ${p.name} ${vH}
                         </h3>
@@ -547,7 +540,6 @@
             }
         }
 
-        // CHAT GLOBAL
         function renderGlobalChat(chatData) {
             const box = document.getElementById('global-chat-box'); 
             let html = ""; 
@@ -580,7 +572,37 @@
             }
         }
 
-        // CÓDIGOS Y RECOMPENSAS
+        // =====================================
+        // ECONOMÍA (NUEVO: RECLAMO DIARIO)
+        // =====================================
+        function claimDailyXP() {
+            if (!currentUserData.key) {
+                alert("Debes iniciar sesión para reclamar XP diaria.");
+                return;
+            }
+
+            let msgBox = document.getElementById("daily-claim-msg");
+            let lastClaim = localStorage.getItem('daily_claim_' + currentUserData.name) || 0;
+            let now = Date.now();
+            let timePassed = now - parseInt(lastClaim);
+
+            if (timePassed >= 86400000) { // 24 horas = 86400000 ms
+                db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => {
+                    db.ref(`players/${currentUserData.key}/totalXP`).set((v.val() || 0) + 5);
+                });
+                
+                localStorage.setItem('daily_claim_' + currentUserData.name, now);
+                msgBox.innerText = "¡Has reclamado +5 XP! Tu billetera ha sido actualizada. Vuelve mañana.";
+                msgBox.style.color = "var(--green)";
+            } else {
+                let timeLeft = 86400000 - timePassed;
+                let hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                msgBox.innerText = `Aún no. Debes esperar ${hours}h y ${minutes}m para tu próximo reclamo.`;
+                msgBox.style.color = "var(--red)";
+            }
+        }
+
         function canjearCodigo() {
             let originalCode = document.getElementById("input-codigo").value.trim(); 
             let code = originalCode.toUpperCase(); 
@@ -590,65 +612,43 @@
             if(!currentUserData.key) { m.innerText = "Inicia sesión primero."; m.style.color="var(--red)"; return; }
             if(!originalCode) { m.innerText = "Ingresa un código."; m.style.color="var(--gold)"; return; }
             
-            let uC = JSON.parse(localStorage.getItem('codes_'+currentUserData.name)||'[]');
+            let uC = JSON.parse(localStorage.getItem('codigos_omni_' + currentUserData.name)||'[]');
             if(uC.includes(originalCode) || uC.includes(code)) { m.innerText = "Este código ya fue usado."; m.style.color="#888"; return; }
             
             let s = false;
-            
             if(originalCode === "wernerantoniokurtz@gmail.com") { db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => { db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0)+22); }); m.innerText="+22 XP añadidos."; m.style.color="var(--green)"; s=true; }
-            else if(code === "SCULLYVIP") { db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"TITULO VIP"}); m.innerText="¡Cosmético VIP Desbloqueado!"; m.style.color="var(--gold)"; s=true; }
+            else if(code === "SCULLYVIP") { db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"TITULO VIP"}); m.innerText="¡VIP Desbloqueado!"; m.style.color="var(--gold)"; s=true; }
             else if(code === "MATRIX") { db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"TEXTO HACKER"}); m.innerText="¡Hacker Desbloqueado!"; m.style.color="var(--green)"; s=true; }
             else if(code === "BLOODLUST") { db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"AURA DEMONIACA"}); m.innerText="¡Aura Desbloqueada!"; m.style.color="var(--red)"; s=true; }
             else if(code === "RAINBOW") { db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"NOMBRE RAINBOW"}); m.innerText="¡Arcoíris Desbloqueado!"; m.style.color="var(--purple)"; s=true; }
             else if(code === "ANUBIS") { pE.style.display="flex"; setTimeout(()=> pE.style.display="none", 4000); document.getElementById("input-codigo").value=""; return; }
             else { m.innerText = "Código inválido o expirado."; m.style.color="var(--red)"; return; }
             
-            if(s) { uC.push(code); localStorage.setItem('codes_'+currentUserData.name, JSON.stringify(uC)); document.getElementById("input-codigo").value=""; }
+            if(s) { uC.push(code); localStorage.setItem('codigos_omni_' + currentUserData.name, JSON.stringify(uC)); document.getElementById("input-codigo").value=""; }
         }
 
         // SMART SUBMIT
-        function previewSugThumb() {
-            const v = extraerYouTubeID(document.getElementById('sug-v').value);
-            const b = document.getElementById('sug-thumb-box'); 
-            const i = document.getElementById('sug-thumb-img');
-            
-            if (v.length === 11) { 
-                document.getElementById('sug-v').value = v; 
-                i.src = `https://img.youtube.com/vi/${v}/mqdefault.jpg`; 
-                b.style.display = 'block'; 
-            } else { 
-                b.style.display = 'none'; 
-            }
+        function previewSugThumb(){ 
+            const v = document.getElementById('sug-v').value.match(/(?:youtu\.be\/|v=)([^"&?\/\s]{11})/); 
+            if(v) { 
+                document.getElementById('sug-v').value = v[1]; 
+                document.getElementById('sug-thumb-img').src = `https://img.youtube.com/vi/${v[1]}/mqdefault.jpg`; 
+                document.getElementById('sug-thumb-img').style.display='block'; 
+            } 
         }
         
-        function sendSuggestion() {
-            const n = document.getElementById('sug-n').value.trim(); 
-            const pos = document.getElementById('sug-pos').value.trim(); 
-            const v = extraerYouTubeID(document.getElementById('sug-v').value.trim());
-            
-            if (!n || !v || !pos) return alert("Error: Nombre, posición y link son obligatorios."); 
-            if (v.length !== 11) return alert("Enlace inválido.");
-            
-            db.ref('level_suggestions').push({ name: n, position: parseInt(pos), video: v, user: currentUserData.name || "Anónimo", time: Date.now() });
-            
-            const u = fullData.system_settings?.discord?.url_sug;
-            if (u) {
-                fetch(u, { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ content: `💡 **NUEVA SUGERENCIA INTELIGENTE:** **${currentUserData.name || "Anónimo"}** sugiere añadir **${n}** en el Top **#${pos}**.\n🎥 **Prueba:** https://youtu.be/${v}`, username: "SCULLY SYSTEM" }) 
-                });
-            }
-            
-            document.getElementById('sugModal').style.display = 'none'; 
-            document.getElementById('sug-n').value = ''; 
-            document.getElementById('sug-pos').value = ''; 
-            document.getElementById('sug-v').value = ''; 
-            document.getElementById('sug-thumb-box').style.display = 'none';
-            alert("Sugerencia enviada exitosamente.");
+        function sendSuggestion(){ 
+            const n = document.getElementById('sug-n').value; 
+            const p = document.getElementById('sug-pos').value; 
+            const v = document.getElementById('sug-v').value; 
+            if(n && p && v.length === 11) { 
+                db.ref('level_suggestions').push({ name: n, position: parseInt(p), video: v, user: currentUserData.name || "Anónimo" }); 
+                alert("Sugerencia enviada. ¡Si un Admin la acepta, ganarás +10 XP!"); 
+                document.getElementById('sugModal').style.display='none'; 
+            } else { alert("Datos inválidos."); }
         }
 
-        // CINEMA MODE - VENCEDORES ORDENADOS CRONOLÓGICAMENTE
+        // CINEMA MODE - ORDENADO POR FECHA DE BASE DE DATOS
         function openCinema(idx) {
             const l = nexus(fullData.levels)[idx]; 
             if (!l) return;
@@ -659,6 +659,7 @@
             document.getElementById('c-verif').innerText = l.first || 'N/A'; 
             document.getElementById('c-bounty-badge').style.display = l.bounty ? 'inline-block' : 'none';
             
+            // Obtenemos a los jugadores que completaron el nivel
             const victorsRaw = nexus(fullData.players).filter(p => nexus(p.completions).some(x => x.level === l.name) && !p.hidden); 
             
             let vList = [];
@@ -669,12 +670,12 @@
                         name: p.name,
                         verified: p.verified,
                         link: r.link,
-                        time: r.time || 0 // Orden cronológico de la Base de Datos
+                        time: r.time || 0 // Si fue inyectado manualmente antiguo, tendrá 0
                     });
                 } 
             });
 
-            // ORDENAR DEL MÁS ANTIGUO AL MÁS RECIENTE
+            // Ordenamos desde el más antiguo (menor tiempo) al más nuevo
             vList.sort((a, b) => a.time - b.time);
             
             let vHTML = "";
@@ -775,7 +776,7 @@
                 ctx.fillStyle = '#ffffff'; 
                 ctx.font = 'bold 35px Arial'; 
                 ctx.fillText("RANK GLOBAL: #" + (pIndex + 1), 40, 230); 
-                ctx.fillText("XP TOTAL: " + p.calcXp.toFixed(1), 40, 280);
+                ctx.fillText("XP BILLETERA: " + p.calcXp.toFixed(1), 40, 280);
                 
                 let cN = (p.clanId && fullData.clans && fullData.clans[p.clanId]) ? fullData.clans[p.clanId].name : "LOBO SOLITARIO"; 
                 ctx.fillStyle = '#00ffff'; 
@@ -797,7 +798,7 @@
                 ctx.font = '18px Arial';
                 
                 for(let k = 0; k < Math.min(5, comps.length); k++) {
-                    ctx.fillText(`> ${comps[k].level} (+${(comps[k].realXp||0).toFixed(1)} XP)`, 500, 245 + (k * 25)); 
+                    ctx.fillText(`> ${comps[k].level} (+${(comps[k].realXp||0).toFixed(1)} Pts)`, 500, 245 + (k * 25)); 
                 }
                 if(comps.length === 0) {
                     ctx.fillText("> Sin registros aún.", 500, 245);
@@ -889,7 +890,7 @@
                             cb.style.pointerEvents = "all"; 
                         }
                         
-                        // LÓGICA DE PODER ABSOLUTO
+                        // LÓGICA DE PODER ABSOLUTO (Activa los 3 botones si es Owner)
                         let role = me.role || '';
                         let isOwner = (role === 'owner' || me.name.toLowerCase() === 'score');
                         
