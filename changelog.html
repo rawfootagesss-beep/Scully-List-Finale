@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMNI | Core Dumps</title>
+    <title>OMNI | Core Dumps (Changelog)</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -17,19 +17,43 @@
         .terminal-container { max-width: 800px; margin: 20px auto; border: 1px solid #00ffff; padding: 30px; box-shadow: inset 0 0 30px rgba(0,255,255,0.05); }
         .header-sys { border-bottom: 1px dashed #00ffff; padding-bottom: 20px; margin-bottom: 30px; }
         
-        .log-entry { margin-bottom: 40px; padding-left: 15px; border-left: 2px solid rgba(0,255,255,0.3); transition: 0.3s; }
+        /* ESTILOS DE LOGS DINÁMICOS Y ANTIGUOS */
+        .log-entry { margin-bottom: 40px; padding-left: 15px; border-left: 2px solid rgba(0,255,255,0.3); transition: 0.3s; animation: fadeIn 0.5s ease; }
         .log-entry:hover { border-left-color: #00ffff; background: rgba(0,255,255,0.02); }
-        .log-version { display: inline-block; background: #00ffff; color: #000; padding: 3px 12px; font-weight: bold; margin-bottom: 15px; font-size: 1.1rem; }
-        .log-date { color: #888; font-size: 0.85rem; margin-left: 15px; }
-        .log-type { font-size: 0.7rem; padding: 2px 6px; border: 1px solid; border-radius: 4px; margin-left: 10px; }
+        
+        /* LOG CONFIDENCIAL (SOLO STAFF) */
+        .log-private { border-left-color: #ff3333; }
+        .log-private:hover { border-left-color: #ff0000; background: rgba(255,51,51,0.05); }
+        
+        .log-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        .log-version { display: inline-block; background: #00ffff; color: #000; padding: 3px 12px; font-weight: bold; font-size: 1.1rem; }
+        .log-date { color: #888; font-size: 0.85rem; background: transparent;}
+        
+        /* Modificador para logs nuevos */
+        .log-date-dynamic { background: #00ffff; color: #000; padding: 2px 10px; font-weight: bold; font-size: 0.9rem; }
+        .log-private .log-date-dynamic { background: #ff3333; color: #fff; }
+        
+        .log-type { font-size: 0.7rem; padding: 2px 6px; border: 1px solid; border-radius: 4px; text-transform: uppercase; }
         .type-update { color: #00ff66; border-color: #00ff66; }
         .type-fix { color: #ff3333; border-color: #ff3333; }
         .type-feature { color: #cc00ff; border-color: #cc00ff; }
+        .type-admin { color: #ffd700; border-color: #ffd700; }
+
+        .log-content { color: #ccc; font-size: 0.9rem; line-height: 1.5; margin: 0; }
+        .log-content b { color: #00ffff; }
+        .log-private .log-content b { color: #ff3333; }
+        .author-tag { font-size: 0.7rem; color: #666; margin-top: 5px; font-style: italic; }
 
         ul { list-style-type: none; padding-left: 0; color: #ccc; }
         li { margin-bottom: 10px; line-height: 1.5; font-size: 0.9rem; }
         li::before { content: "> "; color: #00ffff; }
         li b { color: #00ffff; }
+
+        /* INYECTOR ADMIN (OCULTO) */
+        #admin-injector { display: none; background: rgba(255,215,0,0.05); border: 1px dashed var(--gold); padding: 20px; margin-bottom: 30px; }
+        .g-input { background: #000; border: 1px solid #333; color: #fff; padding: 10px; width: 100%; box-sizing: border-box; margin-bottom: 10px; font-family: inherit; }
+        .g-input:focus { border-color: var(--gold); outline: none; }
+        .btn-inject { background: #ffd700; color: #000; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; font-family: inherit; text-transform: uppercase; }
 
         /* ROADMAP BAR */
         .roadmap-box { margin-top: 50px; border: 1px dashed #333; padding: 20px; background: #050505; }
@@ -38,6 +62,7 @@
         
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         .cursor { animation: blink 1s infinite; display: inline-block; width: 10px; height: 15px; background: #00ffff; vertical-align: bottom; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
         
         @media(max-width: 600px) { .terminal-container { padding: 15px; } }
     </style>
@@ -47,12 +72,37 @@
         <div class="header-sys">
             <a href="index.html" style="color:#00ffff; text-decoration:none;">[cd ../HUB]</a>
             <h2 style="margin: 15px 0 0; text-transform: uppercase;">SCULLY_SYSTEM_LOGS.exe</h2>
-            <span style="color:#888;">Directorio de actualizaciones del Absolute Engine // Auth: ADMIN</span>
+            <span id="auth-status" style="color:#888;">Verificando credenciales de acceso...</span>
         </div>
 
-        <div id="logs-container">
+        <div id="admin-injector">
+            <h3 style="color:#ffd700; margin-top:0; font-size:1rem;">> INYECTAR REGISTRO MANUAL AL NÚCLEO</h3>
+            <input type="text" id="log-text" class="g-input" placeholder="Mensaje del registro (Ej: Se ajustó la XP de Bloodbath)">
+            <div style="display:flex; gap:10px;">
+                <select id="log-type" class="g-input" style="flex:1;">
+                    <option value="update">UPDATE (Actualización)</option>
+                    <option value="feature">FEATURE (Nueva Función)</option>
+                    <option value="fix">FIX (Corrección)</option>
+                    <option value="admin">ADMIN (Acción de Staff)</option>
+                </select>
+                <select id="log-visibility" class="g-input" style="flex:1;">
+                    <option value="public">PÚBLICO (Todos lo ven)</option>
+                    <option value="private">CONFIDENCIAL (Solo Staff)</option>
+                </select>
+            </div>
+            <button class="btn-inject" onclick="manualInject()">Ejecutar Comando</button>
+        </div>
+
+        <div id="dynamic-logs">
+            </div>
+
+        <h3 style="color:#444; border-bottom:1px dashed #333; padding-bottom:10px; margin-top:40px; font-size:1rem;">> ARCHIVOS RECUPERADOS (LEGACY LOGS)</h3>
+        
+        <div id="legacy-logs">
             <div class="log-entry">
-                <div class="log-version">v25.1.0</div><span class="log-date">MAR 2026</span><span class="log-type type-feature">FEATURE</span>
+                <div class="log-header">
+                    <div class="log-version">v25.1.0</div><span class="log-date" style="margin-left: 0;">MAR 2026</span><span class="log-type type-feature">FEATURE</span>
+                </div>
                 <ul>
                     <li>Implementado <b>Mercado Inline Oculto</b>. Los Admins ahora pueden inyectar productos directamente desde la UI de la tienda.</li>
                     <li>Refactorización del <b>Cerebro de Códigos</b>. Se añadió lectura en tiempo real desde Firebase para códigos dinámicos creados por el Staff.</li>
@@ -62,7 +112,9 @@
             </div>
 
             <div class="log-entry">
-                <div class="log-version">v25.0.0</div><span class="log-date">FEB 2026</span><span class="log-type type-update">MAJOR UPDATE</span>
+                <div class="log-header">
+                    <div class="log-version">v25.0.0</div><span class="log-date" style="margin-left: 0;">FEB 2026</span><span class="log-type type-update">MAJOR UPDATE</span>
+                </div>
                 <ul>
                     <li>Lanzamiento oficial del ecosistema <b>The Scully List Hub OMNI</b>.</li>
                     <li>Lanzamiento del motor gráfico Canvas para la forja de la <b>Titan Card 3.0</b>.</li>
@@ -72,7 +124,9 @@
             </div>
 
             <div class="log-entry">
-                <div class="log-version">v24.8.5</div><span class="log-date">ENE 2026</span><span class="log-type type-fix">HOTFIX</span>
+                <div class="log-header">
+                    <div class="log-version">v24.8.5</div><span class="log-date" style="margin-left: 0;">ENE 2026</span><span class="log-type type-fix">HOTFIX</span>
+                </div>
                 <ul>
                     <li>Corregido el fallo de sensibilidad entre mayúsculas y minúsculas (Case Sensitive) en el <b>Cinema Mode</b> y buscador de jugadores.</li>
                     <li>Sincronización del Chat Global optimizada para retener solo los últimos 40 mensajes y evitar sobrecarga de red.</li>
@@ -81,7 +135,9 @@
             </div>
 
             <div class="log-entry">
-                <div class="log-version">v24.0.0</div><span class="log-date">NOV 2025</span><span class="log-type type-update">UPDATE</span>
+                <div class="log-header">
+                    <div class="log-version">v24.0.0</div><span class="log-date" style="margin-left: 0;">NOV 2025</span><span class="log-type type-update">UPDATE</span>
+                </div>
                 <ul>
                     <li>Transición de la vieja base de datos en hojas de cálculo a servidores en tiempo real (Firebase).</li>
                     <li>Creación de los <b>Sindicatos</b> y la billetera personal de XP.</li>
@@ -101,5 +157,105 @@
 
         <p style="margin-top: 40px; color:#aaa;">C:\OMNI\System> Esperando comando<span class="cursor"></span></p>
     </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = { 
+            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
+            authDomain: "scullylist.firebaseapp.com", 
+            databaseURL: "https://scullylist-default-rtdb.firebaseio.com", 
+            projectId: "scullylist"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth(); 
+        const db = firebase.database();
+        
+        let isStaff = false;
+        let myName = "Desconocido";
+
+        // VERIFICAR AUTENTICACIÓN
+        auth.onAuthStateChanged(user => {
+            if(user) {
+                db.ref('players').once('value').then(snap => {
+                    let players = snap.val();
+                    for(let k in players) {
+                        if(players[k].email === user.email) {
+                            myName = players[k].name;
+                            let role = players[k].role || '';
+                            if(role === 'admin' || role === 'mod' || role === 'helper' || myName.toLowerCase() === 'score') {
+                                isStaff = true;
+                                document.getElementById('auth-status').innerHTML = "Status: <b style='color:#ff3333;'>NIVEL STAFF CONFIRMADO</b>";
+                                if(role === 'admin' || myName.toLowerCase() === 'score') {
+                                    document.getElementById('admin-injector').style.display = 'block';
+                                }
+                            } else {
+                                document.getElementById('auth-status').innerHTML = "Status: <b style='color:#00ff66;'>PÚBLICO</b>";
+                            }
+                            break;
+                        }
+                    }
+                    loadLogs(); 
+                });
+            } else {
+                document.getElementById('auth-status').innerHTML = "Status: <b style='color:#888;'>ANÓNIMO</b>";
+                loadLogs();
+            }
+        });
+
+        // CARGAR REGISTROS EN TIEMPO REAL (SOLO LOS NUEVOS EN EL CONTENEDOR DINÁMICO)
+        function loadLogs() {
+            db.ref('system_changelog').orderByChild('timestamp').on('value', snap => {
+                let logs = [];
+                snap.forEach(child => { logs.push(child.val()); });
+                logs.reverse(); // Más recientes primero
+                
+                let html = "";
+                logs.forEach(log => {
+                    if(log.visibility === 'private' && !isStaff) return;
+                    
+                    let dateStr = new Date(log.timestamp).toLocaleString();
+                    let typeClass = `type-${log.type}`;
+                    let privClass = log.visibility === 'private' ? 'log-private' : '';
+                    let privBadge = log.visibility === 'private' ? `<span class="log-type" style="color:#ff3333; border-color:#ff3333;">[CONFIDENCIAL]</span>` : '';
+                    
+                    html += `
+                    <div class="log-entry ${privClass}">
+                        <div class="log-header">
+                            <span class="log-date-dynamic">${dateStr}</span>
+                            <span class="log-type ${typeClass}">${log.type}</span>
+                            ${privBadge}
+                        </div>
+                        <p class="log-content">> ${log.text}</p>
+                        <div class="author-tag">Process executed by: ${log.author}</div>
+                    </div>`;
+                });
+                
+                // Los inyecta SÓLO en el contenedor superior, dejando los legacy abajo intactos
+                document.getElementById('dynamic-logs').innerHTML = html;
+            });
+        }
+
+        // INYECCIÓN MANUAL DESDE ESTA PÁGINA (Solo Admins)
+        function manualInject() {
+            let text = document.getElementById('log-text').value.trim();
+            let type = document.getElementById('log-type').value;
+            let vis = document.getElementById('log-visibility').value;
+            
+            if(!text) return alert("Falta el texto del registro.");
+            
+            db.ref('system_changelog').push({
+                text: text,
+                type: type,
+                visibility: vis,
+                author: myName,
+                timestamp: Date.now()
+            }).then(() => {
+                document.getElementById('log-text').value = "";
+            });
+        }
+    </script>
 </body>
 </html>
