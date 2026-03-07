@@ -551,7 +551,6 @@
         </div>
     </div>
    <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">UN PODEROSO ENEMIGO</div>
-
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
@@ -593,6 +592,7 @@
         const db = firebase.database();
         
         let fullData = {}; 
+        let currentAuthUser = null; // Guarda la sesión real
         let currentUserData = { name: null, key: null }; 
         const nexus = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
 
@@ -633,41 +633,36 @@
             if(!ac) return {nC, tG, bS, eC};
             ac = ac.toUpperCase(); 
             
-            if(ac.includes("VIP")||ac.includes("DORADO")){ 
-                nC="var(--gold)"; bS="4px solid var(--gold)"; 
-            }
-            else if(ac.includes("HACKER")||ac.includes("MATRIX")){ 
-                nC="var(--green)"; tG="color:var(--green); text-shadow:0 0 5px var(--green); font-family:'JetBrains Mono';"; bS="4px solid var(--green)"; 
-            }
-            else if(ac.includes("AURA")||ac.includes("DEMON")){ 
-                nC="var(--red)"; bS="4px dashed var(--red)"; tG="color:#ffaaaa; text-shadow:0 0 5px var(--red);"; 
-            }
-            else if(ac.includes("HIELO")||ac.includes("ICE")){ 
-                nC="#aaddff"; tG="text-shadow: 0 0 8px #00aaff;"; bS="4px solid #00aaff"; 
-            }
-            else if(ac.includes("FUEGO")||ac.includes("FIRE")){ 
-                nC="#ff5500"; tG="text-shadow: 0 0 8px #ff2200;"; bS="4px solid #ff5500"; 
-            }
-            else if(ac.includes("FANTASMA")||ac.includes("GHOST")){ 
-                nC="#ddd"; tG="opacity:0.8; text-shadow: 0 0 5px #fff;"; bS="4px solid #ccc"; 
-            }
-            else if(ac.includes("RAINBOW")||ac.includes("NYAN")){ 
-                eC="rbw-text"; bS="4px solid #ff00ff"; 
-            }
-            else if(ac.includes("GLITCH")){ 
-                eC="glitch-text"; bS="4px solid #00ffff"; tG="text-shadow: 2px 0 red, -2px 0 blue;"; 
-            }
+            if(ac.includes("VIP")||ac.includes("DORADO")){ nC="var(--gold)"; bS="4px solid var(--gold)"; }
+            else if(ac.includes("HACKER")||ac.includes("MATRIX")){ nC="var(--green)"; tG="color:var(--green); text-shadow:0 0 5px var(--green); font-family:'JetBrains Mono';"; bS="4px solid var(--green)"; }
+            else if(ac.includes("AURA")||ac.includes("DEMON")){ nC="var(--red)"; bS="4px dashed var(--red)"; tG="color:#ffaaaa; text-shadow:0 0 5px var(--red);"; }
+            else if(ac.includes("HIELO")||ac.includes("ICE")){ nC="#aaddff"; tG="text-shadow: 0 0 8px #00aaff;"; bS="4px solid #00aaff"; }
+            else if(ac.includes("FUEGO")||ac.includes("FIRE")){ nC="#ff5500"; tG="text-shadow: 0 0 8px #ff2200;"; bS="4px solid #ff5500"; }
+            else if(ac.includes("FANTASMA")||ac.includes("GHOST")){ nC="#ddd"; tG="opacity:0.8; text-shadow: 0 0 5px #fff;"; bS="4px solid #ccc"; }
+            else if(ac.includes("RAINBOW")||ac.includes("ARCOIRIS")||ac.includes("NYAN")){ eC="rbw-text"; bS="4px solid #ff00ff"; }
+            else if(ac.includes("GLITCH")){ eC="glitch-text"; bS="4px solid #00ffff"; tG="text-shadow: 2px 0 red, -2px 0 blue;"; }
             
             return {nC, tG, bS, eC};
         }
 
-        // SINCRONIZACIÓN MAESTRA DE DATOS
+        // =========================================
+        // SISTEMA MAESTRO DE IDENTIDAD (EL REPARADOR)
+        // =========================================
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentAuthUser = user;
+                checkIdentity();
+            } else {
+                currentAuthUser = null;
+                currentUserData = { name: null, key: null };
+            }
+        });
+
         db.ref('/').on('value', snap => {
             fullData = snap.val() || {};
             
             if (fullData.system_settings && fullData.system_settings.lockdown_active) { 
-                document.getElementById('lockdownScreen').style.display = 'flex'; 
-                return; 
+                document.getElementById('lockdownScreen').style.display = 'flex'; return; 
             } else { 
                 document.getElementById('lockdownScreen').style.display = 'none'; 
             }
@@ -677,25 +672,110 @@
             renderLiveFeed(fullData.staff_logs || {}); 
             renderGlobalChat(fullData.global_chat || {});
 
-            if (fullData.system_settings) {
+            if (fullData.system_settings?.global_alert) {
                 const aE = document.getElementById('globalAlert');
-                if (fullData.system_settings.global_alert) { 
-                    aE.innerText = fullData.system_settings.global_alert_msg || "ALERTA GLOBAL ACTIVADA"; 
-                    let bgCol = fullData.system_settings.global_alert_type === "blue" ? "var(--cyan)" : fullData.system_settings.global_alert_type === "yellow" ? "var(--gold)" : "var(--red)";
-                    aE.style.background = bgCol; 
-                    aE.style.color = (bgCol === "var(--gold)" || bgCol === "var(--cyan)") ? "#000" : "#fff"; 
-                    aE.style.display = 'block'; 
-                } else { 
-                    aE.style.display = 'none'; 
-                }
+                aE.innerText = fullData.system_settings.global_alert_msg || "ALERTA GLOBAL ACTIVADA"; 
+                let bgCol = fullData.system_settings.global_alert_type === "blue" ? "var(--cyan)" : fullData.system_settings.global_alert_type === "yellow" ? "var(--gold)" : "var(--red)";
+                aE.style.background = bgCol; 
+                aE.style.color = (bgCol === "var(--gold)" || bgCol === "var(--cyan)") ? "#000" : "#fff"; 
+                aE.style.display = 'block'; 
+            } else { 
+                document.getElementById('globalAlert').style.display = 'none'; 
             }
             
             if (fullData.admin_changelog) { 
                 document.getElementById('ticker-box').innerHTML = Object.values(fullData.admin_changelog).reverse().slice(0, 5).map(l => `<span class="log-item"><i class="fas fa-code" style="color:var(--accent)"></i> ${l.title}</span>`).join("") || "OPERANDO AL 100%"; 
             }
+
+            // Cada vez que la base de datos se actualiza, revisamos la identidad
+            if(currentAuthUser) checkIdentity();
         });
 
-        // RENDERIZADO DEL INDEX
+        // Esta función une Auth con la BD de forma inquebrantable
+        function checkIdentity() {
+            if (!currentAuthUser || !fullData.players) return;
+
+            let me = null;
+            let miLlaveDB = null;
+            
+            for (let key in fullData.players) { 
+                let p = fullData.players[key];
+                if (p && p.email && typeof p.email === 'string') {
+                    if (p.email.trim().toLowerCase() === currentAuthUser.email.trim().toLowerCase()) { 
+                        me = p; 
+                        miLlaveDB = key; 
+                        break; 
+                    }
+                } 
+            }
+
+            const navLogin = document.getElementById('nav-login');
+
+            if (me && miLlaveDB) {
+                // Éxito: El perfil existe y coincide
+                currentUserData = { name: me.name, key: miLlaveDB };
+                
+                if (navLogin) { 
+                    navLogin.innerHTML = '<i class="fas fa-user-circle"></i> Mi Perfil'; 
+                    navLogin.href = "perfil.html"; 
+                    navLogin.onclick = null; 
+                }
+                
+                const btnManage = document.getElementById('btn-manage-account');
+                if (btnManage) { btnManage.innerHTML = '<i class="fas fa-user"></i> MI PERFIL TITÁN'; btnManage.href = "perfil.html"; }
+
+                const ci = document.getElementById('g-chat-input'); 
+                const cb = document.getElementById('g-chat-btn');
+                if (ci && cb) { 
+                    ci.disabled = false; ci.placeholder = `Conectado como ${me.name}. Escribe a la comunidad...`; 
+                    cb.style.opacity = "1"; cb.style.pointerEvents = "all"; 
+                }
+                
+                let role = me.role || '';
+                let isOwner = (role === 'owner' || me.name.toLowerCase() === 'score');
+                
+                if (document.getElementById('adminBtn')) document.getElementById('adminBtn').style.display = (role === 'admin' || isOwner) ? "inline-flex" : "none"; 
+                if (document.getElementById('modBtn')) document.getElementById('modBtn').style.display = (role === 'mod' || role === 'admin' || isOwner) ? "inline-flex" : "none"; 
+                if (document.getElementById('helperBtn')) document.getElementById('helperBtn').style.display = (role === 'helper' || role === 'mod' || role === 'admin' || isOwner) ? "inline-flex" : "none"; 
+                
+            } else {
+                // Auto-Reparador: Sesión iniciada pero cuenta fantasma
+                currentUserData = { name: null, key: null };
+                if (navLogin) { 
+                    navLogin.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:var(--gold)"></i> Vincular Cuenta'; 
+                    navLogin.href = "#";
+                    navLogin.onclick = (e) => {
+                        e.preventDefault();
+                        let nick = prompt("⚠️ Detectamos tu sesión pero no tu perfil Titán.\n\nIngresa tu NICK EXACTO para vincular tu correo al ranking o crear un perfil nuevo:");
+                        if(nick && nick.trim() !== "") {
+                            nick = nick.trim();
+                            let targetKey = null;
+                            for(let k in fullData.players) {
+                                if(fullData.players[k].name && fullData.players[k].name.toLowerCase() === nick.toLowerCase()) {
+                                    targetKey = k; break;
+                                }
+                            }
+                            if(targetKey) {
+                                db.ref('players/' + targetKey).update({ email: currentAuthUser.email.trim().toLowerCase() });
+                                alert("¡Cuenta vinculada exitosamente! Ya puedes enviar récords.");
+                            } else {
+                                db.ref('players').push({
+                                    name: nick,
+                                    email: currentAuthUser.email.trim().toLowerCase(),
+                                    totalXP: 0,
+                                    role: 'player'
+                                });
+                                alert("¡Perfil Titán creado con éxito! Ya puedes enviar récords.");
+                            }
+                        }
+                    };
+                }
+            }
+        }
+
+        // =========================================
+        // RENDERIZADOS
+        // =========================================
         function renderThrone(lvls) { 
             if(!lvls[0]) return; 
             document.getElementById('throneDisplay').innerHTML = `
@@ -747,9 +827,8 @@
         // =========================================
         function openRecordModal() {
             if (!currentUserData.key) {
-                alert("⚠️ ACCESO DENEGADO: El sistema no detecta tu sesión activa. Por favor inicia sesión nuevamente.");
-                window.location.href = "login.html";
-                return;
+                alert("⚠️ ACCESO DENEGADO: El sistema no detecta un perfil vinculado a tu sesión. Si acabas de loguearte, usa el botón amarillo 'Vincular Cuenta' en el menú de arriba.");
+                return; // Ya NO te redirige al login.html a la fuerza
             }
             document.getElementById('rec-username').innerText = currentUserData.name;
             document.getElementById('recModal').style.display = 'flex';
@@ -766,12 +845,11 @@
             }
         }
 
-        // FUNCIÓN ASÍNCRONA PARA NO REINICIAR PÁGINA
         async function submitRecord(event) {
-            if(event) event.preventDefault();
+            if(event) event.preventDefault(); 
 
             if (!currentUserData.key) {
-                alert("⚠️ Error crítico: Tu sesión ha caducado. Vuelve a iniciar sesión.");
+                alert("⚠️ Error de sesión: No hay un perfil válido detectado. Recarga la página o vincula tu cuenta.");
                 return;
             }
 
@@ -785,10 +863,10 @@
                 return;
             }
 
-            const btn = document.getElementById('btn-enviar-rec');
+            const btn = document.getElementById('btn-enviar-rec') || (event ? event.target : null);
             if(btn) {
                 btn.disabled = true;
-                btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> PROCESANDO...";
+                btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> PROCESANDO ENVÍO...";
             }
 
             try {
@@ -821,6 +899,7 @@
                 document.getElementById('rec-raw').value = "";
                 document.getElementById('rec-com').value = "";
                 document.getElementById('rec-thumb-box').style.display='none';
+
             } catch (error) {
                 alert("Hubo un error de conexión con la Base de Datos: " + error.message);
             } finally {
@@ -1267,70 +1346,6 @@
                 trail.style.top = e.pageY + 'px';
                 document.body.appendChild(trail);
                 setTimeout(() => trail.remove(), 400);
-            }
-        });
-
-        // SISTEMA DE ROLES Y AUTENTICACIÓN -> BLINDADO AL 100%
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                db.ref('players').on('value', snap => { 
-                    const playersObj = snap.val(); 
-                    let miLlaveDB = null, me = null;
-                    
-                    for (let key in playersObj) { 
-                        // Filtro ultra robusto: Ignora nulos y verifica que sea un string antes de hacer toLowerCase()
-                        if (playersObj[key] && playersObj[key].email && typeof playersObj[key].email === 'string') {
-                            if (playersObj[key].email.toLowerCase() === user.email.toLowerCase()) { 
-                                me = playersObj[key]; 
-                                miLlaveDB = key; 
-                                break; 
-                            }
-                        } 
-                    }
-                    
-                    if (me && miLlaveDB) {
-                        currentUserData = { name: me.name, key: miLlaveDB };
-                        
-                        const navLogin = document.getElementById('nav-login');
-                        if (navLogin) { 
-                            navLogin.innerHTML = '<i class="fas fa-user-circle"></i> Mi Perfil'; 
-                            navLogin.href = "perfil.html"; 
-                        }
-                        
-                        const btnManage = document.getElementById('btn-manage-account');
-                        if (btnManage) { 
-                            btnManage.innerHTML = '<i class="fas fa-user"></i> MI PERFIL TITÁN'; 
-                            btnManage.href = "perfil.html"; 
-                        }
-
-                        const ci = document.getElementById('g-chat-input'); 
-                        const cb = document.getElementById('g-chat-btn');
-                        if (ci && cb) { 
-                            ci.disabled = false; 
-                            ci.placeholder = `Conectado como ${me.name}. Escribe a la comunidad...`; 
-                            cb.style.opacity = "1"; 
-                            cb.style.pointerEvents = "all"; 
-                        }
-                        
-                        let role = me.role || '';
-                        let isOwner = (role === 'owner' || me.name.toLowerCase() === 'score');
-                        
-                        if (role === 'admin' || isOwner) { 
-                            let aBtn = document.getElementById('adminBtn'); 
-                            if(aBtn) aBtn.style.display = "inline-flex"; 
-                        } 
-                        if (role === 'mod' || isOwner) { 
-                            let mBtn = document.getElementById('modBtn'); 
-                            if(mBtn) mBtn.style.display = "inline-flex"; 
-                        }
-                        if (role === 'helper' || isOwner) { 
-                            let hBtn = document.getElementById('helperBtn'); 
-                            if(hBtn) hBtn.style.display = "inline-flex"; 
-                        }
-                    } 
-                });
-            } else {
-                currentUserData = { name: null, key: null };
             }
         });
     </script>
