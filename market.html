@@ -2,62 +2,118 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>OMNI | Mercado</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Lexend+Deca:wght@400;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OMNI | Mercado de Suministros</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root { --bg: #050505; --gold: #ffd700; --red: #ff3333; --cyan: #00ffff; --border: rgba(255,255,255,0.1); }
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 40px; border-bottom: 1px solid var(--gold); padding-bottom: 20px; }
-        h1 { color: var(--gold); text-transform: uppercase; font-size: 2.5rem; margin: 0; }
+        :root { 
+            --bg: #050505; --gold: #ffd700; --red: #ff3333; 
+            --cyan: #00ffff; --green: #00ff66; --purple: #cc00ff;
+            --border: rgba(255,255,255,0.1); 
+        }
         
-        /* PANEL DE ADMIN OCULTO */
-        #admin-panel { display: none; background: rgba(255,51,51,0.1); border: 1px dashed var(--red); padding: 20px; border-radius: 10px; margin-bottom: 30px; }
-        .admin-title { color: var(--red); margin-top: 0; font-family: 'JetBrains Mono'; text-transform: uppercase; }
-        .admin-inputs { display: flex; gap: 10px; flex-wrap: wrap; }
-        .g-input { flex: 1; background: #000; border: 1px solid var(--border); color: #fff; padding: 10px; border-radius: 5px; outline: none; }
-        .btn-admin { background: var(--red); color: #fff; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; border-radius: 5px; }
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; overflow-x: hidden; }
+        
+        .container { max-width: 1100px; margin: 0 auto; padding-bottom: 50px; }
+        
+        header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 20px; position: relative; }
+        .back-btn { position: absolute; left: 0; top: 10px; color: #aaa; text-decoration: none; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
+        .back-btn:hover { color: var(--gold); }
+        h1 { color: var(--gold); text-transform: uppercase; font-size: clamp(1.8rem, 5vw, 3rem); margin: 0; text-shadow: 0 0 20px rgba(255,215,0,0.3); }
+        
+        /* BILLETERA DEL USUARIO */
+        .user-wallet { background: rgba(0,255,255,0.05); padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 30px; border: 1px solid var(--cyan); box-shadow: 0 0 20px rgba(0,255,255,0.1); }
+        .user-wallet h2 { margin: 0; color: var(--cyan); font-family: 'JetBrains Mono'; font-size: 2rem; }
+        .user-wallet p { margin: 5px 0 0; color: #888; font-size: 0.85rem; text-transform: uppercase; }
 
-        /* GRID DE PRODUCTOS */
-        .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .item-card { background: #111; border: 1px solid var(--border); padding: 20px; border-radius: 10px; text-align: center; transition: 0.3s; position: relative; overflow: hidden; }
-        .item-card:hover { border-color: var(--gold); transform: translateY(-5px); box-shadow: 0 5px 20px rgba(255,215,0,0.2); }
-        .item-price { color: var(--gold); font-size: 1.5rem; font-weight: 800; margin: 15px 0; }
-        .btn-buy { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px; width: 100%; cursor: pointer; transition: 0.3s; border-radius: 5px; }
-        .btn-buy:hover { background: var(--gold); color: #000; }
+        /* PANEL DE ADMIN OCULTO */
+        #admin-panel { display: none; background: rgba(255,51,51,0.05); border: 1px dashed var(--red); padding: 20px; border-radius: 10px; margin-bottom: 30px; }
+        .admin-title { color: var(--red); margin-top: 0; font-family: 'JetBrains Mono'; text-transform: uppercase; font-size: 1rem; }
+        .admin-inputs { display: flex; gap: 10px; flex-wrap: wrap; }
+        .g-input { flex: 1; min-width: 150px; background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 5px; font-family: inherit; }
+        .g-input:focus { border-color: var(--red); }
+        .btn-admin { background: var(--red); color: #fff; border: none; padding: 12px 25px; cursor: pointer; font-weight: 800; border-radius: 5px; text-transform: uppercase; }
+        .btn-admin:hover { background: #cc0000; }
+
+        /* CUADRÍCULA DEL MERCADO */
+        .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
         
-        .user-wallet { background: #111; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; border: 1px solid var(--cyan); }
+        /* TARJETA DE PRODUCTO */
+        .item-card { 
+            background: rgba(15,15,15,0.9); border: 1px solid var(--border); padding: 25px 20px; 
+            border-radius: 15px; text-align: center; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            position: relative; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .item-card:hover { transform: translateY(-10px); border-color: var(--color-hover, var(--gold)); box-shadow: 0 10px 30px var(--shadow-hover, rgba(255,215,0,0.2)); }
+        
+        .item-icon { font-size: 3.5rem; margin-bottom: 15px; text-shadow: 0 0 15px currentColor; }
+        .item-title { margin: 0 0 10px; font-size: 1.2rem; text-transform: uppercase; font-weight: 800; }
+        .item-desc { color: #888; font-size: 0.8rem; line-height: 1.4; margin-bottom: 20px; flex-grow: 1; }
+        
+        .item-price { background: #000; border: 1px dashed #333; padding: 10px; border-radius: 8px; color: var(--gold); font-family: 'JetBrains Mono'; font-weight: 800; font-size: 1.2rem; margin-bottom: 15px; }
+        
+        .btn-buy { 
+            background: transparent; border: 2px solid var(--color-hover, var(--gold)); 
+            color: var(--color-hover, var(--gold)); padding: 12px; width: 100%; 
+            cursor: pointer; transition: 0.3s; border-radius: 8px; font-weight: 800; text-transform: uppercase; 
+        }
+        .btn-buy:hover { background: var(--color-hover, var(--gold)); color: #000; }
+
+        /* EFECTO ESPECIAL NYAN CAT */
+        @keyframes rainbowBorder { 
+            0% { border-color: #ff0000; box-shadow: 0 0 20px rgba(255,0,0,0.4); } 
+            25% { border-color: #ffff00; box-shadow: 0 0 20px rgba(255,255,0,0.4); } 
+            50% { border-color: #00ff00; box-shadow: 0 0 20px rgba(0,255,0,0.4); } 
+            75% { border-color: #00ffff; box-shadow: 0 0 20px rgba(0,255,255,0.4); } 
+            100% { border-color: #ff00ff; box-shadow: 0 0 20px rgba(255,0,255,0.4); } 
+        }
+        .card-nyan { animation: rainbowBorder 3s infinite alternate; }
+        .card-nyan:hover { transform: scale(1.05) rotate(2deg); }
+
+        /* GLITCH EFFECT */
+        .card-glitch:hover .item-icon { animation: shake 0.5s infinite; }
+        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 20% { transform: translate(-1px, -2px) rotate(-1deg); } 40% { transform: translate(-3px, 0px) rotate(1deg); } 60% { transform: translate(3px, 2px) rotate(0deg); } 80% { transform: translate(1px, -1px) rotate(1deg); } 100% { transform: translate(-1px, 2px) rotate(-1deg); } }
+
+        @media(max-width: 600px) {
+            .back-btn { position: static; display: block; margin-bottom: 15px; }
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
         <header>
-            <a href="index.html" style="color:#aaa; text-decoration:none; font-size:0.8rem; float:left;"><i class="fas fa-arrow-left"></i> VOLVER AL HUB</a>
-            <h1><i class="fas fa-shopping-cart"></i> Suministros OMNI</h1>
-            <p style="color:#888;">Gasta tu XP en mejoras y cosméticos para tu perfil.</p>
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> VOLVER AL HUB OMNI</a>
+            <h1><i class="fas fa-store"></i> Mercado de Cosméticos</h1>
+            <p style="color:#888; margin-top:5px; font-size:0.9rem;">Personaliza tu presencia en la red usando tu XP farmeada.</p>
         </header>
 
         <div class="user-wallet">
-            <h3 style="margin:0; color:var(--cyan);">TU BILLETERA: <span id="wallet-xp">CARGANDO...</span> XP</h3>
+            <p>Billetera XP Disponible</p>
+            <h2><i class="fas fa-coins"></i> <span id="wallet-xp">--</span></h2>
         </div>
 
         <div id="admin-panel">
-            <h3 class="admin-title"><i class="fas fa-terminal"></i> Terminal Comercial (Admin)</h3>
+            <h3 class="admin-title"><i class="fas fa-terminal"></i> Inyector de Ítems Dinámicos (Admin)</h3>
+            <p style="color:#888; font-size:0.8rem; margin-bottom:15px;">Añade cosméticos temporales o de evento directamente a la base de datos.</p>
             <div class="admin-inputs">
-                <input type="text" id="add-name" class="g-input" placeholder="Nombre del Ítem (Ej: Aura Neón)">
+                <input type="text" id="add-name" class="g-input" placeholder="Nombre (Ej: Halo de Tormenta)">
                 <input type="number" id="add-price" class="g-input" placeholder="Precio en XP">
-                <select id="add-type" class="g-input" style="max-width: 150px;">
-                    <option value="cosmetic">Cosmético</option>
-                    <option value="perk">Ventaja</option>
-                </select>
-                <button class="btn-admin" onclick="addNewItem()"><i class="fas fa-plus"></i> PUBLICAR</button>
+                <input type="text" id="add-icon" class="g-input" placeholder="Icono (Ej: fas fa-bolt)">
+                <input type="color" id="add-color" class="g-input" style="padding: 5px; max-width: 80px;" value="#00ffff" title="Color del Ítem">
+                <button class="btn-admin" onclick="addNewItem()"><i class="fas fa-upload"></i> PUBLICAR</button>
             </div>
         </div>
 
+        <h3 style="color:#aaa; text-transform:uppercase; font-size:0.9rem; border-bottom:1px dashed #333; padding-bottom:10px;"><i class="fas fa-box-open"></i> Catálogo Oficial</h3>
+        
         <div class="market-grid" id="store-items">
-            <p style="text-align:center; color:#555; grid-column:1/-1;">Sincronizando con la red comercial...</p>
-        </div>
+            </div>
+
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -65,6 +121,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     
     <script>
+        // CONFIGURACIÓN FIREBASE (Mantén la tuya)
         const firebaseConfig = { 
             apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
             authDomain: "scullylist.firebaseapp.com", 
@@ -75,10 +132,24 @@
             appId: "1:498548914021:web:59128b5e06b36a4e81938c" 
         };
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth(); const db = firebase.database();
+        const auth = firebase.auth(); 
+        const db = firebase.database();
+        
         let currentUser = null;
 
-        // VERIFICAR AUTENTICACIÓN Y ROL DE ADMIN
+        // CATÁLOGO OFICIAL (HARDCODED PARA ASEGURAR QUE SIEMPRE ESTÉN)
+        const officialCatalog = [
+            { id: "ghost", name: "Modo Fantasma", price: 100, icon: "fas fa-ghost", color: "#aaaaaa", desc: "Vuelve tu nombre semi-transparente en los Leaderboards. Ideal para acechar en las sombras.", extraClass: "" },
+            { id: "ice", name: "Núcleo de Hielo", price: 200, icon: "fas fa-snowflake", color: "#00aaff", desc: "Emana un aura congelada con destellos celestes en tu perfil y el chat global.", extraClass: "" },
+            { id: "matrix", name: "Hacker Matrix", price: 250, icon: "fas fa-terminal", color: "#00ff66", desc: "Convierte tu fuente a estilo terminal verde brillante. Muestra quién domina el código.", extraClass: "" },
+            { id: "fire", name: "Llamas de Fuego", price: 300, icon: "fas fa-fire", color: "#ff5500", desc: "Una sombra ardiente de color naranja intenso que rodeará tu identidad OMNI.", extraClass: "" },
+            { id: "glitch", name: "Anomalía Glitch", price: 350, icon: "fas fa-bug", color: "#00ffff", desc: "El sistema falla al leer tu nombre. Efecto de estática cibernética incluido.", extraClass: "card-glitch" },
+            { id: "demon", name: "Aura Demoníaca", price: 400, icon: "fas fa-skull", color: "#ff3333", desc: "Demuestra tu letalidad. Borde rojo punteado y texto color sangre brillante.", extraClass: "" },
+            { id: "vip", name: "Estatus VIP Dorada", price: 500, icon: "fas fa-crown", color: "#ffd700", desc: "El clásico de la realeza. Brillo dorado absoluto en todo el ecosistema de The Scully List.", extraClass: "" },
+            { id: "nyan", name: "Nyan Cat Trail", price: 777, icon: "fas fa-cat", color: "#ff00ff", desc: "¡Efecto Arcoíris animado súper legendario! Deja una estela multicolor a tu paso. (Extremadamente raro)", extraClass: "card-nyan" }
+        ];
+
+        // VERIFICAR USUARIO Y ROL
         auth.onAuthStateChanged(user => {
             if(user) {
                 db.ref('players').once('value').then(snap => {
@@ -86,10 +157,11 @@
                     for(let key in players) {
                         if(players[key].email === user.email) {
                             currentUser = { ...players[key], key: key };
-                            document.getElementById('wallet-xp').innerText = currentUser.totalXP || 0;
+                            document.getElementById('wallet-xp').innerText = (currentUser.totalXP || 0).toFixed(1);
                             
-                            // SI ES ADMIN, MOSTRAR EL PANEL DE CREACIÓN DE ÍTEMS
-                            if(currentUser.role === 'admin' || currentUser.name.toLowerCase() === 'score') {
+                            // SI ES ADMIN O SCORE, MOSTRAR PANEL DE INYECCIÓN
+                            let role = currentUser.role || '';
+                            if(role === 'admin' || currentUser.name.toLowerCase() === 'score') {
                                 document.getElementById('admin-panel').style.display = 'block';
                             }
                             break;
@@ -97,56 +169,104 @@
                     }
                 });
             } else {
-                document.getElementById('wallet-xp').innerText = "NO LOGUEADO";
+                document.getElementById('wallet-xp').innerText = "Inicia Sesión";
             }
         });
 
-        // LÓGICA DEL PANEL ADMIN: Añadir ítem a la tienda
-        function addNewItem() {
-            let name = document.getElementById('add-name').value.trim();
-            let price = parseInt(document.getElementById('add-price').value);
-            let type = document.getElementById('add-type').value;
-
-            if(!name || !price) return alert("Faltan datos del producto.");
-            
-            db.ref('market_items').push({ name: name, price: price, type: type, active: true });
-            alert("Ítem añadido al mercado global.");
-            
-            document.getElementById('add-name').value = "";
-            document.getElementById('add-price').value = "";
-        }
-
-        // RENDERIZAR TIENDA EN TIEMPO REAL
-        db.ref('market_items').on('value', snap => {
-            const items = snap.val() || {};
+        // RENDERIZAR TIENDA (Combina Oficiales + Firebase Dinámicos)
+        function renderStore(dynamicItems) {
+            const grid = document.getElementById('store-items');
             let html = "";
-            for(let key in items) {
-                if(items[key].active) {
-                    html += `
-                    <div class="item-card">
-                        <i class="fas fa-box" style="font-size:3rem; color:#444; margin-bottom:10px;"></i>
-                        <h3 style="margin:0; text-transform:uppercase;">${items[key].name}</h3>
-                        <div class="item-price">${items[key].price} XP</div>
-                        <button class="btn-buy" onclick="buyItem('${key}', '${items[key].name}', ${items[key].price})">
-                            <i class="fas fa-shopping-cart"></i> COMPRAR
-                        </button>
-                    </div>`;
+
+            // 1. Dibujar Catálogo Oficial
+            officialCatalog.forEach(item => {
+                html += buildCard(item.id, item.name, item.price, item.icon, item.color, item.desc, item.extraClass, false);
+            });
+
+            // 2. Dibujar Catálogo Dinámico (Añadido por Admins en Firebase)
+            if(dynamicItems) {
+                for(let key in dynamicItems) {
+                    let d = dynamicItems[key];
+                    if(d.active !== false) { // Si no está desactivado
+                        html += buildCard(key, d.name, d.price, d.icon || 'fas fa-star', d.color || '#00ffff', "Ítem Temporal del Evento Admin.", "card-dynamic", true);
+                    }
                 }
             }
-            document.getElementById('store-items').innerHTML = html || "<p style='grid-column:1/-1; text-align:center;'>Mercado vacío.</p>";
+
+            grid.innerHTML = html;
+        }
+
+        // Creador de Tarjetas HTML
+        function buildCard(id, name, price, icon, color, desc, extraClass, isDynamic) {
+            let badge = isDynamic ? `<span style="position:absolute; top:10px; right:10px; background:${color}; color:#000; font-size:0.6rem; padding:2px 6px; border-radius:3px; font-weight:bold;">NUEVO</span>` : "";
+            
+            return `
+            <div class="item-card ${extraClass}" style="--color-hover: ${color}; --shadow-hover: ${color}44;">
+                ${badge}
+                <i class="${icon} item-icon" style="color: ${color};"></i>
+                <h3 class="item-title" style="color: ${color};">${name}</h3>
+                <p class="item-desc">${desc}</p>
+                <div class="item-price">${price} XP</div>
+                <button class="btn-buy" onclick="buyItem('${id}', '${name}', ${price})">
+                    <i class="fas fa-shopping-cart"></i> ADQUIRIR
+                </button>
+            </div>`;
+        }
+
+        // ESCUCHAR ÍTEMS DINÁMICOS DE FIREBASE
+        db.ref('market_dynamic_items').on('value', snap => {
+            renderStore(snap.val());
         });
 
         // LÓGICA DE COMPRA
-        function buyItem(itemKey, itemName, price) {
-            if(!currentUser) return alert("Debes iniciar sesión.");
-            if((currentUser.totalXP || 0) < price) return alert("No tienes suficiente XP.");
-            
-            if(confirm(`¿Comprar ${itemName} por ${price} XP?`)) {
-                let newXP = currentUser.totalXP - price;
-                db.ref(`players/${currentUser.key}/totalXP`).set(newXP);
-                db.ref(`players/${currentUser.key}/inventory`).push({ itemName: itemName, boughtAt: Date.now() });
-                alert(`¡Compra exitosa! ${itemName} añadido a tu inventario.`);
+        function buyItem(itemId, itemName, price) {
+            if(!currentUser) {
+                alert("⚠️ Error: Debes iniciar sesión para realizar transacciones.");
+                return window.location.href = "login.html";
             }
+            
+            if((currentUser.totalXP || 0) < price) {
+                return alert(`❌ Fondos insuficientes. Necesitas ${price} XP y solo tienes ${(currentUser.totalXP||0).toFixed(1)} XP.`);
+            }
+            
+            if(confirm(`¿Estás seguro de adquirir [ ${itemName} ] por ${price} XP?\nSe descontará de tu billetera.`)) {
+                let newXP = currentUser.totalXP - price;
+                
+                // Actualizar Billetera
+                db.ref(`players/${currentUser.key}/totalXP`).set(newXP);
+                
+                // Añadir al Inventario y setear como Cosmético Activo
+                db.ref(`players/${currentUser.key}/inventory`).push({ itemName: itemId, purchasedAt: Date.now() });
+                db.ref(`players/${currentUser.key}/activeCosmetic`).set(itemId);
+                
+                // Actualizar UI local rápido
+                currentUser.totalXP = newXP;
+                document.getElementById('wallet-xp').innerText = newXP.toFixed(1);
+                
+                alert(`✅ ¡Transacción exitosa!\nEl cosmético [ ${itemName} ] ha sido equipado automáticamente en tu perfil.`);
+            }
+        }
+
+        // LÓGICA DEL PANEL ADMIN: Inyectar ítem dinámico
+        function addNewItem() {
+            let name = document.getElementById('add-name').value.trim();
+            let price = parseInt(document.getElementById('add-price').value);
+            let icon = document.getElementById('add-icon').value.trim() || "fas fa-star";
+            let color = document.getElementById('add-color').value;
+
+            if(!name || isNaN(price)) return alert("El nombre y el precio son obligatorios.");
+            
+            db.ref('market_dynamic_items').push({ 
+                name: name, 
+                price: price, 
+                icon: icon, 
+                color: color,
+                createdAt: Date.now()
+            });
+            
+            alert(`Ítem [${name}] inyectado exitosamente en el mercado global.`);
+            document.getElementById('add-name').value = "";
+            document.getElementById('add-price').value = "";
         }
     </script>
 </body>
