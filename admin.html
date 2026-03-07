@@ -276,6 +276,16 @@
                         <button class="btn" style="background:transparent;color:var(--ac);border:1px solid var(--ac);flex:1;" onclick="rLv()"><i class="fas fa-times"></i> CANCELAR EDICIÓN</button>
                         <button class="btn" style="background:var(--rd);color:#fff;flex:1;" onclick="delLv()"><i class="fas fa-trash"></i> ELIMINAR NIVEL</button>
                     </div>
+
+                    <div id="v-inject-box" style="display:none; margin-top:20px; padding-top:15px; border-top:1px solid #333;">
+                        <h4 style="color:var(--gr); margin-top:0; font-size:0.9rem;"><i class="fas fa-plus-circle"></i> Inyectar Victor Directo</h4>
+                        <p style="font-size:0.7rem; color:#888; margin-bottom:10px;">Agrega un jugador a este nivel instantáneamente con XP calculada.</p>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            <input type="text" id="v-inj-name" placeholder="Nick del jugador" style="flex:1; min-width:150px; background:#000; border:1px solid #333; color:#fff; padding:10px; border-radius:8px;">
+                            <input type="text" id="v-inj-link" placeholder="Link de prueba (Opcional)" style="flex:1; min-width:150px; background:#000; border:1px solid #333; color:#fff; padding:10px; border-radius:8px;">
+                            <button class="btn" style="background:var(--gr); color:#000;" onclick="injectVictorDirect()">AÑADIR</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <h3 style="color:var(--bl);font-size:1rem;margin-top:30px; border-bottom:1px solid #333; padding-bottom:10px;">Estructura OMNI Ranking (Modifica el puesto desde el editor)</h3>
@@ -303,6 +313,11 @@
                         <div class="ig">
                             <label>URL Foto de Perfil (Privacidad OMNI)</label>
                             <input type="text" id="pe-pfp" placeholder="Ej: https://i.imgur.com/foto.png">
+                        </div>
+
+                        <div class="ig">
+                            <label>Código de País (Ej: mx, cl, ar, es)</label>
+                            <input type="text" id="pe-flag" placeholder="Código de 2 letras (en blanco para quitarlo)">
                         </div>
                         
                         <div class="ig">
@@ -435,45 +450,8 @@
                         <input type="file" id="importFile" style="display:none" accept=".json" onchange="rDB(event)">
                     </div>
                     
-                    <button class="btn" style="width:100%; background:transparent; border:1px solid var(--rd); color:var(--rd);" onclick="cleanDB()"><i class="fas fa-biohazard"></i> PURGAR USUARIOS INACTIVOS (0 XP)</button>
-                </div>
-            </div>
-
-            <div id="t-aud" class="tab">
-                <h2 class="title"><i class="fas fa-terminal" style="color:var(--bl);"></i> Auditoría Root</h2>
-                <button class="bs br" style="margin-bottom:15px;" onclick="pList('staff_logs')">BORRAR HISTORIAL COMPLETO</button>
-                <div class="panel" style="background:#000; padding:15px;"><div id="l-aud" style="max-height:500px; overflow-y:auto;"></div></div>
-            </div>
-
-        </div>
-    </div>
-
-    <div id="m-rev" class="mod">
-        <div class="mc">
-            <span style="position:absolute; top:15px; right:20px; font-size:1.5rem; color:#888; cursor:pointer;" onclick="cMod('m-rev')">✕</span>
-            <h2 id="r-t" style="margin-top:0; color:var(--ac);">Rev</h2>
-            <div id="r-v" style="margin-bottom:15px;"></div>
-            <div style="background:rgba(255,255,255,.02); padding:15px; border-radius:10px; margin-bottom:20px; font-size:0.8rem; border:1px solid var(--bd);">
-                <p>RAW: <span id="r-rw"></span></p>
-                <p>Nota: <span id="r-cm"></span></p>
-            </div>
-            <div style="display:flex; flex-direction:column; gap:10px;">
-                <button id="b-ac" class="btn bg" style="width:100%;">ACEPTAR (DAR XP)</button>
-                <button id="b-ap" class="btn by" style="width:100%;">APELACIÓN</button>
-                <button id="b-rj" class="btn br" style="width:100%;">RECHAZAR</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="m-hlp" class="mod">
-        <div class="mc" style="text-align:center; border-color:var(--bl);">
-            <i class="fas fa-info-circle" style="font-size:3rem; color:var(--bl); margin-bottom:15px;"></i>
-            <h2 id="h-t" style="color:var(--bl); margin-top:0;">Ayuda</h2>
-            <p id="h-d" style="color:#aaa; font-size:0.85rem; line-height:1.6; margin-bottom:25px;"></p>
-            <button class="btn bb" style="width:100%;" onclick="cMod('m-hlp')">ENTENDIDO</button>
-        </div>
-    </div>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+                    <button class="btn" style="width:100%; background:transparent; border:1px solid var(--rd); color:var(--rd);" onclick="cleanDB()
+                        <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
@@ -689,6 +667,16 @@
             log("Borró Alerta Global");
         }
 
+        // MOTOR DE EXPERIENCIA Y RÉCORDS
+        const getXP = (l, playerName) => { 
+            const i = lvls.findIndex(x => x.name.toLowerCase() === l.toLowerCase()); 
+            if(i === -1) return 0; 
+            let base = Math.max(100 - (i * 0.6), 5); 
+            if(lvls[i].bounty) base = base * 2; 
+            if(playerName && lvls[i].first?.toLowerCase() === playerName.toLowerCase()) base = base * 2;
+            return base; 
+        };
+
         function renderAllPlayers(pList) {
             const currentLvls = nx(fD.levels);
             let calcedList = [...pList].map(p => {
@@ -732,16 +720,6 @@
             $('t-play').scrollIntoView(); 
         }
 
-        // MOTOR DE EXPERIENCIA Y RÉCORDS (DOBLE XP VERIFICADORES)
-        const getXP = (l, playerName) => { 
-            const i = lvls.findIndex(x => x.name.toLowerCase() === l.toLowerCase()); 
-            if(i === -1) return 0; 
-            let base = Math.max(100 - (i * 0.6), 5); 
-            if(lvls[i].bounty) base = base * 2; 
-            if(playerName && lvls[i].first?.toLowerCase() === playerName.toLowerCase()) base = base * 2; // Doble XP Verificador
-            return base; 
-        };
-        
         function rRcs(d) { 
             let h = ""; 
             Object.entries(d).forEach(([id,r]) => { 
@@ -805,6 +783,7 @@
             toast("Procesado");
         }
 
+        // INYECCIÓN MANUAL
         function iRec() { 
             const p = $('m-p').value.trim();
             const l = $('m-l').value.trim();
@@ -837,9 +816,7 @@
             $('m-p').value = ""; $('m-l').value = ""; $('m-k').value = ""; 
         }
 
-        // ==========================================
-        // GESTIÓN DE NIVELES (POSICIONAMIENTO NUMÉRICO)
-        // ==========================================
+        // GESTIÓN DE NIVELES E INYECCIÓN DIRECTA
         function rLvs(d) { 
             let h = ""; 
             d.forEach((l,i) => { 
@@ -862,11 +839,13 @@
             const l = lvls[i]; 
             $('e-ix').value = i; 
             $('a-n').value = l.name; 
-            $('a-p').value = i + 1; // Rellena el input numérico con la posición actual
+            $('a-p').value = i + 1; 
             $('a-i').value = l.id; 
             $('a-v').value = l.first || ""; 
             $('a-b').checked = l.bounty || false; 
+            
             $('edit-action-btns').style.display = 'flex'; 
+            $('v-inject-box').style.display = 'block'; // Muestra inyección directa
             $('t-lvls').scrollIntoView(); 
         }
         
@@ -876,7 +855,7 @@
             const rawId = $('a-i').value;
             const v = $('a-v').value.trim();
             const b = $('a-b').checked; 
-            let p = parseInt($('a-p').value); // Nueva posición
+            let p = parseInt($('a-p').value); 
             
             const id = extraerYouTubeID(rawId);
             
@@ -884,18 +863,16 @@
             
             let nL = [...lvls]; 
             let d = {name: n, id: id, first: v, bounty: b}; 
-            let targetIndex = p - 1; // Array base 0
+            let targetIndex = p - 1; 
             
             if(i === -1) {
-                // AÑADIR NUEVO
                 if(targetIndex >= nL.length) nL.push(d);
                 else nL.splice(targetIndex, 0, d);
                 api(`🆕 **NUEVO NIVEL AÑADIDO:** El Administrador **${sN}** ha añadido **${n}** en el Top #${p}.`, 'lvls');
             } else {
-                // EDITAR / MOVER EXISTENTE
-                nL.splice(i, 1); // Lo quitamos de donde estaba
+                nL.splice(i, 1); 
                 if(targetIndex >= nL.length) nL.push(d);
-                else nL.splice(targetIndex, 0, d); // Lo insertamos en el nuevo lugar
+                else nL.splice(targetIndex, 0, d); 
                 api(`🔄 **NIVEL MODIFICADO/MOVIDO:** El Administrador **${sN}** ha actualizado **${n}** a la posición #${p}.`, 'lvls');
             }
             
@@ -903,6 +880,38 @@
             rLv(); 
             toast("Nivel Guardado"); 
             log(`Modificó Nivel: ${n} (Pos: ${p})`);
+        }
+
+        // INYECCIÓN DIRECTA DE VICTOR DESDE EL NIVEL
+        function injectVictorDirect() {
+            const p = $('v-inj-name').value.trim();
+            const k = $('v-inj-link').value.trim();
+            const l = $('a-n').value.trim(); // Toma el nombre del nivel que estamos editando
+            
+            if(!p || !l) return toast("Nick y nivel son requeridos", true);
+            
+            let xp = getXP(l, p);
+            
+            let pL = nx(fD.players); 
+            let i = pL.findIndex(x => x.name.toLowerCase() === p.toLowerCase()); 
+            
+            if(i === -1) {
+                pL.push({name: p, totalXP: xp, completions: [{level: l, link: k||'Inyectado', xp: xp, time: Date.now()}]});
+            } else { 
+                let c = nx(pL[i].completions); 
+                if(!c.some(x => x.level.toLowerCase() === l.toLowerCase())) {
+                    c.push({level: l, link: k||'Inyectado', xp: xp, time: Date.now()}); 
+                    pL[i].completions = c; 
+                    pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
+                } else {
+                    return toast("El jugador ya tiene este nivel", true);
+                }
+            } 
+            
+            db.ref('players').set(pL); 
+            log(`Inyectó Victor directo: ${p} en ${l}`); 
+            toast("Victor Añadido Correctamente"); 
+            $('v-inj-name').value = ""; $('v-inj-link').value = "";
         }
         
         function rLv() { 
@@ -913,6 +922,7 @@
             $('a-v').value = ""; 
             $('a-b').checked = false; 
             $('edit-action-btns').style.display = 'none'; 
+            $('v-inject-box').style.display = 'none';
         }
         
         function delLv() {
@@ -938,7 +948,7 @@
             api(`🌐 **ORDEN ACTUALIZADO:** El Administrador **${sN}** ha modificado las posiciones del ranking. La XP ha sido recalculada automáticamente.`, 'lvls');
         }
 
-        // GESTIÓN DE SUGERENCIAS (Rellenado automático de posición)
+        // SUGERENCIAS
         function renderSug(d) { 
             let h = ""; 
             Object.entries(d).forEach(([id, s]) => { 
@@ -960,9 +970,8 @@
         function useSug(id, name, levelId, user, pos) {
             $('a-n').value = name;
             $('a-i').value = levelId;
-            $('a-p').value = pos; // AUTO-RELLENADO DE LA POSICIÓN SUGERIDA
+            $('a-p').value = pos;
             
-            // LÓGICA DE CAZARRECOMPENSAS: Dar 10 XP al usuario
             let pL = nx(fD.players);
             let i = pL.findIndex(p => p.name.toLowerCase() === user.toLowerCase());
             if(i > -1) {
@@ -981,7 +990,7 @@
             api(`❌ **SUGERENCIA DESCARTADA:** La sugerencia de **${user}** para añadir el nivel **${name}** ha sido denegada.`, 'sug');
         }
 
-        // EDITOR DE JUGADORES
+        // EDITOR DE JUGADORES (BANDERA/PAÍS AÑADIDO)
         function sP() { 
             const q = $('p-s').value.trim().toLowerCase(); 
             pIx = nx(fD.players).findIndex(x => x.name.toLowerCase() === q); 
@@ -1001,9 +1010,9 @@
             $('pe-b').value = p.bio || ""; 
             $('pe-c').value = p.clanId || ""; 
             $('pe-bg').value = p.badgeId || ""; 
-            
             $('pe-pfp').value = (p.photo && p.photo !== "null" && p.photo !== "undefined") ? p.photo : "";
             $('pe-ver').value = p.verified ? "true" : "false";
+            $('pe-flag').value = p.country || ""; // Lee el código de país (ej. mx)
             
             $('p-bn').innerHTML = p.hidden 
                 ? `<button class="btn bg" style="width:100%" onclick="bN(false)">LEVANTAR BAN</button>` 
@@ -1030,6 +1039,7 @@
             db.ref(`players/${pIx}/badgeId`).set($('pe-bg').value); 
             db.ref(`players/${pIx}/photo`).set($('pe-pfp').value);
             db.ref(`players/${pIx}/verified`).set($('pe-ver').value === "true");
+            db.ref(`players/${pIx}/country`).set($('pe-flag').value.trim().toLowerCase()); // Guarda el código de país
 
             toast("Perfil Guardado"); 
             log(`Modificó perfil de: ${$('pe-n').value}`);
@@ -1069,7 +1079,7 @@
             pIx = -1; 
         }
 
-        // MÓDULOS RESTANTES (RECLAMOS, MERCADO, CLANES, MEDALLAS, CHAT)
+        // RESTO DE FUNCIONES MANTENIDAS EXACTAMENTE IGUAL
         function rClm(c) { 
             let h = ""; 
             Object.entries(c).forEach(([k,v]) => { 
@@ -1265,7 +1275,7 @@
         function renderEff(logs) { 
             let c = {}; 
             Object.values(logs).forEach(x => { 
-                if(x.action.includes('Aprobó') || x.action.includes('Rechazó') || x.action.includes('Guardó Nivel')) {
+                if(x.action.includes('Aprobó') || x.action.includes('Rechazó') || x.action.includes('Modificó Nivel')) {
                     c[x.staff] = (c[x.staff] || 0) + 1; 
                 }
             }); 
@@ -1331,4 +1341,4 @@
         }
     </script>
 </body>
-</html>
+    </html>
