@@ -50,6 +50,7 @@
         /* =========================================
            EASTER EGGS ANIMACIONES CSS
            ========================================= */
+        /* Easter Egg #7: Wave Cursor */
         body.wave-mode, body.wave-mode * { 
             cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='%2300ffff' stroke='%23ffffff' stroke-width='2' d='M2 22 L22 12 L2 2 Z'/></svg>"), crosshair !important; 
         }
@@ -69,6 +70,7 @@
             100% { opacity: 0; transform: scale(0) rotate(45deg); } 
         }
 
+        /* Easter Egg #2: Tributo a 2Parx */
         .tribute-btn { 
             cursor: pointer; 
             transition: 0.3s; 
@@ -549,7 +551,8 @@
         </div>
     </div>
    <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">UN PODEROSO ENEMIGO</div>
-  <script type="text/javascript">
+
+    <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
                 pageLanguage: 'es', 
@@ -648,7 +651,7 @@
             else if(ac.includes("FANTASMA")||ac.includes("GHOST")){ 
                 nC="#ddd"; tG="opacity:0.8; text-shadow: 0 0 5px #fff;"; bS="4px solid #ccc"; 
             }
-            else if(ac.includes("RAINBOW")||ac.includes("ARCOIRIS")||ac.includes("NYAN")){ 
+            else if(ac.includes("RAINBOW")||ac.includes("NYAN")){ 
                 eC="rbw-text"; bS="4px solid #ff00ff"; 
             }
             else if(ac.includes("GLITCH")){ 
@@ -744,7 +747,7 @@
         // =========================================
         function openRecordModal() {
             if (!currentUserData.key) {
-                alert("⚠️ ACCESO DENEGADO: Debes iniciar sesión o crear una cuenta para enviar tu récord. Esto es para proteger tu XP de suplantadores.");
+                alert("⚠️ ACCESO DENEGADO: El sistema no detecta tu sesión activa. Por favor inicia sesión nuevamente.");
                 window.location.href = "login.html";
                 return;
             }
@@ -763,12 +766,12 @@
             }
         }
 
-        // FIX DEFINITIVO: async/await y bloqueo de botón
+        // FUNCIÓN ASÍNCRONA PARA NO REINICIAR PÁGINA
         async function submitRecord(event) {
-            if(event) event.preventDefault(); // Por si acaso hay un form oculto en el navegador
+            if(event) event.preventDefault();
 
             if (!currentUserData.key) {
-                alert("⚠️ Error de sesión: El sistema perdió la conexión con tu cuenta. Por favor, recarga la página.");
+                alert("⚠️ Error crítico: Tu sesión ha caducado. Vuelve a iniciar sesión.");
                 return;
             }
 
@@ -782,15 +785,13 @@
                 return;
             }
 
-            // Cambiamos estado del botón para evitar spam de clics
-            const btn = document.getElementById('btn-enviar-rec') || (event ? event.target : null);
+            const btn = document.getElementById('btn-enviar-rec');
             if(btn) {
                 btn.disabled = true;
-                btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> PROCESANDO ENVÍO...";
+                btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> PROCESANDO...";
             }
 
             try {
-                // Esperamos a que la Base de Datos conteste
                 await db.ref('submissions').push({
                     player: currentUserData.name,
                     level: lvl,
@@ -800,7 +801,6 @@
                     time: Date.now()
                 });
 
-                // Enviar Webhook a Discord (No bloquea si falla)
                 const u = fullData.system_settings?.discord?.url;
                 if(u) {
                     fetch(u, {
@@ -813,20 +813,17 @@
                     }).catch(()=>{});
                 }
 
-                alert("¡Récord enviado con éxito! Un moderador lo revisará pronto y se añadirá a tu cuenta.");
+                alert("✅ ¡Récord enviado con éxito! Un moderador lo revisará pronto y se añadirá a tu cuenta.");
                 
-                // Limpiar todo después de éxito
                 document.getElementById('recModal').style.display = 'none';
                 document.getElementById('rec-lvl').value = "";
                 document.getElementById('rec-link').value = "";
                 document.getElementById('rec-raw').value = "";
                 document.getElementById('rec-com').value = "";
                 document.getElementById('rec-thumb-box').style.display='none';
-
             } catch (error) {
                 alert("Hubo un error de conexión con la Base de Datos: " + error.message);
             } finally {
-                // Devolver el botón a la normalidad pase lo que pase
                 if(btn) {
                     btn.disabled = false;
                     btn.innerHTML = "ENVIAR PARA VERIFICACIÓN";
@@ -836,7 +833,7 @@
 
         // BUSCADOR DE JUGADORES
         function searchPublicPlayer(e) {
-            if(e) e.preventDefault();
+            if(e && e.preventDefault) e.preventDefault();
             const q = document.getElementById('pub-search').value.trim().toLowerCase(); 
             const res = document.getElementById('pub-search-res'); 
             if(!q) return;
@@ -907,7 +904,7 @@
         }
 
         function sendGlobalChat(e) {
-            if(e) e.preventDefault();
+            if(e && e.preventDefault) e.preventDefault();
             if (!currentUserData.name) return alert("Inicia sesión primero."); 
             const input = document.getElementById('g-chat-input');
             if (input.value.trim().length > 0) { 
@@ -1276,17 +1273,18 @@
         // SISTEMA DE ROLES Y AUTENTICACIÓN -> BLINDADO AL 100%
         auth.onAuthStateChanged(user => {
             if (user) {
-                // USAMOS .on PARA QUE SE MANTENGA ACTUALIZADO SIEMPRE, NO SOLO AL CARGAR
                 db.ref('players').on('value', snap => { 
                     const playersObj = snap.val(); 
                     let miLlaveDB = null, me = null;
                     
                     for (let key in playersObj) { 
-                        // FILTRO ROBUSTO
-                        if (playersObj[key].email && typeof playersObj[key].email === 'string' && playersObj[key].email.toLowerCase() === user.email.toLowerCase()) { 
-                            me = playersObj[key]; 
-                            miLlaveDB = key; 
-                            break; 
+                        // Filtro ultra robusto: Ignora nulos y verifica que sea un string antes de hacer toLowerCase()
+                        if (playersObj[key] && playersObj[key].email && typeof playersObj[key].email === 'string') {
+                            if (playersObj[key].email.toLowerCase() === user.email.toLowerCase()) { 
+                                me = playersObj[key]; 
+                                miLlaveDB = key; 
+                                break; 
+                            }
                         } 
                     }
                     
@@ -1332,10 +1330,9 @@
                     } 
                 });
             } else {
-                // SI FIREBASE DICE QUE NO ESTÁS LOGUEADO, LIMPIAR DATOS
                 currentUserData = { name: null, key: null };
             }
         });
     </script>
 </body>
-</html> 
+</html>
