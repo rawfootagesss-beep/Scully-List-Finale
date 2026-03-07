@@ -106,6 +106,43 @@
             gap: 15px; 
         }
 
+        /* --- MINI PANEL STAFF (OCULTO POR DEFECTO) --- */
+        #staff-pfp-panel {
+            display: none;
+            background: rgba(0,204,255,0.05);
+            border: 1px dashed var(--blue);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .req-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #111;
+            border: 1px solid #333;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .req-info { display: flex; align-items: center; gap: 15px; }
+        .req-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue); cursor: pointer; transition: 0.2s;}
+        .req-img:hover { transform: scale(1.1); }
+        .req-btns { display: flex; gap: 10px; }
+        
+        .btn-sm {
+            padding: 8px 12px; font-weight: 800; font-size: 0.7rem; border-radius: 6px; cursor: pointer; border: none; text-transform: uppercase; transition: 0.2s;
+        }
+        .btn-ap { background: rgba(0,255,102,0.2); color: var(--green); border: 1px solid var(--green); }
+        .btn-ap:hover { background: var(--green); color: #000; }
+        .btn-rj { background: rgba(255,51,51,0.2); color: var(--red); border: 1px solid var(--red); }
+        .btn-rj:hover { background: var(--red); color: #fff; }
+
         /* TIER VISUAL (SOLO TOP 10) */
         .tier-header { text-align: center; font-family: 'JetBrains Mono'; text-transform: uppercase; font-weight: 800; padding: 10px; margin: 30px 0 5px 0; letter-spacing: 2px; border-radius: 10px; }
         .header-core { background: linear-gradient(90deg, transparent, rgba(255,215,0,0.15), transparent); color: var(--gold); border-bottom: 1px solid var(--gold); }
@@ -233,6 +270,8 @@
             .player-stats { flex-direction: row; justify-content: center; }
             .player-card:hover .player-stats { transform: none; }
             .player-card::after { display: none; }
+            .req-box { flex-direction: column; text-align: center; }
+            .req-info { flex-direction: column; }
         }
     </style>
 </head>
@@ -250,8 +289,19 @@
         <a href="perfil.html" class="btn-hub" style="border-color:var(--cyan); color:var(--cyan);"><i class="fas fa-user-circle"></i> MI PERFIL</a>
     </header>
 
-    <div class="leaderboard-container" id="leaderboardList">
-        <p style="text-align:center; color:#555;"><i class="fas fa-spinner fa-spin"></i> Cargando leyendas y sincronizando XP...</p>
+    <div class="leaderboard-container">
+        
+        <div id="staff-pfp-panel">
+            <h3 style="color:var(--blue); margin-top:0; font-size:1rem; text-transform:uppercase;"><i class="fas fa-image"></i> Solicitudes de Foto de Perfil</h3>
+            <div id="pfp-requests-list">
+                <p style="color:#666; font-size:0.8rem;">Cargando base de datos...</p>
+            </div>
+        </div>
+
+        <div id="leaderboardList">
+            <p style="text-align:center; color:#555;"><i class="fas fa-spinner fa-spin"></i> Cargando leyendas y sincronizando XP...</p>
+        </div>
+
     </div>
 
     <div id="playerModal" class="modal">
@@ -275,6 +325,7 @@
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script>
         // CONFIGURACIÓN FIREBASE
@@ -289,11 +340,34 @@
             measurementId: "G-X3JF2DVWYH"
         };
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.database();
 
         let globalPlayers = [];
         let fullData = {};
+        let isStaff = false;
+        let myName = "Desconocido";
         const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
+
+        // VERIFICAR ROL DE STAFF (PARA EL PANEL DE FOTOS)
+        auth.onAuthStateChanged(user => {
+            if(user) {
+                db.ref('players').once('value').then(snap => {
+                    let players = snap.val();
+                    for(let k in players) {
+                        if(players[k].email === user.email) {
+                            myName = players[k].name;
+                            let role = players[k].role || '';
+                            if(role === 'admin' || role === 'mod' || role === 'helper' || myName.toLowerCase() === 'score') {
+                                isStaff = true;
+                                document.getElementById('staff-pfp-panel').style.display = 'block';
+                            }
+                            break;
+                        }
+                    }
+                });
+            }
+        });
 
         // MOTOR UNIVERSAL DE COSMÉTICOS (ACTUALIZADO CON NYAN Y GLITCH)
         function getCosmetic(ac) {
@@ -317,6 +391,13 @@
             fullData = s.val() || {};
             const levels = fullData.levels || [];
             let players = nx(fullData.players).filter(p => !p.hidden);
+            
+            // Si es Staff, renderiza el panel de fotos de perfil
+            if(isStaff && fullData.pfp_requests) {
+                renderPfpPanel(fullData.pfp_requests);
+            } else if (isStaff) {
+                document.getElementById('pfp-requests-list').innerHTML = "<p style='color:#666; font-size:0.8rem; margin:0;'>Bandeja limpia. No hay solicitudes pendientes.</p>";
+            }
             
             players.forEach(p => {
                 let uniqueLevels = new Set();
@@ -351,6 +432,49 @@
             globalPlayers = players.sort((a,b) => b.pts - a.pts);
             renderLeaderboard(globalPlayers);
         });
+
+        // RENDER DE PANEL PFP
+        function renderPfpPanel(reqs) {
+            let html = "";
+            Object.entries(reqs).forEach(([id, req]) => {
+                html += `
+                <div class="req-box">
+                    <div class="req-info">
+                        <img src="${req.photo_url}" class="req-img" onclick="window.open('${req.photo_url}', '_blank')">
+                        <div>
+                            <h4 style="margin:0; font-size:0.9rem; color:#fff;">${req.player}</h4>
+                            <p style="margin:0; font-size:0.7rem; color:#888;">Solicita cambio de foto</p>
+                        </div>
+                    </div>
+                    <div class="req-btns">
+                        <button class="btn-sm btn-ap" onclick="approvePfp('${id}', '${req.player}', '${req.photo_url}')"><i class="fas fa-check"></i> APROBAR</button>
+                        <button class="btn-sm btn-rj" onclick="rejectPfp('${id}')"><i class="fas fa-times"></i> RECHAZAR</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('pfp-requests-list').innerHTML = html || "<p style='color:#666; font-size:0.8rem; margin:0;'>Bandeja limpia. No hay solicitudes pendientes.</p>";
+        }
+
+        // ACCIONES DE PFP
+        function approvePfp(id, playerName, photoUrl) {
+            let pL = nx(fullData.players);
+            let i = pL.findIndex(p => p.name.toLowerCase() === playerName.toLowerCase());
+            
+            if(i > -1) {
+                pL[i].photo = photoUrl;
+                db.ref('players').set(pL).then(() => {
+                    db.ref(`pfp_requests/${id}`).remove();
+                    // Log silencioso para admin changelog
+                    db.ref('staff_logs').push({staff: myName, action: `Aprobó PFP de ${playerName}`, timestamp: Date.now()});
+                });
+            } else {
+                alert("Error: Jugador no encontrado en la BD.");
+            }
+        }
+
+        function rejectPfp(id) {
+            db.ref(`pfp_requests/${id}`).remove();
+        }
 
         function renderLeaderboard(players) {
             let html = "";
@@ -433,7 +557,7 @@
             
             if(compsArray.length > 0) {
                 [...compsArray].reverse().forEach(c => {
-                    // AQUÍ ESTÁ EL FIX MANTENIDO: Solo muestra el nivel si existe en la lista oficial
+                    // FIX MANTENIDO: Solo muestra el nivel si existe en la lista oficial
                     let esNivelOficial = levelNamesOficiales.includes(c.level.toLowerCase());
                     
                     if(!verifiedNames.includes(c.level.toLowerCase()) && esNivelOficial) {
