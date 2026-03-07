@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OMNI | Core Dumps</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -10,67 +11,95 @@
             background: #020202; color: #00ffff; 
             font-family: 'JetBrains Mono', monospace; 
             margin: 0; padding: 20px;
-            /* Efecto Scanlines de monitor antiguo */
             background-image: linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 100% 3px;
         }
-        .terminal-container { max-width: 800px; margin: 40px auto; border: 1px solid #00ffff; padding: 30px; box-shadow: inset 0 0 20px rgba(0,255,255,0.1); }
+        .terminal-container { max-width: 800px; margin: 20px auto; border: 1px solid #00ffff; padding: 30px; box-shadow: inset 0 0 30px rgba(0,255,255,0.05); }
         .header-sys { border-bottom: 1px dashed #00ffff; padding-bottom: 20px; margin-bottom: 30px; }
         
-        .log-entry { margin-bottom: 30px; animation: glitch 0.5s; }
-        .log-version { display: inline-block; background: #00ffff; color: #000; padding: 2px 10px; font-weight: bold; margin-bottom: 10px; }
-        .log-date { color: #888; font-size: 0.8rem; margin-left: 10px; }
-        ul { list-style-type: "> "; padding-left: 20px; color: #ccc; }
-        li { margin-bottom: 8px; line-height: 1.4; }
+        .log-entry { margin-bottom: 40px; padding-left: 15px; border-left: 2px solid rgba(0,255,255,0.3); transition: 0.3s; }
+        .log-entry:hover { border-left-color: #00ffff; background: rgba(0,255,255,0.02); }
+        .log-version { display: inline-block; background: #00ffff; color: #000; padding: 3px 12px; font-weight: bold; margin-bottom: 15px; font-size: 1.1rem; }
+        .log-date { color: #888; font-size: 0.85rem; margin-left: 15px; }
+        .log-type { font-size: 0.7rem; padding: 2px 6px; border: 1px solid; border-radius: 4px; margin-left: 10px; }
+        .type-update { color: #00ff66; border-color: #00ff66; }
+        .type-fix { color: #ff3333; border-color: #ff3333; }
+        .type-feature { color: #cc00ff; border-color: #cc00ff; }
+
+        ul { list-style-type: none; padding-left: 0; color: #ccc; }
+        li { margin-bottom: 10px; line-height: 1.5; font-size: 0.9rem; }
+        li::before { content: "> "; color: #00ffff; }
         li b { color: #00ffff; }
 
         /* ROADMAP BAR */
-        .roadmap-box { margin-top: 50px; border: 1px solid #333; padding: 20px; }
-        .progress-container { width: 100%; background: #111; height: 20px; margin-top: 10px; position: relative; }
-        .progress-bar { height: 100%; background: #00ffff; width: 65%; /* CAMBIA ESTO PARA MOVER LA BARRA */ transition: width 1s; }
+        .roadmap-box { margin-top: 50px; border: 1px dashed #333; padding: 20px; background: #050505; }
+        .progress-container { width: 100%; background: #111; height: 15px; margin-top: 15px; position: relative; border: 1px solid #333; }
+        .progress-bar { height: 100%; background: #00ffff; width: 65%; transition: width 1.5s ease-in-out; box-shadow: 0 0 10px #00ffff; }
         
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         .cursor { animation: blink 1s infinite; display: inline-block; width: 10px; height: 15px; background: #00ffff; vertical-align: bottom; }
+        
+        @media(max-width: 600px) { .terminal-container { padding: 15px; } }
     </style>
 </head>
 <body>
     <div class="terminal-container">
         <div class="header-sys">
             <a href="index.html" style="color:#00ffff; text-decoration:none;">[cd ../HUB]</a>
-            <h2 style="margin: 15px 0 0;">SCULLY_SYSTEM_LOGS.exe</h2>
-            <span style="color:#888;">Accediendo a los registros del motor absoluto...</span>
+            <h2 style="margin: 15px 0 0; text-transform: uppercase;">SCULLY_SYSTEM_LOGS.exe</h2>
+            <span style="color:#888;">Directorio de actualizaciones del Absolute Engine // Auth: ADMIN</span>
         </div>
 
         <div id="logs-container">
             <div class="log-entry">
-                <div class="log-version">v25.1.0</div><span class="log-date">10 MAR 2026</span>
+                <div class="log-version">v25.1.0</div><span class="log-date">MAR 2026</span><span class="log-type type-feature">FEATURE</span>
                 <ul>
-                    <li>Implementado panel <b>Mercado Inline</b> exclusivo para Owners/Admins.</li>
-                    <li>Refactorización del sistema de Códigos Promocionales.</li>
-                    <li>Añadido Disclaimer en la pantalla de "Sobre Nosotros".</li>
+                    <li>Implementado <b>Mercado Inline Oculto</b>. Los Admins ahora pueden inyectar productos directamente desde la UI de la tienda.</li>
+                    <li>Refactorización del <b>Cerebro de Códigos</b>. Se añadió lectura en tiempo real desde Firebase para códigos dinámicos creados por el Staff.</li>
+                    <li>Integración del <b>Modal de Disclaimer ("Sobre Nosotros")</b> para advertir sobre la inestabilidad de los módulos beta.</li>
+                    <li>Parche CSS: El pulso de red ahora opera en el backend sin ocupar espacio visual en el frontend.</li>
                 </ul>
             </div>
 
             <div class="log-entry">
-                <div class="log-version">v25.0.0</div><span class="log-date">01 MAR 2026</span>
+                <div class="log-version">v25.0.0</div><span class="log-date">FEB 2026</span><span class="log-type type-update">MAJOR UPDATE</span>
                 <ul>
-                    <li>Lanzamiento inicial de <b>The Scully List Hub OMNI</b>.</li>
-                    <li>Sincronización de Base de Datos Firebase habilitada.</li>
-                    <li>Generador de Titan Cards (Canvas) calibrado al 100%.</li>
+                    <li>Lanzamiento oficial del ecosistema <b>The Scully List Hub OMNI</b>.</li>
+                    <li>Lanzamiento del motor gráfico Canvas para la forja de la <b>Titan Card 3.0</b>.</li>
+                    <li>Implementado sistema de "Contratos Activos" (Bounty) que duplica la ganancia de XP en Demons seleccionados.</li>
+                    <li>El algoritmo de cálculo de XP ahora utiliza un escalado dinámico: <span style="color:#888; font-size:0.75rem;">XP = Math.max(100 - (rank * 0.6), 5)</span>.</li>
+                </ul>
+            </div>
+
+            <div class="log-entry">
+                <div class="log-version">v24.8.5</div><span class="log-date">ENE 2026</span><span class="log-type type-fix">HOTFIX</span>
+                <ul>
+                    <li>Corregido el fallo de sensibilidad entre mayúsculas y minúsculas (Case Sensitive) en el <b>Cinema Mode</b> y buscador de jugadores.</li>
+                    <li>Sincronización del Chat Global optimizada para retener solo los últimos 40 mensajes y evitar sobrecarga de red.</li>
+                    <li>Añadidos Easter Eggs de sistema (Shift + Cursor, Tributo a 2Parx y Protocolo Anubis).</li>
+                </ul>
+            </div>
+
+            <div class="log-entry">
+                <div class="log-version">v24.0.0</div><span class="log-date">NOV 2025</span><span class="log-type type-update">UPDATE</span>
+                <ul>
+                    <li>Transición de la vieja base de datos en hojas de cálculo a servidores en tiempo real (Firebase).</li>
+                    <li>Creación de los <b>Sindicatos</b> y la billetera personal de XP.</li>
+                    <li>Establecimiento de las reglas de grabación RAW obligatorias para el Top 10.</li>
                 </ul>
             </div>
         </div>
 
         <div class="roadmap-box">
-            <h3 style="margin-top:0;">> STATUS PROYECTO: v26.0 (BETA)</h3>
-            <p style="font-size:0.8rem; color:#888;">Progreso hacia el despliegue del Sistema de Duelos (Arena 1v1).</p>
+            <h3 style="margin-top:0;">> ESTATUS PROYECTO: v26.0 (BETA PREVIEW)</h3>
+            <p style="font-size:0.8rem; color:#888; margin-bottom:15px;">Objetivo principal: Habilitar "Arena 1v1" y Panel de Sindicatos.</p>
             <div class="progress-container">
                 <div class="progress-bar"></div>
             </div>
-            <p style="text-align:right; margin:5px 0 0; font-size:0.8rem;">65% COMPLETADO</p>
+            <p style="text-align:right; margin:5px 0 0; font-size:0.8rem; color:#00ffff;">65% MODULES COMPILED</p>
         </div>
 
-        <p style="margin-top: 30px;">C:\OMNI\System> Esperando comando<span class="cursor"></span></p>
+        <p style="margin-top: 40px; color:#aaa;">C:\OMNI\System> Esperando comando<span class="cursor"></span></p>
     </div>
 </body>
 </html>
