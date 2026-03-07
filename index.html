@@ -12,13 +12,36 @@
     <style>
         /* VARIABLES GLOBALES */
         :root { 
-            --accent: #ff6600; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%); 
-            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85); --glow: 0 0 25px rgba(255, 102, 0, 0.3); 
-            --border: rgba(255, 255, 255, 0.05); --green: #00ff66; --red: #ff3333; 
-            --blue: #00ccff; --purple: #cc00ff; --gold: #ffd700; --discord: #7289da; --cyan: #00ffff; 
+            --accent: #ff6600; 
+            --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%); 
+            --bg: #030303; 
+            --card-bg: rgba(15, 15, 15, 0.85); 
+            --glow: 0 0 25px rgba(255, 102, 0, 0.3); 
+            --border: rgba(255, 255, 255, 0.05); 
+            --green: #00ff66; 
+            --red: #ff3333; 
+            --blue: #00ccff; 
+            --purple: #cc00ff; 
+            --gold: #ffd700; 
+            --discord: #7289da; 
+            --cyan: #00ffff; 
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
+        
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+        
+        body { 
+            background: var(--bg); 
+            color: #fff; 
+            font-family: 'Lexend Deca', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden; 
+            scroll-behavior: smooth; 
+        }
+        
         ::-webkit-scrollbar { width: 8px; } 
         ::-webkit-scrollbar-track { background: var(--bg); } 
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
@@ -27,18 +50,73 @@
            EASTER EGGS ANIMACIONES CSS
            ========================================= */
         /* Easter Egg #7: Wave Cursor */
-        body.wave-mode, body.wave-mode * { cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='%2300ffff' stroke='%23ffffff' stroke-width='2' d='M2 22 L22 12 L2 2 Z'/></svg>"), crosshair !important; }
-        .wave-trail { position: fixed; width: 10px; height: 10px; background: var(--cyan); box-shadow: 0 0 10px var(--cyan), 0 0 20px var(--cyan); transform: rotate(45deg) translate(-50%, -50%); pointer-events: none; z-index: 999999; animation: fadeTrail 0.4s forwards ease-out; }
-        @keyframes fadeTrail { 0% { opacity: 1; transform: scale(1) rotate(45deg); } 100% { opacity: 0; transform: scale(0) rotate(45deg); } }
+        body.wave-mode, body.wave-mode * { 
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='%2300ffff' stroke='%23ffffff' stroke-width='2' d='M2 22 L22 12 L2 2 Z'/></svg>"), crosshair !important; 
+        }
+        .wave-trail { 
+            position: fixed; 
+            width: 10px; 
+            height: 10px; 
+            background: var(--cyan); 
+            box-shadow: 0 0 10px var(--cyan), 0 0 20px var(--cyan); 
+            transform: rotate(45deg) translate(-50%, -50%); 
+            pointer-events: none; 
+            z-index: 999999; 
+            animation: fadeTrail 0.4s forwards ease-out; 
+        }
+        @keyframes fadeTrail { 
+            0% { opacity: 1; transform: scale(1) rotate(45deg); } 
+            100% { opacity: 0; transform: scale(0) rotate(45deg); } 
+        }
 
         /* Easter Egg #2: Tributo a 2Parx */
-        .tribute-btn { cursor: pointer; transition: 0.3s; user-select: none; }
-        .tribute-btn:hover { color: var(--gold) !important; border-color: var(--gold) !important; text-shadow: 0 0 10px var(--gold); }
-        .star-tribute { position: fixed; width: 4px; height: 4px; background: #fff; box-shadow: 0 0 15px 3px var(--gold); border-radius: 50%; z-index: 100000; pointer-events: none; animation: starFall 1.5s linear forwards; }
-        .star-tribute::after { content: ''; position: absolute; top: 50%; right: 100%; width: 80px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); transform: translateY(-50%); }
-        @keyframes starFall { 0% { transform: translate(-10vw, -10vh) rotate(45deg); opacity: 1; } 100% { transform: translate(110vw, 110vh) rotate(45deg); opacity: 0; } }
-        .tribute-flash { position: fixed; inset: 0; background: #fff; z-index: 999999; pointer-events: none; animation: flashAnim 1.2s forwards; }
-        @keyframes flashAnim { 0% { opacity: 1; } 100% { opacity: 0; } }
+        .tribute-btn { 
+            cursor: pointer; 
+            transition: 0.3s; 
+            user-select: none; 
+        }
+        .tribute-btn:hover { 
+            color: var(--gold) !important; 
+            border-color: var(--gold) !important; 
+            text-shadow: 0 0 10px var(--gold); 
+        }
+        .star-tribute { 
+            position: fixed; 
+            width: 4px; 
+            height: 4px; 
+            background: #fff; 
+            box-shadow: 0 0 15px 3px var(--gold); 
+            border-radius: 50%; 
+            z-index: 100000; 
+            pointer-events: none; 
+            animation: starFall 1.5s linear forwards; 
+        }
+        .star-tribute::after { 
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            right: 100%; 
+            width: 80px; 
+            height: 1px; 
+            background: linear-gradient(90deg, transparent, var(--gold)); 
+            transform: translateY(-50%); 
+        }
+        @keyframes starFall { 
+            0% { transform: translate(-10vw, -10vh) rotate(45deg); opacity: 1; } 
+            100% { transform: translate(110vw, 110vh) rotate(45deg); opacity: 0; } 
+        }
+        .tribute-flash { 
+            position: fixed; 
+            inset: 0; 
+            background: #fff; 
+            z-index: 999999; 
+            pointer-events: none; 
+            animation: flashAnim 1.2s forwards; 
+        }
+        @keyframes flashAnim { 
+            0% { opacity: 1; } 
+            100% { opacity: 0; } 
+        }
 
         /* API TRADUCTOR SUTIL OCULTO */
         .goog-te-banner-frame.skiptranslate, .goog-te-gadget-icon { display: none !important; }
@@ -46,37 +124,85 @@
         .goog-te-gadget-simple { background-color: transparent !important; border: none !important; font-size: 0 !important; }
         .goog-te-gadget-simple a { display: none !important; }
         
-        .lang-toggle { position: absolute; top: 15px; left: 20px; z-index: 5000; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #aaa; padding: 6px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .lang-toggle { 
+            position: absolute; top: 15px; left: 20px; z-index: 5000; 
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
+            color: #aaa; padding: 6px 15px; border-radius: 20px; 
+            font-size: 0.75rem; font-weight: 800; cursor: pointer; 
+            transition: 0.3s; display: flex; align-items: center; gap: 8px; 
+        }
         .lang-toggle:hover { color: #fff; border-color: var(--cyan); background: rgba(0,255,255,0.1); }
 
-        @keyframes rbwAnim { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
-        .rbw-text { background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000); background-size: 200% auto; -webkit-background-clip: text; color: transparent !important; animation: rbwAnim 3s linear infinite; font-weight: 900; }
+        @keyframes rbwAnim { 
+            0% { background-position: 0% 50%; } 
+            100% { background-position: 200% 50%; } 
+        }
+        .rbw-text { 
+            background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000); 
+            background-size: 200% auto; -webkit-background-clip: text; 
+            color: transparent !important; animation: rbwAnim 3s linear infinite; font-weight: 900; 
+        }
 
-        #lockdownScreen { display: none; position: fixed; inset: 0; background: #000; z-index: 99999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
-        #globalAlert { display: none; background: var(--red); color: #fff; text-align: center; padding: 12px; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; position: sticky; top: 0; z-index: 2000; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5); }
-        .news-ticker { background: rgba(0,0,0,0.95); border-bottom: 1px solid var(--border); padding: 12px 0; font-size: 0.7rem; font-family: 'JetBrains Mono'; overflow: hidden; display: flex; position: sticky; top: 0; z-index: 1000; }
+        #lockdownScreen { 
+            display: none; position: fixed; inset: 0; background: #000; z-index: 99999; 
+            flex-direction: column; justify-content: center; align-items: center; 
+            text-align: center; padding: 20px; 
+        }
+        #globalAlert { 
+            display: none; background: var(--red); color: #fff; text-align: center; 
+            padding: 12px; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; 
+            letter-spacing: 2px; position: sticky; top: 0; z-index: 2000; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5); 
+        }
+        .news-ticker { 
+            background: rgba(0,0,0,0.95); border-bottom: 1px solid var(--border); 
+            padding: 12px 0; font-size: 0.7rem; font-family: 'JetBrains Mono'; 
+            overflow: hidden; display: flex; position: sticky; top: 0; z-index: 1000; 
+        }
         .ticker-content { display: flex; white-space: nowrap; animation: ticker-scroll 40s linear infinite; }
         .log-item { margin-right: 100px; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; gap: 8px; }
         @keyframes ticker-scroll { 0% { transform: translateX(100vw); } 100% { transform: translateX(-150%); } }
 
-        .staff-bar { display: flex; justify-content: center; gap: 25px; padding: 15px; background: rgba(255,255,255,0.02); font-size: 0.65rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; align-items: center; text-transform: uppercase; font-weight: 700; margin-top: 45px; }
-        .staff-bar b { color: #fff; } .staff-bar i { margin-right: 6px; }
+        .staff-bar { 
+            display: flex; justify-content: center; gap: 25px; padding: 15px; 
+            background: rgba(255,255,255,0.02); font-size: 0.65rem; border-bottom: 1px solid var(--border); 
+            flex-wrap: wrap; align-items: center; text-transform: uppercase; font-weight: 700; margin-top: 45px; 
+        }
+        .staff-bar b { color: #fff; } 
+        .staff-bar i { margin-right: 6px; }
 
         header { padding: 40px 20px; text-align: center; position: relative; }
         h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 800; margin: 0; letter-spacing: -2px; text-transform: uppercase; }
         h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
         .main-nav { margin-top: 35px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; align-items: center; }
         .mobile-menu-btn { display: none; font-size: 2rem; color: var(--accent); background: transparent; border: none; cursor: pointer; position: absolute; top: 20px; right: 20px; z-index: 5001; }
-        .btn-scully { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 14px 25px; text-decoration: none; font-size: 0.8rem; border-radius: 50px; font-weight: 600; transition: 0.3s ease; text-transform: uppercase; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; position: relative; justify-content: center; }
+        
+        .btn-scully { 
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; 
+            padding: 14px 25px; text-decoration: none; font-size: 0.8rem; border-radius: 50px; 
+            font-weight: 600; transition: 0.3s ease; text-transform: uppercase; display: inline-flex; 
+            align-items: center; gap: 10px; cursor: pointer; position: relative; justify-content: center; 
+        }
         .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: var(--glow); border-color: var(--accent); }
         .btn-scully.active { border-color: var(--accent); color: var(--accent); }
-        .btn-ai { border-color: var(--cyan); color: var(--cyan); } .btn-ai:hover { background: var(--cyan); color: #000; box-shadow: 0 0 15px rgba(0,255,255,0.3); }
-        .badge-new { background: var(--purple); color: #fff; font-size: 0.55rem; padding: 3px 8px; border-radius: 4px; font-weight: 800; position: absolute; top: -10px; right: -10px; animation: pulse 1.5s infinite; box-shadow: 0 0 10px var(--purple); }
+        
+        .btn-ai { border-color: var(--cyan); color: var(--cyan); } 
+        .btn-ai:hover { background: var(--cyan); color: #000; box-shadow: 0 0 15px rgba(0,255,255,0.3); }
+        
+        .badge-new { 
+            background: var(--purple); color: #fff; font-size: 0.55rem; padding: 3px 8px; 
+            border-radius: 4px; font-weight: 800; position: absolute; top: -10px; right: -10px; 
+            animation: pulse 1.5s infinite; box-shadow: 0 0 10px var(--purple); 
+        }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
         .container { width: 95%; max-width: 1200px; margin: 20px auto 40px; }
         .top-actions { display: flex; justify-content: space-between; align-items: stretch; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
-        .live-feed, .action-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px; padding: 25px; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        .live-feed, .action-box { 
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px; 
+            padding: 25px; display: flex; flex-direction: column; justify-content: space-between; 
+        }
         
         .live-feed { flex: 1.5; min-width: 300px; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
         .live-feed h3 { margin: 0 0 15px; font-size: 1rem; color: var(--cyan); text-transform: uppercase; font-family: 'JetBrains Mono'; display: flex; align-items: center; gap: 10px; }
@@ -200,7 +326,6 @@
             <a href="helper.html" id="helperBtn" class="btn-scully" style="display:none; background:var(--green); color:#000; border:none;"><i class="fas fa-hands-helping"></i> HELPER PANEL</a>
         </div>
     </header>
-
     <main class="container">
         
         <div class="top-actions">
@@ -308,7 +433,14 @@
             <p style="font-size:0.8rem; color:#aaa; margin-bottom:20px;">Estás a punto de enviar un récord bajo el nombre de <b id="rec-username" style="color:#fff;">Tu Usuario</b>.</p>
             
             <input type="text" id="rec-lvl" class="g-input" placeholder="Nombre exacto del Nivel (Ej: Bloodbath)">
-            <input type="text" id="rec-link" class="g-input" placeholder="Link del Video de YouTube (Obligatorio)">
+            
+            <input type="text" id="rec-link" class="g-input" placeholder="Link del Video de YouTube (Obligatorio)" oninput="previewRecThumb()">
+            
+            <div id="rec-thumb-box" style="display:none; margin-bottom: 20px; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 15px; border: 1px dashed var(--blue);">
+                <p style="margin: 0 0 10px; font-size: 0.75rem; color: #aaa; text-transform: uppercase;">Vista Previa de la Prueba</p>
+                <img id="rec-thumb-img" src="" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; border: 1px solid #333;">
+            </div>
+
             <input type="text" id="rec-raw" class="g-input" placeholder="Link del RAW (Opcional pero recomendado)">
             <textarea id="rec-com" class="g-input" rows="3" placeholder="Comentarios adicionales para el moderador (Opcional)"></textarea>
             
@@ -340,10 +472,12 @@
             <input type="text" id="sug-n" class="g-input" placeholder="Nombre del Nivel (Obligatorio)">
             <input type="number" id="sug-pos" class="g-input" placeholder="Posición sugerida en la lista (Ej: 10)" min="1">
             <input type="text" id="sug-v" class="g-input" placeholder="Link del Video de YouTube (Obligatorio)" oninput="previewSugThumb()">
+            
             <div id="sug-thumb-box" style="display:none; margin-bottom: 20px; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 15px; border: 1px dashed var(--purple);">
                 <p style="margin: 0 0 10px; font-size: 0.75rem; color: #aaa; text-transform: uppercase;">Vista Previa</p>
                 <img id="sug-thumb-img" src="" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; border: 1px solid #333;">
             </div>
+            
             <button class="btn-scully" style="background:var(--purple); color:#fff; width:100%; justify-content:center; border:none;" onclick="sendSuggestion()">ENVIAR SUGERENCIA (+10 XP si se aprueba)</button>
         </div>
     </div>
@@ -365,11 +499,13 @@
             <button class="btn-scully" onclick="document.getElementById('aiModal').style.display='none'" style="background:var(--cyan); color:#000; width:100%; justify-content:center; border:none;">CERRAR</button>
         </div>
     </div>
-
-    <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">UN PODEROSO ENEMIGO</div>
     <script type="text/javascript">
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'en,es', autoDisplay: false}, 'google_translate_element');
+            new google.translate.TranslateElement({
+                pageLanguage: 'es', 
+                includedLanguages: 'en,es', 
+                autoDisplay: false
+            }, 'google_translate_element');
         }
 
         function toggleLanguage() {
@@ -421,14 +557,14 @@
             const icon = document.getElementById('mob-icon'); 
             nav.classList.toggle('active'); 
             
-            if (nav.classList.contains('active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-                document.body.style.overflow = 'hidden';
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-                document.body.style.overflow = 'auto';
+            if (nav.classList.contains('active')) { 
+                icon.classList.remove('fa-bars'); 
+                icon.classList.add('fa-times'); 
+                document.body.style.overflow = 'hidden'; 
+            } else { 
+                icon.classList.remove('fa-times'); 
+                icon.classList.add('fa-bars'); 
+                document.body.style.overflow = 'auto'; 
             }
         }
 
@@ -444,13 +580,27 @@
             if(!ac) return {nC, tG, bS, eC};
             ac = ac.toUpperCase();
             
-            if(ac.includes("VIP")||ac.includes("DORADO")){ nC="var(--gold)"; bS="4px solid var(--gold)"; }
-            else if(ac.includes("HACKER")||ac.includes("MATRIX")){ nC="var(--green)"; tG="color:var(--green); text-shadow:0 0 5px var(--green); font-family:'JetBrains Mono';"; bS="4px solid var(--green)"; }
-            else if(ac.includes("AURA")||ac.includes("DEMON")){ nC="var(--red)"; bS="4px dashed var(--red)"; tG="color:#ffaaaa; text-shadow:0 0 5px var(--red);"; }
-            else if(ac.includes("HIELO")||ac.includes("ICE")){ nC="#aaddff"; tG="text-shadow: 0 0 8px #00aaff;"; bS="4px solid #00aaff"; }
-            else if(ac.includes("FUEGO")||ac.includes("FIRE")){ nC="#ff5500"; tG="text-shadow: 0 0 8px #ff2200;"; bS="4px solid #ff5500"; }
-            else if(ac.includes("FANTASMA")||ac.includes("GHOST")){ nC="#ddd"; tG="opacity:0.8; text-shadow: 0 0 5px #fff;"; bS="4px solid #ccc"; }
-            else if(ac.includes("RAINBOW")||ac.includes("ARCOIRIS")){ eC="rbw-text"; bS="4px solid #ff00ff"; }
+            if(ac.includes("VIP")||ac.includes("DORADO")){ 
+                nC="var(--gold)"; bS="4px solid var(--gold)"; 
+            }
+            else if(ac.includes("HACKER")||ac.includes("MATRIX")){ 
+                nC="var(--green)"; tG="color:var(--green); text-shadow:0 0 5px var(--green); font-family:'JetBrains Mono';"; bS="4px solid var(--green)"; 
+            }
+            else if(ac.includes("AURA")||ac.includes("DEMON")){ 
+                nC="var(--red)"; bS="4px dashed var(--red)"; tG="color:#ffaaaa; text-shadow:0 0 5px var(--red);"; 
+            }
+            else if(ac.includes("HIELO")||ac.includes("ICE")){ 
+                nC="#aaddff"; tG="text-shadow: 0 0 8px #00aaff;"; bS="4px solid #00aaff"; 
+            }
+            else if(ac.includes("FUEGO")||ac.includes("FIRE")){ 
+                nC="#ff5500"; tG="text-shadow: 0 0 8px #ff2200;"; bS="4px solid #ff5500"; 
+            }
+            else if(ac.includes("FANTASMA")||ac.includes("GHOST")){ 
+                nC="#ddd"; tG="opacity:0.8; text-shadow: 0 0 5px #fff;"; bS="4px solid #ccc"; 
+            }
+            else if(ac.includes("RAINBOW")||ac.includes("ARCOIRIS")){ 
+                eC="rbw-text"; bS="4px solid #ff00ff"; 
+            }
             
             return {nC, tG, bS, eC};
         }
@@ -549,6 +699,17 @@
             document.getElementById('recModal').style.display = 'flex';
         }
 
+        function previewRecThumb(){ 
+            const input = document.getElementById('rec-link').value;
+            const v = input.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+            if(v) { 
+                document.getElementById('rec-thumb-img').src = `https://img.youtube.com/vi/${v[1]}/mqdefault.jpg`; 
+                document.getElementById('rec-thumb-box').style.display='block'; 
+            } else {
+                document.getElementById('rec-thumb-box').style.display='none'; 
+            }
+        }
+
         function submitRecord() {
             if (!currentUserData.key) return;
 
@@ -562,7 +723,6 @@
                 return;
             }
 
-            // Enviar a la base de datos
             db.ref('submissions').push({
                 player: currentUserData.name,
                 level: lvl,
@@ -572,13 +732,15 @@
                 time: Date.now()
             });
 
-            // Webhook opcional
             const u = fullData.system_settings?.discord?.url;
             if(u) {
                 fetch(u, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: `📥 **NUEVO ENVÍO:** **${currentUserData.name}** ha subido un récord para **${lvl}**.\n🔗 Prueba: ${link}`, username: "SCULLY SYSTEM" })
+                    body: JSON.stringify({ 
+                        content: `📥 **NUEVO ENVÍO:** **${currentUserData.name}** ha subido un récord para **${lvl}**.\n🔗 Prueba: ${link}`, 
+                        username: "SCULLY SYSTEM" 
+                    })
                 }).catch(()=>{});
             }
 
@@ -588,9 +750,10 @@
             document.getElementById('rec-link').value = "";
             document.getElementById('rec-raw').value = "";
             document.getElementById('rec-com').value = "";
+            document.getElementById('rec-thumb-box').style.display='none';
         }
 
-        // BUSCADOR Y CHAT
+        // BUSCADOR DE JUGADORES
         function searchPublicPlayer() {
             const q = document.getElementById('pub-search').value.trim().toLowerCase(); 
             const res = document.getElementById('pub-search-res'); 
@@ -637,6 +800,7 @@
             }
         }
 
+        // CHAT GLOBAL
         function renderGlobalChat(chatData) {
             const box = document.getElementById('global-chat-box'); 
             let html = ""; 
@@ -698,6 +862,7 @@
             }
         }
 
+        // ECONOMÍA: CANJEAR CÓDIGOS
         function canjearCodigo() {
             let originalCode = document.getElementById("input-codigo").value.trim(); 
             let code = originalCode.toUpperCase(); 
@@ -711,18 +876,45 @@
             if(uC.includes(originalCode) || uC.includes(code)) { m.innerText = "Este código ya fue usado."; m.style.color="#888"; return; }
             
             let s = false;
-            if(originalCode === "wernerantoniokurtz@gmail.com") { db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => { db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0)+22); }); m.innerText="+22 XP añadidos."; m.style.color="var(--green)"; s=true; }
-            else if(code === "SCULLYVIP") { db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"TITULO VIP"}); m.innerText="¡VIP Desbloqueado!"; m.style.color="var(--gold)"; s=true; }
-            else if(code === "MATRIX") { db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"TEXTO HACKER"}); m.innerText="¡Hacker Desbloqueado!"; m.style.color="var(--green)"; s=true; }
-            else if(code === "BLOODLUST") { db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"AURA DEMONIACA"}); m.innerText="¡Aura Desbloqueada!"; m.style.color="var(--red)"; s=true; }
-            else if(code === "RAINBOW") { db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"NOMBRE RAINBOW"}); m.innerText="¡Arcoíris Desbloqueado!"; m.style.color="var(--purple)"; s=true; }
-            else if(code === "ANUBIS") { pE.style.display="flex"; setTimeout(()=> pE.style.display="none", 4000); document.getElementById("input-codigo").value=""; return; }
-            else { m.innerText = "Código inválido o expirado."; m.style.color="var(--red)"; return; }
+            if(originalCode === "wernerantoniokurtz@gmail.com") { 
+                db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => { db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0)+22); }); 
+                m.innerText="+22 XP añadidos."; m.style.color="var(--green)"; s=true; 
+            }
+            else if(code === "SCULLYVIP") { 
+                db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"TITULO VIP"}); 
+                m.innerText="¡VIP Desbloqueado!"; m.style.color="var(--gold)"; s=true; 
+            }
+            else if(code === "MATRIX") { 
+                db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"TEXTO HACKER"}); 
+                m.innerText="¡Hacker Desbloqueado!"; m.style.color="var(--green)"; s=true; 
+            }
+            else if(code === "BLOODLUST") { 
+                db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"AURA DEMONIACA"}); 
+                m.innerText="¡Aura Desbloqueada!"; m.style.color="var(--red)"; s=true; 
+            }
+            else if(code === "RAINBOW") { 
+                db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"NOMBRE RAINBOW"}); 
+                m.innerText="¡Arcoíris Desbloqueado!"; m.style.color="var(--purple)"; s=true; 
+            }
+            else if(code === "ANUBIS") { 
+                pE.style.display="flex"; 
+                setTimeout(()=> pE.style.display="none", 4000); 
+                document.getElementById("input-codigo").value=""; 
+                return; 
+            }
+            else { 
+                m.innerText = "Código inválido o expirado."; m.style.color="var(--red)"; 
+                return; 
+            }
             
-            if(s) { uC.push(code); localStorage.setItem('codigos_omni_' + currentUserData.name, JSON.stringify(uC)); document.getElementById("input-codigo").value=""; }
+            if(s) { 
+                uC.push(code); 
+                localStorage.setItem('codigos_omni_' + currentUserData.name, JSON.stringify(uC)); 
+                document.getElementById("input-codigo").value=""; 
+            }
         }
 
-        // SMART SUBMIT
+        // SMART SUBMIT SUGERENCIAS
         function previewSugThumb(){ 
             const v = document.getElementById('sug-v').value.match(/(?:youtu\.be\/|v=)([^"&?\/\s]{11})/); 
             if(v) { 
@@ -736,14 +928,17 @@
             const n = document.getElementById('sug-n').value; 
             const p = document.getElementById('sug-pos').value; 
             const v = document.getElementById('sug-v').value; 
+            
             if(n && p && v.length === 11) { 
                 db.ref('level_suggestions').push({ name: n, position: parseInt(p), video: v, user: currentUserData.name || "Anónimo" }); 
                 alert("Sugerencia enviada. ¡Si un Admin la acepta, ganarás +10 XP!"); 
                 document.getElementById('sugModal').style.display='none'; 
-            } else { alert("Datos inválidos."); }
+            } else { 
+                alert("Datos inválidos."); 
+            }
         }
 
-        // CINEMA MODE
+        // CINEMA MODE - REPARADO PARA IGNORAR MAYÚSCULAS/MINÚSCULAS
         function openCinema(idx) {
             const l = nexus(fullData.levels)[idx]; 
             if (!l) return;
@@ -754,18 +949,16 @@
             document.getElementById('c-verif').innerText = l.first || 'N/A'; 
             document.getElementById('c-bounty-badge').style.display = l.bounty ? 'inline-block' : 'none';
             
-            const victorsRaw = nexus(fullData.players).filter(p => nexus(p.completions).some(x => x.level === l.name) && !p.hidden); 
+            // LA CORRECCIÓN: Compara convirtiendo todo a minúsculas
+            const victorsRaw = nexus(fullData.players).filter(p => nexus(p.completions).some(x => x.level.toLowerCase() === l.name.toLowerCase()) && !p.hidden); 
             
             let vList = [];
             victorsRaw.forEach(p => { 
                 if (p.name !== l.first) { 
-                    let r = nexus(p.completions).find(x => x.level === l.name); 
-                    vList.push({
-                        name: p.name,
-                        verified: p.verified,
-                        link: r.link,
-                        time: r.time || 0 
-                    });
+                    let r = nexus(p.completions).find(x => x.level.toLowerCase() === l.name.toLowerCase()); 
+                    if(r) {
+                        vList.push({ name: p.name, verified: p.verified, link: r.link, time: r.time || 0 });
+                    }
                 } 
             });
 
@@ -944,10 +1137,10 @@
         }
 
         // =========================================
-        // EASTER EGGS LOGIC (NUEVO)
+        // EASTER EGGS LOGIC
         // =========================================
 
-        // Easter Egg #2: Tributo a 2Parx (7 Clics)
+        // Easter Egg #2: Tributo a 2Parx
         let tributeClicks = 0;
         let tributeTimer;
         function triggerTribute() {
@@ -1003,7 +1196,7 @@
         });
         document.addEventListener('mousemove', (e) => {
             if(isWaveMode) {
-                if(Math.random() > 0.4) return; // Limita las partículas para no dar lag
+                if(Math.random() > 0.4) return; // Limita partículas para que no se laggee
                 let trail = document.createElement('div');
                 trail.className = 'wave-trail';
                 trail.style.left = e.pageX + 'px';
@@ -1016,7 +1209,7 @@
         // SISTEMA DE ROLES Y AUTENTICACIÓN
         auth.onAuthStateChanged(user => {
             if (user) {
-                db.ref('players').once('value', snap => { 
+                db.ref('players').once('value').then(snap => { 
                     const playersObj = snap.val(); 
                     let miLlaveDB = null, me = null;
                     
@@ -1032,24 +1225,41 @@
                         currentUserData = { name: me.name, key: miLlaveDB };
                         
                         const navLogin = document.getElementById('nav-login');
-                        if (navLogin) { navLogin.innerHTML = '<i class="fas fa-user-circle"></i> Mi Perfil'; navLogin.href = "perfil.html"; }
+                        if (navLogin) { 
+                            navLogin.innerHTML = '<i class="fas fa-user-circle"></i> Mi Perfil'; 
+                            navLogin.href = "perfil.html"; 
+                        }
                         
                         const btnManage = document.getElementById('btn-manage-account');
-                        if (btnManage) { btnManage.innerHTML = '<i class="fas fa-user"></i> MI PERFIL TITÁN'; btnManage.href = "perfil.html"; }
+                        if (btnManage) { 
+                            btnManage.innerHTML = '<i class="fas fa-user"></i> MI PERFIL TITÁN'; 
+                            btnManage.href = "perfil.html"; 
+                        }
 
                         const ci = document.getElementById('g-chat-input'); 
                         const cb = document.getElementById('g-chat-btn');
                         if (ci && cb) { 
-                            ci.disabled = false; ci.placeholder = `Conectado como ${me.name}. Escribe a la comunidad...`; 
-                            cb.style.opacity = "1"; cb.style.pointerEvents = "all"; 
+                            ci.disabled = false; 
+                            ci.placeholder = `Conectado como ${me.name}. Escribe a la comunidad...`; 
+                            cb.style.opacity = "1"; 
+                            cb.style.pointerEvents = "all"; 
                         }
                         
                         let role = me.role || '';
                         let isOwner = (role === 'owner' || me.name.toLowerCase() === 'score');
                         
-                        if (role === 'admin' || isOwner) { let aBtn = document.getElementById('adminBtn'); if(aBtn) aBtn.style.display = "inline-flex"; } 
-                        if (role === 'mod' || isOwner) { let mBtn = document.getElementById('modBtn'); if(mBtn) mBtn.style.display = "inline-flex"; }
-                        if (role === 'helper' || isOwner) { let hBtn = document.getElementById('helperBtn'); if(hBtn) hBtn.style.display = "inline-flex"; }
+                        if (role === 'admin' || isOwner) { 
+                            let aBtn = document.getElementById('adminBtn'); 
+                            if(aBtn) aBtn.style.display = "inline-flex"; 
+                        } 
+                        if (role === 'mod' || isOwner) { 
+                            let mBtn = document.getElementById('modBtn'); 
+                            if(mBtn) mBtn.style.display = "inline-flex"; 
+                        }
+                        if (role === 'helper' || isOwner) { 
+                            let hBtn = document.getElementById('helperBtn'); 
+                            if(hBtn) hBtn.style.display = "inline-flex"; 
+                        }
                     } 
                 });
             }
@@ -1057,3 +1267,4 @@
     </script>
 </body>
 </html>
+    <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">UN PODEROSO ENEMIGO</div>
