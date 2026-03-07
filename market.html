@@ -58,12 +58,21 @@
         
         .item-price { background: #000; border: 1px dashed #333; padding: 10px; border-radius: 8px; color: var(--gold); font-family: 'JetBrains Mono'; font-weight: 800; font-size: 1.2rem; margin-bottom: 15px; }
         
+        /* BOTONES DE COMPRA Y REGALO */
+        .action-buttons { display: flex; gap: 8px; width: 100%; }
         .btn-buy { 
             background: transparent; border: 2px solid var(--color-hover, var(--gold)); 
-            color: var(--color-hover, var(--gold)); padding: 12px; width: 100%; 
+            color: var(--color-hover, var(--gold)); padding: 12px; flex-grow: 1; 
             cursor: pointer; transition: 0.3s; border-radius: 8px; font-weight: 800; text-transform: uppercase; 
         }
         .btn-buy:hover { background: var(--color-hover, var(--gold)); color: #000; }
+        
+        .btn-gift {
+            background: transparent; border: 2px solid var(--purple); 
+            color: var(--purple); padding: 12px 15px; 
+            cursor: pointer; transition: 0.3s; border-radius: 8px; font-weight: 800; 
+        }
+        .btn-gift:hover { background: var(--purple); color: #fff; box-shadow: 0 0 15px rgba(204,0,255,0.4); }
 
         /* EFECTO ESPECIAL NYAN CAT */
         @keyframes rainbowBorder { 
@@ -80,6 +89,11 @@
         .card-glitch:hover .item-icon { animation: shake 0.5s infinite; }
         @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 20% { transform: translate(-1px, -2px) rotate(-1deg); } 40% { transform: translate(-3px, 0px) rotate(1deg); } 60% { transform: translate(3px, 2px) rotate(0deg); } 80% { transform: translate(1px, -1px) rotate(1deg); } 100% { transform: translate(-1px, 2px) rotate(-1deg); } }
 
+        /* MODAL DE REGALO */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content { background: #0a0a0a; padding: 30px; border-radius: 15px; border: 1px solid var(--purple); text-align: center; width: 90%; max-width: 400px; position: relative; }
+        .modal-close { position: absolute; top: 15px; right: 20px; color: #888; font-size: 1.5rem; cursor: pointer; }
+
         @media(max-width: 600px) {
             .back-btn { position: static; display: block; margin-bottom: 15px; }
         }
@@ -91,7 +105,7 @@
         <header>
             <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> VOLVER AL HUB OMNI</a>
             <h1><i class="fas fa-store"></i> Mercado de Cosméticos</h1>
-            <p style="color:#888; margin-top:5px; font-size:0.9rem;">Personaliza tu presencia en la red usando tu XP farmeada.</p>
+            <p style="color:#888; margin-top:5px; font-size:0.9rem;">Personaliza tu presencia o envía regalos a la comunidad.</p>
         </header>
 
         <div class="user-wallet">
@@ -108,7 +122,7 @@
                 <input type="text" id="add-icon" class="g-input" placeholder="Icono (Ej: fas fa-bolt)">
                 <input type="color" id="add-color" class="g-input" style="padding: 5px; max-width: 80px;" value="#00ffff" title="Color del Ítem">
                 <button class="btn-admin" onclick="addNewItem()"><i class="fas fa-upload"></i> PUBLICAR</button>
-                <button class="btn-debug" onclick="resetMyXP()"><i class="fas fa-sync"></i> PURGAR MI XP (DEBUG)</button>
+                <button class="btn-debug" onclick="resetMyXP()"><i class="fas fa-sync"></i> PURGAR MI XP</button>
             </div>
         </div>
 
@@ -117,6 +131,16 @@
         <div class="market-grid" id="store-items">
             </div>
 
+    </div>
+
+    <div id="giftModal" class="modal">
+        <div class="modal-content" style="box-shadow: 0 0 30px rgba(204,0,255,0.2);">
+            <span class="modal-close" onclick="closeGiftModal()">✕</span>
+            <h2 style="color:var(--purple); margin-top:0; text-transform:uppercase;"><i class="fas fa-gift"></i> Sistema de Regalos</h2>
+            <p style="color:#aaa; font-size:0.85rem;">Estás a punto de regalar <b><span id="gift-item-name" style="color:#fff;"></span></b>. Se descontará de tu XP.</p>
+            <input type="text" id="gift-receiver" class="g-input" placeholder="Nick exacto del jugador destino..." style="margin:20px 0; width:100%;">
+            <button class="btn-buy" style="--color-hover: var(--purple); width:100%;" onclick="sendGift()"><i class="fas fa-paper-plane"></i> ENVIAR REGALO PÚBLICO</button>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -139,8 +163,9 @@
         const db = firebase.database();
         
         let currentUser = null;
+        let pendingGift = null;
 
-        // CATÁLOGO OFICIAL (HARDCODED PARA ASEGURAR QUE SIEMPRE ESTÉN)
+        // CATÁLOGO OFICIAL 
         const officialCatalog = [
             { id: "ghost", name: "Modo Fantasma", price: 100, icon: "fas fa-ghost", color: "#aaaaaa", desc: "Vuelve tu nombre semi-transparente en los Leaderboards. Ideal para acechar en las sombras.", extraClass: "" },
             { id: "ice", name: "Núcleo de Hielo", price: 200, icon: "fas fa-snowflake", color: "#00aaff", desc: "Emana un aura congelada con destellos celestes en tu perfil y el chat global.", extraClass: "" },
@@ -181,16 +206,14 @@
             const grid = document.getElementById('store-items');
             let html = "";
 
-            // 1. Dibujar Catálogo Oficial
             officialCatalog.forEach(item => {
                 html += buildCard(item.id, item.name, item.price, item.icon, item.color, item.desc, item.extraClass, false);
             });
 
-            // 2. Dibujar Catálogo Dinámico (Añadido por Admins en Firebase)
             if(dynamicItems) {
                 for(let key in dynamicItems) {
                     let d = dynamicItems[key];
-                    if(d.active !== false) { // Si no está desactivado
+                    if(d.active !== false) { 
                         html += buildCard(key, d.name, d.price, d.icon || 'fas fa-star', d.color || '#00ffff', "Ítem Temporal del Evento Admin.", "card-dynamic", true);
                     }
                 }
@@ -210,47 +233,93 @@
                 <h3 class="item-title" style="color: ${color};">${name}</h3>
                 <p class="item-desc">${desc}</p>
                 <div class="item-price">${price} XP</div>
-                <button class="btn-buy" onclick="buyItem('${id}', '${name}', ${price})">
-                    <i class="fas fa-shopping-cart"></i> ADQUIRIR
-                </button>
+                <div class="action-buttons">
+                    <button class="btn-buy" onclick="buyItem('${id}', '${name}', ${price})">COMPRAR</button>
+                    <button class="btn-gift" title="Regalar a alguien" onclick="openGiftModal('${id}', '${name}', ${price})"><i class="fas fa-gift"></i></button>
+                </div>
             </div>`;
         }
 
-        // ESCUCHAR ÍTEMS DINÁMICOS DE FIREBASE
+        // ESCUCHAR ÍTEMS DINÁMICOS
         db.ref('market_dynamic_items').on('value', snap => {
             renderStore(snap.val());
         });
 
-        // LÓGICA DE COMPRA
+        // 1-CLICK COMPRA
         function buyItem(itemId, itemName, price) {
-            if(!currentUser) {
-                alert("⚠️ Error: Debes iniciar sesión para realizar transacciones.");
-                return window.location.href = "login.html";
-            }
+            if(!currentUser) return alert("⚠️ Error: Debes iniciar sesión para realizar transacciones.");
+            if((currentUser.totalXP || 0) < price) return alert(`❌ Fondos insuficientes. Necesitas ${price} XP.`);
             
-            if((currentUser.totalXP || 0) < price) {
-                return alert(`❌ Fondos insuficientes. Necesitas ${price} XP y solo tienes ${(currentUser.totalXP||0).toFixed(1)} XP.`);
-            }
+            let newXP = currentUser.totalXP - price;
             
-            if(confirm(`¿Estás seguro de adquirir [ ${itemName} ] por ${price} XP?\nSe descontará de tu billetera.`)) {
-                let newXP = currentUser.totalXP - price;
-                
-                // Actualizar Billetera
+            // Actualizar Billetera, Inventario y Equipar instantáneamente
+            db.ref(`players/${currentUser.key}/totalXP`).set(newXP);
+            db.ref(`players/${currentUser.key}/inventory`).push({ itemName: itemId, purchasedAt: Date.now() });
+            db.ref(`players/${currentUser.key}/activeCosmetic`).set(itemId);
+            
+            currentUser.totalXP = newXP;
+            document.getElementById('wallet-xp').innerText = newXP.toFixed(1);
+            
+            alert(`✅ ¡Transacción exitosa! El cosmético [ ${itemName} ] ha sido equipado en tu perfil.`);
+        }
+
+        // LÓGICA DE REGALOS PÚBLICOS
+        function openGiftModal(itemId, itemName, price) {
+            if(!currentUser) return alert("⚠️ Error: Debes iniciar sesión para regalar.");
+            if((currentUser.totalXP || 0) < price) return alert(`❌ Fondos insuficientes para regalar este ítem.`);
+            
+            pendingGift = { id: itemId, name: itemName, price: price };
+            document.getElementById('gift-item-name').innerText = itemName;
+            document.getElementById('giftModal').style.display = 'flex';
+        }
+
+        function closeGiftModal() {
+            document.getElementById('giftModal').style.display = 'none';
+            document.getElementById('gift-receiver').value = '';
+        }
+
+        function sendGift() {
+            let receiverName = document.getElementById('gift-receiver').value.trim();
+            if(!receiverName) return;
+
+            // Buscar al jugador en la BD
+            db.ref('players').once('value').then(snap => {
+                let players = snap.val();
+                let receiverKey = null;
+                let realReceiverName = "";
+
+                for(let k in players) {
+                    if(players[k].name.toLowerCase() === receiverName.toLowerCase()) {
+                        receiverKey = k;
+                        realReceiverName = players[k].name;
+                        break;
+                    }
+                }
+
+                if(!receiverKey) return alert("❌ Error: Jugador no encontrado en la red OMNI.");
+                if(receiverKey === currentUser.key) return alert("❌ No puedes enviarte un regalo a ti mismo.");
+
+                // Procesar transacción
+                let newXP = currentUser.totalXP - pendingGift.price;
                 db.ref(`players/${currentUser.key}/totalXP`).set(newXP);
+                db.ref(`players/${receiverKey}/inventory`).push({ itemName: pendingGift.id, receivedFrom: currentUser.name, date: Date.now() });
                 
-                // Añadir al Inventario y setear como Cosmético Activo
-                db.ref(`players/${currentUser.key}/inventory`).push({ itemName: itemId, purchasedAt: Date.now() });
-                db.ref(`players/${currentUser.key}/activeCosmetic`).set(itemId);
-                
-                // Actualizar UI local rápido
+                // NOTIFICACIÓN EN EL CHAT GLOBAL (REGALO PÚBLICO)
+                db.ref('global_chat').push({ 
+                    user: "OMNI BOT", 
+                    text: `🎁 ¡Transacción Pública! [${currentUser.name}] ha gastado ${pendingGift.price} XP para regalarle [${pendingGift.name}] a [${realReceiverName}]. ¡Qué generosidad!`, 
+                    time: Date.now() 
+                });
+
                 currentUser.totalXP = newXP;
                 document.getElementById('wallet-xp').innerText = newXP.toFixed(1);
                 
-                alert(`✅ ¡Transacción exitosa!\nEl cosmético [ ${itemName} ] ha sido equipado automáticamente en tu perfil.`);
-            }
+                alert(`✅ ¡Regalo enviado con éxito a ${realReceiverName} y anunciado en el Chat Global!`);
+                closeGiftModal();
+            });
         }
 
-        // LÓGICA DEL PANEL ADMIN: Inyectar ítem dinámico
+        // LÓGICA DEL PANEL ADMIN (AÑADIR ITEMS Y PURGAR XP)
         function addNewItem() {
             let name = document.getElementById('add-name').value.trim();
             let price = parseInt(document.getElementById('add-price').value);
@@ -259,31 +328,18 @@
 
             if(!name || isNaN(price)) return alert("El nombre y el precio son obligatorios.");
             
-            db.ref('market_dynamic_items').push({ 
-                name: name, 
-                price: price, 
-                icon: icon, 
-                color: color,
-                createdAt: Date.now()
-            });
+            db.ref('market_dynamic_items').push({ name: name, price: price, icon: icon, color: color, createdAt: Date.now() });
             
             alert(`Ítem [${name}] inyectado exitosamente en el mercado global.`);
-            document.getElementById('add-name').value = "";
-            document.getElementById('add-price').value = "";
+            document.getElementById('add-name').value = ""; document.getElementById('add-price').value = "";
         }
 
-        // LÓGICA DEL PANEL ADMIN: Purgar Billetera (DEBUG)
         function resetMyXP() {
             if(!currentUser) return;
-            
-            if(confirm("⚠️ MODO DEBUG ADMIN ACTIVADO\n\n¿Seguro que quieres PURGAR tu Billetera XP a 0?\n\nEsto borrará todas las ganancias artificiales (códigos, reclamos, compras de prueba). Tu Nivel y XP en el Ranking Global volverán a ser calculados ÚNICAMENTE basándose en los niveles que te has pasado legítimamente.")) {
-                
+            if(confirm("⚠️ MODO DEBUG ADMIN ACTIVADO\n\n¿Seguro que quieres PURGAR tu Billetera XP a 0?\nEsto limpiará tus excesos de XP tras las pruebas.")) {
                 db.ref(`players/${currentUser.key}/totalXP`).set(0).then(() => {
-                    alert("✅ PURGA COMPLETADA.\nTu XP ha sido sincronizada. Los Leaderboards y tu Titan Card ahora mostrarán tu puntaje real.");
-                    currentUser.totalXP = 0;
-                    document.getElementById('wallet-xp').innerText = "0.0";
-                }).catch(err => {
-                    alert("Error de conexión: " + err.message);
+                    alert("✅ PURGA COMPLETADA. Tu XP ha sido sincronizada a los niveles completados reales.");
+                    currentUser.totalXP = 0; document.getElementById('wallet-xp').innerText = "0.0";
                 });
             }
         }
