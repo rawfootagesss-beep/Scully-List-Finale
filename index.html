@@ -75,15 +75,17 @@
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
         .container { width: 95%; max-width: 1200px; margin: 20px auto 40px; }
-        .top-actions { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
-        .live-feed, .suggest-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px; padding: 25px; }
-        .live-feed { flex: 1; min-width: 300px; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+        .top-actions { display: flex; justify-content: space-between; align-items: stretch; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
+        .live-feed, .action-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px; padding: 25px; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        .live-feed { flex: 1.5; min-width: 300px; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
         .live-feed h3 { margin: 0 0 15px; font-size: 1rem; color: var(--cyan); text-transform: uppercase; font-family: 'JetBrains Mono'; display: flex; align-items: center; gap: 10px; }
         .feed-scroll { display: flex; flex-direction: column; gap: 12px; max-height: 150px; overflow-y: auto; padding-right: 10px; }
         .feed-item { font-size: 0.8rem; color: #aaa; border-left: 3px solid var(--accent); padding-left: 12px; animation: fadeIn 0.5s ease; }
         .feed-item b { color: #fff; }
-        .suggest-box { border-color: var(--purple); text-align: center; min-width: 280px; }
-        .suggest-box h3 { margin: 0 0 10px; color: var(--purple); font-size: 1rem; text-transform: uppercase; }
+        
+        .action-box { flex: 1; min-width: 250px; text-align: center; }
+        .action-box h3 { margin: 0 0 10px; font-size: 1rem; text-transform: uppercase; }
 
         .throne-section { width: 90%; max-width: 900px; margin: 0 auto 50px; }
         .throne-card { background-size: cover; background-position: center; border-radius: 30px; padding: 70px; border: 2px solid var(--accent); box-shadow: var(--glow); display: flex; align-items: center; position: relative; overflow: hidden; min-height: 300px; transition: 0.5s ease; cursor: pointer; }
@@ -127,8 +129,8 @@
 
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000; backdrop-filter: blur(15px); }
         .modal-content { background: #0a0a0a; margin: 10vh auto; padding: 40px; width: 90%; max-width: 550px; border-radius: 35px; border: 1px solid var(--cyan); text-align: center; position: relative; box-shadow: 0 0 50px rgba(0,255,255,0.15); max-height: 80vh; overflow-y: auto; }
-        input.g-input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 15px; border-radius: 10px; font-family: inherit; font-size: 0.95rem; outline: none; box-sizing: border-box; margin-bottom: 20px; transition: 0.3s; }
-        input.g-input:focus { border-color: var(--cyan); }
+        input.g-input, textarea.g-input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 15px; border-radius: 10px; font-family: inherit; font-size: 0.95rem; outline: none; box-sizing: border-box; margin-bottom: 20px; transition: 0.3s; }
+        input.g-input:focus, textarea.g-input:focus { border-color: var(--cyan); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -167,7 +169,7 @@
     </div>
     
     <nav class="staff-bar notranslate">
-        <span id="tribute-btn" class="tribute-btn" style="color:#fff; font-weight:800; border:1px solid rgba(255,255,255,0.2); padding:4px 12px; border-radius:50px;">TRIBUTO A 2PARX 🕊️</span>
+        <span id="tribute-btn" class="tribute-btn" onclick="triggerTribute()" style="color:#fff; font-weight:800; border:1px solid rgba(255,255,255,0.2); padding:4px 12px; border-radius:50px;">TRIBUTO A 2PARX 🕊️</span>
         <span><i class="fas fa-crown" style="color:var(--accent);"></i> OWNER <b>score</b></span>
         <span><i class="fas fa-user-shield" style="color:var(--blue);"></i> ADMIN <b>Sopa354</b></span>
         <span><i class="fas fa-user-shield" style="color:var(--blue);"></i> ADMIN <b>awrqsdt</b></span>
@@ -209,11 +211,19 @@
                 </div>
             </div>
             
-            <div class="suggest-box">
-                <h3><i class="fas fa-lightbulb"></i> Sugerir Nivel</h3>
+            <div class="action-box" style="border-color: var(--blue);">
+                <h3 style="color: var(--blue);"><i class="fas fa-upload"></i> Subir Victoria</h3>
+                <p style="font-size:0.75rem; color:#888; margin-bottom:20px;">¿Te pasaste un Demon de la lista? Manda tu prueba y gana Puntos Titán.</p>
+                <button class="btn-scully" style="background:var(--blue); color:#000; border:none; width:100%; justify-content:center;" onclick="openRecordModal()">
+                    ENVIAR RÉCORD
+                </button>
+            </div>
+
+            <div class="action-box" style="border-color: var(--purple);">
+                <h3 style="color: var(--purple);"><i class="fas fa-lightbulb"></i> Sugerir Nivel</h3>
                 <p style="font-size:0.75rem; color:#888; margin-bottom:20px;">¿Falta un demon en la lista? Gana +10 XP en tu billetera si es aceptado.</p>
                 <button class="btn-scully" style="background:var(--purple); color:#fff; border:none; width:100%; justify-content:center;" onclick="document.getElementById('sugModal').style.display='flex'">
-                    ENVIAR SUGERENCIA
+                    SUGERIR NIVEL
                 </button>
             </div>
         </div>
@@ -282,6 +292,7 @@
             </div>
         </section>
     </main>
+
     <footer class="footer-credits">
         <p style="color:#444; font-size:0.8rem; font-weight:800; letter-spacing:1px;">THE SCULLY LIST &copy; 2026 | CODED BY SCORE ENGINEERING</p>
         <div class="color-trigger" title="Modificar color de interfaz">
@@ -289,6 +300,21 @@
             <input type="color" id="themeColor" oninput="updateThemeColor(this.value)">
         </div>
     </footer>
+
+    <div id="recModal" class="modal">
+        <div class="modal-content" style="border-color:var(--blue);">
+            <span style="position:absolute; top:15px; right:20px; color:#888; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('recModal').style.display='none'">✕</span>
+            <h2 style="color:var(--blue); margin-top:0;"><i class="fas fa-upload"></i> Subir Victoria</h2>
+            <p style="font-size:0.8rem; color:#aaa; margin-bottom:20px;">Estás a punto de enviar un récord bajo el nombre de <b id="rec-username" style="color:#fff;">Tu Usuario</b>.</p>
+            
+            <input type="text" id="rec-lvl" class="g-input" placeholder="Nombre exacto del Nivel (Ej: Bloodbath)">
+            <input type="text" id="rec-link" class="g-input" placeholder="Link del Video de YouTube (Obligatorio)">
+            <input type="text" id="rec-raw" class="g-input" placeholder="Link del RAW (Opcional pero recomendado)">
+            <textarea id="rec-com" class="g-input" rows="3" placeholder="Comentarios adicionales para el moderador (Opcional)"></textarea>
+            
+            <button class="btn-scully" style="background:var(--blue); color:#000; width:100%; justify-content:center; border:none; font-weight:800;" onclick="submitRecord()">ENVIAR PARA VERIFICACIÓN</button>
+        </div>
+    </div>
 
     <div id="cinemaModal" class="cinema-mod">
         <div class="cinema-bg" id="c-bg"></div>
@@ -341,7 +367,6 @@
     </div>
 
     <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">UN PODEROSO ENEMIGO</div>
-
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'en,es', autoDisplay: false}, 'google_translate_element');
@@ -511,6 +536,60 @@
             }).join('') || "Escuchando señales..."; 
         }
 
+        // =========================================
+        // ENVÍO DE RÉCORDS (PROTEGIDO)
+        // =========================================
+        function openRecordModal() {
+            if (!currentUserData.key) {
+                alert("⚠️ ACCESO DENEGADO: Debes iniciar sesión o crear una cuenta para enviar tu récord. Esto es para proteger tu XP de suplantadores.");
+                window.location.href = "login.html";
+                return;
+            }
+            document.getElementById('rec-username').innerText = currentUserData.name;
+            document.getElementById('recModal').style.display = 'flex';
+        }
+
+        function submitRecord() {
+            if (!currentUserData.key) return;
+
+            const lvl = document.getElementById('rec-lvl').value.trim();
+            const link = document.getElementById('rec-link').value.trim();
+            const raw = document.getElementById('rec-raw').value.trim();
+            const com = document.getElementById('rec-com').value.trim();
+
+            if (!lvl || !link) {
+                alert("Error: El nombre del nivel y el link de YouTube son obligatorios.");
+                return;
+            }
+
+            // Enviar a la base de datos
+            db.ref('submissions').push({
+                player: currentUserData.name,
+                level: lvl,
+                link: link,
+                raw: raw,
+                comments: com,
+                time: Date.now()
+            });
+
+            // Webhook opcional
+            const u = fullData.system_settings?.discord?.url;
+            if(u) {
+                fetch(u, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: `📥 **NUEVO ENVÍO:** **${currentUserData.name}** ha subido un récord para **${lvl}**.\n🔗 Prueba: ${link}`, username: "SCULLY SYSTEM" })
+                }).catch(()=>{});
+            }
+
+            alert("¡Récord enviado con éxito! Un moderador lo revisará pronto y se añadirá a tu cuenta.");
+            document.getElementById('recModal').style.display = 'none';
+            document.getElementById('rec-lvl').value = "";
+            document.getElementById('rec-link').value = "";
+            document.getElementById('rec-raw').value = "";
+            document.getElementById('rec-com').value = "";
+        }
+
         // BUSCADOR Y CHAT
         function searchPublicPlayer() {
             const q = document.getElementById('pub-search').value.trim().toLowerCase(); 
@@ -590,7 +669,7 @@
             }
         }
 
-        // ECONOMÍA
+        // ECONOMÍA: RECLAMO DIARIO
         function claimDailyXP() {
             if (!currentUserData.key) {
                 alert("Debes iniciar sesión para reclamar XP diaria.");
@@ -643,6 +722,7 @@
             if(s) { uC.push(code); localStorage.setItem('codigos_omni_' + currentUserData.name, JSON.stringify(uC)); document.getElementById("input-codigo").value=""; }
         }
 
+        // SMART SUBMIT
         function previewSugThumb(){ 
             const v = document.getElementById('sug-v').value.match(/(?:youtu\.be\/|v=)([^"&?\/\s]{11})/); 
             if(v) { 
@@ -840,6 +920,7 @@
             img.src = (p.photo && p.photo !== "null" && p.photo !== "undefined" && p.photo.trim() !== "") ? p.photo : "https://i.imgur.com/6D2g3wU.png";
         }
 
+        // SCULLY AI ENGINE
         function runScullyAI() { 
             document.getElementById('aiModal').style.display = 'block'; 
             const aiText = document.getElementById('aiText'); 
@@ -866,7 +947,7 @@
         // EASTER EGGS LOGIC (NUEVO)
         // =========================================
 
-        // Easter Egg #2: Tributo a 2Parx
+        // Easter Egg #2: Tributo a 2Parx (7 Clics)
         let tributeClicks = 0;
         let tributeTimer;
         function triggerTribute() {
@@ -906,7 +987,7 @@
             }
         }
 
-        // Easter Egg #7: Modo Wave
+        // Easter Egg #7: Modo Wave con Shift
         let isWaveMode = false;
         document.addEventListener('keydown', (e) => {
             if(e.key === 'Shift' && !isWaveMode) {
@@ -922,7 +1003,7 @@
         });
         document.addEventListener('mousemove', (e) => {
             if(isWaveMode) {
-                if(Math.random() > 0.4) return; // Limita partículas para que no se laggee
+                if(Math.random() > 0.4) return; // Limita las partículas para no dar lag
                 let trail = document.createElement('div');
                 trail.className = 'wave-trail';
                 trail.style.left = e.pageX + 'px';
@@ -932,7 +1013,7 @@
             }
         });
 
-        // SISTEMA DE ROLES Y PODER ABSOLUTO
+        // SISTEMA DE ROLES Y AUTENTICACIÓN
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.ref('players').once('value', snap => { 
