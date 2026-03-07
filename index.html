@@ -552,7 +552,7 @@
         </div>
     </div>
    <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">UN PODEROSO ENEMIGO</div>
- <script type="text/javascript">
+   <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
                 pageLanguage: 'es', 
@@ -627,34 +627,34 @@
             return (match && match[1]) ? match[1] : url.trim(); 
         }
 
-        // MOTOR UNIVERSAL DE COSMÉTICOS (ACTUALIZADO AL MERCADO V25)
+        // MOTOR UNIVERSAL DE COSMÉTICOS
         function getCosmetic(ac) {
             let nC = "var(--cyan)", tG = "", bS = "4px solid var(--cyan)", eC = "";
             if(!ac) return {nC, tG, bS, eC};
-            ac = ac.toLowerCase(); // Sincronizado con las IDs del mercado
+            ac = ac.toUpperCase(); 
             
-            if(ac.includes("vip") || ac.includes("dorado")){ 
+            if(ac.includes("VIP")||ac.includes("DORADO")){ 
                 nC="var(--gold)"; bS="4px solid var(--gold)"; 
             }
-            else if(ac.includes("matrix") || ac.includes("hacker")){ 
+            else if(ac.includes("HACKER")||ac.includes("MATRIX")){ 
                 nC="var(--green)"; tG="color:var(--green); text-shadow:0 0 5px var(--green); font-family:'JetBrains Mono';"; bS="4px solid var(--green)"; 
             }
-            else if(ac.includes("demon") || ac.includes("aura")){ 
+            else if(ac.includes("AURA")||ac.includes("DEMON")){ 
                 nC="var(--red)"; bS="4px dashed var(--red)"; tG="color:#ffaaaa; text-shadow:0 0 5px var(--red);"; 
             }
-            else if(ac.includes("ice") || ac.includes("hielo")){ 
+            else if(ac.includes("HIELO")||ac.includes("ICE")){ 
                 nC="#aaddff"; tG="text-shadow: 0 0 8px #00aaff;"; bS="4px solid #00aaff"; 
             }
-            else if(ac.includes("fire") || ac.includes("fuego")){ 
+            else if(ac.includes("FUEGO")||ac.includes("FIRE")){ 
                 nC="#ff5500"; tG="text-shadow: 0 0 8px #ff2200;"; bS="4px solid #ff5500"; 
             }
-            else if(ac.includes("ghost") || ac.includes("fantasma")){ 
-                nC="#ddd"; tG="opacity:0.7; text-shadow: 0 0 5px #fff;"; bS="4px solid #ccc"; 
+            else if(ac.includes("FANTASMA")||ac.includes("GHOST")){ 
+                nC="#ddd"; tG="opacity:0.8; text-shadow: 0 0 5px #fff;"; bS="4px solid #ccc"; 
             }
-            else if(ac.includes("nyan") || ac.includes("rainbow")){ 
+            else if(ac.includes("RAINBOW")||ac.includes("ARCOIRIS")||ac.includes("NYAN")){ 
                 eC="rbw-text"; bS="4px solid #ff00ff"; 
             }
-            else if(ac.includes("glitch")){ 
+            else if(ac.includes("GLITCH")){ 
                 eC="glitch-text"; bS="4px solid #00ffff"; tG="text-shadow: 2px 0 red, -2px 0 blue;"; 
             }
             
@@ -985,7 +985,7 @@
             }
         }
 
-        // CINEMA MODE - REPARADO PARA IGNORAR MAYÚSCULAS/MINÚSCULAS
+        // CINEMA MODE
         function openCinema(idx) {
             const l = nexus(fullData.levels)[idx]; 
             if (!l) return;
@@ -996,7 +996,6 @@
             document.getElementById('c-verif').innerText = l.first || 'N/A'; 
             document.getElementById('c-bounty-badge').style.display = l.bounty ? 'inline-block' : 'none';
             
-            // LA CORRECCIÓN: Compara convirtiendo todo a minúsculas
             const victorsRaw = nexus(fullData.players).filter(p => nexus(p.completions).some(x => x.level.toLowerCase() === l.name.toLowerCase()) && !p.hidden); 
             
             let vList = [];
@@ -1254,7 +1253,7 @@
             }
         });
 
-        // SISTEMA DE ROLES Y AUTENTICACIÓN
+        // SISTEMA DE ROLES Y AUTENTICACIÓN -> FIX APLICADO (tolowerCase)
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.ref('players').once('value').then(snap => { 
@@ -1262,7 +1261,8 @@
                     let miLlaveDB = null, me = null;
                     
                     for (let key in playersObj) { 
-                        if (playersObj[key].email === user.email) { 
+                        // FIX: Ignorar mayúsculas al comparar correos
+                        if (playersObj[key].email && playersObj[key].email.toLowerCase() === user.email.toLowerCase()) { 
                             me = playersObj[key]; 
                             miLlaveDB = key; 
                             break; 
@@ -1314,4 +1314,4 @@
         });
     </script>
 </body>
-</html>  
+</html>
