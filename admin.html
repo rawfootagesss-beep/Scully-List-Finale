@@ -416,49 +416,46 @@
 
             <div id="t-clm" class="tab">
                 <h2 class="title"><i class="fas fa-id-badge" style="color:var(--cy);"></i> Centro de Reclamos</h2>
-                <button class="bs br" style="margin-bottom:15px;" onclick="pList('claim_requests')">PURGAR RECLAMOS</button>
+                
+                <button class="bs br" style="margin-bottom:15px;" onclick="pList('claim_requests')">PURGAR RECLAMOS DE CUENTAS</button>
                 <div id="l-clm" class="dl"></div>
+                
+                <h3 style="color:var(--bl); font-size:1rem; margin-top:30px; border-top:1px solid #333; padding-top:15px;"><i class="fas fa-image"></i> Solicitudes de Foto de Perfil</h3>
+                <button class="bs br" style="margin-bottom:15px;" onclick="pList('pfp_requests')">PURGAR SOLICITUDES DE FOTO</button>
+                <div id="l-pfp" class="dl"></div>
             </div>
-<div id="t-mkt" class="tab">
-    <h2 class="title"><i class="fas fa-store" style="color:var(--gd);"></i> Mercado & Economía</h2>
-    
-    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:30px;">
-        <div style="flex:1; min-width:300px;">
-            <h3 style="color:var(--gr);font-size:1rem; margin-top:0;"><i class="fas fa-ticket-alt"></i> Generador de Códigos</h3>
-            <div class="panel" style="border-color:var(--gr);">
-                <div class="ig"><label>Código</label><input type="text" id="cd-k" placeholder="EJ: OMNI2026" style="text-transform:uppercase;"></div>
-                <div class="ig"><label>XP de Regalo</label><input type="number" id="cd-x" placeholder="100"></div>
-                <div class="ig"><label>Mensaje Personalizado</label><input type="text" id="cd-m" placeholder="¡Felicidades!"></div>
-                <button class="btn bg" style="width:100%;" onclick="aCod()"><i class="fas fa-plus"></i> CREAR CÓDIGO</button>
-            </div>
-            <h3 style="font-size:1rem; border-bottom:1px solid #333; padding-bottom:5px;">Códigos Activos</h3>
-            <div id="l-cod" class="dl"></div>
-        </div>
 
-        <div style="flex:1; min-width:300px;">
-            <h3 style="color:var(--gd); font-size:1rem; margin-top:0;"><i class="fas fa-upload"></i> Publicar Ítem</h3>
-            <div class="panel" style="border-color:var(--gd);">
-                <div class="ig"><label>Nombre del Ítem</label><input type="text" id="i-n" placeholder="Título VIP"></div>
-                <div class="ig"><label>Precio (XP)</label><input type="number" id="i-p" placeholder="500"></div>
-                <div class="ig"><label>Link Icono/Imagen</label><input type="text" id="i-i" placeholder="URL Imgur"></div>
-                <button class="btn by" style="width:100%;" onclick="aItm()"><i class="fas fa-upload"></i> PUBLICAR</button>
-            </div>
-            <h3 style="font-size:1rem; border-bottom:1px solid #333; padding-bottom:5px;">Catálogo</h3>
-            <div id="l-mit" class="dl"></div>
-        </div>
-    </div>
+            <div id="t-mkt" class="tab">
+                <h2 class="title"><i class="fas fa-store" style="color:var(--gd);"></i> Mercado & Economía</h2>
+                
+                <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:30px;">
+                    <div style="flex:1; min-width:300px;">
+                        <h3 style="color:var(--gr);font-size:1rem; margin-top:0;"><i class="fas fa-ticket-alt"></i> Generador de Códigos</h3>
+                        <div class="panel" style="border-color:var(--gr);">
+                            <div class="ig"><label>Código</label><input type="text" id="cd-k" placeholder="EJ: OMNI2026" style="text-transform:uppercase;"></div>
+                            <div class="ig"><label>XP de Regalo</label><input type="number" id="cd-x" placeholder="100"></div>
+                            <div class="ig"><label>Mensaje Personalizado</label><input type="text" id="cd-m" placeholder="¡Felicidades!"></div>
+                            <button class="btn bg" style="width:100%;" onclick="aCod()"><i class="fas fa-plus"></i> CREAR CÓDIGO</button>
+                        </div>
+                        <h3 style="font-size:1rem; border-bottom:1px solid #333; padding-bottom:5px;">Códigos Activos</h3>
+                        <div id="l-cod" class="dl"></div>
+                    </div>
 
-    <h3 style="color:var(--gd);font-size:1rem; border-top:1px solid #333; padding-top:20px;">Peticiones de Usuarios</h3>
-    <div id="l-mrq" class="dl"></div>
-</div>
-            
-            
-<h3 style="color:var(--gd);font-size:1rem;">Peticiones de Compra</h3>
-<div id="l-mrq" class="dl"></div>
-                    <button class="btn" style="background:var(--gd);color:#000;width:100%;" onclick="aItm()"><i class="fas fa-upload"></i> PUBLICAR EN TIENDA</button>
+                    <div style="flex:1; min-width:300px;">
+                        <h3 style="color:var(--gd); font-size:1rem; margin-top:0;"><i class="fas fa-upload"></i> Publicar Ítem</h3>
+                        <div class="panel" style="border-color:var(--gd);">
+                            <div class="ig"><label>Nombre del Ítem</label><input type="text" id="i-n" placeholder="Título VIP"></div>
+                            <div class="ig"><label>Precio (XP)</label><input type="number" id="i-p" placeholder="500"></div>
+                            <div class="ig"><label>Link Icono/Imagen</label><input type="text" id="i-i" placeholder="URL Imgur"></div>
+                            <button class="btn by" style="width:100%;" onclick="aItm()"><i class="fas fa-upload"></i> PUBLICAR EN TIENDA</button>
+                        </div>
+                        <h3 style="font-size:1rem; border-bottom:1px solid #333; padding-bottom:5px;">Catálogo Activo</h3>
+                        <div id="l-mit" class="dl"></div>
+                    </div>
                 </div>
-                <h3 style="font-size:1rem; border-bottom:1px solid #333; padding-bottom:5px;">Catálogo Activo</h3>
-                <div id="l-mit" class="dl"></div>
+
+                <h3 style="color:var(--gd);font-size:1rem; border-top:1px solid #333; padding-top:20px;">Peticiones de Compra de Usuarios</h3>
+                <div id="l-mrq" class="dl"></div>
             </div>
 
             <div id="t-cln" class="tab">
@@ -721,7 +718,6 @@
 
         // ==========================================
         // AUTENTICACIÓN SEGURA (CON TRY/CATCH)
-        // Soluciona la pantalla de carga infinita
         // ==========================================
         auth.onAuthStateChanged(user => {
             if(!user) return location.href="login.html"; 
@@ -804,6 +800,7 @@
                     rMReq(fD.market_requests||{}); 
                     rMIt(fD.market_items||{});
                     rClm(fD.claim_requests||{}); 
+                    rPfp(fD.pfp_requests||{}); // NUEVO: Llamada a renderizar fotos
                     rCln(fD.clans||{}); 
                     rBdg(fD.badges||{}); 
                     rCht(fD.staff_chat||{});
@@ -1220,6 +1217,8 @@
             }
         }
         
+        function searchP() { sP(); } // Alias por si lo llama editDirectP
+        
         function rPD() { 
             const p = nx(fD.players)[pIx]; 
             $('pe-n').value = p.name; 
@@ -1228,7 +1227,7 @@
             $('pe-bg').value = p.badgeId || ""; 
             $('pe-pfp').value = (p.photo && p.photo !== "null" && p.photo !== "undefined") ? p.photo : ""; 
             $('pe-ver').value = p.verified ? "true" : "false";
-            $('pe-flag').value = p.country || ""; // Muestra el código de país
+            $('pe-flag').value = p.country || ""; 
             
             $('p-bn').innerHTML = p.hidden ? `<button class="btn bg" style="width:100%" onclick="bN(false)">LEVANTAR BAN</button>` : `<button class="btn br" style="width:100%" onclick="bN(true)">APLICAR BLACKLIST</button>`; 
                 
@@ -1253,7 +1252,7 @@
             db.ref(`players/${pIx}/badgeId`).set($('pe-bg').value); 
             db.ref(`players/${pIx}/photo`).set($('pe-pfp').value); 
             db.ref(`players/${pIx}/verified`).set($('pe-ver').value === "true"); 
-            db.ref(`players/${pIx}/country`).set($('pe-flag').value.trim().toLowerCase()); // Guarda el código de país
+            db.ref(`players/${pIx}/country`).set($('pe-flag').value.trim().toLowerCase()); 
             
             toast("Perfil Guardado"); 
             log(`Modificó perfil de: ${$('pe-n').value}`);
@@ -1296,6 +1295,69 @@
         }
 
         // ==========================================
+        // GESTIÓN DE RECLAMOS Y FOTOS DE PERFIL (NUEVO)
+        // ==========================================
+        function rClm(c) { 
+            let h = ""; 
+            Object.entries(c).forEach(([k,v]) => { 
+                h += `<div class="dc"><div><h4 style="margin:0;color:var(--cy);">${v.nick}</h4><p style="margin:0;font-size:.7rem;">${v.email}</p></div><div style="display:flex;gap:5px;"><button class="bs bg" onclick="aClm('${k}')">VINCULAR</button></div></div>`; 
+            }); 
+            if($('l-clm')) $('l-clm').innerHTML = h || '<p style="color:#666;">Bandeja limpia.</p>'; 
+        }
+        
+        function aClm(k) { 
+            const r = fD.claim_requests[k]; 
+            let pL = nx(fD.players); 
+            let i = pL.findIndex(p => p.name.toLowerCase() === r.nick.toLowerCase()); 
+            
+            if(i > -1) { 
+                pL[i].email = r.email; 
+                db.ref('players').set(pL); 
+                db.ref(`claim_requests/${k}`).remove(); 
+                log(`Vinculó cuenta de: ${r.nick}`); 
+                toast("Cuenta Enlazada"); 
+            } else { 
+                toast("Perfil Inexistente", true); 
+            } 
+        }
+
+        // --- SISTEMA DE FOTOS DE PERFIL ---
+        function rPfp(d) {
+            let h = "";
+            Object.entries(d).forEach(([id, req]) => {
+                h += `
+                <div class="dc" style="align-items: flex-start;">
+                    <img src="${req.photo_url}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid var(--bl);">
+                    <div style="flex:1;">
+                        <h4 style="margin:0; color:var(--bl);">${req.player}</h4>
+                        <a href="${req.photo_url}" target="_blank" style="font-size:0.7rem; color:var(--cy);">Ver Imagen Completa</a>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:5px;">
+                        <button class="bs bg" onclick="aPfp('${id}')">APROBAR</button>
+                        <button class="bs br" onclick="db.ref('pfp_requests/${id}').remove()">RECHAZAR</button>
+                    </div>
+                </div>`;
+            });
+            if($('l-pfp')) $('l-pfp').innerHTML = h || '<p style="color:#666;">Sin peticiones de foto.</p>';
+        }
+
+        function aPfp(id) {
+            const req = fD.pfp_requests[id];
+            let pL = nx(fD.players);
+            let i = pL.findIndex(p => p.name.toLowerCase() === req.player.toLowerCase());
+            
+            if(i > -1) {
+                pL[i].photo = req.photo_url;
+                db.ref('players').set(pL);
+                db.ref(`pfp_requests/${id}`).remove();
+                log(`Aprobó foto de perfil de: ${req.player}`);
+                toast("Foto Actualizada");
+            } else {
+                toast("Jugador no encontrado", true);
+            }
+        }
+
+        // ==========================================
         // MERCADO (CON FUNCIÓN DE REGALAR SIN COBRO)
         // ==========================================
         function rMReq(reqs) { 
@@ -1314,7 +1376,7 @@
                     </div>
                 </div>`; 
             }); 
-            if($('l-mrq')) $('l-mrq').innerHTML = h || '<p style="color:#666;">Sin peticiones.</p>'; 
+            if($('l-mrq')) $('l-mrq').innerHTML = h || '<p style="color:#666;">Sin peticiones de compra.</p>'; 
         }
         
         function aPur(id, chargeXP) { 
@@ -1362,6 +1424,7 @@
                 db.ref('market_items').push({name: n, price: parseInt(p), img: i}); 
                 log(`Publicó ítem: ${n}`); 
                 toast("Tienda Actualizada"); 
+                $('i-n').value = ''; $('i-p').value = ''; $('i-i').value = '';
             } 
         }
         
@@ -1373,33 +1436,36 @@
             if($('l-mit')) $('l-mit').innerHTML = h; 
         }
 
+        function aCod() {
+            const k = $('cd-k').value.trim().toUpperCase();
+            const x = parseInt($('cd-x').value);
+            const m = $('cd-m').value.trim();
+
+            if(k && !isNaN(x) && m) {
+                db.ref(`promo_codes/${k}`).set({ xp: x, msg: m });
+                log(`Creó código: ${k} (+${x} XP)`);
+                toast("Código Creado con Éxito");
+                $('cd-k').value = ''; $('cd-x').value = ''; $('cd-m').value = '';
+            } else {
+                toast("Error: Faltan datos", true);
+            }
+        }
+
+        function rCod(d) {
+            let h = "";
+            Object.entries(d).forEach(([code, data]) => {
+                h += `<div class="dc" style="border-left:3px solid var(--gr);">
+                    <div><h4 style="color:var(--gr);margin:0;">${code}</h4>
+                    <p style="margin:0;font-size:.75rem;">+${data.xp} XP | "${data.msg}"</p></div>
+                    <button class="bs br" onclick="db.ref('promo_codes/${code}').remove()">BORRAR</button>
+                </div>`;
+            });
+            if($('l-cod')) $('l-cod').innerHTML = h || '<p style="color:#666;">Sin códigos activos.</p>';
+        }
+
         // ==========================================
         // OTROS MÓDULOS (CLANES, MEDALLAS, CHAT, LOGS, ROOT)
         // ==========================================
-        function rClm(c) { 
-            let h = ""; 
-            Object.entries(c).forEach(([k,v]) => { 
-                h += `<div class="dc"><div><h4 style="margin:0;color:var(--cy);">${v.nick}</h4><p style="margin:0;font-size:.7rem;">${v.email}</p></div><div style="display:flex;gap:5px;"><button class="bs bg" onclick="aClm('${k}')">VINCULAR</button></div></div>`; 
-            }); 
-            if($('l-clm')) $('l-clm').innerHTML = h || '<p style="color:#666;">Bandeja limpia.</p>'; 
-        }
-        
-        function aClm(k) { 
-            const r = fD.claim_requests[k]; 
-            let pL = nx(fD.players); 
-            let i = pL.findIndex(p => p.name.toLowerCase() === r.nick.toLowerCase()); 
-            
-            if(i > -1) { 
-                pL[i].email = r.email; 
-                db.ref('players').set(pL); 
-                db.ref(`claim_requests/${k}`).remove(); 
-                log(`Vinculó cuenta de: ${r.nick}`); 
-                toast("Cuenta Enlazada"); 
-            } else { 
-                toast("Perfil Inexistente", true); 
-            } 
-        }
-
         function aCln() { 
             const n = $('c-n').value; 
             const t = $('c-t').value; 
@@ -1604,39 +1670,6 @@
             }; 
             r.readAsText(f); 
         }
-        // FUNCIÓN PARA CREAR EL CÓDIGO EN LA NUBE
-        function aCod() {
-            const k = $('cd-k').value.trim().toUpperCase(); // Lee el nombre
-            const x = parseInt($('cd-x').value);            // Lee la XP
-            const m = $('cd-m').value.trim();               // Lee el mensaje
-
-            if(k && !isNaN(x) && m) {
-                // Guarda en la base de datos "promo_codes"
-                db.ref(`promo_codes/${k}`).set({ xp: x, msg: m });
-                log(`Creó código: ${k} (+${x} XP)`);
-                toast("Código Creado con Éxito");
-                // Limpia las casillas
-                $('cd-k').value = ''; $('cd-x').value = ''; $('cd-m').value = '';
-            } else {
-                toast("Error: Faltan datos", true);
-            }
-        }
-
-        // FUNCIÓN PARA MOSTRAR LA LISTA DE CÓDIGOS EN EL ADMIN
-        function rCod(d) {
-            let h = "";
-            Object.entries(d).forEach(([code, data]) => {
-                h += `<div class="dc" style="border-left:3px solid var(--gr);">
-                    <div><h4 style="color:var(--gr);margin:0;">${code}</h4>
-                    <p style="margin:0;font-size:.75rem;">+${data.xp} XP | "${data.msg}"</p></div>
-                    <button class="bs br" onclick="db.ref('promo_codes/${code}').remove()">BORRAR</button>
-                </div>`;
-            });
-            if($('l-cod')) $('l-cod').innerHTML = h || '<p style="color:#666;">Sin códigos activos.</p>';
-        }
     </script>
 </body>
 </html>
-
-
-
