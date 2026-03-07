@@ -50,7 +50,6 @@
         /* =========================================
            EASTER EGGS ANIMACIONES CSS
            ========================================= */
-        /* Easter Egg #7: Wave Cursor */
         body.wave-mode, body.wave-mode * { 
             cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='%2300ffff' stroke='%23ffffff' stroke-width='2' d='M2 22 L22 12 L2 2 Z'/></svg>"), crosshair !important; 
         }
@@ -70,7 +69,6 @@
             100% { opacity: 0; transform: scale(0) rotate(45deg); } 
         }
 
-        /* Easter Egg #2: Tributo a 2Parx */
         .tribute-btn { 
             cursor: pointer; 
             transition: 0.3s; 
@@ -321,11 +319,11 @@
             <a href="rules.html" class="btn-scully" style="color:var(--green); border-color:rgba(0,255,102,0.3);"><i class="fas fa-book"></i> Manual Titán</a>
             <a href="changelog.html" class="btn-scully" style="color:var(--cyan); border-color:rgba(0,255,255,0.3);"><i class="fas fa-file-code"></i> Changelog</a>
             
-            <button class="btn-scully btn-ai" onclick="runScullyAI(); if(window.innerWidth <= 900) toggleMobileMenu();">
+            <button type="button" class="btn-scully btn-ai" onclick="runScullyAI(); if(window.innerWidth <= 900) toggleMobileMenu();">
                 <i class="fas fa-brain"></i> Scully AI
             </button>
             
-            <button class="btn-scully" onclick="document.getElementById('aboutModal').style.display='flex'">
+            <button type="button" class="btn-scully" onclick="document.getElementById('aboutModal').style.display='flex'">
                 <i class="fas fa-info-circle"></i> Sobre Nosotros
             </button>
 
@@ -381,7 +379,7 @@
             </div>
 
             <div class="search-player-box">
-                <input type="text" id="pub-search" placeholder="Buscar jugador en el Ranking Global..." onkeypress="if(event.keyCode==13) searchPublicPlayer()">
+                <input type="text" id="pub-search" placeholder="Buscar jugador en el Ranking Global..." onkeypress="if(event.keyCode==13) searchPublicPlayer(event)">
                 <button type="button" class="btn-scully" style="background:var(--cyan); color:#000; border:none; padding:10px 20px;" onclick="searchPublicPlayer()">
                     <i class="fas fa-search"></i>
                 </button>
@@ -408,7 +406,7 @@
                     <h3 style="color:var(--gold); margin-top:0;"><i class="fas fa-ticket-alt"></i> Canje de Códigos</h3>
                     <p style="font-size:0.85rem; color:#aaa; margin-bottom:15px;">Ingresa códigos ocultos que el Staff comparte en Discord o en eventos especiales.</p>
                     <div style="display:flex; gap:10px;">
-                        <input type="text" id="input-codigo" placeholder="Escribe el código..." style="flex:1; background:transparent; border:1px solid #333; color:#fff; padding:10px; border-radius:8px; outline:none;">
+                        <input type="text" id="input-codigo" placeholder="Escribe el código..." style="flex:1; background:transparent; border:1px solid #333; color:#fff; padding:10px; border-radius:8px; outline:none;" onkeypress="if(event.keyCode==13) canjearCodigo()">
                         <button type="button" class="btn-scully" style="background:var(--gold); color:#000; border:none; padding:10px 20px;" onclick="canjearCodigo()"><i class="fas fa-check"></i></button>
                     </div>
                     <p id="mensaje-codigo" style="font-weight: bold; font-size:0.8rem; margin-top: 15px; text-align:center;"></p>
@@ -420,7 +418,7 @@
             <h2 style="color:var(--cyan); text-transform: uppercase; font-size: clamp(1.2rem, 4vw, 1.8rem); margin-top:0; border-bottom:1px solid var(--border); padding-bottom:15px;"><i class="fas fa-globe"></i> Comunidad Global</h2>
             <div class="chat-messages" id="global-chat-box"><p style="text-align:center; color:#555; margin-top:50px;">Conectando...</p></div>
             <div style="display:flex; gap:10px; background:#000; padding:15px; border-radius:15px; border:1px solid #222; flex-wrap:wrap;">
-                <input type="text" id="g-chat-input" placeholder="Inicia sesión para participar en el chat global..." disabled onkeypress="if(event.keyCode==13) sendGlobalChat()" style="flex:1; min-width:200px; background:transparent; border:none; color:#fff; outline:none;">
+                <input type="text" id="g-chat-input" placeholder="Inicia sesión para participar en el chat global..." disabled onkeypress="if(event.keyCode==13) sendGlobalChat(event)" style="flex:1; min-width:200px; background:transparent; border:none; color:#fff; outline:none;">
                 <button type="button" id="g-chat-btn" class="btn-scully" style="background:var(--cyan); color:#000; border:none; opacity:0.5; pointer-events:none; padding:15px 25px; flex-grow:1; max-width:100px;" onclick="sendGlobalChat()">
                     <i class="fas fa-paper-plane"></i>
                 </button>
@@ -453,7 +451,7 @@
             <input type="text" id="rec-raw" class="g-input" placeholder="Link del RAW (Opcional pero recomendado)">
             <textarea id="rec-com" class="g-input" rows="3" placeholder="Comentarios adicionales para el moderador (Opcional)"></textarea>
             
-            <button type="button" class="btn-scully" style="background:var(--blue); color:#000; width:100%; justify-content:center; border:none; font-weight:800;" onclick="submitRecord()">ENVIAR PARA VERIFICACIÓN</button>
+            <button type="button" id="btn-enviar-rec" class="btn-scully" style="background:var(--blue); color:#000; width:100%; justify-content:center; border:none; font-weight:800;" onclick="submitRecord(event)">ENVIAR PARA VERIFICACIÓN</button>
         </div>
     </div>
 
@@ -487,7 +485,7 @@
                 <img id="sug-thumb-img" src="" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; border: 1px solid #333;">
             </div>
             
-            <button type="button" class="btn-scully" style="background:var(--purple); color:#fff; width:100%; justify-content:center; border:none;" onclick="sendSuggestion()">ENVIAR SUGERENCIA (+10 XP si se aprueba)</button>
+            <button type="button" class="btn-scully" style="background:var(--purple); color:#fff; width:100%; justify-content:center; border:none;" onclick="sendSuggestion(event)">ENVIAR SUGERENCIA (+10 XP si se aprueba)</button>
         </div>
     </div>
 
@@ -551,7 +549,7 @@
         </div>
     </div>
    <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">UN PODEROSO ENEMIGO</div>
-   <script type="text/javascript">
+  <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
                 pageLanguage: 'es', 
@@ -742,7 +740,7 @@
         }
 
         // =========================================
-        // ENVÍO DE RÉCORDS (PROTEGIDO Y ASÍNCRONO)
+        // ENVÍO DE RÉCORDS (BLINDADO Y ASÍNCRONO)
         // =========================================
         function openRecordModal() {
             if (!currentUserData.key) {
@@ -765,9 +763,14 @@
             }
         }
 
-        // FIX APLICADO: ASYNC PARA EVITAR RECARGA DE PÁGINA Y PÉRDIDA DE SESIÓN
-        async function submitRecord() {
-            if (!currentUserData.key) return;
+        // FIX DEFINITIVO: async/await y bloqueo de botón
+        async function submitRecord(event) {
+            if(event) event.preventDefault(); // Por si acaso hay un form oculto en el navegador
+
+            if (!currentUserData.key) {
+                alert("⚠️ Error de sesión: El sistema perdió la conexión con tu cuenta. Por favor, recarga la página.");
+                return;
+            }
 
             const lvl = document.getElementById('rec-lvl').value.trim();
             const link = document.getElementById('rec-link').value.trim();
@@ -779,8 +782,15 @@
                 return;
             }
 
+            // Cambiamos estado del botón para evitar spam de clics
+            const btn = document.getElementById('btn-enviar-rec') || (event ? event.target : null);
+            if(btn) {
+                btn.disabled = true;
+                btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> PROCESANDO ENVÍO...";
+            }
+
             try {
-                // Esperamos a que Firebase confirme la escritura
+                // Esperamos a que la Base de Datos conteste
                 await db.ref('submissions').push({
                     player: currentUserData.name,
                     level: lvl,
@@ -790,6 +800,7 @@
                     time: Date.now()
                 });
 
+                // Enviar Webhook a Discord (No bloquea si falla)
                 const u = fullData.system_settings?.discord?.url;
                 if(u) {
                     fetch(u, {
@@ -804,20 +815,28 @@
 
                 alert("¡Récord enviado con éxito! Un moderador lo revisará pronto y se añadirá a tu cuenta.");
                 
-                // Cerrar modal y limpiar campos
+                // Limpiar todo después de éxito
                 document.getElementById('recModal').style.display = 'none';
                 document.getElementById('rec-lvl').value = "";
                 document.getElementById('rec-link').value = "";
                 document.getElementById('rec-raw').value = "";
                 document.getElementById('rec-com').value = "";
                 document.getElementById('rec-thumb-box').style.display='none';
+
             } catch (error) {
-                alert("Ocurrió un error al intentar enviar el récord: " + error.message);
+                alert("Hubo un error de conexión con la Base de Datos: " + error.message);
+            } finally {
+                // Devolver el botón a la normalidad pase lo que pase
+                if(btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = "ENVIAR PARA VERIFICACIÓN";
+                }
             }
         }
 
         // BUSCADOR DE JUGADORES
-        function searchPublicPlayer() {
+        function searchPublicPlayer(e) {
+            if(e) e.preventDefault();
             const q = document.getElementById('pub-search').value.trim().toLowerCase(); 
             const res = document.getElementById('pub-search-res'); 
             if(!q) return;
@@ -887,7 +906,8 @@
             box.scrollTop = box.scrollHeight;
         }
 
-        function sendGlobalChat() {
+        function sendGlobalChat(e) {
+            if(e) e.preventDefault();
             if (!currentUserData.name) return alert("Inicia sesión primero."); 
             const input = document.getElementById('g-chat-input');
             if (input.value.trim().length > 0) { 
@@ -934,11 +954,9 @@
 
             if(!currentUserData.key) { m.innerText = "Inicia sesión primero."; m.style.color = "var(--red)"; return; }
             
-            // Verificar si ya lo usó
             let uC = JSON.parse(localStorage.getItem('codigos_omni_' + currentUserData.name) || '[]');
             if(uC.includes(code)) { m.innerText = "Ya canjeaste este código."; m.style.color = "#888"; return; }
 
-            // 1. CÓDIGOS ESPECIALES FIJOS
             if(code === "ANUBIS") { 
                 pE.style.display = "flex"; setTimeout(()=> pE.style.display = "none", 4000); 
                 document.getElementById("input-codigo").value = ""; return; 
@@ -950,7 +968,6 @@
                 document.getElementById("input-codigo").value = ""; return;
             }
 
-            // 2. CÓDIGOS DINÁMICOS DEL ADMIN
             m.innerText = "Validando...";
             db.ref(`promo_codes/${code}`).once('value').then(snap => {
                 const data = snap.val();
@@ -978,7 +995,8 @@
             } 
         }
         
-        function sendSuggestion(){ 
+        function sendSuggestion(e){ 
+            if(e) e.preventDefault();
             const n = document.getElementById('sug-n').value; 
             const p = document.getElementById('sug-pos').value; 
             const v = document.getElementById('sug-v').value; 
@@ -1194,7 +1212,6 @@
         // EASTER EGGS LOGIC
         // =========================================
 
-        // Easter Egg #2: Tributo a 2Parx
         let tributeClicks = 0;
         let tributeTimer;
         function triggerTribute() {
@@ -1205,13 +1222,11 @@
             if(tributeClicks === 7) {
                 tributeClicks = 0;
                 
-                // Flash visual
                 let flash = document.createElement('div');
                 flash.className = 'tribute-flash';
                 document.body.appendChild(flash);
                 setTimeout(() => flash.remove(), 1200);
 
-                // Estrellas cayendo
                 for(let i=0; i<7; i++) {
                     setTimeout(() => {
                         let star = document.createElement('div');
@@ -1222,7 +1237,6 @@
                     }, i * 200);
                 }
 
-                // Sumar XP (Solo si está logueado)
                 if(currentUserData.key) {
                     db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => {
                         db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0) + 1);
@@ -1234,7 +1248,6 @@
             }
         }
 
-        // Easter Egg #7: Modo Wave con Shift
         let isWaveMode = false;
         document.addEventListener('keydown', (e) => {
             if(e.key === 'Shift' && !isWaveMode) {
@@ -1250,7 +1263,7 @@
         });
         document.addEventListener('mousemove', (e) => {
             if(isWaveMode) {
-                if(Math.random() > 0.4) return; // Limita partículas para que no se laggee
+                if(Math.random() > 0.4) return; 
                 let trail = document.createElement('div');
                 trail.className = 'wave-trail';
                 trail.style.left = e.pageX + 'px';
@@ -1260,15 +1273,16 @@
             }
         });
 
-        // SISTEMA DE ROLES Y AUTENTICACIÓN -> FIX APLICADO (Filtro Robusto de Correo)
+        // SISTEMA DE ROLES Y AUTENTICACIÓN -> BLINDADO AL 100%
         auth.onAuthStateChanged(user => {
             if (user) {
-                db.ref('players').once('value').then(snap => { 
+                // USAMOS .on PARA QUE SE MANTENGA ACTUALIZADO SIEMPRE, NO SOLO AL CARGAR
+                db.ref('players').on('value', snap => { 
                     const playersObj = snap.val(); 
                     let miLlaveDB = null, me = null;
                     
                     for (let key in playersObj) { 
-                        // FIX: Ignorar mayúsculas al comparar correos y evitar crasheo si el nodo no tiene email
+                        // FILTRO ROBUSTO
                         if (playersObj[key].email && typeof playersObj[key].email === 'string' && playersObj[key].email.toLowerCase() === user.email.toLowerCase()) { 
                             me = playersObj[key]; 
                             miLlaveDB = key; 
@@ -1315,14 +1329,13 @@
                             let hBtn = document.getElementById('helperBtn'); 
                             if(hBtn) hBtn.style.display = "inline-flex"; 
                         }
-                    } else {
-                        console.warn("Usuario logueado pero no encontrado en nodo players.");
-                    }
-                }).catch(err => console.error("Error leyendo players:", err));
+                    } 
+                });
             } else {
+                // SI FIREBASE DICE QUE NO ESTÁS LOGUEADO, LIMPIAR DATOS
                 currentUserData = { name: null, key: null };
             }
         });
     </script>
 </body>
-</html>
+</html> 
