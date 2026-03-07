@@ -38,6 +38,8 @@
         .g-input:focus { border-color: var(--red); }
         .btn-admin { background: var(--red); color: #fff; border: none; padding: 12px 25px; cursor: pointer; font-weight: 800; border-radius: 5px; text-transform: uppercase; }
         .btn-admin:hover { background: #cc0000; }
+        .btn-debug { background: var(--cyan); color: #000; border: none; padding: 12px 25px; cursor: pointer; font-weight: 800; border-radius: 5px; text-transform: uppercase; transition: 0.3s; }
+        .btn-debug:hover { background: #00cccc; box-shadow: 0 0 15px rgba(0,255,255,0.4); }
 
         /* CUADRÍCULA DEL MERCADO */
         .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
@@ -99,13 +101,14 @@
 
         <div id="admin-panel">
             <h3 class="admin-title"><i class="fas fa-terminal"></i> Inyector de Ítems Dinámicos (Admin)</h3>
-            <p style="color:#888; font-size:0.8rem; margin-bottom:15px;">Añade cosméticos temporales o de evento directamente a la base de datos.</p>
+            <p style="color:#888; font-size:0.8rem; margin-bottom:15px;">Añade cosméticos temporales a la base de datos o limpia tu XP de las pruebas.</p>
             <div class="admin-inputs">
                 <input type="text" id="add-name" class="g-input" placeholder="Nombre (Ej: Halo de Tormenta)">
                 <input type="number" id="add-price" class="g-input" placeholder="Precio en XP">
                 <input type="text" id="add-icon" class="g-input" placeholder="Icono (Ej: fas fa-bolt)">
                 <input type="color" id="add-color" class="g-input" style="padding: 5px; max-width: 80px;" value="#00ffff" title="Color del Ítem">
                 <button class="btn-admin" onclick="addNewItem()"><i class="fas fa-upload"></i> PUBLICAR</button>
+                <button class="btn-debug" onclick="resetMyXP()"><i class="fas fa-sync"></i> PURGAR MI XP (DEBUG)</button>
             </div>
         </div>
 
@@ -121,7 +124,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     
     <script>
-        // CONFIGURACIÓN FIREBASE (Mantén la tuya)
+        // CONFIGURACIÓN FIREBASE 
         const firebaseConfig = { 
             apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
             authDomain: "scullylist.firebaseapp.com", 
@@ -267,6 +270,22 @@
             alert(`Ítem [${name}] inyectado exitosamente en el mercado global.`);
             document.getElementById('add-name').value = "";
             document.getElementById('add-price').value = "";
+        }
+
+        // LÓGICA DEL PANEL ADMIN: Purgar Billetera (DEBUG)
+        function resetMyXP() {
+            if(!currentUser) return;
+            
+            if(confirm("⚠️ MODO DEBUG ADMIN ACTIVADO\n\n¿Seguro que quieres PURGAR tu Billetera XP a 0?\n\nEsto borrará todas las ganancias artificiales (códigos, reclamos, compras de prueba). Tu Nivel y XP en el Ranking Global volverán a ser calculados ÚNICAMENTE basándose en los niveles que te has pasado legítimamente.")) {
+                
+                db.ref(`players/${currentUser.key}/totalXP`).set(0).then(() => {
+                    alert("✅ PURGA COMPLETADA.\nTu XP ha sido sincronizada. Los Leaderboards y tu Titan Card ahora mostrarán tu puntaje real.");
+                    currentUser.totalXP = 0;
+                    document.getElementById('wallet-xp').innerText = "0.0";
+                }).catch(err => {
+                    alert("Error de conexión: " + err.message);
+                });
+            }
         }
     </script>
 </body>
