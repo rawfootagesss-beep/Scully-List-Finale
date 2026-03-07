@@ -322,6 +322,21 @@
             }
         }
     </script>
+      <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'en,es', autoDisplay: false}, 'google_translate_element');
+        }
+
+        function toggleLanguage() {
+            var select = document.querySelector('.goog-te-combo');
+            if(select) {
+                select.value = select.value === 'en' ? 'es' : 'en';
+                select.dispatchEvent(new Event('change'));
+            } else {
+                alert("Cargando traductor automático. Intenta en un segundo.");
+            }
+        }
+    </script>
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -355,7 +370,7 @@
                 db.ref('players').once('value').then(snap => {
                     let players = snap.val();
                     for(let k in players) {
-                        if(players[k].email === user.email) {
+                        if(players[k].email && players[k].email.toLowerCase() === user.email.toLowerCase()) {
                             myName = players[k].name;
                             let role = players[k].role || '';
                             if(role === 'admin' || role === 'mod' || role === 'helper' || myName.toLowerCase() === 'score') {
@@ -369,7 +384,7 @@
             }
         });
 
-        // MOTOR UNIVERSAL DE COSMÉTICOS (ACTUALIZADO CON NYAN Y GLITCH)
+        // MOTOR UNIVERSAL DE COSMÉTICOS
         function getCosmetic(ac) {
             let nC = "", tG = "", bS = "1px solid var(--border)", eC = "";
             if(!ac) return {nC, tG, bS, eC};
@@ -440,7 +455,7 @@
                 html += `
                 <div class="req-box">
                     <div class="req-info">
-                        <img src="${req.photo_url}" class="req-img" onclick="window.open('${req.photo_url}', '_blank')">
+                        <img src="${req.photo_url}" class="req-img" onerror="this.src='https://i.imgur.com/8pw98K4.png'" onclick="window.open('${req.photo_url}', '_blank')">
                         <div>
                             <h4 style="margin:0; font-size:0.9rem; color:#fff;">${req.player}</h4>
                             <p style="margin:0; font-size:0.7rem; color:#888;">Solicita cambio de foto</p>
@@ -464,7 +479,6 @@
                 pL[i].photo = photoUrl;
                 db.ref('players').set(pL).then(() => {
                     db.ref(`pfp_requests/${id}`).remove();
-                    // Log silencioso para admin changelog
                     db.ref('staff_logs').push({staff: myName, action: `Aprobó PFP de ${playerName}`, timestamp: Date.now()});
                 });
             } else {
@@ -511,11 +525,15 @@
 
                 let rankColor = index === 0 ? "var(--gold)" : (index === 1 ? "#c0c0c0" : (index === 2 ? "#cd7f32" : "rgba(255,255,255,0.1)"));
 
+                // LA CORRECCIÓN: Filtro estricto para evitar strings "null" o rotas
+                let safePfp = (p.photo && p.photo !== "null" && p.photo !== "undefined" && p.photo.trim() !== "") ? p.photo : 
+                              (p.pfp && p.pfp !== "null" && p.pfp !== "undefined" && p.pfp.trim() !== "") ? p.pfp : 'https://i.imgur.com/8pw98K4.png';
+
                 html += `
                 <div class="player-card ${tierClass}" onclick="openPlayerProfile(${index})" style="border: ${cos.bS};">
                     <div class="rank-number" style="color:${rankColor}">#${rank}</div>
                     
-                    <img src="${p.pfp || p.photo || 'https://i.imgur.com/8pw98K4.png'}" class="player-pfp" style="border-color: ${cos.nC || 'var(--border)'};">
+                    <img src="${safePfp}" onerror="this.src='https://i.imgur.com/8pw98K4.png'" class="player-pfp" style="border-color: ${cos.nC || 'var(--border)'};">
                     
                     <div class="player-info">
                         <h3 class="${cos.eC} notranslate" style="color: ${cos.nC || '#fff'}; ${cos.tG}">
@@ -538,7 +556,7 @@
             const p = globalPlayers[index];
             const lvls = fullData.levels || [];
             
-            // FILTRO INTELIGENTE DE NIVELES (Para ocultar códigos o inyecciones manuales)
+            // FILTRO INTELIGENTE DE NIVELES
             const levelNamesOficiales = lvls.map(l => l.name.toLowerCase()); 
             
             let cos = getCosmetic(p.activeCosmetic);
@@ -557,7 +575,6 @@
             
             if(compsArray.length > 0) {
                 [...compsArray].reverse().forEach(c => {
-                    // FIX MANTENIDO: Solo muestra el nivel si existe en la lista oficial
                     let esNivelOficial = levelNamesOficiales.includes(c.level.toLowerCase());
                     
                     if(!verifiedNames.includes(c.level.toLowerCase()) && esNivelOficial) {
@@ -575,10 +592,14 @@
 
             let vTick = p.verified ? `<i class="fas fa-check-circle" style="color:var(--cyan); font-size:1.2rem; margin-left:8px;"></i>` : "";
 
+            // LA CORRECCIÓN EN EL MODAL DE PERFIL
+            let safePfpModal = (p.photo && p.photo !== "null" && p.photo !== "undefined" && p.photo.trim() !== "") ? p.photo : 
+                               (p.pfp && p.pfp !== "null" && p.pfp !== "undefined" && p.pfp.trim() !== "") ? p.pfp : 'https://i.imgur.com/8pw98K4.png';
+
             document.getElementById('modal-body').innerHTML = `
                 <span onclick="closeModal()" style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.8rem; color:#666; transition:0.3s;">&times;</span>
                 
-                <img src="${p.pfp || p.photo || 'https://i.imgur.com/8pw98K4.png'}" style="width:110px; height:110px; border-radius:50%; border:3px solid ${cos.nC || 'var(--accent)'}; margin-bottom:15px; object-fit:cover;">
+                <img src="${safePfpModal}" onerror="this.src='https://i.imgur.com/8pw98K4.png'" style="width:110px; height:110px; border-radius:50%; border:3px solid ${cos.nC || 'var(--accent)'}; margin-bottom:15px; object-fit:cover;">
                 
                 <h2 style="margin:0; color:${cos.nC || '#fff'}; ${cos.tG}; text-transform:uppercase; font-size:1.8rem; display:flex; justify-content:center; align-items:center;" class="${cos.eC} notranslate">
                     ${flagProfileHtml} ${p.name} ${vTick}
@@ -614,4 +635,4 @@
         }
     </script>
 </body>
-</html>
+</html>                                      
