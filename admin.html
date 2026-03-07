@@ -11,27 +11,90 @@
     
     <style>
         :root { 
-            --ac: #ff6600; --bg: #030303; --sb: #0a0a0a; --cd: #111111; 
-            --bd: rgba(255, 255, 255, 0.08); --gr: #00ff66; --rd: #ff3333; 
-            --bl: #00ccff; --gd: #ffd700; --pu: #cc00ff; --cy: #00ffff; --ow: #ff0055; 
+            --ac: #ff6600; 
+            --bg: #030303; 
+            --sb: #0a0a0a; 
+            --cd: #111111; 
+            --bd: rgba(255, 255, 255, 0.08); 
+            --gr: #00ff66; 
+            --rd: #ff3333; 
+            --bl: #00ccff; 
+            --gd: #ffd700; 
+            --pu: #cc00ff; 
+            --cy: #00ffff; 
+            --ow: #ff0055; 
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
-        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--ac); border-radius: 10px; }
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+        } 
+        
+        body { 
+            background: var(--bg); 
+            color: #fff; 
+            font-family: 'Lexend Deca', sans-serif; 
+            margin: 0; 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+        
+        ::-webkit-scrollbar { width: 8px; } 
+        ::-webkit-scrollbar-track { background: var(--bg); } 
+        ::-webkit-scrollbar-thumb { background: var(--ac); border-radius: 10px; }
 
-        .mob-nav { display: none; background: var(--sb); height: 60px; width: 100%; position: fixed; top: 0; left: 0; z-index: 4000; border-bottom: 1px solid var(--bd); padding: 0 20px; align-items: center; justify-content: space-between; } 
+        .mob-nav { 
+            display: none; 
+            background: var(--sb); 
+            height: 60px; 
+            width: 100%; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            z-index: 4000; 
+            border-bottom: 1px solid var(--bd); 
+            padding: 0 20px; 
+            align-items: center; 
+            justify-content: space-between; 
+        } 
         .mob-nav h1 { margin: 0; font-family: 'JetBrains Mono'; font-size: 1.4rem; text-transform: uppercase; } 
         .mob-nav span { color: var(--ac); } 
         .ham { font-size: 1.5rem; color: var(--ac); cursor: pointer; } 
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); z-index: 3000; backdrop-filter: blur(4px); }
 
-        .sidebar { width: 280px; min-width: 280px; background: var(--sb); border-right: 1px solid var(--bd); display: flex; flex-direction: column; z-index: 3500; transition: transform 0.3s ease; } 
-        .brand { text-align: center; padding: 25px 10px; border-bottom: 1px solid var(--bd); background: #000; cursor: pointer; touch-action: manipulation; user-select: none; } 
+        .sidebar { 
+            width: 280px; 
+            min-width: 280px; 
+            background: var(--sb); 
+            border-right: 1px solid var(--bd); 
+            display: flex; 
+            flex-direction: column; 
+            z-index: 3500; 
+            transition: transform 0.3s ease; 
+        } 
+        .brand { text-align: center; padding: 25px 10px; border-bottom: 1px solid var(--bd); background: #000; cursor: pointer; user-select: none; } 
         .brand h1 { font-family: 'JetBrains Mono'; font-size: 1.8rem; margin: 0; text-transform: uppercase; letter-spacing: -1px; } 
         .brand span { color: var(--ac); }
         .nav-sc { flex: 1; overflow-y: auto; padding: 10px 0; } 
-        .n-btn { width: 100%; background: transparent; color: #888; border: none; padding: 14px 25px; text-align: left; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 12px; font-weight: 700; text-transform: uppercase; border-left: 3px solid transparent; transition: 0.2s; } 
+        
+        .n-btn { 
+            width: 100%; 
+            background: transparent; 
+            color: #888; 
+            border: none; 
+            padding: 14px 25px; 
+            text-align: left; 
+            font-size: 0.75rem; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            border-left: 3px solid transparent; 
+            transition: 0.2s; 
+        } 
         .n-btn:hover, .n-btn.active { color: #fff; background: rgba(255, 102, 0, 0.06); border-left-color: var(--ac); } 
         .n-sec { font-size: 0.6rem; color: #444; text-transform: uppercase; font-weight: 900; margin: 20px 25px 8px; letter-spacing: 1px; display: block; }
 
@@ -93,7 +156,11 @@
         .mod { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); z-index: 10000; backdrop-filter: blur(8px); overflow-y: auto; } 
         .mc { background: var(--sb); margin: 5vh auto; padding: 30px; width: 90%; max-width: 550px; border-radius: 15px; border: 1px solid var(--bd); position: relative; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8); }
 
-        #toast { visibility: hidden; min-width: 200px; background: var(--gr); color: #000; text-align: center; border-radius: 8px; padding: 15px; position: fixed; z-index: 20000; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(50px); font-weight: 800; opacity: 0; transition: 0.4s; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); } 
+        #toast { 
+            visibility: hidden; min-width: 200px; background: var(--gr); color: #000; text-align: center; 
+            border-radius: 8px; padding: 15px; position: fixed; z-index: 20000; bottom: 30px; left: 50%; 
+            transform: translateX(-50%) translateY(50px); font-weight: 800; opacity: 0; transition: 0.4s; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
+        } 
         #toast.show { visibility: visible; transform: translateX(-50%) translateY(0); opacity: 1; }
 
         @media(max-width: 768px) {
@@ -112,7 +179,7 @@
 
     <div id="loader" style="position:fixed;inset:0;background:#000;z-index:90000;display:flex;flex-direction:column;justify-content:center;align-items:center;">
         <div style="width:50px;height:50px;border:3px solid rgba(255,102,0,.1);border-top-color:var(--ac);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px;"></div>
-        <h2 style="color:var(--ac);font-family:'JetBrains Mono';font-size:1.5rem;letter-spacing:2px;">OMNI_V25_SYNC</h2>
+        <h2 id="loader-text" style="color:var(--ac);font-family:'JetBrains Mono';font-size:1.5rem;letter-spacing:2px;">OMNI_V25_SYNC</h2>
         <style>@keyframes spin {to{transform:rotate(360deg);}}</style>
     </div>
 
@@ -244,7 +311,6 @@
                     <button class="btn" style="width:100%;" onclick="iRec()"><i class="fas fa-syringe"></i> EJECUTAR INYECCIÓN DE RÉCORD</button>
                 </div>
             </div>
-
             <div id="t-lvls" class="tab">
                 <h2 class="title"><i class="fas fa-database" style="color:var(--pu);"></i> Editor de Niveles</h2>
                 
@@ -299,7 +365,7 @@
                 
                 <div class="panel" style="border-color:rgba(255,51,51,0.3);">
                     <div style="display:flex;gap:10px; flex-wrap:wrap;">
-                        <input type="text" id="p-s" placeholder="Buscar por Nick exacto..." style="flex:1; min-width:200px;">
+                        <input type="text" id="p-s" placeholder="Buscar por Nick exacto..." style="flex:1; min-width:200px;" onkeypress="if(event.keyCode==13) sP()">
                         <button class="btn" style="background:var(--rd); color:#fff;" onclick="sP()"><i class="fas fa-search"></i> BUSCAR</button>
                     </div>
                 </div>
@@ -450,8 +516,45 @@
                         <input type="file" id="importFile" style="display:none" accept=".json" onchange="rDB(event)">
                     </div>
                     
-                    <button class="btn" style="width:100%; background:transparent; border:1px solid var(--rd); color:var(--rd);" onclick="cleanDB()
-                        <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+                    <button class="btn" style="width:100%; background:transparent; border:1px solid var(--rd); color:var(--rd);" onclick="cleanDB()"><i class="fas fa-biohazard"></i> PURGAR USUARIOS INACTIVOS (0 XP)</button>
+                </div>
+            </div>
+
+            <div id="t-aud" class="tab">
+                <h2 class="title"><i class="fas fa-terminal" style="color:var(--bl);"></i> Auditoría Root</h2>
+                <button class="bs br" style="margin-bottom:15px;" onclick="pList('staff_logs')">BORRAR HISTORIAL COMPLETO</button>
+                <div class="panel" style="background:#000; padding:15px;"><div id="l-aud" style="max-height:500px; overflow-y:auto;"></div></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="m-rev" class="mod">
+        <div class="mc">
+            <span style="position:absolute; top:15px; right:20px; font-size:1.5rem; color:#888; cursor:pointer;" onclick="cMod('m-rev')">✕</span>
+            <h2 id="r-t" style="margin-top:0; color:var(--ac);">Rev</h2>
+            <div id="r-v" style="margin-bottom:15px;"></div>
+            <div style="background:rgba(255,255,255,.02); padding:15px; border-radius:10px; margin-bottom:20px; font-size:0.8rem; border:1px solid var(--bd);">
+                <p>RAW: <span id="r-rw"></span></p>
+                <p>Nota: <span id="r-cm"></span></p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button id="b-ac" class="btn bg" style="width:100%;">ACEPTAR (DAR XP)</button>
+                <button id="b-ap" class="btn by" style="width:100%;">APELACIÓN</button>
+                <button id="b-rj" class="btn br" style="width:100%;">RECHAZAR</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="m-hlp" class="mod">
+        <div class="mc" style="text-align:center; border-color:var(--bl);">
+            <i class="fas fa-info-circle" style="font-size:3rem; color:var(--bl); margin-bottom:15px;"></i>
+            <h2 id="h-t" style="color:var(--bl); margin-top:0;">Ayuda</h2>
+            <p id="h-d" style="color:#aaa; font-size:0.85rem; line-height:1.6; margin-bottom:25px;"></p>
+            <button class="btn bb" style="width:100%;" onclick="cMod('m-hlp')">ENTENDIDO</button>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
@@ -472,17 +575,15 @@
         
         const $ = id => document.getElementById(id);
         const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
-        let fD = {}, lvls = [], pIx = -1, sN = "Admin", sR = "helper", cEm = "";
+        
+        let fD = {}; 
+        let lvls = []; 
+        let pIx = -1; 
+        let sN = "Admin"; 
+        let sR = "helper"; 
+        let cEm = "";
 
-        // EXTRACTOR INTELIGENTE DE YOUTUBE
-        function extraerYouTubeID(url) {
-            if (!url) return "";
-            const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
-            const match = url.match(regex);
-            return (match && match[1]) ? match[1] : url.trim();
-        }
-
-        // UI HANDLERS
+        // UI HANDLERS (NOTIFICACIONES Y PESTAÑAS)
         function toast(m, e=false) { 
             const t = $('toast'); 
             t.innerText = m; 
@@ -501,11 +602,22 @@
             window.location.hash = id; 
         }
         
-        function cMod(id) { if($(id)) $(id).style.display = 'none'; }
-        function toggleMenu() { $('sidebar').classList.toggle('open'); $('overlay').classList.toggle('active'); }
-        function sHlp(t, d) { $('h-t').innerText = t; $('h-d').innerText = d; $('m-hlp').style.display = 'block'; }
+        function cMod(id) { 
+            if($(id)) $(id).style.display = 'none'; 
+        }
         
-        // LOGGER SEGURO
+        function toggleMenu() { 
+            $('sidebar').classList.toggle('open'); 
+            $('overlay').classList.toggle('active'); 
+        }
+        
+        function sHlp(t, d) { 
+            $('h-t').innerText = t; 
+            $('h-d').innerText = d; 
+            $('m-hlp').style.display = 'block'; 
+        }
+        
+        // LOGGER DEL PANEL ADMIN
         function log(m) { 
             db.ref('staff_logs').push({staff: sN, action: m, timestamp: Date.now()}); 
             if($('term')) { 
@@ -515,43 +627,64 @@
         }
         
         function pList(p) { 
-            if(confirm("¿Eliminar permanentemente todos los registros?")) { 
+            if(confirm("¿Eliminar permanentemente todos los registros de esta categoría?")) { 
                 db.ref(p).remove(); 
-                toast("Vaciada"); 
-                log(`Purgó base: ${p}`); 
+                toast("Lista Vaciada"); 
+                log(`Purgó base de datos: ${p}`); 
             } 
         }
 
-        // FAKER TRAFFIC
-        setInterval(() => { const t = $('s-t'); if(t) t.innerText = 40 + Math.floor(Math.random() * 20) - 10; }, 5000);
+        // EXTRAER ID DE YOUTUBE INTELIGENTE
+        function extraerYouTubeID(url) {
+            if (!url) return "";
+            const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+            return (match && match[1]) ? match[1] : url.trim();
+        }
 
-        // DISCORD WEBHOOK API MULTICANAL
+        // TRÁFICO SIMULADO EN EL DASHBOARD
+        setInterval(() => { 
+            const t = $('s-t'); 
+            if(t) t.innerText = 40 + Math.floor(Math.random() * 20) - 10; 
+        }, 5000);
+
+        // API WEBHOOKS (DISCORD MULTICANAL)
         const api = (m, type='main') => { 
             let u = fD.system_settings?.discord?.url; 
             if (type === 'sug') u = fD.system_settings?.discord?.url_sug; 
             if (type === 'lvls') u = fD.system_settings?.discord?.url_lvls; 
             
-            if(u) fetch(u, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content:m, username:"SCULLY OMNI"}) }).catch(()=>{}); 
+            if(u) {
+                fetch(u, { 
+                    method:'POST', 
+                    headers:{'Content-Type':'application/json'}, 
+                    body:JSON.stringify({content:m, username:"SCULLY OMNI"}) 
+                }).catch(()=>{}); 
+            }
         };
 
-        // RECOVERY PROTOCOL
-        let tC=0, tT;
+        // PROTOCOLO DE RECUPERACIÓN (OWNER)
+        let tC = 0, tT;
         function handleSecretTap() { 
-            tC++; clearTimeout(tT); tT = setTimeout(() => { tC=0 }, 2000); 
+            tC++; 
+            clearTimeout(tT); 
+            tT = setTimeout(() => { tC = 0; }, 2000); 
+            
             if(tC >= 5) { 
                 tC = 0; 
-                $('recovery-screen').style.display = 'flex'; 
-                $('root-box').style.display = 'block';
+                if($('recovery-screen')) $('recovery-screen').style.display = 'flex'; 
+                if($('root-box')) $('root-box').style.display = 'block'; 
             } 
         }
         
         function eOwC() { 
             if($('o-k').value === "score123") { 
-                db.ref('players').once('value', s => {
+                db.ref('players').once('value').then(s => {
                     let pL = nx(s.val()); 
                     let i = pL.findIndex(p => p.name.toLowerCase() === 'score'); 
+                    
                     if(i > -1) { 
-                        pL[i].email = cEm; pL[i].role = 'owner'; 
+                        pL[i].email = cEm; 
+                        pL[i].role = 'owner'; 
                         db.ref('players').set(pL).then(() => location.reload()); 
                     } else { 
                         pL.push({name:'score', email:cEm, role:'owner', totalXP:0}); 
@@ -563,37 +696,74 @@
             } 
         }
 
-        // AUTENTICACIÓN
+        // ==========================================
+        // AUTENTICACIÓN SEGURA (CON TRY/CATCH)
+        // Soluciona la pantalla de carga infinita
+        // ==========================================
         auth.onAuthStateChanged(user => {
             if(!user) return location.href="login.html"; 
             cEm = user.email;
             
-            db.ref('players').once('value', s => {
-                const me = nx(s.val()).find(x => x.email === user.email);
-                if(me && (me.role === 'admin' || me.name.trim().toLowerCase() === 'score' || me.role === 'owner')) {
-                    sN = me.name; 
-                    sR = me.role || 'admin';
-                    if(sN.trim().toLowerCase() === 'score') sR = 'owner';
+            try {
+                db.ref('players').once('value').then(s => {
+                    const me = nx(s.val()).find(x => x.email === user.email);
                     
-                    $('badge').innerText = `${sR.toUpperCase()}`; 
-                    $('loader').style.display = 'none';
-                    
-                    if(sR === 'owner') { 
-                        $('ow-t').style.display = 'block'; 
-                        $('b-st').style.display = 'flex'; 
-                        $('b-cf').style.display = 'flex'; 
-                        $('b-au').style.display = 'flex'; 
+                    if(me && (me.role === 'admin' || me.name.trim().toLowerCase() === 'score' || me.role === 'owner')) {
+                        sN = me.name; 
+                        sR = me.role || 'admin';
+                        if(sN.trim().toLowerCase() === 'score') sR = 'owner';
+                        
+                        if($('badge')) $('badge').innerText = `${sR.toUpperCase()}`; 
+                        if($('loader')) $('loader').style.display = 'none';
+                        
+                        if(sR === 'owner') { 
+                            if($('ow-t')) $('ow-t').style.display = 'block'; 
+                            if($('b-st')) $('b-st').style.display = 'flex'; 
+                            if($('b-cf')) $('b-cf').style.display = 'flex'; 
+                            if($('b-au')) $('b-au').style.display = 'flex'; 
+                        }
+                        
+                        setTimeout(() => { 
+                            const hash = window.location.hash; 
+                            if(hash && $(hash.substring(1))) sTab(hash.substring(1)); 
+                        }, 300);
+                        
+                        initEngine();
+                    } else { 
+                        if($('loader')) {
+                            $('loader').innerHTML = `
+                                <h2 style="color:var(--rd);font-family:'JetBrains Mono';">ACCESO DENEGADO</h2>
+                                <p style="color:#aaa; max-width:300px; text-align:center;">No tienes permisos de Administrador.</p>
+                                <div class="brand" onclick="handleSecretTap()" style="margin-top:20px;padding:20px;background:#111;border-radius:15px;cursor:pointer;">
+                                    <h1 style="color:#fff;font-family:'JetBrains Mono'; margin:0;">SYS.<span style="color:var(--ac);">OMNI</span></h1>
+                                    <p style="font-size:0.5rem;color:#666;margin:10px 0 0;">TOCA 5 VECES</p>
+                                </div>
+                                <div class="ig" id="root-box" style="display:none; margin-top:15px; width:100%; max-width:300px;">
+                                    <input type="password" id="o-k" placeholder="Código de Recuperación..." style="text-align:center;">
+                                    <button class="btn" style="width:100%;" onclick="eOwC()">EJECUTAR</button>
+                                </div>
+                                <button onclick="location.href='index.html'" style="margin-top:30px;padding:10px 20px;background:var(--rd);color:#fff;border:none;border-radius:5px;font-weight:bold;cursor:pointer;">VOLVER AL INICIO</button>
+                            `;
+                        }
                     }
-                    
-                    setTimeout(() => { const hash = window.location.hash; if(hash && $(hash.substring(1))) sTab(hash.substring(1)); }, 300);
-                    initEngine();
-                } else { 
-                    $('loader').innerHTML = `<h2 style="color:var(--rd);font-family:'JetBrains Mono';">DENEGADO</h2><div class="brand" onclick="handleSecretTap()" style="margin-top:20px;padding:20px;background:#111;border-radius:15px;cursor:pointer;"><h1 style="color:#fff;font-family:'JetBrains Mono';">SYS.<span style="color:var(--ac);">OMNI</span></h1><p style="font-size:0.5rem;color:#666;margin:10px 0 0;">TOCA 5 VECES</p></div><div class="ig" id="root-box" style="display:none; margin-top:15px; width:100%; max-width:300px;"><input type="password" id="o-k" placeholder="Código de Recuperación..." style="text-align:center;"><button class="btn" style="width:100%;" onclick="eOwC()">EJECUTAR</button></div><button onclick="location.href='index.html'" style="margin-top:30px;padding:10px 20px;background:var(--rd);color:#fff;border:none;border-radius:5px;font-weight:bold;cursor:pointer;">VOLVER</button>`;
-                }
-            });
+                }).catch(err => {
+                    console.error(err);
+                    if($('loader')) {
+                        $('loader').innerHTML = `
+                            <h2 style="color:var(--rd);">ERROR DE CONEXIÓN DB</h2>
+                            <p>${err.message}</p>
+                            <button onclick="location.href='index.html'" style="padding:10px; background:var(--ac); color:#000; border:none; font-weight:bold;">VOLVER</button>
+                        `;
+                    }
+                });
+            } catch (err) {
+                console.error(err);
+                if($('loader')) $('loader').style.display = 'none';
+                alert("Error crítico iniciando el panel.");
+            }
         });
 
-        // SINCRONIZACIÓN DE DATOS MAESTRA
+        // SINCRONIZACIÓN MAESTRA (BASE DE DATOS -> UI)
         function initEngine() {
             db.ref('/').on('value', s => {
                 try {
@@ -601,9 +771,9 @@
                     lvls = nx(fD.levels);
                     const pList = nx(fD.players);
                     
-                    $('s-p').innerText = pList.length; 
-                    $('s-l').innerText = lvls.length; 
-                    $('s-r').innerText = Object.keys(fD.submissions||{}).length;
+                    if($('s-p')) $('s-p').innerText = pList.length; 
+                    if($('s-l')) $('s-l').innerText = lvls.length; 
+                    if($('s-r')) $('s-r').innerText = Object.keys(fD.submissions||{}).length;
                     
                     rRcs(fD.submissions||{}); 
                     rLvs(lvls); 
@@ -615,29 +785,37 @@
                     rCht(fD.staff_chat||{});
                     rACh(fD.admin_changelog||{}); 
                     rStf(pList); 
-                    renderEff(fD.staff_logs||{});
-                    
+                    renderEff(fD.staff_logs||{}); 
                     renderAllPlayers(pList); 
                     renderSug(fD.level_suggestions||{});
                     
                     if(fD.system_settings) { 
-                        $('cf-w1').value = fD.system_settings.discord?.url || ""; 
-                        $('cf-w2').value = fD.system_settings.discord?.url_sug || ""; 
-                        $('cf-w3').value = fD.system_settings.discord?.url_lvls || ""; 
-                        $('cf-cs').value = fD.system_settings.custom_css || ""; 
-                        $('c-lk').checked = !!fD.system_settings.lockdown_active; 
+                        if($('cf-w1')) $('cf-w1').value = fD.system_settings.discord?.url || ""; 
+                        if($('cf-w2')) $('cf-w2').value = fD.system_settings.discord?.url_sug || ""; 
+                        if($('cf-w3')) $('cf-w3').value = fD.system_settings.discord?.url_lvls || ""; 
+                        if($('cf-cs')) $('cf-cs').value = fD.system_settings.custom_css || ""; 
+                        if($('c-lk')) $('c-lk').checked = !!fD.system_settings.lockdown_active; 
                         
-                        if(fD.system_settings.lockdown_active) $('sl-id').style.background = "var(--ac)"; 
-                        else $('sl-id').style.background = "#222"; 
+                        if($('sl-id')) {
+                            if(fD.system_settings.lockdown_active) $('sl-id').style.background = "var(--ac)"; 
+                            else $('sl-id').style.background = "#222"; 
+                        }
                     }
                     
-                    let cS = $('pe-c'); 
-                    cS.innerHTML = '<option value="">Ninguno</option>'; 
-                    Object.entries(fD.clans||{}).forEach(([id,c]) => { cS.innerHTML += `<option value="${id}">${c.name}</option>`; });
-                    
-                    let bS = $('pe-bg'); 
-                    bS.innerHTML = '<option value="">Sin Medalla</option>'; 
-                    Object.entries(fD.badges||{}).forEach(([id,b]) => { bS.innerHTML += `<option value="${id}">${b.name}</option>`; });
+                    if($('pe-c')) {
+                        let cS = $('pe-c'); 
+                        cS.innerHTML = '<option value="">Ninguno</option>'; 
+                        Object.entries(fD.clans||{}).forEach(([id,c]) => { 
+                            cS.innerHTML += `<option value="${id}">${c.name}</option>`; 
+                        });
+                    }
+                    if($('pe-bg')) {
+                        let bS = $('pe-bg'); 
+                        bS.innerHTML = '<option value="">Sin Medalla</option>'; 
+                        Object.entries(fD.badges||{}).forEach(([id,b]) => { 
+                            bS.innerHTML += `<option value="${id}">${b.name}</option>`; 
+                        });
+                    }
                     
                     if(pIx !== -1) rPD();
                 } catch(e) { 
@@ -646,28 +824,29 @@
             });
         }
 
+        // ALERTA GLOBAL
         function sendBroadcast() {
-            const m = $('b-msg').value.trim();
+            const m = $('b-msg').value.trim(); 
             const t = $('b-type').value;
-            if(m) {
-                db.ref('system_settings/global_alert').set(true);
-                db.ref('system_settings/global_alert_msg').set(m);
+            if(m) { 
+                db.ref('system_settings/global_alert').set(true); 
+                db.ref('system_settings/global_alert_msg').set(m); 
                 db.ref('system_settings/global_alert_type').set(t); 
                 toast("Alerta Transmitida"); 
                 log(`Transmitió Alerta: ${m}`); 
-                $('b-msg').value = "";
-            } else {
-                toast("Escribe un mensaje", true);
+                $('b-msg').value = ""; 
+            } else { 
+                toast("Escribe un mensaje", true); 
             }
         }
         
-        function clearBroadcast() {
-            db.ref('system_settings/global_alert').set(false);
+        function clearBroadcast() { 
+            db.ref('system_settings/global_alert').set(false); 
             toast("Alerta Apagada"); 
-            log("Borró Alerta Global");
+            log("Borró Alerta Global"); 
         }
 
-        // MOTOR DE EXPERIENCIA Y RÉCORDS
+        // CALCULAR XP AUTOMÁTICA DE UN JUGADOR
         const getXP = (l, playerName) => { 
             const i = lvls.findIndex(x => x.name.toLowerCase() === l.toLowerCase()); 
             if(i === -1) return 0; 
@@ -680,15 +859,13 @@
         function renderAllPlayers(pList) {
             const currentLvls = nx(fD.levels);
             let calcedList = [...pList].map(p => {
-                let comps = nx(p.completions);
+                let comps = nx(p.completions); 
                 let realXp = 0;
                 comps.forEach(c => {
                     let lIdx = currentLvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase());
-                    if(lIdx > -1) {
-                        let base = Math.max(100 - (lIdx * 0.6), 5);
-                        if(currentLvls[lIdx].bounty) base *= 2;
-                        realXp += base;
-                    } else {
+                    if(lIdx > -1) { 
+                        realXp += Math.max(100 - (lIdx * 0.6), 5) * (currentLvls[lIdx].bounty ? 2 : 1); 
+                    } else { 
                         realXp += c.xp || 0; 
                     }
                 });
@@ -696,7 +873,6 @@
             });
 
             calcedList.sort((a,b) => b.calcXp - a.calcXp);
-            
             let h = "";
             calcedList.forEach((p, i) => {
                 let st = p.hidden ? '<span style="color:var(--rd);font-weight:800;">[BANEADO]</span>' : `<span style="color:var(--gd);font-weight:800;">Rank #${i+1}</span>`;
@@ -711,7 +887,7 @@
                     <button class="bs bb" onclick="editDirectP('${p.name}')">EDITAR</button>
                 </div>`;
             });
-            $('all-players-list').innerHTML = h || '<p style="color:#666;text-align:center;">No hay usuarios registrados.</p>';
+            if($('all-players-list')) $('all-players-list').innerHTML = h || '<p style="color:#666;text-align:center;">No hay usuarios registrados.</p>';
         }
         
         function editDirectP(name) { 
@@ -720,21 +896,31 @@
             $('t-play').scrollIntoView(); 
         }
 
+        // BANDEJA DE RÉCORDS
         function rRcs(d) { 
             let h = ""; 
             Object.entries(d).forEach(([id,r]) => { 
-                h += `<div class="dc"><div><h4 style="color:var(--ac);margin:0;">${r.level}</h4><p style="margin:0;font-size:.75rem;color:#aaa;">Por: ${r.player}</p></div><button class="bs bb" onclick="oRev('${id}')">REVISAR</button></div>`; 
+                h += `
+                <div class="dc">
+                    <div>
+                        <h4 style="color:var(--ac);margin:0;">${r.level}</h4>
+                        <p style="margin:0;font-size:.75rem;color:#aaa;">Por: ${r.player}</p>
+                    </div>
+                    <button class="bs bb" onclick="oRev('${id}')">REVISAR</button>
+                </div>`; 
             }); 
-            $('l-sub').innerHTML = h || '<p style="color:#666;">Bandeja limpia.</p>'; 
+            if($('l-sub')) $('l-sub').innerHTML = h || '<p style="color:#666;">Bandeja limpia.</p>'; 
         }
         
         function oRev(id) { 
             const r = fD.submissions[id]; 
             $('r-t').innerText = r.level; 
             const v = r.link.match(/([\w-]{11})/); 
+            
             $('r-v').innerHTML = v ? `<iframe width="100%" height="220" src="https://www.youtube.com/embed/${v[1]}" frameborder="0" style="border-radius:10px;"></iframe>` : `<a href="${r.link}" target="_blank" style="color:var(--bl);font-weight:800;">VER VIDEO URL</a>`; 
             $('r-rw').innerHTML = r.raw ? `<a href="${r.raw}" target="_blank" style="color:var(--cy);">Link Raw</a>` : "N/A"; 
             $('r-cm').innerText = r.comments || "---"; 
+            
             $('b-ac').onclick = () => pRc(id,'acc'); 
             $('b-ap').onclick = () => pRc(id,'app'); 
             $('b-rj').onclick = () => pRc(id,'rej'); 
@@ -750,8 +936,8 @@
                 let pL = nx(fD.players); 
                 let i = pL.findIndex(x => x.name.toLowerCase() === r.player.toLowerCase());
                 
-                if(i === -1) {
-                    pL.push({name: r.player, totalXP: xp, completions: [{level: r.level, link: r.link, xp: xp, time: Date.now()}]});
+                if(i === -1) { 
+                    pL.push({name: r.player, totalXP: xp, completions: [{level: r.level, link: r.link, xp: xp, time: Date.now()}]}); 
                 } else { 
                     let c = nx(pL[i].completions); 
                     if(!c.some(x => x.level.toLowerCase() === r.level.toLowerCase())) { 
@@ -764,12 +950,14 @@
                 db.ref('players').set(pL); 
                 log(`Aceptó récord de ${r.player}`); 
                 api(`✅ **NUEVO RÉCORD:** **${r.player}** superó **${r.level}** (+${xp.toFixed(1)} XP) \n*Aprobado por:* ${sN}`, 'main');
+            
             } else if(m === 'app') { 
                 const n = prompt("Motivo de Apelación:"); 
                 if(n) { 
                     db.ref('history').push({player: r.player, level: r.level, status: 'Apelacion', reason: n}); 
                     api(`⚠️ **RÉCORD EN APELACIÓN:** **${r.player}** en **${r.level}**\n*Revisado por:* ${sN}\n*Motivo:* ${n}`, 'main'); 
                 } else return; 
+            
             } else { 
                 const n = prompt("Razón de Rechazo:"); 
                 if(n) { 
@@ -783,12 +971,11 @@
             toast("Procesado");
         }
 
-        // INYECCIÓN MANUAL
+        // INYECCIÓN MANUAL DESDE PESTAÑA RÉCORDS
         function iRec() { 
-            const p = $('m-p').value.trim();
-            const l = $('m-l').value.trim();
+            const p = $('m-p').value.trim(); 
+            const l = $('m-l').value.trim(); 
             const k = $('m-k').value.trim(); 
-            
             if(!p || !l) return toast("Faltan datos", true); 
             
             let xp = getXP(l, p); 
@@ -801,8 +988,8 @@
             let pL = nx(fD.players); 
             let i = pL.findIndex(x => x.name.toLowerCase() === p.toLowerCase()); 
             
-            if(i === -1) {
-                pL.push({name: p, totalXP: xp, completions: [{level: l, link: k||'Inyectado', xp: xp, time: Date.now()}]});
+            if(i === -1) { 
+                pL.push({name: p, totalXP: xp, completions: [{level: l, link: k||'Inyectado', xp: xp, time: Date.now()}]}); 
             } else { 
                 let c = nx(pL[i].completions); 
                 c.push({level: l, link: k||'Inyectado', xp: xp, time: Date.now()}); 
@@ -816,11 +1003,13 @@
             $('m-p').value = ""; $('m-l').value = ""; $('m-k').value = ""; 
         }
 
-        // GESTIÓN DE NIVELES E INYECCIÓN DIRECTA
+        // ==========================================
+        // EDITOR DE NIVELES E INYECCIÓN DE VICTORS
+        // ==========================================
         function rLvs(d) { 
             let h = ""; 
             d.forEach((l,i) => { 
-                let bS = l.bounty ? 'var(--gd)' : '#222';
+                let bS = l.bounty ? 'var(--gd)' : '#222'; 
                 let bIcon = l.bounty ? '<i class="fas fa-fire" style="color:var(--gd)"></i>' : '';
                 h += `
                 <div class="dc" style="background:#000; margin-bottom:5px; border-color:${bS};">
@@ -832,28 +1021,28 @@
                     </div>
                 </div>`; 
             }); 
-            $('l-lvl').innerHTML = h; 
+            if($('l-lvl')) $('l-lvl').innerHTML = h; 
         }
         
         function eLv(i) { 
             const l = lvls[i]; 
-            $('e-ix').value = i; 
-            $('a-n').value = l.name; 
-            $('a-p').value = i + 1; 
-            $('a-i').value = l.id; 
-            $('a-v').value = l.first || ""; 
-            $('a-b').checked = l.bounty || false; 
+            if($('e-ix')) $('e-ix').value = i; 
+            if($('a-n')) $('a-n').value = l.name; 
+            if($('a-p')) $('a-p').value = i + 1; 
+            if($('a-i')) $('a-i').value = l.id; 
+            if($('a-v')) $('a-v').value = l.first || ""; 
+            if($('a-b')) $('a-b').checked = l.bounty || false; 
             
-            $('edit-action-btns').style.display = 'flex'; 
-            $('v-inject-box').style.display = 'block'; // Muestra inyección directa
-            $('t-lvls').scrollIntoView(); 
+            if($('edit-action-btns')) $('edit-action-btns').style.display = 'flex'; 
+            if($('v-inject-box')) $('v-inject-box').style.display = 'block'; 
+            if($('t-lvls')) $('t-lvls').scrollIntoView(); 
         }
         
         function sLv() { 
-            const i = parseInt($('e-ix').value);
-            const n = $('a-n').value.trim();
-            const rawId = $('a-i').value;
-            const v = $('a-v').value.trim();
+            const i = parseInt($('e-ix').value); 
+            const n = $('a-n').value.trim(); 
+            const rawId = $('a-i').value; 
+            const v = $('a-v').value.trim(); 
             const b = $('a-b').checked; 
             let p = parseInt($('a-p').value); 
             
@@ -866,12 +1055,12 @@
             let targetIndex = p - 1; 
             
             if(i === -1) {
-                if(targetIndex >= nL.length) nL.push(d);
+                if(targetIndex >= nL.length) nL.push(d); 
                 else nL.splice(targetIndex, 0, d);
                 api(`🆕 **NUEVO NIVEL AÑADIDO:** El Administrador **${sN}** ha añadido **${n}** en el Top #${p}.`, 'lvls');
             } else {
                 nL.splice(i, 1); 
-                if(targetIndex >= nL.length) nL.push(d);
+                if(targetIndex >= nL.length) nL.push(d); 
                 else nL.splice(targetIndex, 0, d); 
                 api(`🔄 **NIVEL MODIFICADO/MOVIDO:** El Administrador **${sN}** ha actualizado **${n}** a la posición #${p}.`, 'lvls');
             }
@@ -882,59 +1071,58 @@
             log(`Modificó Nivel: ${n} (Pos: ${p})`);
         }
 
-        // INYECCIÓN DIRECTA DE VICTOR DESDE EL NIVEL
         function injectVictorDirect() {
-            const p = $('v-inj-name').value.trim();
-            const k = $('v-inj-link').value.trim();
-            const l = $('a-n').value.trim(); // Toma el nombre del nivel que estamos editando
+            const p = $('v-inj-name').value.trim(); 
+            const k = $('v-inj-link').value.trim(); 
+            const l = $('a-n').value.trim(); 
             
             if(!p || !l) return toast("Nick y nivel son requeridos", true);
             
             let xp = getXP(l, p);
-            
             let pL = nx(fD.players); 
             let i = pL.findIndex(x => x.name.toLowerCase() === p.toLowerCase()); 
             
-            if(i === -1) {
-                pL.push({name: p, totalXP: xp, completions: [{level: l, link: k||'Inyectado', xp: xp, time: Date.now()}]});
+            if(i === -1) { 
+                pL.push({name: p, totalXP: xp, completions: [{level: l, link: k||'Inyectado', xp: xp, time: Date.now()}]}); 
             } else { 
                 let c = nx(pL[i].completions); 
-                if(!c.some(x => x.level.toLowerCase() === l.toLowerCase())) {
+                if(!c.some(x => x.level.toLowerCase() === l.toLowerCase())) { 
                     c.push({level: l, link: k||'Inyectado', xp: xp, time: Date.now()}); 
                     pL[i].completions = c; 
                     pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
-                } else {
-                    return toast("El jugador ya tiene este nivel", true);
+                } else { 
+                    return toast("El jugador ya tiene este nivel", true); 
                 }
             } 
             
             db.ref('players').set(pL); 
             log(`Inyectó Victor directo: ${p} en ${l}`); 
             toast("Victor Añadido Correctamente"); 
-            $('v-inj-name').value = ""; $('v-inj-link').value = "";
+            $('v-inj-name').value = ""; 
+            $('v-inj-link').value = "";
         }
         
         function rLv() { 
-            $('e-ix').value = "-1"; 
-            $('a-n').value = ""; 
-            $('a-i').value = ""; 
-            $('a-p').value = ""; 
-            $('a-v').value = ""; 
-            $('a-b').checked = false; 
-            $('edit-action-btns').style.display = 'none'; 
-            $('v-inject-box').style.display = 'none';
+            if($('e-ix')) $('e-ix').value = "-1"; 
+            if($('a-n')) $('a-n').value = ""; 
+            if($('a-i')) $('a-i').value = ""; 
+            if($('a-p')) $('a-p').value = ""; 
+            if($('a-v')) $('a-v').value = ""; 
+            if($('a-b')) $('a-b').checked = false; 
+            if($('edit-action-btns')) $('edit-action-btns').style.display = 'none'; 
+            if($('v-inject-box')) $('v-inject-box').style.display = 'none';
         }
         
         function delLv() {
             const i = parseInt($('e-ix').value);
             if(i > -1) {
                 if(confirm("¿Eliminar este nivel de la base de datos? Esto recalculará la XP de todos en tiempo real.")) {
-                    let nL = [...lvls];
-                    let deletedName = nL[i].name;
+                    let nL = [...lvls]; 
+                    let deletedName = nL[i].name; 
                     nL.splice(i, 1);
-                    db.ref('levels').set(nL);
-                    rLv();
-                    toast("Nivel Eliminado");
+                    db.ref('levels').set(nL); 
+                    rLv(); 
+                    toast("Nivel Eliminado"); 
                     log(`Eliminó el nivel: ${deletedName}`);
                     api(`🗑️ **NIVEL ELIMINADO:** El Administrador **${sN}** ha eliminado el nivel **${deletedName}** de la lista. Toda la XP global ha sido recalculada.`, 'lvls');
                 }
@@ -945,10 +1133,12 @@
             db.ref('levels').set(lvls); 
             log("Orden de Niveles Publicado"); 
             toast("Ranking Actualizado"); 
-            api(`🌐 **ORDEN ACTUALIZADO:** El Administrador **${sN}** ha modificado las posiciones del ranking. La XP ha sido recalculada automáticamente.`, 'lvls');
+            api(`🌐 **ORDEN ACTUALIZADO:** El Administrador **${sN}** ha modificado las posiciones del ranking. La XP ha sido recalculada automáticamente.`, 'lvls'); 
         }
 
-        // SUGERENCIAS
+        // ==========================================
+        // GESTIÓN DE SUGERENCIAS
+        // ==========================================
         function renderSug(d) { 
             let h = ""; 
             Object.entries(d).forEach(([id, s]) => { 
@@ -964,33 +1154,36 @@
                     </div>
                 </div>`; 
             }); 
-            $('l-sug').innerHTML = h || '<p style="color:#666;">Sin sugerencias nuevas.</p>'; 
+            if($('l-sug')) $('l-sug').innerHTML = h || '<p style="color:#666;">Sin sugerencias nuevas.</p>'; 
         }
 
         function useSug(id, name, levelId, user, pos) {
-            $('a-n').value = name;
-            $('a-i').value = levelId;
+            $('a-n').value = name; 
+            $('a-i').value = levelId; 
             $('a-p').value = pos;
             
-            let pL = nx(fD.players);
+            let pL = nx(fD.players); 
             let i = pL.findIndex(p => p.name.toLowerCase() === user.toLowerCase());
-            if(i > -1) {
-                pL[i].totalXP = (pL[i].totalXP || 0) + 10;
-                db.ref('players').set(pL);
-                toast(`+10 XP otorgados a ${user}`);
+            
+            if(i > -1) { 
+                pL[i].totalXP = (pL[i].totalXP || 0) + 10; 
+                db.ref('players').set(pL); 
+                toast(`+10 XP a ${user}`); 
             }
             
-            db.ref(`level_suggestions/${id}`).remove();
+            db.ref(`level_suggestions/${id}`).remove(); 
             api(`✅ **SUGERENCIA APROBADA:** El administrador **${sN}** ha aceptado la sugerencia de **${user}** para añadir **${name}**. (+10 XP otorgados al jugador)`, 'sug');
         }
 
-        function rejSug(id, name, user) {
-            db.ref(`level_suggestions/${id}`).remove();
-            toast('Rechazada');
-            api(`❌ **SUGERENCIA DESCARTADA:** La sugerencia de **${user}** para añadir el nivel **${name}** ha sido denegada.`, 'sug');
+        function rejSug(id, name, user) { 
+            db.ref(`level_suggestions/${id}`).remove(); 
+            toast('Rechazada'); 
+            api(`❌ **SUGERENCIA DESCARTADA:** La sugerencia de **${user}** para añadir el nivel **${name}** ha sido denegada.`, 'sug'); 
         }
 
-        // EDITOR DE JUGADORES (BANDERA/PAÍS AÑADIDO)
+        // ==========================================
+        // EDITOR DE JUGADORES (BANDERAS/PAÍS INCLUIDO)
+        // ==========================================
         function sP() { 
             const q = $('p-s').value.trim().toLowerCase(); 
             pIx = nx(fD.players).findIndex(x => x.name.toLowerCase() === q); 
@@ -998,25 +1191,22 @@
             if(pIx > -1) { 
                 $('p-res').style.display = 'block'; 
                 rPD(); 
-            } else {
+            } else { 
                 toast("Jugador no encontrado", true); 
             }
         }
         
         function rPD() { 
             const p = nx(fD.players)[pIx]; 
-            
             $('pe-n').value = p.name; 
             $('pe-b').value = p.bio || ""; 
             $('pe-c').value = p.clanId || ""; 
             $('pe-bg').value = p.badgeId || ""; 
-            $('pe-pfp').value = (p.photo && p.photo !== "null" && p.photo !== "undefined") ? p.photo : "";
+            $('pe-pfp').value = (p.photo && p.photo !== "null" && p.photo !== "undefined") ? p.photo : ""; 
             $('pe-ver').value = p.verified ? "true" : "false";
-            $('pe-flag').value = p.country || ""; // Lee el código de país (ej. mx)
+            $('pe-flag').value = p.country || ""; // Muestra el código de país
             
-            $('p-bn').innerHTML = p.hidden 
-                ? `<button class="btn bg" style="width:100%" onclick="bN(false)">LEVANTAR BAN</button>` 
-                : `<button class="btn br" style="width:100%" onclick="bN(true)">APLICAR BLACKLIST</button>`; 
+            $('p-bn').innerHTML = p.hidden ? `<button class="btn bg" style="width:100%" onclick="bN(false)">LEVANTAR BAN</button>` : `<button class="btn br" style="width:100%" onclick="bN(true)">APLICAR BLACKLIST</button>`; 
                 
             let h = ""; 
             nx(p.completions).forEach((x,i) => { 
@@ -1037,10 +1227,10 @@
             db.ref(`players/${pIx}/bio`).set($('pe-b').value); 
             db.ref(`players/${pIx}/clanId`).set($('pe-c').value); 
             db.ref(`players/${pIx}/badgeId`).set($('pe-bg').value); 
-            db.ref(`players/${pIx}/photo`).set($('pe-pfp').value);
-            db.ref(`players/${pIx}/verified`).set($('pe-ver').value === "true");
+            db.ref(`players/${pIx}/photo`).set($('pe-pfp').value); 
+            db.ref(`players/${pIx}/verified`).set($('pe-ver').value === "true"); 
             db.ref(`players/${pIx}/country`).set($('pe-flag').value.trim().toLowerCase()); // Guarda el código de país
-
+            
             toast("Perfil Guardado"); 
             log(`Modificó perfil de: ${$('pe-n').value}`);
         }
@@ -1066,10 +1256,12 @@
                 let c = nx(p.completions); 
                 const xp = c[i].xp || 0; 
                 c.splice(i,1); 
+                
                 db.ref(`players/${pIx}/completions`).set(c); 
                 db.ref(`players/${pIx}/totalXP`).set((p.totalXP || 0) - xp); 
-                log(`Récord borrado a ${p.name}`);
-                rPD();
+                
+                log(`Récord borrado a ${p.name}`); 
+                rPD(); 
             } 
         }
         
@@ -1079,28 +1271,31 @@
             pIx = -1; 
         }
 
-        // RESTO DE FUNCIONES MANTENIDAS EXACTAMENTE IGUAL
+        // ==========================================
+        // FUNCIONES DE MÓDULOS RESTANTES (MERCADO, CHAT, LOGS, ROOT)
+        // ==========================================
         function rClm(c) { 
             let h = ""; 
             Object.entries(c).forEach(([k,v]) => { 
                 h += `<div class="dc"><div><h4 style="margin:0;color:var(--cy);">${v.nick}</h4><p style="margin:0;font-size:.7rem;">${v.email}</p></div><div style="display:flex;gap:5px;"><button class="bs bg" onclick="aClm('${k}')">VINCULAR</button></div></div>`; 
             }); 
-            $('l-clm').innerHTML = h || '<p style="color:#666;">Bandeja limpia.</p>'; 
+            if($('l-clm')) $('l-clm').innerHTML = h || '<p style="color:#666;">Bandeja limpia.</p>'; 
         }
         
         function aClm(k) { 
             const r = fD.claim_requests[k]; 
             let pL = nx(fD.players); 
             let i = pL.findIndex(p => p.name.toLowerCase() === r.nick.toLowerCase()); 
+            
             if(i > -1) { 
                 pL[i].email = r.email; 
                 db.ref('players').set(pL); 
                 db.ref(`claim_requests/${k}`).remove(); 
                 log(`Vinculó cuenta de: ${r.nick}`); 
                 toast("Cuenta Enlazada"); 
-            } else {
+            } else { 
                 toast("Perfil Inexistente", true); 
-            }
+            } 
         }
 
         function aItm() { 
@@ -1119,21 +1314,32 @@
             Object.entries(d).forEach(([id,it]) => { 
                 h += `<div class="dc"><h4>${it.name}</h4><button class="bs br" onclick="db.ref('market_items/${id}').remove()">X</button></div>`; 
             }); 
-            $('l-mit').innerHTML = h; 
+            if($('l-mit')) $('l-mit').innerHTML = h; 
         }
         
         function rMReq(reqs) { 
             let h = ""; 
             Object.entries(reqs).forEach(([id, r]) => { 
-                h += `<div class="dc" style="border-left:3px solid var(--gd);"><div><h4 style="color:var(--gd);margin:0;">${r.itemName}</h4><p style="margin:0;font-size:.8rem;">Para: ${r.player} | ${r.price}XP</p></div><div style="display:flex;flex-direction:column;gap:5px;"><button class="bs bg" onclick="aPur('${id}')">APROBAR</button><button class="bs br" onclick="db.ref('market_requests/${id}').remove()">DENEGAR</button></div></div>`; 
+                h += `
+                <div class="dc" style="border-left:3px solid var(--gd);">
+                    <div>
+                        <h4 style="color:var(--gd);margin:0;">${r.itemName}</h4>
+                        <p style="margin:0;font-size:.8rem;">Para: ${r.player} | ${r.price}XP</p>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:5px;">
+                        <button class="bs bg" onclick="aPur('${id}')">APROBAR</button>
+                        <button class="bs br" onclick="db.ref('market_requests/${id}').remove()">DENEGAR</button>
+                    </div>
+                </div>`; 
             }); 
-            $('l-mrq').innerHTML = h || '<p style="color:#666;">Sin peticiones.</p>'; 
+            if($('l-mrq')) $('l-mrq').innerHTML = h || '<p style="color:#666;">Sin peticiones.</p>'; 
         }
         
         function aPur(id) { 
             const r = fD.market_requests[id]; 
             let pL = nx(fD.players); 
             let i = pL.findIndex(p => p.name.toLowerCase() === r.player.toLowerCase()); 
+            
             if(i > -1) { 
                 const cxp = pL[i].totalXP || 0; 
                 if(cxp >= r.price) { 
@@ -1141,14 +1347,16 @@
                     let inv = nx(pL[i].inventory); 
                     inv.push({itemName: r.itemName, date: Date.now()}); 
                     pL[i].inventory = inv; 
+                    
                     db.ref('players').set(pL); 
                     db.ref(`market_requests/${id}`).remove(); 
+                    
                     log(`Compra ejecutada: ${r.itemName} por ${r.player}`); 
                     api(`🛒 **MERCADO:** El administrador **${sN}** ha procesado la compra de **${r.itemName}** para el jugador **${r.player}**.`, 'main'); 
                     toast("Cobro Realizado"); 
-                } else {
+                } else { 
                     toast("XP Insuficiente", true); 
-                }
+                } 
             } 
         }
 
@@ -1165,9 +1373,16 @@
         function rCln(d) { 
             let h = ""; 
             Object.entries(d).forEach(([id,c]) => { 
-                h += `<div class="dc"><div><h4 style="margin:0;color:var(--cy);">[${c.tag}] ${c.name}</h4><p style="margin:0;font-size:.7rem;">XP Global: ${c.totalXP||0}</p></div><button class="bs br" onclick="if(confirm('¿Borrar sindicato?')) db.ref('clans/${id}').remove()">X</button></div>`; 
+                h += `
+                <div class="dc">
+                    <div>
+                        <h4 style="margin:0;color:var(--cy);">[${c.tag}] ${c.name}</h4>
+                        <p style="margin:0;font-size:.7rem;">XP Global: ${c.totalXP||0}</p>
+                    </div>
+                    <button class="bs br" onclick="if(confirm('¿Borrar sindicato?')) db.ref('clans/${id}').remove()">X</button>
+                </div>`; 
             }); 
-            $('l-cln').innerHTML = h; 
+            if($('l-cln')) $('l-cln').innerHTML = h; 
         }
         
         function aBdg() { 
@@ -1185,9 +1400,9 @@
             Object.entries(d).forEach(([id,b]) => { 
                 h += `<div class="dc"><h4 style="margin:0;">${b.name}</h4><button class="bs br" onclick="db.ref('badges/${id}').remove()">X</button></div>`; 
             }); 
-            $('l-bdg').innerHTML = h; 
+            if($('l-bdg')) $('l-bdg').innerHTML = h; 
         }
-
+        
         function sCht() { 
             const m = $('c-m').value; 
             if(m) { 
@@ -1201,8 +1416,10 @@
             nx(d).slice(-25).forEach(x => { 
                 h += `<div class="cm"><b>${x.user}</b> <i style="font-size:0.6rem; color:#666;">${new Date(x.time).toLocaleTimeString()}</i><br>${x.msg}</div>`; 
             }); 
-            $('c-bx').innerHTML = h || '<p style="color:#666;">Canal vacío.</p>'; 
-            $('c-bx').scrollTop = $('c-bx').scrollHeight; 
+            if($('c-bx')) { 
+                $('c-bx').innerHTML = h || '<p style="color:#666;">Canal vacío.</p>'; 
+                $('c-bx').scrollTop = $('c-bx').scrollHeight; 
+            } 
         }
         
         function fPrg() { 
@@ -1210,7 +1427,7 @@
             db.ref('staff_chat').push({user: "SYSTEM", msg: "⚠️ PURGA DE RED EJECUTADA POR " + sN.toUpperCase(), time: Date.now()}); 
             toast("Red Purgada"); 
         }
-
+        
         function aLog() { 
             const t = $('al-t').value; 
             const d = $('al-d').value; 
@@ -1231,17 +1448,24 @@
                     <button class="bs br" style="margin-top:5px;" onclick="db.ref('admin_changelog/${id}').remove()">BORRAR</button>
                 </div>`; 
             }); 
-            $('l-alg').innerHTML = h; 
+            if($('l-alg')) $('l-alg').innerHTML = h; 
         }
-
+        
         function rStf(ps) { 
             let h = ""; 
             ps.forEach(p => { 
-                if(p.role) {
-                    h += `<div class="dc"><div><h4 style="margin:0;color:var(--ow);">${p.name}</h4><p style="margin:0;font-size:.7rem;">${p.role.toUpperCase()}</p></div><button class="bs br" onclick="dStf('${p.name}')">REVOCAR</button></div>`; 
-                }
+                if(p.role) { 
+                    h += `
+                    <div class="dc">
+                        <div>
+                            <h4 style="margin:0;color:var(--ow);">${p.name}</h4>
+                            <p style="margin:0;font-size:.7rem;">${p.role.toUpperCase()}</p>
+                        </div>
+                        <button class="bs br" onclick="dStf('${p.name}')">REVOCAR</button>
+                    </div>`; 
+                } 
             }); 
-            $('l-stf').innerHTML = h; 
+            if($('l-stf')) $('l-stf').innerHTML = h; 
         }
         
         function pStf() { 
@@ -1250,20 +1474,22 @@
             const r = $('st-r').value; 
             let pL = nx(fD.players); 
             let i = pL.findIndex(p => p.name.toLowerCase() === n.toLowerCase()); 
+            
             if(i > -1) { 
                 pL[i].role = r; 
                 db.ref('players').set(pL); 
                 log(`Otorgó rango ${r} a ${n}`); 
                 toast("Poder Asignado"); 
-            } else {
+            } else { 
                 toast("Usuario Inexistente", true); 
-            }
+            } 
         }
         
         function dStf(n) { 
             if(sR !== 'owner') return; 
             let pL = nx(fD.players); 
             let i = pL.findIndex(p => p.name === n); 
+            
             if(i > -1) { 
                 delete pL[i].role; 
                 db.ref('players').set(pL); 
@@ -1275,29 +1501,28 @@
         function renderEff(logs) { 
             let c = {}; 
             Object.values(logs).forEach(x => { 
-                if(x.action.includes('Aprobó') || x.action.includes('Rechazó') || x.action.includes('Modificó Nivel')) {
+                if(x.action.includes('Aprobó') || x.action.includes('Rechazó') || x.action.includes('Modificó Nivel')) { 
                     c[x.staff] = (c[x.staff] || 0) + 1; 
-                }
+                } 
             }); 
             let h = ""; 
             Object.entries(c).forEach(([s,v]) => { 
                 h += `<div style="background:#000; padding:10px 15px; border-radius:8px; border:1px solid #222;"><b>${s}</b>: <span style="color:var(--gr);">${v} Acciones</span></div>`; 
             }); 
-            $('eff-box').innerHTML = h || '<p style="color:#666;">No hay datos de eficiencia recientes.</p>'; 
+            if($('eff-box')) $('eff-box').innerHTML = h || '<p style="color:#666;">No hay datos de eficiencia recientes.</p>'; 
         }
-
-        // LIMPIEZA DE BD Y AJUSTES ROOT
-        function cleanDB() {
-            if(confirm("ALERTA CRÍTICA: ¿Deseas purgar permanentemente a todos los usuarios inactivos que no son Staff y tienen 0 XP?")) {
-                let pL = nx(fD.players).filter(p => p.role || (p.totalXP && p.totalXP > 0) || (p.completions && Object.keys(p.completions).length > 0));
+        
+        function cleanDB() { 
+            if(confirm("ALERTA CRÍTICA: ¿Deseas purgar permanentemente a todos los usuarios inactivos que no son Staff y tienen 0 XP?")) { 
+                let pL = nx(fD.players).filter(p => p.role || (p.totalXP && p.totalXP > 0) || (p.completions && Object.keys(p.completions).length > 0)); 
                 db.ref('players').set(pL).then(() => { 
                     log("PURGA DE INACTIVOS EJECUTADA EN LA BD"); 
                     toast("Purga Completada"); 
                     location.reload(); 
-                });
-            }
+                }); 
+            } 
         }
- 
+        
         function sCfg() { 
             db.ref('system_settings/discord/url').set($('cf-w1').value); 
             db.ref('system_settings/discord/url_sug').set($('cf-w2').value); 
@@ -1330,15 +1555,15 @@
             r.onload = function(ev) { 
                 try { 
                     const j = JSON.parse(ev.target.result); 
-                    if(confirm("PELIGRO: ¿Estás seguro de que quieres sobrescribir toda la Base de Datos OMNI con este archivo?")) {
+                    if(confirm("PELIGRO: ¿Estás seguro de que quieres sobrescribir toda la Base de Datos OMNI con este archivo?")) { 
                         db.ref('/').set(j).then(() => location.reload()); 
-                    }
+                    } 
                 } catch(er) { 
                     toast("JSON Corrupto/Inválido", true); 
-                }
+                } 
             }; 
             r.readAsText(f); 
         }
     </script>
 </body>
-    </html>
+</html>
