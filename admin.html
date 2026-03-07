@@ -422,42 +422,32 @@
 
             <div id="t-mkt" class="tab">
                 <div id="t-mkt" class="tab">
-    <h2 class="title"><i class="fas fa-store" style="color:var(--gd);"></i> Mercado & Economía</h2>
-    
-    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:30px;">
-        <div style="flex:1; min-width:300px;">
-            <h3 style="color:var(--green);font-size:1rem; margin-top:0;"><i class="fas fa-ticket-alt"></i> Generador de Códigos</h3>
-            <div class="panel" style="border-color:var(--green);">
-                <div class="ig"><input type="text" id="cd-k" placeholder="Código (Ej: OMNI2026)" style="text-transform:uppercase;"></div>
-                <div class="ig"><input type="number" id="cd-x" placeholder="XP de Regalo"></div>
-                <div class="ig"><input type="text" id="cd-m" placeholder="Mensaje para el usuario"></div>
-                <button class="btn bg" style="width:100%; justify-content:center;" onclick="aCod()"><i class="fas fa-plus"></i> CREAR CÓDIGO</button>
-            </div>
-            <h3 style="font-size:1rem; border-bottom:1px solid #333; padding-bottom:5px;">Códigos Activos</h3>
-            <div id="l-cod" class="dl" style="max-height:250px;"></div>
+<h2 class="title"><i class="fas fa-store" style="color:var(--gd);"></i> Mercado & Economía</h2>
+<div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:30px;">
+    <div style="flex:1; min-width:300px;">
+        <h3 style="color:var(--gr);font-size:1rem; margin-top:0;"><i class="fas fa-ticket-alt"></i> Generador de Códigos</h3>
+        <div class="panel" style="border-color:var(--gr);">
+            <div class="ig"><input type="text" id="cd-k" placeholder="Código (Ej: OMNI2026)" style="text-transform:uppercase;"></div>
+            <div class="ig"><input type="number" id="cd-x" placeholder="XP de Regalo"></div>
+            <div class="ig"><input type="text" id="cd-m" placeholder="Mensaje personalizado"></div>
+            <button class="btn bg" style="width:100%;" onclick="aCod()"><i class="fas fa-plus"></i> CREAR CÓDIGO</button>
         </div>
-
-        <div style="flex:1; min-width:300px;">
-            <h3 style="color:var(--gd); font-size:1rem; margin-top:0;"><i class="fas fa-upload"></i> Publicar Ítem</h3>
-            <div class="panel" style="border-color:var(--gd);">
-                <div class="ig"><input type="text" id="i-n" placeholder="Nombre Ítem"></div>
-                <div class="ig"><input type="number" id="i-p" placeholder="Precio en XP"></div>
-                <div class="ig"><input type="text" id="i-i" placeholder="URL Icono"></div>
-                <button class="btn by" style="width:100%; justify-content:center;" onclick="aItm()"><i class="fas fa-upload"></i> PUBLICAR ÍTEM</button>
-            </div>
-            <h3 style="font-size:1rem; border-bottom:1px solid #333; padding-bottom:5px;">Catálogo Activo</h3>
-            <div id="l-mit" class="dl" style="max-height:250px;"></div>
+        <h3 style="font-size:1rem;">Códigos Activos</h3>
+        <div id="l-cod" class="dl"></div>
+    </div>
+    <div style="flex:1; min-width:300px;">
+        <h3 style="color:var(--gd); font-size:1rem; margin-top:0;"><i class="fas fa-upload"></i> Publicar Ítem</h3>
+        <div class="panel" style="border-color:var(--gd);">
+            <div class="ig"><input type="text" id="i-n" placeholder="Nombre"></div>
+            <div class="ig"><input type="number" id="i-p" placeholder="XP"></div>
+            <div class="ig"><input type="text" id="i-i" placeholder="URL Icono"></div>
+            <button class="btn by" style="width:100%;" onclick="aItm()"><i class="fas fa-upload"></i> PUBLICAR</button>
         </div>
+        <div id="l-mit" class="dl"></div>
     </div>
 </div>
-                
-                <div class="panel" style="border-color:var(--gd);">
-                    <h3 style="color:var(--gd); font-size:1rem; margin-top:0;">Publicar Ítem/Cosmético</h3>
-                    <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-bottom:15px;">
-                        <input type="text" id="i-n" placeholder="Nombre Ítem (Ej: Letras Neón, Rol VIP)">
-                        <input type="number" id="i-p" placeholder="Precio en XP">
-                        <input type="text" id="i-i" placeholder="URL Imagen/Icono">
-                    </div>
+<h3 style="color:var(--gd);font-size:1rem;">Peticiones de Compra</h3>
+<div id="l-mrq" class="dl"></div>
                     <button class="btn" style="background:var(--gd);color:#000;width:100%;" onclick="aItm()"><i class="fas fa-upload"></i> PUBLICAR EN TIENDA</button>
                 </div>
                 <h3 style="font-size:1rem; border-bottom:1px solid #333; padding-bottom:5px;">Catálogo Activo</h3>
@@ -1640,4 +1630,5 @@
     </script>
 </body>
 </html>
+
 
