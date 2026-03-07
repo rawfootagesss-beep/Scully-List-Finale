@@ -266,7 +266,7 @@
 
             try {
                 // 1. Crear el usuario en Auth
-                const userCred = await auth.createUserWithEmailAndPassword(email, pass);
+                await auth.createUserWithEmailAndPassword(email, pass);
                 
                 // 2. Verificar si el nombre ya existe en la base de datos 'players'
                 const snap = await db.ref('players').once('value');
