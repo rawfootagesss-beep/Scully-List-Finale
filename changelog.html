@@ -2,59 +2,75 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Changelog | Hub OMNI</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
+    <title>OMNI | Core Dumps</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg: #030303; --card: rgba(20,20,20,0.9); --gold: #ffd700; --cyan: #00ffff; --border: rgba(255,255,255,0.1); --accent: #ff6600; --purple: #cc00ff; --green: #00ff66; }
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; }
-        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 10px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
-        h1 { font-family: 'JetBrains Mono'; font-size: 2.5rem; color: var(--cyan); text-transform: uppercase; margin: 0; }
-        p.subtitle { color: #888; font-size: 1rem; margin-top: 5px; }
-        .update-card { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--cyan); padding: 25px; border-radius: 15px; margin-bottom: 25px; transition: 0.3s; }
-        .update-card:hover { border-left-color: var(--gold); background: rgba(255,255,255,0.02); box-shadow: 0 10px 30px rgba(0,255,255,0.05); }
-        .version-tag { display: inline-block; background: var(--cyan); color: #000; padding: 5px 12px; border-radius: 5px; font-weight: 800; font-size: 0.8rem; margin-bottom: 15px; font-family: 'JetBrains Mono'; }
-        .update-title { font-size: 1.5rem; margin: 0 0 15px 0; color: #fff; }
-        ul { padding-left: 20px; margin: 0; color: #ccc; line-height: 1.6; font-size: 0.95rem; }
-        li { margin-bottom: 10px; }
-        li b { color: var(--gold); }
-        .nav-back { display: block; text-align: center; color: var(--cyan); text-decoration: none; font-weight: 800; margin-top: 40px; font-family: 'JetBrains Mono'; padding-bottom: 30px; }
+        body { 
+            background: #020202; color: #00ffff; 
+            font-family: 'JetBrains Mono', monospace; 
+            margin: 0; padding: 20px;
+            /* Efecto Scanlines de monitor antiguo */
+            background-image: linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 3px;
+        }
+        .terminal-container { max-width: 800px; margin: 40px auto; border: 1px solid #00ffff; padding: 30px; box-shadow: inset 0 0 20px rgba(0,255,255,0.1); }
+        .header-sys { border-bottom: 1px dashed #00ffff; padding-bottom: 20px; margin-bottom: 30px; }
+        
+        .log-entry { margin-bottom: 30px; animation: glitch 0.5s; }
+        .log-version { display: inline-block; background: #00ffff; color: #000; padding: 2px 10px; font-weight: bold; margin-bottom: 10px; }
+        .log-date { color: #888; font-size: 0.8rem; margin-left: 10px; }
+        ul { list-style-type: "> "; padding-left: 20px; color: #ccc; }
+        li { margin-bottom: 8px; line-height: 1.4; }
+        li b { color: #00ffff; }
+
+        /* ROADMAP BAR */
+        .roadmap-box { margin-top: 50px; border: 1px solid #333; padding: 20px; }
+        .progress-container { width: 100%; background: #111; height: 20px; margin-top: 10px; position: relative; }
+        .progress-bar { height: 100%; background: #00ffff; width: 65%; /* CAMBIA ESTO PARA MOVER LA BARRA */ transition: width 1s; }
+        
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .cursor { animation: blink 1s infinite; display: inline-block; width: 10px; height: 15px; background: #00ffff; vertical-align: bottom; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-file-code"></i> System Log</h1>
-            <p class="subtitle">Registro público de actualizaciones de OMNI</p>
-        </header>
-
-        <div class="update-card" style="border-left-color: var(--green);">
-            <div class="version-tag" style="background: var(--green);">V25.4 - REBIRTH OF TITANS</div>
-            <h2 class="update-title">El Regreso de los Récords y Nueva Economía</h2>
-            <ul>
-                <li><b>Envío de Récords Seguro:</b> Hemos reactivado el botón para Enviar Récords. Ahora es obligatorio tener una cuenta y estar logueado para subir tu victoria. ¡Esto evita el spam y asegura tu XP!</li>
-                <li><b>Suministro Diario:</b> Añadido un botón en el Index para reclamar +5 de Billetera XP cada 24 horas.</li>
-                <li><b>Cazarrecompensas:</b> Si envías una Sugerencia de Nivel y el Staff la acepta, ¡recibirás +10 XP automáticamente!</li>
-                <li><b>Modo Wave (Easter Egg):</b> Mantén presionada la tecla 'Shift' (en PC) para usar el cursor de la Wave con estelas de partículas.</li>
-                <li><b>Tributo 2Parx (Easter Egg):</b> Descubre el secreto haciendo 7 clics en la barra superior para obtener una recompensa de lealtad.</li>
-            </ul>
+    <div class="terminal-container">
+        <div class="header-sys">
+            <a href="index.html" style="color:#00ffff; text-decoration:none;">[cd ../HUB]</a>
+            <h2 style="margin: 15px 0 0;">SCULLY_SYSTEM_LOGS.exe</h2>
+            <span style="color:#888;">Accediendo a los registros del motor absoluto...</span>
         </div>
 
-        <div class="update-card">
-            <div class="version-tag">V25.3 - SEPARACIÓN ECONÓMICA</div>
-            <h2 class="update-title">Puntos Titán vs Billetera XP</h2>
-            <ul>
-                <li><b>Nuevo Ranking Justo:</b> Ahora el Ranking Global SOLO cuenta los Puntos Titán (habilidad por pasarte niveles).</li>
-                <li><b>Billetera Independiente:</b> Gastar XP en el mercado de cosméticos ya no bajará tu puesto en el Ranking.</li>
-                <li><b>Doble XP Verificadores:</b> Si eres el verificador original de un nivel, recibirás x2 de XP automáticamente.</li>
-                <li><b>Traductor Nativo:</b> Añadido un botón sutil (EN/ES) en la parte superior izquierda de la pantalla.</li>
-            </ul>
+        <div id="logs-container">
+            <div class="log-entry">
+                <div class="log-version">v25.1.0</div><span class="log-date">10 MAR 2026</span>
+                <ul>
+                    <li>Implementado panel <b>Mercado Inline</b> exclusivo para Owners/Admins.</li>
+                    <li>Refactorización del sistema de Códigos Promocionales.</li>
+                    <li>Añadido Disclaimer en la pantalla de "Sobre Nosotros".</li>
+                </ul>
+            </div>
+
+            <div class="log-entry">
+                <div class="log-version">v25.0.0</div><span class="log-date">01 MAR 2026</span>
+                <ul>
+                    <li>Lanzamiento inicial de <b>The Scully List Hub OMNI</b>.</li>
+                    <li>Sincronización de Base de Datos Firebase habilitada.</li>
+                    <li>Generador de Titan Cards (Canvas) calibrado al 100%.</li>
+                </ul>
+            </div>
         </div>
 
-        <a href="index.html" class="nav-back"><i class="fas fa-arrow-left"></i> VOLVER AL HUB PRINCIPAL</a>
+        <div class="roadmap-box">
+            <h3 style="margin-top:0;">> STATUS PROYECTO: v26.0 (BETA)</h3>
+            <p style="font-size:0.8rem; color:#888;">Progreso hacia el despliegue del Sistema de Duelos (Arena 1v1).</p>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+            <p style="text-align:right; margin:5px 0 0; font-size:0.8rem;">65% COMPLETADO</p>
+        </div>
+
+        <p style="margin-top: 30px;">C:\OMNI\System> Esperando comando<span class="cursor"></span></p>
     </div>
 </body>
 </html>
