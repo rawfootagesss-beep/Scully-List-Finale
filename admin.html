@@ -1004,7 +1004,7 @@
         }
 
         // ==========================================
-        // EDITOR DE NIVELES E INYECCIÓN DE VICTORS
+        // EDITOR DE NIVELES E INYECCIÓN DE VICTORS DIRECTA
         // ==========================================
         function rLvs(d) { 
             let h = ""; 
@@ -1272,7 +1272,85 @@
         }
 
         // ==========================================
-        // FUNCIONES DE MÓDULOS RESTANTES (MERCADO, CHAT, LOGS, ROOT)
+        // MERCADO (CON FUNCIÓN DE REGALAR SIN COBRO)
+        // ==========================================
+        function rMReq(reqs) { 
+            let h = ""; 
+            Object.entries(reqs).forEach(([id, r]) => { 
+                h += `
+                <div class="dc" style="border-left:3px solid var(--gd);">
+                    <div>
+                        <h4 style="color:var(--gd);margin:0;">${r.itemName}</h4>
+                        <p style="margin:0;font-size:.8rem;">Para: ${r.player} | ${r.price}XP</p>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:5px;">
+                        <button class="bs bg" onclick="aPur('${id}', true)">APROBAR (COBRAR)</button>
+                        <button class="bs bb" onclick="aPur('${id}', false)">REGALAR (SIN COBRO)</button>
+                        <button class="bs br" onclick="db.ref('market_requests/${id}').remove()">DENEGAR</button>
+                    </div>
+                </div>`; 
+            }); 
+            if($('l-mrq')) $('l-mrq').innerHTML = h || '<p style="color:#666;">Sin peticiones.</p>'; 
+        }
+        
+        function aPur(id, chargeXP) { 
+            const r = fD.market_requests[id]; 
+            let pL = nx(fD.players); 
+            let i = pL.findIndex(p => p.name.toLowerCase() === r.player.toLowerCase()); 
+            
+            if(i > -1) { 
+                const cxp = pL[i].totalXP || 0; 
+                
+                if(chargeXP) {
+                    if(cxp >= r.price) { 
+                        pL[i].totalXP = cxp - r.price; 
+                    } else { 
+                        return toast("XP Insuficiente", true); 
+                    }
+                }
+                
+                let inv = nx(pL[i].inventory); 
+                inv.push({itemName: r.itemName, date: Date.now()}); 
+                pL[i].inventory = inv; 
+                
+                db.ref('players').set(pL); 
+                db.ref(`market_requests/${id}`).remove(); 
+                
+                if(chargeXP) {
+                    log(`Compra ejecutada: ${r.itemName} por ${r.player}`); 
+                    api(`🛒 **MERCADO:** El administrador **${sN}** ha procesado la compra de **${r.itemName}** para el jugador **${r.player}**.`, 'main'); 
+                    toast("Cobro Realizado"); 
+                } else {
+                    log(`Regalo concedido (Sin Cobro): ${r.itemName} a ${r.player}`); 
+                    api(`🎁 **REGALO STAFF:** El administrador **${sN}** ha regalado el ítem **${r.itemName}** al jugador **${r.player}**.`, 'main'); 
+                    toast("Ítem Regalado"); 
+                }
+            } else {
+                toast("Jugador no encontrado", true);
+            }
+        }
+
+        function aItm() { 
+            const n = $('i-n').value; 
+            const p = $('i-p').value; 
+            const i = $('i-i').value; 
+            if(n && p) { 
+                db.ref('market_items').push({name: n, price: parseInt(p), img: i}); 
+                log(`Publicó ítem: ${n}`); 
+                toast("Tienda Actualizada"); 
+            } 
+        }
+        
+        function rMIt(d) { 
+            let h = ""; 
+            Object.entries(d).forEach(([id,it]) => { 
+                h += `<div class="dc"><h4>${it.name}</h4><button class="bs br" onclick="db.ref('market_items/${id}').remove()">X</button></div>`; 
+            }); 
+            if($('l-mit')) $('l-mit').innerHTML = h; 
+        }
+
+        // ==========================================
+        // OTROS MÓDULOS (CLANES, MEDALLAS, CHAT, LOGS, ROOT)
         // ==========================================
         function rClm(c) { 
             let h = ""; 
@@ -1295,68 +1373,6 @@
                 toast("Cuenta Enlazada"); 
             } else { 
                 toast("Perfil Inexistente", true); 
-            } 
-        }
-
-        function aItm() { 
-            const n = $('i-n').value; 
-            const p = $('i-p').value; 
-            const i = $('i-i').value; 
-            if(n && p) { 
-                db.ref('market_items').push({name: n, price: parseInt(p), img: i}); 
-                log(`Publicó ítem: ${n}`); 
-                toast("Tienda Actualizada"); 
-            } 
-        }
-        
-        function rMIt(d) { 
-            let h = ""; 
-            Object.entries(d).forEach(([id,it]) => { 
-                h += `<div class="dc"><h4>${it.name}</h4><button class="bs br" onclick="db.ref('market_items/${id}').remove()">X</button></div>`; 
-            }); 
-            if($('l-mit')) $('l-mit').innerHTML = h; 
-        }
-        
-        function rMReq(reqs) { 
-            let h = ""; 
-            Object.entries(reqs).forEach(([id, r]) => { 
-                h += `
-                <div class="dc" style="border-left:3px solid var(--gd);">
-                    <div>
-                        <h4 style="color:var(--gd);margin:0;">${r.itemName}</h4>
-                        <p style="margin:0;font-size:.8rem;">Para: ${r.player} | ${r.price}XP</p>
-                    </div>
-                    <div style="display:flex;flex-direction:column;gap:5px;">
-                        <button class="bs bg" onclick="aPur('${id}')">APROBAR</button>
-                        <button class="bs br" onclick="db.ref('market_requests/${id}').remove()">DENEGAR</button>
-                    </div>
-                </div>`; 
-            }); 
-            if($('l-mrq')) $('l-mrq').innerHTML = h || '<p style="color:#666;">Sin peticiones.</p>'; 
-        }
-        
-        function aPur(id) { 
-            const r = fD.market_requests[id]; 
-            let pL = nx(fD.players); 
-            let i = pL.findIndex(p => p.name.toLowerCase() === r.player.toLowerCase()); 
-            
-            if(i > -1) { 
-                const cxp = pL[i].totalXP || 0; 
-                if(cxp >= r.price) { 
-                    pL[i].totalXP = cxp - r.price; 
-                    let inv = nx(pL[i].inventory); 
-                    inv.push({itemName: r.itemName, date: Date.now()}); 
-                    pL[i].inventory = inv; 
-                    
-                    db.ref('players').set(pL); 
-                    db.ref(`market_requests/${id}`).remove(); 
-                    
-                    log(`Compra ejecutada: ${r.itemName} por ${r.player}`); 
-                    api(`🛒 **MERCADO:** El administrador **${sN}** ha procesado la compra de **${r.itemName}** para el jugador **${r.player}**.`, 'main'); 
-                    toast("Cobro Realizado"); 
-                } else { 
-                    toast("XP Insuficiente", true); 
-                } 
             } 
         }
 
