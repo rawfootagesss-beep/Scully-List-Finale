@@ -421,9 +421,35 @@
             </div>
 
             <div id="t-mkt" class="tab">
-                <h2 class="title"><i class="fas fa-store" style="color:var(--gd);"></i> Mercado XP</h2>
-                <h3 style="color:var(--gd);font-size:1rem; margin-top:0;">Peticiones de Compra</h3>
-                <div id="l-mrq" class="dl" style="margin-bottom:30px;"></div>
+                <div id="t-mkt" class="tab">
+    <h2 class="title"><i class="fas fa-store" style="color:var(--gd);"></i> Mercado & Economía</h2>
+    
+    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:30px;">
+        <div style="flex:1; min-width:300px;">
+            <h3 style="color:var(--green);font-size:1rem; margin-top:0;"><i class="fas fa-ticket-alt"></i> Generador de Códigos</h3>
+            <div class="panel" style="border-color:var(--green);">
+                <div class="ig"><input type="text" id="cd-k" placeholder="Código (Ej: OMNI2026)" style="text-transform:uppercase;"></div>
+                <div class="ig"><input type="number" id="cd-x" placeholder="XP de Regalo"></div>
+                <div class="ig"><input type="text" id="cd-m" placeholder="Mensaje para el usuario"></div>
+                <button class="btn bg" style="width:100%; justify-content:center;" onclick="aCod()"><i class="fas fa-plus"></i> CREAR CÓDIGO</button>
+            </div>
+            <h3 style="font-size:1rem; border-bottom:1px solid #333; padding-bottom:5px;">Códigos Activos</h3>
+            <div id="l-cod" class="dl" style="max-height:250px;"></div>
+        </div>
+
+        <div style="flex:1; min-width:300px;">
+            <h3 style="color:var(--gd); font-size:1rem; margin-top:0;"><i class="fas fa-upload"></i> Publicar Ítem</h3>
+            <div class="panel" style="border-color:var(--gd);">
+                <div class="ig"><input type="text" id="i-n" placeholder="Nombre Ítem"></div>
+                <div class="ig"><input type="number" id="i-p" placeholder="Precio en XP"></div>
+                <div class="ig"><input type="text" id="i-i" placeholder="URL Icono"></div>
+                <button class="btn by" style="width:100%; justify-content:center;" onclick="aItm()"><i class="fas fa-upload"></i> PUBLICAR ÍTEM</button>
+            </div>
+            <h3 style="font-size:1rem; border-bottom:1px solid #333; padding-bottom:5px;">Catálogo Activo</h3>
+            <div id="l-mit" class="dl" style="max-height:250px;"></div>
+        </div>
+    </div>
+</div>
                 
                 <div class="panel" style="border-color:var(--gd);">
                     <h3 style="color:var(--gd); font-size:1rem; margin-top:0;">Publicar Ítem/Cosmético</h3>
@@ -776,6 +802,7 @@
                     if($('s-r')) $('s-r').innerText = Object.keys(fD.submissions||{}).length;
                     
                     rRcs(fD.submissions||{}); 
+                    rCod(fD.promo_codes || {});
                     rLvs(lvls); 
                     rMReq(fD.market_requests||{}); 
                     rMIt(fD.market_items||{});
@@ -1580,6 +1607,37 @@
             }; 
             r.readAsText(f); 
         }
+        // FUNCIÓN PARA CREAR EL CÓDIGO EN LA NUBE
+        function aCod() {
+            const k = $('cd-k').value.trim().toUpperCase(); // Lee el nombre
+            const x = parseInt($('cd-x').value);            // Lee la XP
+            const m = $('cd-m').value.trim();               // Lee el mensaje
+
+            if(k && !isNaN(x) && m) {
+                // Guarda en la base de datos "promo_codes"
+                db.ref(`promo_codes/${k}`).set({ xp: x, msg: m });
+                log(`Creó código: ${k} (+${x} XP)`);
+                toast("Código Creado con Éxito");
+                // Limpia las casillas
+                $('cd-k').value = ''; $('cd-x').value = ''; $('cd-m').value = '';
+            } else {
+                toast("Error: Faltan datos", true);
+            }
+        }
+
+        // FUNCIÓN PARA MOSTRAR LA LISTA DE CÓDIGOS EN EL ADMIN
+        function rCod(d) {
+            let h = "";
+            Object.entries(d).forEach(([code, data]) => {
+                h += `<div class="dc" style="border-left:3px solid var(--gr);">
+                    <div><h4 style="color:var(--gr);margin:0;">${code}</h4>
+                    <p style="margin:0;font-size:.75rem;">+${data.xp} XP | "${data.msg}"</p></div>
+                    <button class="bs br" onclick="db.ref('promo_codes/${code}').remove()">BORRAR</button>
+                </div>`;
+            });
+            if($('l-cod')) $('l-cod').innerHTML = h || '<p style="color:#666;">Sin códigos activos.</p>';
+        }
     </script>
 </body>
 </html>
+
