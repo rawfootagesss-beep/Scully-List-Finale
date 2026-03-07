@@ -863,56 +863,47 @@
         }
 
         // ECONOMÍA: CANJEAR CÓDIGOS
-        function canjearCodigo() {
-            let originalCode = document.getElementById("input-codigo").value.trim(); 
-            let code = originalCode.toUpperCase(); 
-            let m = document.getElementById("mensaje-codigo");
-            let pE = document.getElementById("easter-egg-anubis");
+function canjearCodigo() {
+    let originalCode = document.getElementById("input-codigo").value.trim(); 
+    let code = originalCode.toUpperCase(); 
+    let m = document.getElementById("mensaje-codigo");
+    let pE = document.getElementById("easter-egg-anubis");
 
-            if(!currentUserData.key) { m.innerText = "Inicia sesión primero."; m.style.color="var(--red)"; return; }
-            if(!originalCode) { m.innerText = "Ingresa un código."; m.style.color="var(--gold)"; return; }
-            
-            let uC = JSON.parse(localStorage.getItem('codigos_omni_' + currentUserData.name)||'[]');
-            if(uC.includes(originalCode) || uC.includes(code)) { m.innerText = "Este código ya fue usado."; m.style.color="#888"; return; }
-            
-            let s = false;
-            if(originalCode === "wernerantoniokurtz@gmail.com") { 
-                db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => { db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0)+22); }); 
-                m.innerText="+22 XP añadidos."; m.style.color="var(--green)"; s=true; 
-            }
-            else if(code === "SCULLYVIP") { 
-                db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"TITULO VIP"}); 
-                m.innerText="¡VIP Desbloqueado!"; m.style.color="var(--gold)"; s=true; 
-            }
-            else if(code === "MATRIX") { 
-                db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"TEXTO HACKER"}); 
-                m.innerText="¡Hacker Desbloqueado!"; m.style.color="var(--green)"; s=true; 
-            }
-            else if(code === "BLOODLUST") { 
-                db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"AURA DEMONIACA"}); 
-                m.innerText="¡Aura Desbloqueada!"; m.style.color="var(--red)"; s=true; 
-            }
-            else if(code === "RAINBOW") { 
-                db.ref(`players/${currentUserData.key}/inventory`).push({itemName:"NOMBRE RAINBOW"}); 
-                m.innerText="¡Arcoíris Desbloqueado!"; m.style.color="var(--purple)"; s=true; 
-            }
-            else if(code === "ANUBIS") { 
-                pE.style.display="flex"; 
-                setTimeout(()=> pE.style.display="none", 4000); 
-                document.getElementById("input-codigo").value=""; 
-                return; 
-            }
-            else { 
-                m.innerText = "Código inválido o expirado."; m.style.color="var(--red)"; 
-                return; 
-            }
-            
-            if(s) { 
-                uC.push(code); 
-                localStorage.setItem('codigos_omni_' + currentUserData.name, JSON.stringify(uC)); 
-                document.getElementById("input-codigo").value=""; 
-            }
+    if(!currentUserData.key) { m.innerText = "Inicia sesión primero."; m.style.color = "var(--red)"; return; }
+    
+    // Verificar si ya lo usó
+    let uC = JSON.parse(localStorage.getItem('codigos_omni_' + currentUserData.name) || '[]');
+    if(uC.includes(code)) { m.innerText = "Ya canjeaste este código."; m.style.color = "#888"; return; }
+
+    // 1. CÓDIGOS ESPECIALES FIJOS
+    if(code === "ANUBIS") { 
+        pE.style.display = "flex"; setTimeout(()=> pE.style.display = "none", 4000); 
+        document.getElementById("input-codigo").value = ""; return; 
+    }
+    if(code === "MATRIX" || code === "SCULLYVIP" || code === "BLOODLUST" || code === "RAINBOW") {
+        db.ref(`players/${currentUserData.key}/inventory`).push({itemName: code});
+        m.innerText = "¡Cosmético Desbloqueado!"; m.style.color = "var(--green)";
+        uC.push(code); localStorage.setItem('codigos_omni_' + currentUserData.name, JSON.stringify(uC));
+        document.getElementById("input-codigo").value = ""; return;
+    }
+
+    // 2. CÓDIGOS DINÁMICOS DEL ADMIN
+    m.innerText = "Validando...";
+    db.ref(`promo_codes/${code}`).once('value').then(snap => {
+        const data = snap.val();
+        if (data) {
+            db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => { 
+                db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0) + data.xp); 
+            }); 
+            m.innerHTML = `<span style="color:var(--green)">+${data.xp} XP</span> | <i>"${data.msg}"</i>`;
+            uC.push(code);
+            localStorage.setItem('codigos_omni_' + currentUserData.name, JSON.stringify(uC));
+            document.getElementById("input-codigo").value = "";
+        } else {
+            m.innerText = "Código inválido."; m.style.color = "var(--red)";
         }
+    });
+}
 
         // SMART SUBMIT SUGERENCIAS
         function previewSugThumb(){ 
@@ -1268,3 +1259,4 @@
 </body>
 </html>
     <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">UN PODEROSO ENEMIGO</div>
+
