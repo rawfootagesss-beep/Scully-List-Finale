@@ -134,6 +134,7 @@
         }
         .lang-toggle:hover { color: #fff; border-color: var(--cyan); background: rgba(0,255,255,0.1); }
 
+        /* EFECTOS COSMÉTICOS */
         @keyframes rbwAnim { 
             0% { background-position: 0% 50%; } 
             100% { background-position: 200% 50%; } 
@@ -144,6 +145,10 @@
             color: transparent !important; animation: rbwAnim 3s linear infinite; font-weight: 900; 
         }
 
+        .glitch-text { animation: shake 0.5s infinite; color: #fff; text-shadow: 2px 0 red, -2px 0 blue; }
+        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 20% { transform: translate(-1px, -2px) rotate(-1deg); } 40% { transform: translate(-3px, 0px) rotate(1deg); } 60% { transform: translate(3px, 2px) rotate(0deg); } 80% { transform: translate(1px, -1px) rotate(1deg); } 100% { transform: translate(-1px, 2px) rotate(-1deg); } }
+
+        /* ALERTAS Y PANELES */
         #lockdownScreen { 
             display: none; position: fixed; inset: 0; background: #000; z-index: 99999; 
             flex-direction: column; justify-content: center; align-items: center; 
@@ -547,8 +552,7 @@
         </div>
     </div>
    <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">UN PODEROSO ENEMIGO</div>
-
-    <script type="text/javascript">
+ <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
                 pageLanguage: 'es', 
@@ -623,32 +627,35 @@
             return (match && match[1]) ? match[1] : url.trim(); 
         }
 
-        // MOTOR UNIVERSAL DE COSMÉTICOS
+        // MOTOR UNIVERSAL DE COSMÉTICOS (ACTUALIZADO AL MERCADO V25)
         function getCosmetic(ac) {
             let nC = "var(--cyan)", tG = "", bS = "4px solid var(--cyan)", eC = "";
             if(!ac) return {nC, tG, bS, eC};
-            ac = ac.toUpperCase();
+            ac = ac.toLowerCase(); // Sincronizado con las IDs del mercado
             
-            if(ac.includes("VIP")||ac.includes("DORADO")){ 
+            if(ac.includes("vip") || ac.includes("dorado")){ 
                 nC="var(--gold)"; bS="4px solid var(--gold)"; 
             }
-            else if(ac.includes("HACKER")||ac.includes("MATRIX")){ 
+            else if(ac.includes("matrix") || ac.includes("hacker")){ 
                 nC="var(--green)"; tG="color:var(--green); text-shadow:0 0 5px var(--green); font-family:'JetBrains Mono';"; bS="4px solid var(--green)"; 
             }
-            else if(ac.includes("AURA")||ac.includes("DEMON")){ 
+            else if(ac.includes("demon") || ac.includes("aura")){ 
                 nC="var(--red)"; bS="4px dashed var(--red)"; tG="color:#ffaaaa; text-shadow:0 0 5px var(--red);"; 
             }
-            else if(ac.includes("HIELO")||ac.includes("ICE")){ 
+            else if(ac.includes("ice") || ac.includes("hielo")){ 
                 nC="#aaddff"; tG="text-shadow: 0 0 8px #00aaff;"; bS="4px solid #00aaff"; 
             }
-            else if(ac.includes("FUEGO")||ac.includes("FIRE")){ 
+            else if(ac.includes("fire") || ac.includes("fuego")){ 
                 nC="#ff5500"; tG="text-shadow: 0 0 8px #ff2200;"; bS="4px solid #ff5500"; 
             }
-            else if(ac.includes("FANTASMA")||ac.includes("GHOST")){ 
-                nC="#ddd"; tG="opacity:0.8; text-shadow: 0 0 5px #fff;"; bS="4px solid #ccc"; 
+            else if(ac.includes("ghost") || ac.includes("fantasma")){ 
+                nC="#ddd"; tG="opacity:0.7; text-shadow: 0 0 5px #fff;"; bS="4px solid #ccc"; 
             }
-            else if(ac.includes("RAINBOW")||ac.includes("ARCOIRIS")){ 
+            else if(ac.includes("nyan") || ac.includes("rainbow")){ 
                 eC="rbw-text"; bS="4px solid #ff00ff"; 
+            }
+            else if(ac.includes("glitch")){ 
+                eC="glitch-text"; bS="4px solid #00ffff"; tG="text-shadow: 2px 0 red, -2px 0 blue;"; 
             }
             
             return {nC, tG, bS, eC};
@@ -911,7 +918,7 @@
             }
         }
 
-        // ECONOMÍA: CANJEAR CÓDIGOS (ACTUALIZADO PARA ADMIN)
+        // ECONOMÍA: CANJEAR CÓDIGOS
         function canjearCodigo() {
             let originalCode = document.getElementById("input-codigo").value.trim(); 
             let code = originalCode.toUpperCase(); 
@@ -997,7 +1004,7 @@
                 if (p.name !== l.first) { 
                     let r = nexus(p.completions).find(x => x.level.toLowerCase() === l.name.toLowerCase()); 
                     if(r) {
-                        vList.push({ name: p.name, verified: p.verified, link: r.link, time: r.time || 0 });
+                        vList.push({ name: p.name, verified: p.verified, link: r.link, time: r.time || 0, activeCosmetic: p.activeCosmetic });
                     }
                 } 
             });
@@ -1007,9 +1014,10 @@
             let vHTML = "";
             vList.forEach(p => { 
                 let vTick = p.verified ? `<i class="fas fa-check-circle verified-tick"></i>` : ""; 
+                let cos = getCosmetic(p.activeCosmetic);
                 vHTML += `
                 <div class="v-row">
-                    <span class="notranslate" style="font-weight:800; font-size:1rem;">${p.name} ${vTick}</span>
+                    <span class="notranslate ${cos.eC}" style="color:${cos.nC}; ${cos.tG}; font-weight:800; font-size:1rem;">${p.name} ${vTick}</span>
                     <a href="${p.link}" target="_blank" style="color:var(--cyan); text-decoration:none; font-weight:800; font-size:0.75rem; background:rgba(0,255,255,0.1); padding:8px 15px; border-radius:8px; border:1px solid rgba(0,255,255,0.2);">
                         <i class="fas fa-play"></i> VER PRUEBA
                     </a>
@@ -1306,4 +1314,4 @@
         });
     </script>
 </body>
-</html> 
+</html>  
