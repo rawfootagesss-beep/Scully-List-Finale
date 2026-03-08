@@ -332,7 +332,7 @@
                         nx(myPlayer.completions).forEach(c => {
                             let idx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase());
                             if(idx > -1) {
-                                let base = Math.max(100 - (idx * 0.6), 5);
+                                let base = Math.max(250 - (idx * 2), 5);
                                 if(lvls[idx].bounty) base *= 2;
                                 // [FIX] Bonus x2 si el jugador es First Victor del nivel
                                 if(lvls[idx].first && lvls[idx].first.toLowerCase() === myPlayer.name.toLowerCase()) base *= 2;
