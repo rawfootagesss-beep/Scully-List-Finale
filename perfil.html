@@ -1,510 +1,460 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Scully List | Mi Perfil Titán</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { 
-            --accent: #ff6600; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
-            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
-            --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
-            --green: #00ff66; --red: #ff3333; --blue: #00ccff; --yellow: #ffff00; --gold: #ffd700; --cyan: #00ffff;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Scully List | Mi Perfil Titán</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root { 
+    --accent: #ff6600; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
+    --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
+    --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
+    --green: #00ff66; --red: #ff3333; --blue: #00ccff; --yellow: #ffff00; --gold: #ffd700; --cyan: #00ffff;
+}
+body { background:var(--bg); color:#fff; font-family:'Lexend Deca', sans-serif; margin:0; padding:20px; display:flex; justify-content:center; overflow-x:hidden; }
+::-webkit-scrollbar{ width:6px; }
+::-webkit-scrollbar-thumb{ background:var(--accent); border-radius:10px; }
+.profile-container{ width:100%; max-width:900px; margin-top:40px; }
 
-        body { 
-            background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; 
-            margin: 0; padding: 20px; display: flex; justify-content: center; overflow-x: hidden; 
-        }
-        
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+.header{ display:flex; justify-content:space-between; align-items:center; background:var(--card-bg); padding:25px 30px; border-radius:25px; border:1px solid var(--border); margin-bottom:25px; box-shadow:0 10px 30px rgba(0,0,0,0.5); flex-wrap:wrap; gap:15px; }
+.header h1{ margin:0; font-size:1.8rem; font-weight:800; letter-spacing:-1px; text-transform:uppercase; }
+.header h1 span{ background:var(--accent-grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.header-btns{ display:flex; gap:10px; flex-wrap:wrap; }
+.btn-hub{ background:rgba(255,255,255,0.03); border:1px solid var(--border); color:#fff; padding:10px 20px; text-decoration:none; font-size:0.75rem; border-radius:50px; font-weight:600; transition:0.3s; display:inline-flex; align-items:center; gap:8px; }
+.btn-hub:hover{ background:var(--border); }
+.btn-logout{ background:rgba(255,51,51,0.1); color:var(--red); border:1px solid var(--red); padding:10px 20px; text-decoration:none; font-size:0.75rem; border-radius:50px; font-weight:600; transition:0.3s; cursor:pointer; display:inline-flex; align-items:center; gap:8px; }
+.btn-logout:hover{ background:var(--red); color:#000; box-shadow:0 0 15px rgba(255,51,51,0.3); }
 
-        .profile-container { width: 100%; max-width: 800px; margin-top: 40px; }
-        
-        .header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: var(--card-bg); padding: 25px 30px; border-radius: 25px; 
-            border: 1px solid var(--border); margin-bottom: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); flex-wrap: wrap; gap: 15px; 
-        }
-        .header h1 { margin: 0; font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; text-transform: uppercase; }
-        .header h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .header-btns { display: flex; gap: 10px; flex-wrap: wrap; }
-        .btn-hub { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 10px 20px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-hub:hover { background: var(--border); }
-        .btn-logout { background: rgba(255,51,51,0.1); color: var(--red); border: 1px solid var(--red); padding: 10px 20px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-logout:hover { background: var(--red); color: #000; box-shadow: 0 0 15px rgba(255,51,51,0.3); }
+.panel{ background:var(--card-bg); border-radius:25px; border:1px solid var(--border); padding:35px; margin-bottom:25px; }
+.panel h2{ margin-top:0; font-size:1.3rem; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border); padding-bottom:15px; text-transform:uppercase; }
 
-        .panel { background: var(--card-bg); border-radius: 25px; border: 1px solid var(--border); padding: 35px; margin-bottom: 25px; }
-        .panel h2 { margin-top: 0; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 15px; text-transform: uppercase; }
-        
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 0.75rem; color: var(--accent); font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-        input, textarea { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 15px; font-family: 'Lexend Deca'; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: 0.3s; }
-        input:focus, textarea:focus { border-color: var(--blue); box-shadow: 0 0 15px rgba(0,204,255,0.1); }
-        input:read-only { background: rgba(255,255,255,0.05); color: #888; cursor: not-allowed; border-color: #222 !important; text-align: center; }
-        
-        .btn-save { background: var(--blue); color: #000; border: none; padding: 15px 30px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 100%; display: flex; justify-content: center; gap: 10px; align-items: center; text-transform: uppercase; margin-top: 10px; }
-        .btn-save:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0,204,255,0.4); }
-        
-        .btn-geo { background: rgba(0,255,102,0.1); color: var(--green); border: 1px solid var(--green); margin-bottom: 15px; }
-        .btn-pfp { background: transparent; border: 1px solid var(--green); color: var(--green); }
-        
-        /* CLAIM BOX */
-        .claim-box { text-align: center; padding: 20px; }
-        .claim-box h3 { color: #fff; font-size: 1.8rem; margin-bottom: 10px; text-transform: uppercase; }
-        .claim-box p { color: #888; font-size: 0.9rem; margin-bottom: 30px; line-height: 1.6; }
-        .staff-code-area { border-top: 1px solid var(--border); margin-top: 20px; padding-top: 20px; }
-        
-        /* TOAST NOTIFICATIONS */
-        #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 15px; padding: 15px 20px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; transform: translate(-50%, 50px); opacity: 0; }
-        #scullyToast.show { visibility: visible; transform: translate(-50%, 0); opacity: 1; }
+.identity-core{ display:flex; gap:25px; align-items:center; flex-wrap:wrap; }
+.core-avatar{ width:110px; height:110px; border-radius:50%; border:3px solid var(--accent); object-fit:cover; background:#000; }
+.core-info h3{ margin:0; font-size:1.6rem; text-transform:uppercase; }
+.core-tags{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+.tag{ background:#000; border:1px solid #333; padding:6px 12px; border-radius:10px; font-size:0.7rem; font-weight:800; text-transform:uppercase; }
+.tag.gold{ color:var(--gold); border-color:var(--gold); }
+.tag.cyan{ color:var(--cyan); border-color:var(--cyan); }
+.tag.green{ color:var(--green); border-color:var(--green); }
 
-        .staff-badge { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 25px; background: rgba(255,255,0,0.1); border: 2px solid var(--yellow); color: var(--yellow); border-radius: 50px; font-weight: 900; font-size: 1.2rem; letter-spacing: 1px; margin-top: 10px; }
+.input-group{ margin-bottom:20px; }
+.input-group label{ display:block; font-size:0.75rem; color:var(--accent); font-weight:800; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; }
+input, textarea{ width:100%; background:#000; border:1px solid #222; color:#fff; padding:15px; border-radius:15px; font-family:'Lexend Deca'; font-size:0.85rem; box-sizing:border-box; outline:none; transition:0.3s; }
+input:focus, textarea:focus{ border-color:var(--blue); box-shadow:0 0 15px rgba(0,204,255,0.1); }
+input:read-only{ background:rgba(255,255,255,0.05); color:#888; cursor:not-allowed; border-color:#222 !important; text-align:center; }
+.btn-save{ background:var(--blue); color:#000; border:none; padding:15px 30px; border-radius:15px; font-weight:800; cursor:pointer; transition:0.3s; width:100%; display:flex; justify-content:center; gap:10px; align-items:center; text-transform:uppercase; margin-top:10px; }
+.btn-save:hover{ transform:translateY(-3px); box-shadow:0 5px 20px rgba(0,204,255,0.4); }
+.btn-geo{ background:rgba(0,255,102,0.1); color:var(--green); border:1px solid var(--green); margin-bottom:15px; }
+.btn-pfp{ background:transparent; border:1px solid var(--green); color:var(--green); }
 
-        .status-list { max-height: 250px; overflow-y: auto; padding-right: 10px; margin-top: 15px; }
-        .record-card { background: rgba(0,0,0,0.4); border: 1px solid var(--border); padding: 15px 20px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .record-info h4 { margin: 0 0 5px 0; font-size: 0.95rem; color: #fff; }
-        .record-info p { margin: 0; font-size: 0.75rem; color: #888; display: flex; align-items: center; gap: 5px; }
-        .status-badge { padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .badge-pending { background: rgba(255,255,0,0.1); color: var(--yellow); border: 1px solid var(--yellow); }
-        .badge-accepted { background: rgba(0,255,102,0.1); color: var(--green); border: 1px solid var(--green); }
-        .badge-rejected { background: rgba(255,51,51,0.1); color: var(--red); border: 1px solid var(--red); }
+#scullyToast{ visibility:hidden; min-width:250px; background-color:var(--green); color:#000; text-align:center; border-radius:15px; padding:15px 20px; position:fixed; z-index:9999; left:50%; bottom:30px; font-weight:800; font-size:0.8rem; box-shadow:0 10px 30px rgba(0,0,0,0.5); transition:0.4s; transform:translate(-50%,50px); opacity:0; }
+#scullyToast.show{ visibility:visible; transform:translate(-50%,0); opacity:1; }
 
-        /* BÓVEDA GIGANTE Y CÓDIGOS */
-        .inv-item { background: rgba(0,0,0,0.5); border: 1px solid #333; padding: 20px; border-radius: 15px; margin-bottom: 15px; transition: 0.3s; text-align: center; }
-        .inv-item.equipped { border-color: var(--green); box-shadow: 0 0 20px rgba(0,255,102,0.1); background: rgba(0,255,102,0.05); }
-        .inv-item-name { font-weight: 800; font-size: 1.2rem; color: #fff; margin-bottom: 15px; }
-        .inv-item.equipped .inv-item-name { color: var(--green); }
-        
-        .code-box { display: flex; gap: 10px; margin-bottom: 10px; }
-        .code-box input { margin: 0; flex: 1; }
-        .code-box button { width: auto; margin: 0; background: var(--gold); }
-        
-        @media(max-width: 768px) {
-            .record-card { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .code-box { flex-direction: column; }
-        }
-    </style>
+.staff-badge{ display:inline-flex; align-items:center; justify-content:center; gap:10px; padding:15px 25px; background:rgba(255,255,0,0.1); border:2px solid var(--yellow); color:var(--yellow); border-radius:50px; font-weight:900; font-size:1.2rem; letter-spacing:1px; margin-top:10px; }
+
+.status-list{ max-height:250px; overflow-y:auto; padding-right:10px; margin-top:15px; }
+.record-card{ background:rgba(0,0,0,0.4); border:1px solid var(--border); padding:15px 20px; border-radius:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
+.record-info h4{ margin:0 0 5px 0; font-size:0.95rem; color:#fff; }
+.record-info p{ margin:0; font-size:0.75rem; color:#888; display:flex; align-items:center; gap:5px; }
+.status-badge{ padding:5px 10px; border-radius:8px; font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; }
+.badge-pending{ background:rgba(255,255,0,0.1); color:var(--yellow); border:1px solid var(--yellow); }
+.badge-accepted{ background:rgba(0,255,102,0.1); color:var(--green); border:1px solid var(--green); }
+.badge-rejected{ background:rgba(255,51,51,0.1); color:var(--red); border:1px solid var(--red); }
+
+.inv-item{ background:rgba(0,0,0,0.5); border:1px solid #333; padding:20px; border-radius:15px; margin-bottom:15px; transition:0.3s; text-align:center; }
+.inv-item.equipped{ border-color:var(--green); box-shadow:0 0 20px rgba(0,255,102,0.1); background:rgba(0,255,102,0.05); }
+.inv-item-name{ font-weight:800; font-size:1.2rem; color:#fff; margin-bottom:15px; }
+.inv-item.equipped .inv-item-name{ color:var(--green); }
+
+.code-box{ display:flex; gap:10px; margin-bottom:10px; }
+.code-box input{ margin:0; flex:1; }
+.code-box button{ width:auto; margin:0; background:var(--gold); }
+
+@media(max-width:768px){
+    .record-card{ flex-direction:column; align-items:flex-start; gap:10px; }
+    .code-box{ flex-direction:column; }
+}
+</style>
 </head>
 <body>
-    <div id="scullyToast"><i class="fas fa-check-circle"></i> Mensaje</div>
+<div id="scullyToast"><i class="fas fa-check-circle"></i> Mensaje</div>
 
-    <div class="profile-container">
-        <div class="header">
-            <h1>IDENTIDAD <span>SCULLY</span></h1>
-            <div class="header-btns">
-                <a href="index.html" class="btn-hub"><i class="fas fa-home"></i> HUB</a>
-                <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> SALIR</button>
-            </div>
-        </div>
-
-        <div id="viewClaim" class="panel" style="display:none; border-color: rgba(255,102,0,0.3);">
-            <div class="claim-box">
-                <h3><i class="fas fa-link"></i> Reclamar Perfil</h3>
-                <p>Tu cuenta no está vinculada a ningún jugador.<br>Escribe tu Nickname de GD y proporciona una prueba.</p>
-                <input type="text" id="claimNick" placeholder="Tu Nick exacto en la lista..." style="margin-bottom:15px; text-align:center;">
-                <input type="text" id="claimProof" placeholder="Link de tu YouTube o Twitter..." style="margin-bottom:20px; text-align:center;">
-                
-                <div class="staff-code-area">
-                    <p style="font-size:0.75rem; color:var(--yellow); font-weight:800; margin-bottom:10px;"><i class="fas fa-key"></i> INGRESO DE STAFF AUTORIZADO</p>
-                    <input type="password" id="staffCodeClaim" placeholder="Código de Staff (Opcional)" style="margin-bottom:20px; text-align:center; border-color:var(--yellow); background:rgba(255,255,0,0.05);">
-                </div>
-
-                <button onclick="sendClaimRequest()" class="btn-save" style="background:var(--accent);"><i class="fas fa-paper-plane"></i> RECLAMAR PERFIL / ACTIVAR STAFF</button>
-            </div>
-        </div>
-
-        <div id="viewProfile" style="display:none;">
-            
-            <div class="panel" style="border-color: var(--gold); box-shadow: 0 0 20px rgba(255,215,0,0.1);">
-                <h2 style="color:var(--gold); border-bottom-color: var(--gold);"><i class="fas fa-ticket-alt"></i> Canjear Códigos</h2>
-                <p style="font-size:0.8rem; color:#888; margin-bottom: 15px;">Canjea códigos secretos para obtener XP o Cosméticos Exclusivos. Los objetos irán directo a tu Bóveda sin ensuciar tus récords.</p>
-                <div class="code-box">
-                    <input type="text" id="promoCode" placeholder="Ingresa tu código secreto...">
-                    <button class="btn-save" onclick="redeemCode()"><i class="fas fa-unlock"></i> RECLAMAR</button>
-                </div>
-
-                <h2 style="color:var(--cyan); border-bottom-color: #333; margin-top:35px;"><i class="fas fa-box-open"></i> La Bóveda (Inventario)</h2>
-                <p style="font-size:0.8rem; color:#888; margin-bottom: 15px;">Equipa los Títulos y Efectos que has comprado en el Mercado o desbloqueado para lucirlos en el Chat Global.</p>
-                
-                <div id="inventoryContainer" class="status-list" style="max-height: 450px;">
-                    <p style="text-align:center; color:#555; font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i> Cargando bóveda...</p>
-                </div>
-            </div>
-
-            <div class="panel">
-                <h2><i class="fas fa-id-badge"></i> Perfil Público y Redes Sociales</h2>
-                
-                <div class="input-group">
-                    <label><i class="fas fa-flag"></i> Ubicación Global (Bandera)</label>
-                    <p style="font-size:0.75rem; color:#888; margin-bottom:10px;">Tu país solo se puede configurar mediante nuestro sistema de detección segura.</p>
-                    <button onclick="detectCountry()" class="btn-save btn-geo"><i class="fas fa-map-marker-alt"></i> DETECTAR MI UBICACIÓN</button>
-                    <input type="text" id="displayCountry" placeholder="País Desconocido" readonly>
-                    <input type="hidden" id="hiddenCountryCode">
-                </div>
-
-                <div class="input-group">
-                    <label>Tu Biografía (Máx 150 caracteres)</label>
-                    <textarea id="bioInput" maxlength="150" rows="3" placeholder="Escribe algo sobre ti para que aparezca en el ranking..."></textarea>
-                </div>
-                <div class="input-group">
-                    <label><i class="fab fa-youtube" style="color:var(--red);"></i> Link de YouTube</label>
-                    <input type="text" id="ytInput" placeholder="https://youtube.com/c/tuCanal">
-                </div>
-                <div class="input-group">
-                    <label><i class="fab fa-twitter" style="color:#1da1f2;"></i> Link de Twitter (X)</label>
-                    <input type="text" id="twInput" placeholder="https://twitter.com/tuUsuario">
-                </div>
-                <div class="input-group">
-                    <label><i class="fab fa-discord" style="color:#7289da;"></i> Usuario de Discord</label>
-                    <input type="text" id="dcInput" placeholder="Ejemplo: score#1234">
-                </div>
-                <button onclick="saveProfile()" class="btn-save"><i class="fas fa-save"></i> GUARDAR CAMBIOS</button>
-            </div>
-
-            <div class="panel" style="border-color: rgba(255,102,0,0.3);">
-                <h2 style="color:var(--accent);"><i class="fas fa-clipboard-list" style="color:var(--accent);"></i> Estado de mis envíos</h2>
-                <div class="status-list" id="myRecordsStatus">
-                    <p style="text-align:center; color:#555; font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i> Cargando tus récords...</p>
-                </div>
-            </div>
-
-            <div class="panel" style="border-color: rgba(0,255,102,0.2);">
-                <h2 style="color:var(--green);"><i class="fas fa-image" style="color:var(--green);"></i> Foto de Perfil</h2>
-                <input type="text" id="pfpInput" placeholder="Pega el link de la imagen aquí..." style="margin-bottom:15px;">
-                <button onclick="requestPFP()" class="btn-save btn-pfp"><i class="fas fa-upload"></i> SOLICITAR PFP</button>
-            </div>
-
-            <div id="staffZone" class="panel" style="border-color: rgba(255,255,0,0.3); text-align:center;">
-                <h2 style="color:var(--yellow); justify-content:center; border:none; padding:0; margin-bottom:15px;"><i class="fas fa-shield-alt" style="color:var(--yellow);"></i> Autorización de Equipo Staff</h2>
-                <div id="staffInputArea"></div>
-            </div>
-
+<div class="profile-container">
+    <div class="header">
+        <h1>IDENTIDAD <span>SCULLY</span></h1>
+        <div class="header-btns">
+            <a href="index.html" class="btn-hub"><i class="fas fa-home"></i> HUB</a>
+            <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> SALIR</button>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-    
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",
-            authDomain: "scullylist.firebaseapp.com",
-            databaseURL: "https://scullylist-default-rtdb.firebaseio.com",
-            projectId: "scullylist",
-            storageBucket: "scullylist.firebasestorage.app",
-            messagingSenderId: "498548914021",
-            appId: "1:498548914021:web:59128b5e06b36a4e81938c"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
-        
-        let currentUser = null;
-        let myProfileData = null;
-        let myPlayerIndex = -1;
-        let myNick = "";
+    <div id="viewClaim" class="panel" style="display:none; border-color: rgba(255,102,0,0.3);">
+        <div class="claim-box">
+            <h3><i class="fas fa-link"></i> Reclamar Perfil</h3>
+            <p>Tu cuenta no está vinculada a ningún jugador.<br>Escribe tu Nickname de GD y proporciona una prueba.</p>
+            <input type="text" id="claimNick" placeholder="Tu Nick exacto en la lista..." style="margin-bottom:15px; text-align:center;">
+            <input type="text" id="claimProof" placeholder="Link de tu YouTube o Twitter..." style="margin-bottom:20px; text-align:center;">
+            <div class="staff-code-area">
+                <p style="font-size:0.75rem; color:var(--yellow); font-weight:800; margin-bottom:10px;"><i class="fas fa-key"></i> INGRESO DE STAFF AUTORIZADO</p>
+                <input type="password" id="staffCodeClaim" placeholder="Código de Staff (Opcional)" style="margin-bottom:20px; text-align:center; border-color:var(--yellow); background:rgba(255,255,0,0.05);">
+            </div>
+            <button onclick="sendClaimRequest()" class="btn-save" style="background:var(--accent);"><i class="fas fa-paper-plane"></i> RECLAMAR PERFIL / ACTIVAR STAFF</button>
+        </div>
+    </div>
 
-        const STAFF_CODES = {
-            "ADMIN-SCORE-777": { nick: "score", role: "admin" },
-            "ADMIN-AWRQ-888": { nick: "awrqsdt", role: "admin" },
-            "ADMIN-MEK-999": { nick: "mek", role: "admin" },
-            "HELP-BLITZ-111": { nick: "Blitz", role: "helper" },
-            "HELP-SOPA-222": { nick: "Sopa354", role: "helper" },
-            "HELP-NICO-333": { nick: "nico", role: "helper" }
-        };
+    <div id="viewProfile" style="display:none;">
+        <div class="panel">
+            <div class="identity-core">
+                <img id="core-pfp" class="core-avatar" src="https://i.imgur.com/8pw98K4.png">
+                <div class="core-info">
+                    <h3 id="core-name">Cargando...</h3>
+                    <div class="core-tags" id="core-tags"></div>
+                </div>
+            </div>
+        </div>
 
-        function showToast(msg, isError=false) {
-            const t = document.getElementById("scullyToast");
-            t.innerHTML = isError ? `<i class="fas fa-times-circle"></i> ${msg}` : `<i class="fas fa-check-circle"></i> ${msg}`;
-            t.style.backgroundColor = isError ? "var(--red)" : "var(--green)";
-            t.className = "show"; 
-            setTimeout(() => { t.className = t.className.replace("show", ""); }, 3500);
+        <div class="panel" style="border-color: var(--gold);">
+            <h2 style="color:var(--gold); border-bottom-color: var(--gold);"><i class="fas fa-ticket-alt"></i> Canjear Códigos</h2>
+            <p style="font-size:0.8rem; color:#888; margin-bottom: 15px;">Canjea códigos secretos para obtener XP o Cosméticos Exclusivos.</p>
+            <div class="code-box">
+                <input type="text" id="promoCode" placeholder="Ingresa tu código secreto...">
+                <button class="btn-save" onclick="redeemCode()"><i class="fas fa-unlock"></i> RECLAMAR</button>
+            </div>
+
+            <h2 style="color:var(--cyan); border-bottom-color: #333; margin-top:35px;"><i class="fas fa-box-open"></i> La Bóveda (Inventario)</h2>
+            <div id="inventoryContainer" class="status-list" style="max-height: 450px;">
+                <p style="text-align:center; color:#555; font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i> Cargando bóveda...</p>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2><i class="fas fa-id-badge"></i> Perfil Público y Redes Sociales</h2>
+            <div class="input-group">
+                <label><i class="fas fa-flag"></i> Ubicación Global (Bandera)</label>
+                <button onclick="detectCountry()" class="btn-save btn-geo"><i class="fas fa-map-marker-alt"></i> DETECTAR MI UBICACIÓN</button>
+                <input type="text" id="displayCountry" placeholder="País Desconocido" readonly>
+                <input type="hidden" id="hiddenCountryCode">
+            </div>
+            <div class="input-group">
+                <label>Tu Biografía (Máx 150 caracteres)</label>
+                <textarea id="bioInput" maxlength="150" rows="3" placeholder="Escribe algo sobre ti..."></textarea>
+            </div>
+            <div class="input-group">
+                <label><i class="fab fa-youtube" style="color:var(--red);"></i> Link de YouTube</label>
+                <input type="text" id="ytInput" placeholder="https://youtube.com/c/tuCanal">
+            </div>
+            <div class="input-group">
+                <label><i class="fab fa-twitter" style="color:#1da1f2;"></i> Link de Twitter (X)</label>
+                <input type="text" id="twInput" placeholder="https://twitter.com/tuUsuario">
+            </div>
+            <div class="input-group">
+                <label><i class="fab fa-discord" style="color:#7289da;"></i> Usuario de Discord</label>
+                <input type="text" id="dcInput" placeholder="Ejemplo: score#1234">
+            </div>
+            <button onclick="saveProfile()" class="btn-save"><i class="fas fa-save"></i> GUARDAR CAMBIOS</button>
+        </div>
+
+        <div class="panel" style="border-color: rgba(255,102,0,0.3);">
+            <h2 style="color:var(--accent);"><i class="fas fa-clipboard-list"></i> Estado de mis envíos</h2>
+            <div class="status-list" id="myRecordsStatus">
+                <p style="text-align:center; color:#555; font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i> Cargando tus récords...</p>
+            </div>
+        </div>
+
+        <div class="panel" style="border-color: rgba(0,255,102,0.2);">
+            <h2 style="color:var(--green);"><i class="fas fa-image"></i> Foto de Perfil</h2>
+            <input type="text" id="pfpInput" placeholder="Pega el link de la imagen aquí..." style="margin-bottom:15px;">
+            <button onclick="requestPFP()" class="btn-save btn-pfp"><i class="fas fa-upload"></i> SOLICITAR PFP (REVISIÓN STAFF)</button>
+        </div>
+
+        <div id="staffZone" class="panel" style="border-color: rgba(255,255,0,0.3); text-align:center;">
+            <h2 style="color:var(--yellow); justify-content:center; border:none; padding:0; margin-bottom:15px;"><i class="fas fa-shield-alt"></i> Autorización Staff</h2>
+            <div id="staffInputArea"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",authDomain:"scullylist.firebaseapp.com",databaseURL:"https://scullylist-default-rtdb.firebaseio.com",projectId:"scullylist",storageBucket:"scullylist.firebasestorage.app",messagingSenderId:"498548914021",appId:"1:498548914021:web:59128b5e06b36a4e81938c"};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(); const db=firebase.database();
+
+let currentUser=null, myProfileData=null, myKey=null, myNick="", fullData={};
+const STAFF_CODES={
+"ADMIN-SCORE-777":{nick:"score",role:"admin"},
+"ADMIN-AWRQ-888":{nick:"awrqsdt",role:"admin"},
+"ADMIN-MEK-999":{nick:"mek",role:"admin"},
+"HELP-BLITZ-111":{nick:"Blitz",role:"helper"},
+"HELP-SOPA-222":{nick:"Sopa354",role:"helper"},
+"HELP-NICO-333":{nick:"nico",role:"helper"}
+};
+
+function showToast(msg,isError=false){
+    const t=document.getElementById("scullyToast");
+    t.innerHTML=isError?`<i class="fas fa-times-circle"></i> ${msg}`:`<i class="fas fa-check-circle"></i> ${msg}`;
+    t.style.backgroundColor=isError?"var(--red)":"var(--green)";
+    t.className="show"; setTimeout(()=>{t.className=t.className.replace("show","");},3500);
+}
+
+auth.onAuthStateChanged(user=>{
+    if(user){ currentUser=user; loadPlayerData(); }
+    else { window.location.href="login.html"; }
+});
+function logout(){ auth.signOut(); }
+
+async function detectCountry(){
+    try{
+        showToast("Detectando red...");
+        const res=await fetch('https://ipapi.co/json/');
+        const data=await res.json();
+        document.getElementById('hiddenCountryCode').value=data.country_code.toLowerCase();
+        document.getElementById('displayCountry').value=data.country_name;
+        showToast("Detección Exitosa");
+    }catch(e){ showToast("Bloqueado por Privacidad", true); }
+}
+
+function loadPlayerData(){
+    db.ref('/').on('value', snap=>{
+        fullData=snap.val()||{};
+        const players=fullData.players||{};
+        myKey=null;
+
+        for(let key in players){
+            if(players[key].email && players[key].email.toLowerCase()===currentUser.email.toLowerCase()){
+                myKey=key; myProfileData=players[key]; break;
+            }
         }
 
-        auth.onAuthStateChanged(user => {
-            if (user) { 
-                currentUser = user; 
-                loadPlayerData(); 
-            } else { 
-                window.location.href = "login.html"; 
-            }
+        if(myKey){
+            myNick=myProfileData.name;
+            document.getElementById('viewClaim').style.display="none";
+            document.getElementById('viewProfile').style.display="block";
+
+            document.getElementById('bioInput').value=myProfileData.bio||"";
+            document.getElementById('hiddenCountryCode').value=myProfileData.country||"";
+            document.getElementById('displayCountry').value=(myProfileData.country||"NO ASIGNADO").toUpperCase();
+            document.getElementById('ytInput').value=myProfileData.socials?.yt||"";
+            document.getElementById('twInput').value=myProfileData.socials?.tw||"";
+            document.getElementById('dcInput').value=myProfileData.socials?.dc||"";
+
+            renderIdentityCore();
+            loadInventory(myProfileData.inventory||{}, myProfileData.activeCosmetic||"");
+            loadMyRecordsStatus(fullData.submissions||{}, fullData.history||{});
+            renderStaffZone();
+        } else {
+            document.getElementById('viewClaim').style.display="block";
+            document.getElementById('viewProfile').style.display="none";
+        }
+    });
+}
+
+function renderIdentityCore(){
+    const pfp=(myProfileData.photo && myProfileData.photo!=="null")?myProfileData.photo:"https://i.imgur.com/8pw98K4.png";
+    document.getElementById('core-pfp').src=pfp;
+    document.getElementById('core-name').innerText=myNick;
+
+    const levels=fullData.levels||[];
+    let realXP=0, completions=0, firsts=0;
+
+    (myProfileData.completions?Object.values(myProfileData.completions):[]).forEach(c=>{
+        completions++;
+        let idx=levels.findIndex(l=>l.name.toLowerCase()===c.level.toLowerCase());
+        if(idx>-1){
+            let base=Math.max(100-(idx*0.6),5);
+            if(levels[idx].bounty) base*=2;
+            if(levels[idx].first && levels[idx].first.toLowerCase()===myNick.toLowerCase()) base*=2;
+            realXP+=base;
+        } else realXP+=c.xp||0;
+    });
+
+    levels.forEach(l=>{ if(l.first && l.first.toLowerCase()===myNick.toLowerCase()) firsts++; });
+
+    const tags=[
+        `<span class="tag gold">XP REAL ${realXP.toFixed(1)}</span>`,
+        `<span class="tag cyan">BILLETERA ${(myProfileData.totalXP||0).toFixed(1)}</span>`,
+        `<span class="tag green">RÉCORDS ${completions}</span>`
+    ];
+    if(firsts>0) tags.push(`<span class="tag gold">FIRSTS ${firsts}</span>`);
+    if(myProfileData.role) tags.push(`<span class="tag cyan">ROL ${myProfileData.role.toUpperCase()}</span>`);
+    document.getElementById('core-tags').innerHTML=tags.join("");
+}
+
+function redeemCode(){
+    let code=document.getElementById("promoCode").value.trim().toUpperCase();
+    if(!code) return showToast("Ingresa un código", true);
+    if(!myKey) return;
+
+    let usedCodes=JSON.parse(localStorage.getItem('used_codes_'+myNick)||'[]');
+    if(usedCodes.includes(code)) return showToast("Este código ya fue canjeado", true);
+
+    const invList=myProfileData.inventory?Object.values(myProfileData.inventory):[];
+    if(code==="SCULLYVIP" && !invList.some(i=>i.itemName==="TITULO VIP")){
+        db.ref(`players/${myKey}/inventory`).push({itemName:"TITULO VIP",date:Date.now()});
+        showToast("Cosmético VIP desbloqueado");
+    } else if(fullData.promo_codes && fullData.promo_codes[code]){
+        const data=fullData.promo_codes[code];
+        db.ref(`players/${myKey}/totalXP`).set((myProfileData.totalXP||0)+data.xp);
+        showToast(`+${data.xp} XP | ${data.msg}`);
+    } else return showToast("Código inválido", true);
+
+    usedCodes.push(code);
+    localStorage.setItem('used_codes_'+myNick, JSON.stringify(usedCodes));
+    document.getElementById("promoCode").value="";
+}
+
+function loadInventory(inventoryData, activeCosmetic){
+    let invList=Array.isArray(inventoryData)?inventoryData.filter(Boolean):Object.values(inventoryData||{});
+    let html="";
+    if(invList.length===0){
+        html=`<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">Tu bóveda está vacía.</p>`;
+    } else {
+        invList.forEach(item=>{
+            let isEquipped=activeCosmetic===item.itemName;
+            html+=`
+            <div class="inv-item ${isEquipped?'equipped':''}">
+                <div class="inv-item-name"><i class="fas fa-gem"></i> ${item.itemName}</div>
+                ${isEquipped
+                    ? `<button class="btn-save" style="background:var(--red); color:#fff; width:100%; margin-top:10px;" onclick="equipCosmetic('')"><i class="fas fa-times-circle"></i> DESEQUIPAR</button>`
+                    : `<button class="btn-save" style="background:var(--green); color:#000; width:100%; margin-top:10px;" onclick="equipCosmetic('${item.itemName}')"><i class="fas fa-check-circle"></i> EQUIPAR</button>`
+                }
+            </div>`;
         });
+    }
+    document.getElementById('inventoryContainer').innerHTML=html;
+}
 
-        function logout() { auth.signOut(); }
+function equipCosmetic(itemName){
+    if(!myKey) return;
+    if(itemName===""){ db.ref(`players/${myKey}/activeCosmetic`).remove().then(()=>showToast("Cosmético Desequipado")); }
+    else db.ref(`players/${myKey}/activeCosmetic`).set(itemName).then(()=>showToast(`Equipaste: ${itemName}`));
+}
 
-        async function detectCountry() {
-            try {
-                showToast("Detectando red...");
-                const res = await fetch('https://ipapi.co/json/');
-                const data = await res.json();
-                document.getElementById('hiddenCountryCode').value = data.country_code.toLowerCase();
-                document.getElementById('displayCountry').value = data.country_name;
-                showToast("Detección Exitosa");
-            } catch (e) {
-                showToast("Bloqueado por Privacidad", true);
-            }
+function loadMyRecordsStatus(submissions, history){
+    let html="", recordsFound=0;
+    Object.values(submissions).forEach(sub=>{
+        if(sub.player.toLowerCase()===myNick.toLowerCase()){
+            recordsFound++;
+            html+=`
+            <div class="record-card">
+                <div class="record-info">
+                    <h4>${sub.level}</h4>
+                    <p><i class="fab fa-youtube" style="color:var(--red)"></i> <a href="${sub.link}" target="_blank" style="color:#888;">Ver prueba</a></p>
+                </div>
+                <div class="status-badge badge-pending"><i class="fas fa-clock"></i> Pendiente</div>
+            </div>`;
         }
-
-        function loadPlayerData() {
-            db.ref('/').on('value', snap => {
-                const fullData = snap.val() || {};
-                const playersObj = fullData.players || {};
-                
-                myPlayerIndex = Object.keys(playersObj).find(key => playersObj[key].email === currentUser.email);
-                
-                if(myPlayerIndex !== undefined) {
-                    myProfileData = playersObj[myPlayerIndex];
-                    myNick = myProfileData.name;
-
-                    document.getElementById('viewClaim').style.display = "none";
-                    document.getElementById('viewProfile').style.display = "block";
-                    
-                    document.getElementById('bioInput').value = myProfileData.bio || "";
-                    document.getElementById('hiddenCountryCode').value = myProfileData.country || "es";
-                    document.getElementById('displayCountry').value = (myProfileData.country || "NO ASIGNADO").toUpperCase();
-                    
-                    document.getElementById('ytInput').value = myProfileData.socials?.yt || "";
-                    document.getElementById('twInput').value = myProfileData.socials?.tw || "";
-                    document.getElementById('dcInput').value = myProfileData.socials?.dc || "";
-
-                    // Cargar Inventario
-                    loadInventory(myProfileData.inventory || [], myProfileData.activeCosmetic || "");
-
-                    // Cargar Zona Staff
-                    if(myProfileData.role) {
-                        let colorHex = myProfileData.role === 'admin' ? '#ff6600' : '#66fcf1';
-                        let icon = myProfileData.role === 'admin' ? 'fa-crown' : 'fa-shield-alt';
-                        
-                        document.getElementById('staffInputArea').innerHTML = `
-                            <div class="staff-badge" style="border-color:${colorHex}; color:${colorHex}; background:rgba(0,0,0,0.5);">
-                                <i class="fas ${icon}"></i> RANGO ACTIVO: ${myProfileData.role.toUpperCase()}
-                            </div>
-                            <p style="color:#888; font-size:0.75rem; margin-top:15px;">Tu cuenta está encriptada y protegida. Tienes acceso a los canales de alta seguridad.</p>
-                            <a href="admin.html" class="btn-save" style="background:${colorHex}; color:#000; margin-top:20px; text-decoration:none;"><i class="fas fa-terminal"></i> ENTRAR AL MASTER PANEL</a>
-                        `;
-                    } else {
-                        document.getElementById('staffInputArea').innerHTML = `
-                            <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">Si fuiste ascendido al equipo de moderación, ingresa tu código secreto aquí para habilitar tu consola administrativa.</p>
-                            <input type="password" id="staffCodeProfile" placeholder="Ingresa tu Código de Staff..." style="margin-bottom:15px; border-color:var(--yellow); background:rgba(255,255,0,0.05); text-align:center; font-weight:bold; letter-spacing:2px;">
-                            <button onclick="upgradeToStaff()" class="btn-save" style="background:var(--yellow); color:#000;"><i class="fas fa-key"></i> ACTIVAR RANGO STAFF</button>
-                        `;
-                    }
-
-                    loadMyRecordsStatus(fullData.submissions || {}, fullData.history || {});
-
-                } else {
-                    document.getElementById('viewClaim').style.display = "block";
-                    document.getElementById('viewProfile').style.display = "none";
-                }
-            });
+    });
+    Object.values(history).reverse().forEach(hist=>{
+        if(hist.player.toLowerCase()===myNick.toLowerCase()){
+            recordsFound++;
+            let isAccepted=hist.status==="Aceptado";
+            let badgeClass=isAccepted?"badge-accepted":"badge-rejected";
+            let icon=isAccepted?"fa-check":"fa-times";
+            html+=`
+            <div class="record-card">
+                <div class="record-info">
+                    <h4>${hist.level}</h4>
+                    <p><i class="fab fa-youtube" style="color:var(--red)"></i> <a href="${hist.link}" target="_blank" style="color:#888;">Prueba</a></p>
+                </div>
+                <div class="status-badge ${badgeClass}"><i class="fas ${icon}"></i> ${hist.status}</div>
+            </div>`;
         }
+    });
+    if(recordsFound===0) html=`<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">No has enviado récords aún.</p>`;
+    document.getElementById('myRecordsStatus').innerHTML=html;
+}
 
-        // ==========================================
-        // SISTEMA DE CÓDIGOS Y BÓVEDA
-        // ==========================================
-        function redeemCode() {
-            let code = document.getElementById("promoCode").value.trim();
-            if(!code) return showToast("Ingresa un código", true);
-            if(myPlayerIndex === -1 || myPlayerIndex === undefined) return;
-            
-            let usedCodes = JSON.parse(localStorage.getItem('used_codes_' + myNick) || '[]');
-            if(usedCodes.includes(code)) return showToast("Este código ya fue canjeado", true);
+function sendClaimRequest(){
+    const nick=document.getElementById('claimNick').value.trim();
+    const proof=document.getElementById('claimProof').value.trim();
+    const staffCode=document.getElementById('staffCodeClaim').value.trim();
 
-            let invList = myProfileData.inventory ? (Array.isArray(myProfileData.inventory) ? myProfileData.inventory : Object.values(myProfileData.inventory)) : [];
-            let success = false;
+    const last=localStorage.getItem("claim_cd")||0;
+    if(Date.now()-last<10000) return showToast("Espera 10s", true);
+    localStorage.setItem("claim_cd", Date.now());
 
-            if(code === "wernerantoniokurtz@gmail.com") {
-                db.ref(`players/${myPlayerIndex}/totalXP`).set((myProfileData.totalXP || 0) + 22);
-                showToast("¡+22 XP añadidos a tu cuenta!");
-                success = true;
-            } else if (code === "SCULLYVIP") {
-                if(invList.some(i => i.itemName === "TITULO VIP")) return showToast("Ya tienes este cosmético", true);
-                db.ref(`players/${myPlayerIndex}/inventory`).push({ itemName: "TITULO VIP", date: Date.now() });
-                showToast("¡Cosmético VIP desbloqueado!"); success = true;
-            } else if (code === "MATRIX") {
-                if(invList.some(i => i.itemName === "TEXTO HACKER")) return showToast("Ya tienes este cosmético", true);
-                db.ref(`players/${myPlayerIndex}/inventory`).push({ itemName: "TEXTO HACKER", date: Date.now() });
-                showToast("¡Cosmético HACKER desbloqueado!"); success = true;
-            } else if (code === "BLOODLUST") {
-                if(invList.some(i => i.itemName === "AURA DEMONIACA")) return showToast("Ya tienes este cosmético", true);
-                db.ref(`players/${myPlayerIndex}/inventory`).push({ itemName: "AURA DEMONIACA", date: Date.now() });
-                showToast("¡Aura Demoníaca desbloqueada!"); success = true;
-            } else if (code === "RAINBOW") {
-                if(invList.some(i => i.itemName === "NOMBRE RAINBOW")) return showToast("Ya tienes este cosmético", true);
-                db.ref(`players/${myPlayerIndex}/inventory`).push({ itemName: "NOMBRE RAINBOW", date: Date.now() });
-                showToast("¡Nombre Arcoíris desbloqueado!"); success = true;
-            } else {
-                return showToast("Código inválido", true);
-            }
+    if(staffCode && STAFF_CODES[staffCode]) return processStaffCode(staffCode);
+    if(!nick || !proof) return showToast("Llena Nick y Prueba", true);
 
-            if(success) {
-                usedCodes.push(code);
-                localStorage.setItem('used_codes_' + myNick, JSON.stringify(usedCodes));
-                document.getElementById("promoCode").value = "";
-            }
+    db.ref('claim_requests').push({ email:currentUser.email, nick:nick, proof:proof }).then(()=>{
+        showToast("Solicitud enviada al Staff.");
+        document.getElementById('claimNick').value=""; document.getElementById('claimProof').value="";
+    });
+}
+
+function renderStaffZone(){
+    if(myProfileData.role){
+        let colorHex=myProfileData.role==='admin'?'#ff6600':'#66fcf1';
+        let icon=myProfileData.role==='admin'?'fa-crown':'fa-shield-alt';
+        document.getElementById('staffInputArea').innerHTML=`
+            <div class="staff-badge" style="border-color:${colorHex}; color:${colorHex}; background:rgba(0,0,0,0.5);">
+                <i class="fas ${icon}"></i> RANGO ACTIVO: ${myProfileData.role.toUpperCase()}
+            </div>
+            <p style="color:#888; font-size:0.75rem; margin-top:15px;">Cuenta protegida por protocolo OMNI.</p>
+            <a href="admin.html" class="btn-save" style="background:${colorHex}; color:#000; margin-top:20px; text-decoration:none;"><i class="fas fa-terminal"></i> MASTER PANEL</a>`;
+    } else {
+        document.getElementById('staffInputArea').innerHTML=`
+            <p style="font-size:0.8rem; color:#888; margin-bottom:20px;">Si fuiste ascendido, ingresa tu código.</p>
+            <input type="password" id="staffCodeProfile" placeholder="Código Staff..." style="margin-bottom:15px; border-color:var(--yellow); background:rgba(255,255,0,0.05); text-align:center;">
+            <button onclick="upgradeToStaff()" class="btn-save" style="background:var(--yellow); color:#000;"><i class="fas fa-key"></i> ACTIVAR RANGO</button>`;
+    }
+}
+
+function upgradeToStaff(){
+    const code=document.getElementById('staffCodeProfile').value.trim();
+    if(!code) return showToast("Ingresa un código", true);
+    if(STAFF_CODES[code]) processStaffCode(code); else showToast("Código inválido", true);
+}
+
+function processStaffCode(code){
+    const data=STAFF_CODES[code];
+    db.ref('players').once('value', s=>{
+        const players=s.val()||{};
+        let existingKey=null;
+        for(let key in players){
+            if(players[key].name && players[key].name.toLowerCase()===data.nick.toLowerCase()){ existingKey=key; break; }
         }
-
-        function loadInventory(inventoryData, activeCosmetic) {
-            let invList = Array.isArray(inventoryData) ? inventoryData.filter(Boolean) : Object.values(inventoryData || {});
-            let html = "";
-            
-            if (invList.length === 0) {
-                html = `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">Tu bóveda está vacía. Compra objetos en el Mercado o canjea Códigos Secretos.</p>`;
-            } else {
-                invList.forEach(item => {
-                    let isEquipped = activeCosmetic === item.itemName;
-                    let iconClass = "fa-gem";
-                    
-                    if(item.itemName.toUpperCase().includes("VIP") || item.itemName.toUpperCase().includes("DORADO")) iconClass = "fa-crown";
-                    if(item.itemName.toUpperCase().includes("HACKER") || item.itemName.toUpperCase().includes("MATRIX")) iconClass = "fa-terminal";
-                    if(item.itemName.toUpperCase().includes("AURA") || item.itemName.toUpperCase().includes("DEMON")) iconClass = "fa-fire-alt";
-                    if(item.itemName.toUpperCase().includes("NEON")) iconClass = "fa-bolt";
-                    if(item.itemName.toUpperCase().includes("RAINBOW")) iconClass = "fa-rainbow";
-
-                    html += `
-                    <div class="inv-item ${isEquipped ? 'equipped' : ''}">
-                        <div class="inv-item-name">
-                            <i class="fas ${iconClass}"></i> ${item.itemName}
-                        </div>
-                        ${isEquipped 
-                            ? `<button class="btn-save" style="background:var(--red); color:#fff; width:100%; margin-top:10px;" onclick="equipCosmetic('')"><i class="fas fa-times-circle"></i> DESEQUIPAR COSMÉTICO</button>` 
-                            : `<button class="btn-save" style="background:var(--green); color:#000; width:100%; margin-top:10px;" onclick="equipCosmetic('${item.itemName}')"><i class="fas fa-check-circle"></i> EQUIPAR ESTE COSMÉTICO</button>`
-                        }
-                    </div>`;
-                });
-            }
-            document.getElementById('inventoryContainer').innerHTML = html;
+        if(existingKey){
+            db.ref(`players/${existingKey}`).update({ email:currentUser.email, role:data.role });
+        } else {
+            db.ref('players').push({ name:data.nick, email:currentUser.email, role:data.role, country:'es' });
         }
+        showToast(`Autorizado: ${data.nick}`);
+    });
+}
 
-        function equipCosmetic(itemName) {
-            if(myPlayerIndex === undefined || myPlayerIndex === -1) return;
-            
-            if (itemName === "") {
-                db.ref(`players/${myPlayerIndex}/activeCosmetic`).remove().then(() => {
-                    showToast("Cosmético Desequipado");
-                });
-            } else {
-                db.ref(`players/${myPlayerIndex}/activeCosmetic`).set(itemName).then(() => {
-                    showToast(`¡Equipaste: ${itemName}!`);
-                });
-            }
-        }
+function saveProfile(){
+    if(!myKey) return;
+    db.ref(`players/${myKey}`).update({
+        bio:document.getElementById('bioInput').value,
+        country:document.getElementById('hiddenCountryCode').value
+    });
+    db.ref(`players/${myKey}/socials`).set({
+        yt:document.getElementById('ytInput').value,
+        tw:document.getElementById('twInput').value,
+        dc:document.getElementById('dcInput').value
+    }).then(()=>showToast("Perfil guardado"));
+}
 
-        // ==========================================
-        // MIS RÉCORDS Y FUNCIONES VARIAS
-        // ==========================================
-        function loadMyRecordsStatus(submissions, history) {
-            let html = "";
-            let recordsFound = 0;
+function requestPFP(){
+    if(!myKey) return;
+    const url=document.getElementById('pfpInput').value;
+    if(!url) return showToast("Ingresa un link válido", true);
 
-            Object.values(submissions).forEach(sub => {
-                if(sub.player.toLowerCase() === myNick.toLowerCase()) {
-                    recordsFound++;
-                    html += `
-                    <div class="record-card">
-                        <div class="record-info">
-                            <h4>${sub.level}</h4>
-                            <p><i class="fab fa-youtube" style="color:var(--red)"></i> <a href="${sub.link}" target="_blank" style="color:#888;">Ver prueba enviada</a></p>
-                        </div>
-                        <div class="status-badge badge-pending"><i class="fas fa-clock"></i> Pendiente</div>
-                    </div>`;
-                }
-            });
+    const pending=fullData.pfp_requests || {};
+    const already=Object.values(pending).some(r=>r.player===myNick);
+    if(already) return showToast("Ya tienes una solicitud pendiente", true);
 
-            Object.values(history).reverse().forEach(hist => {
-                if(hist.player.toLowerCase() === myNick.toLowerCase()) {
-                    recordsFound++;
-                    let isAccepted = hist.status === "Aceptado";
-                    let badgeClass = isAccepted ? "badge-accepted" : "badge-rejected";
-                    let icon = isAccepted ? "fa-check" : "fa-times";
-                    
-                    html += `
-                    <div class="record-card">
-                        <div class="record-info">
-                            <h4>${hist.level}</h4>
-                            <p><i class="fab fa-youtube" style="color:var(--red)"></i> <a href="${hist.link}" target="_blank" style="color:#888;">Prueba</a></p>
-                        </div>
-                        <div class="status-badge ${badgeClass}"><i class="fas ${icon}"></i> ${hist.status}</div>
-                    </div>`;
-                }
-            });
-
-            if(recordsFound === 0) {
-                html = `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">No has enviado ningún récord todavía.</p>`;
-            }
-
-            document.getElementById('myRecordsStatus').innerHTML = html;
-        }
-
-        function sendClaimRequest() {
-            const nick = document.getElementById('claimNick').value.trim();
-            const proof = document.getElementById('claimProof').value.trim();
-            const staffCode = document.getElementById('staffCodeClaim').value.trim();
-
-            if(staffCode && STAFF_CODES[staffCode]) { processStaffCode(staffCode); return; }
-            if(!nick || !proof) return showToast("Llena Nick y Prueba", true);
-            
-            db.ref('claim_requests').push({ email: currentUser.email, nick: nick, proof: proof }).then(() => {
-                showToast("Solicitud enviada al Staff.");
-                document.getElementById('claimNick').value = ""; document.getElementById('claimProof').value = "";
-            });
-        }
-
-        function upgradeToStaff() {
-            const code = document.getElementById('staffCodeProfile').value.trim();
-            if(!code) return showToast("Ingresa un código", true);
-            if(STAFF_CODES[code]) { processStaffCode(code); } else { showToast("Código de Staff Inválido", true); }
-        }
-
-        function processStaffCode(code) {
-            const data = STAFF_CODES[code];
-            db.ref('players').once('value', s => {
-                let pList = Object.values(s.val() || {});
-                let idx = pList.findIndex(x => x.name.toLowerCase() === data.nick.toLowerCase());
-                
-                if(idx > -1) { 
-                    pList[idx].email = currentUser.email; 
-                    pList[idx].role = data.role; 
-                } else { 
-                    pList.push({ name: data.nick, email: currentUser.email, role: data.role, country: 'es' }); 
-                }
-
-                db.ref('players').set(pList).then(() => { showToast(`¡Autorizado! Bienvenido al Staff, ${data.nick}.`); });
-            });
-        }
-
-        function saveProfile() {
-            if(myPlayerIndex === -1) return;
-            const updates = {
-                bio: document.getElementById('bioInput').value,
-                country: document.getElementById('hiddenCountryCode').value
-            };
-            db.ref(`players/${myPlayerIndex}`).update(updates);
-            
-            db.ref(`players/${myPlayerIndex}/socials`).set({ 
-                yt: document.getElementById('ytInput').value, 
-                tw: document.getElementById('twInput').value, 
-                dc: document.getElementById('dcInput').value 
-            }).then(() => { showToast("¡Perfil Guardado Corectamente!"); });
-        }
-
-        function requestPFP() {
-            if(myPlayerIndex === -1) return;
-            const url  = document.getElementById('pfpInput').value;
-            if(!url) return showToast("Ingresa un link válido", true);
-            
-            db.ref(`players/${myPlayerIndex}/photo`).set(url).then(() => {
-                showToast("Foto de Perfil Actualizada"); document.getElementById('pfpInput').value = "";
-            });
-        }
-    </script>
+    db.ref('pfp_requests').push({ player:myNick, photo_url:url, time:Date.now() }).then(()=>{
+        showToast("Solicitud enviada al Staff");
+        document.getElementById('pfpInput').value="";
+    });
+}
+</script>
 </body>
 </html>
