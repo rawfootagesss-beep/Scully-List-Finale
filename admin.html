@@ -852,7 +852,7 @@
         const getXP = (l, playerName) => { 
             const i = lvls.findIndex(x => x.name.toLowerCase() === l.toLowerCase()); 
             if(i === -1) return 0; 
-            let base = Math.max(100 - (i * 0.6), 5); 
+            let base = Math.max(250 - (i * 2), 5); 
             if(lvls[i].bounty) base = base * 2; 
             if(playerName && lvls[i].first?.toLowerCase() === playerName.toLowerCase()) base = base * 2;
             return base; 
