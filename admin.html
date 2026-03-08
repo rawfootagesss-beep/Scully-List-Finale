@@ -1298,6 +1298,7 @@
         function searchP() { sP(); }
         
         function rPD() { 
+        function rPD() { 
             const p = nx(fD.players)[pIx]; 
             $('pe-n').value = p.name; 
             $('pe-b').value = p.bio || ""; 
@@ -1317,7 +1318,10 @@
                         <span style="font-weight:800;color:var(--ac);">${x.level}</span><br>
                         <small style="color:#888;">XP Original: ${x.xp||0}</small>
                     </div>
-                    <button class="bs br" onclick="dPr(${i})"><i class="fas fa-trash"></i></button>
+                    <div style="display:flex; gap:5px;">
+                        <button class="bs by" onclick="makeFirst('${p.name}', '${x.level}')" title="Coronar como First Victor"><i class="fas fa-crown"></i></button>
+                        <button class="bs br" onclick="dPr(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
                 </div>`; 
             }); 
             $('p-r').innerHTML = h || '<p style="color:#666;">Sin récords.</p>'; 
@@ -1371,6 +1375,24 @@
             $('p-s').value = ''; 
             pIx = -1; 
         }
+       // ASIGNAR FIRST VICTOR DESDE EL EDITOR DE JUGADOR
+        function makeFirst(playerName, levelName) {
+            if(!confirm(`¿Coronar a ${playerName} como FIRST VICTOR oficial de ${levelName}?`)) return;
+            
+            let nL = [...lvls];
+            let idx = nL.findIndex(l => l.name.toLowerCase() === levelName.toLowerCase());
+            
+            if(idx > -1) {
+                nL[idx].first = playerName;
+                db.ref('levels').set(nL).then(() => {
+                    toast("First Victor Actualizado");
+                    log(`Coronó a ${playerName} como First Victor de ${levelName}`);
+                    api(`👑 **NUEVO FIRST VICTOR:** El administrador **${sN}** ha coronado oficialmente a **${playerName}** como el primer vencedor de **${levelName}**.`, 'main');
+                });
+            } else {
+                toast("El nivel no existe en la lista", true);
+            }
+        } 
 
         // ==========================================
         // GESTIÓN DE RECLAMOS Y FOTOS DE PERFIL
@@ -1750,3 +1772,4 @@
     </script>
 </body>
 </html>
+
