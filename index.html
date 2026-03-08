@@ -1019,7 +1019,7 @@
             }
 
             for (let i = 1; i < lvls.length; i++) {
-                let xp = Math.max(100 - (i * 0.6), 5).toFixed(1);
+                let xp = Math.max(250 - (i * 2), 5).toFixed(1);
                 let bS = "", bI = '<i class="fas fa-star"></i>', xC = "var(--accent)";
                 
                 if (lvls[i].bounty) { 
@@ -1198,7 +1198,7 @@
                 nexus(p.completions).forEach(c => { 
                     let idx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase()); 
                     if(idx > -1) {
-                        let base = Math.max(100 - (idx * 0.6), 5);
+                        let base = Math.max(250 - (idx * 2), 5);
                         if(lvls[idx].bounty) base *= 2;
                         // [FIX] Bonus x2 si es First Victor del nivel
                         if(lvls[idx].first && lvls[idx].first.toLowerCase() === p.name.toLowerCase()) base *= 2;
@@ -1555,7 +1555,7 @@
                     let lIdx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase()); 
                     let cXp = 0;
                     if(lIdx > -1) {
-                        let base = Math.max(100 - (lIdx * 0.6), 5);
+                        let base = Math.max(250 - (lIdx * 2), 5);
                         if(lvls[lIdx].bounty) base *= 2;
                         // [FIX] Bonus x2 si es First Victor del nivel
                         if(lvls[lIdx].first && lvls[lIdx].first.toLowerCase() === p.name.toLowerCase()) base *= 2;
@@ -1671,7 +1671,7 @@
                     nexus(p.completions).forEach(c => {
                         let idx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase());
                         if(idx > -1) {
-                            let base = Math.max(100 - (idx * 0.6), 5);
+                            let base = Math.max(250 - (idx * 2), 5);
                             if(lvls[idx].bounty) base *= 2;
                             if(lvls[idx].first && lvls[idx].first.toLowerCase() === p.name.toLowerCase()) base *= 2;
                             xp += base;
@@ -1688,7 +1688,7 @@
                 let myCompletedNames = myData ? nexus(myData.completions).map(c => c.level.toLowerCase()) : [];
                 let pending = lvls
                     .map((l, idx) => {
-                        let base = Math.max(100 - (idx * 0.6), 5);
+                        let base = Math.max(250 - (idx * 2), 5);
                         if(l.bounty) base *= 2;
                         return { name: l.name, xp: base, idx, bounty: l.bounty || false };
                     })
