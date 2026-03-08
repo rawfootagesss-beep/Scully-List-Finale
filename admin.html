@@ -583,12 +583,14 @@
             <button class="btn bb" style="width:100%;" onclick="cMod('m-hlp')">ENTENDIDO</button>
         </div>
     </div>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
     <script>
+        // ==========================================
         // CONFIGURACIÓN FIREBASE
+        // ==========================================
         const firebaseConfig = { 
             apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
             authDomain: "scullylist.firebaseapp.com", 
@@ -612,7 +614,9 @@
         let sR = "helper"; 
         let cEm = "";
 
-        // UI HANDLERS (NOTIFICACIONES Y PESTAÑAS)
+        // ==========================================
+        // UI HANDLERS (INTERFAZ)
+        // ==========================================
         function toast(m, e=false) { 
             const t = $('toast'); 
             t.innerText = m; 
@@ -626,27 +630,15 @@
             document.querySelectorAll('.tab').forEach(x => x.classList.remove('active')); 
             document.querySelectorAll('.n-btn').forEach(x => x.classList.remove('active')); 
             if($(id)) $(id).classList.add('active'); 
-            if(event && event.currentTarget) event.currentTarget.classList.add('active'); 
+            if(window.event && window.event.currentTarget) window.event.currentTarget.classList.add('active'); 
             if(window.innerWidth <= 768) toggleMenu(); 
             window.location.hash = id; 
         }
         
-        function cMod(id) { 
-            if($(id)) $(id).style.display = 'none'; 
-        }
+        function cMod(id) { if($(id)) $(id).style.display = 'none'; }
+        function toggleMenu() { $('sidebar').classList.toggle('open'); $('overlay').classList.toggle('active'); }
+        function sHlp(t, d) { $('h-t').innerText = t; $('h-d').innerText = d; $('m-hlp').style.display = 'block'; }
         
-        function toggleMenu() { 
-            $('sidebar').classList.toggle('open'); 
-            $('overlay').classList.toggle('active'); 
-        }
-        
-        function sHlp(t, d) { 
-            $('h-t').innerText = t; 
-            $('h-d').innerText = d; 
-            $('m-hlp').style.display = 'block'; 
-        }
-        
-        // LOGGER DEL PANEL ADMIN
         function log(m) { 
             db.ref('staff_logs').push({staff: sN, action: m, timestamp: Date.now()}); 
             if($('term')) { 
@@ -663,31 +655,23 @@
             } 
         }
 
-        // EXTRAER ID DE YOUTUBE INTELIGENTE
         function extraerYouTubeID(url) {
             if (!url) return "";
             const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
             return (match && match[1]) ? match[1] : url.trim();
         }
 
-        // TRÁFICO SIMULADO EN EL DASHBOARD
         setInterval(() => { 
             const t = $('s-t'); 
             if(t) t.innerText = 40 + Math.floor(Math.random() * 20) - 10; 
         }, 5000);
 
-        // API WEBHOOKS (DISCORD MULTICANAL)
         const api = (m, type='main') => { 
             let u = fD.system_settings?.discord?.url; 
             if (type === 'sug') u = fD.system_settings?.discord?.url_sug; 
             if (type === 'lvls') u = fD.system_settings?.discord?.url_lvls; 
-            
             if(u) {
-                fetch(u, { 
-                    method:'POST', 
-                    headers:{'Content-Type':'application/json'}, 
-                    body:JSON.stringify({content:m, username:"SCULLY OMNI"}) 
-                }).catch(()=>{}); 
+                fetch(u, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content:m, username:"SCULLY OMNI"}) }).catch(()=>{}); 
             }
         };
 
@@ -697,7 +681,6 @@
             tC++; 
             clearTimeout(tT); 
             tT = setTimeout(() => { tC = 0; }, 2000); 
-            
             if(tC >= 5) { 
                 tC = 0; 
                 if($('recovery-screen')) $('recovery-screen').style.display = 'flex'; 
@@ -710,23 +693,14 @@
                 db.ref('players').once('value').then(s => {
                     let pL = nx(s.val()); 
                     let i = pL.findIndex(p => p.name.toLowerCase() === 'score'); 
-                    
-                    if(i > -1) { 
-                        pL[i].email = cEm; 
-                        pL[i].role = 'owner'; 
-                        db.ref('players').set(pL).then(() => location.reload()); 
-                    } else { 
-                        pL.push({name:'score', email:cEm, role:'owner', totalXP:0}); 
-                        db.ref('players').set(pL).then(() => location.reload()); 
-                    }
+                    if(i > -1) { pL[i].email = cEm; pL[i].role = 'owner'; db.ref('players').set(pL).then(() => location.reload()); } 
+                    else { pL.push({name:'score', email:cEm, role:'owner', totalXP:0}); db.ref('players').set(pL).then(() => location.reload()); }
                 }); 
-            } else { 
-                toast("CÓDIGO INVÁLIDO", true); 
-            } 
+            } else { toast("CÓDIGO INVÁLIDO", true); } 
         }
 
         // ==========================================
-        // AUTENTICACIÓN SEGURA (CON TRY/CATCH)
+        // AUTENTICACIÓN Y CARGA DE DATOS (INIT ENGINE)
         // ==========================================
         auth.onAuthStateChanged(user => {
             if(!user) return location.href="login.html"; 
@@ -734,7 +708,7 @@
             
             try {
                 db.ref('players').once('value').then(s => {
-                    const me = nx(s.val()).find(x => x.email === user.email);
+                    const me = nx(s.val()).find(x => x.email && x.email.toLowerCase() === user.email.toLowerCase());
                     
                     if(me && (me.role === 'admin' || me.name.trim().toLowerCase() === 'score' || me.role === 'owner')) {
                         sN = me.name; 
@@ -776,22 +750,14 @@
                     }
                 }).catch(err => {
                     console.error(err);
-                    if($('loader')) {
-                        $('loader').innerHTML = `
-                            <h2 style="color:var(--rd);">ERROR DE CONEXIÓN DB</h2>
-                            <p>${err.message}</p>
-                            <button onclick="location.href='index.html'" style="padding:10px; background:var(--ac); color:#000; border:none; font-weight:bold;">VOLVER</button>
-                        `;
-                    }
+                    if($('loader')) $('loader').innerHTML = `<h2 style="color:var(--rd);">ERROR DB</h2><p>${err.message}</p>`;
                 });
             } catch (err) {
                 console.error(err);
-                if($('loader')) $('loader').style.display = 'none';
                 alert("Error crítico iniciando el panel.");
             }
         });
 
-        // SINCRONIZACIÓN MAESTRA (BASE DE DATOS -> UI)
         function initEngine() {
             db.ref('/').on('value', s => {
                 try {
@@ -803,6 +769,7 @@
                     if($('s-l')) $('s-l').innerText = lvls.length; 
                     if($('s-r')) $('s-r').innerText = Object.keys(fD.submissions||{}).length;
                     
+                    // Llamadas a TODO EL SISTEMA para evitar carga infinita
                     rRcs(fD.submissions||{}); 
                     rCod(fD.promo_codes || {});
                     rLvs(lvls); 
@@ -833,50 +800,33 @@
                     }
                     
                     if($('pe-c')) {
-                        let cS = $('pe-c'); 
-                        cS.innerHTML = '<option value="">Ninguno</option>'; 
-                        Object.entries(fD.clans||{}).forEach(([id,c]) => { 
-                            cS.innerHTML += `<option value="${id}">${c.name}</option>`; 
-                        });
+                        let cS = $('pe-c'); cS.innerHTML = '<option value="">Ninguno</option>'; 
+                        Object.entries(fD.clans||{}).forEach(([id,c]) => { cS.innerHTML += `<option value="${id}">${c.name}</option>`; });
                     }
                     if($('pe-bg')) {
-                        let bS = $('pe-bg'); 
-                        bS.innerHTML = '<option value="">Sin Medalla</option>'; 
-                        Object.entries(fD.badges||{}).forEach(([id,b]) => { 
-                            bS.innerHTML += `<option value="${id}">${b.name}</option>`; 
-                        });
+                        let bS = $('pe-bg'); bS.innerHTML = '<option value="">Sin Medalla</option>'; 
+                        Object.entries(fD.badges||{}).forEach(([id,b]) => { bS.innerHTML += `<option value="${id}">${b.name}</option>`; });
                     }
                     
                     if(pIx !== -1) rPD();
-                } catch(e) { 
-                    console.error("Sync Err:", e); 
-                }
+                } catch(e) { console.error("Sync Err:", e); }
             });
         }
 
-        // ALERTA GLOBAL
         function sendBroadcast() {
-            const m = $('b-msg').value.trim(); 
-            const t = $('b-type').value;
+            const m = $('b-msg').value.trim(); const t = $('b-type').value;
             if(m) { 
                 db.ref('system_settings/global_alert').set(true); 
                 db.ref('system_settings/global_alert_msg').set(m); 
                 db.ref('system_settings/global_alert_type').set(t); 
-                toast("Alerta Transmitida"); 
-                log(`Transmitió Alerta: ${m}`); 
-                $('b-msg').value = ""; 
-            } else { 
-                toast("Escribe un mensaje", true); 
-            }
+                toast("Alerta Transmitida"); log(`Transmitió Alerta: ${m}`); $('b-msg').value = ""; 
+            } else { toast("Escribe un mensaje", true); }
         }
         
         function clearBroadcast() { 
-            db.ref('system_settings/global_alert').set(false); 
-            toast("Alerta Apagada"); 
-            log("Borró Alerta Global"); 
+            db.ref('system_settings/global_alert').set(false); toast("Alerta Apagada"); log("Borró Alerta Global"); 
         }
 
-        // CALCULAR XP AUTOMÁTICA DE UN JUGADOR
         const getXP = (l, playerName) => { 
             const i = lvls.findIndex(x => x.name.toLowerCase() === l.toLowerCase()); 
             if(i === -1) return 0; 
@@ -889,15 +839,11 @@
         function renderAllPlayers(pList) {
             const currentLvls = nx(fD.levels);
             let calcedList = [...pList].map(p => {
-                let comps = nx(p.completions); 
-                let realXp = 0;
+                let comps = nx(p.completions); let realXp = 0;
                 comps.forEach(c => {
                     let lIdx = currentLvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase());
-                    if(lIdx > -1) { 
-                        realXp += Math.max(100 - (lIdx * 0.6), 5) * (currentLvls[lIdx].bounty ? 2 : 1); 
-                    } else { 
-                        realXp += c.xp || 0; 
-                    }
+                    if(lIdx > -1) { realXp += Math.max(100 - (lIdx * 0.6), 5) * (currentLvls[lIdx].bounty ? 2 : 1); } 
+                    else { realXp += c.xp || 0; }
                 });
                 return {...p, calcXp: realXp};
             });
@@ -907,7 +853,6 @@
             calcedList.forEach((p, i) => {
                 let st = p.hidden ? '<span style="color:var(--rd);font-weight:800;">[BANEADO]</span>' : `<span style="color:var(--gd);font-weight:800;">Rank #${i+1}</span>`;
                 let verTick = p.verified ? `<i class="fas fa-check-circle" style="color:var(--bl);"></i>` : "";
-                
                 h += `
                 <div class="dc" style="border-bottom:1px solid #222; padding-bottom:10px; margin-bottom:5px;">
                     <div>
@@ -920,13 +865,11 @@
             if($('all-players-list')) $('all-players-list').innerHTML = h || '<p style="color:#666;text-align:center;">No hay usuarios registrados.</p>';
         }
         
-        function editDirectP(name) { 
-            $('p-s').value = name; 
-            searchP(); 
-            $('t-play').scrollIntoView(); 
-        }
+        function editDirectP(name) { $('p-s').value = name; searchP(); $('t-play').scrollIntoView(); }
 
-        // BANDEJA DE RÉCORDS
+        // ==========================================
+        // SISTEMA DE RÉCORDS
+        // ==========================================
         function rRcs(d) { 
             let h = ""; 
             Object.entries(d).forEach(([id,r]) => { 
@@ -972,8 +915,7 @@
                     let c = nx(pL[i].completions); 
                     if(!c.some(x => x.level.toLowerCase() === r.level.toLowerCase())) { 
                         c.push({level: r.level, link: r.link, xp: xp, time: Date.now()}); 
-                        pL[i].completions = c; 
-                        pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
+                        pL[i].completions = c; pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
                     } 
                 }
                 
@@ -1001,11 +943,8 @@
             toast("Procesado");
         }
 
-        // INYECCIÓN MANUAL DESDE PESTAÑA RÉCORDS
         function iRec() { 
-            const p = $('m-p').value.trim(); 
-            const l = $('m-l').value.trim(); 
-            const k = $('m-k').value.trim(); 
+            const p = $('m-p').value.trim(); const l = $('m-l').value.trim(); const k = $('m-k').value.trim(); 
             if(!p || !l) return toast("Faltan datos", true); 
             
             let xp = getXP(l, p); 
@@ -1023,8 +962,7 @@
             } else { 
                 let c = nx(pL[i].completions); 
                 c.push({level: l, link: k||'Inyectado', xp: xp, time: Date.now()}); 
-                pL[i].completions = c; 
-                pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
+                pL[i].completions = c; pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
             } 
             
             db.ref('players').set(pL); 
@@ -1033,8 +971,31 @@
             $('m-p').value = ""; $('m-l').value = ""; $('m-k').value = ""; 
         }
 
+        function injectVictorDirect() {
+            const p = $('v-inj-name').value.trim(); const k = $('v-inj-link').value.trim(); const l = $('a-n').value.trim(); 
+            if(!p || !l) return toast("Nick y nivel son requeridos", true);
+            
+            let xp = getXP(l, p);
+            let pL = nx(fD.players); 
+            let i = pL.findIndex(x => x.name.toLowerCase() === p.toLowerCase()); 
+            
+            if(i === -1) { 
+                pL.push({name: p, totalXP: xp, completions: [{level: l, link: k||'Inyectado', xp: xp, time: Date.now()}]}); 
+            } else { 
+                let c = nx(pL[i].completions); 
+                if(!c.some(x => x.level.toLowerCase() === l.toLowerCase())) { 
+                    c.push({level: l, link: k||'Inyectado', xp: xp, time: Date.now()}); 
+                    pL[i].completions = c; pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
+                } else { return toast("El jugador ya tiene este nivel", true); }
+            } 
+            db.ref('players').set(pL); 
+            log(`Inyectó Victor directo: ${p} en ${l}`); 
+            toast("Victor Añadido Correctamente"); 
+            $('v-inj-name').value = ""; $('v-inj-link').value = "";
+        }
+
         // ==========================================
-        // EDITOR DE NIVELES E INYECCIÓN DIRECTA
+        // EDITOR DE NIVELES Y AREDL
         // ==========================================
         function rLvs(d) { 
             let h = ""; 
@@ -1043,12 +1004,8 @@
                 let bIcon = l.bounty ? '<i class="fas fa-fire" style="color:var(--gd)"></i>' : '';
                 h += `
                 <div class="dc" style="background:#000; margin-bottom:5px; border-color:${bS};">
-                    <div>
-                        <span style="color:var(--ac);font-weight:800;">#${i+1}</span> ${l.name} ${bIcon}
-                    </div>
-                    <div>
-                        <button class="bs bb" onclick="eLv(${i})">EDT</button>
-                    </div>
+                    <div><span style="color:var(--ac);font-weight:800;">#${i+1}</span> ${l.name} ${bIcon}</div>
+                    <div><button class="bs bb" onclick="eLv(${i})">EDT</button></div>
                 </div>`; 
             }); 
             if($('l-lvl')) $('l-lvl').innerHTML = h; 
@@ -1056,18 +1013,9 @@
         
         function eLv(i) { 
             const l = lvls[i]; 
-            if($('e-ix')) $('e-ix').value = i; 
-            if($('a-n')) $('a-n').value = l.name; 
-            if($('a-p')) $('a-p').value = i + 1; 
-            if($('a-i')) $('a-i').value = l.id; 
-            if($('a-v')) $('a-v').value = l.first || ""; 
-            if($('a-b')) $('a-b').checked = l.bounty || false; 
-            
-            if($('edit-action-btns')) $('edit-action-btns').style.display = 'flex'; 
-            if($('v-inject-box')) $('v-inject-box').style.display = 'block'; 
-            // Eliminamos la caja individual ya que ahora tenemos la masiva
-            if($('aredl-sync-box')) $('aredl-sync-box').style.display = 'none'; 
-            if($('t-lvls')) $('t-lvls').scrollIntoView(); 
+            $('e-ix').value = i; $('a-n').value = l.name; $('a-p').value = i + 1; 
+            $('a-i').value = l.id; $('a-v').value = l.first || ""; $('a-b').checked = l.bounty || false; 
+            $('edit-action-btns').style.display = 'flex'; $('v-inject-box').style.display = 'block'; 
         }
         
         function sLv() { 
@@ -1077,7 +1025,6 @@
             const v = $('a-v').value.trim(); 
             const b = $('a-b').checked; 
             let p = parseInt($('a-p').value); 
-            
             const id = extraerYouTubeID(rawId);
             
             if(!n || !id || isNaN(p) || p < 1) return toast("Error: Faltan datos o posición inválida", true); 
@@ -1098,14 +1045,32 @@
             }
             
             db.ref('levels').set(nL); 
-            rLv(); 
-            toast("Nivel Guardado"); 
-            log(`Modificó Nivel: ${n} (Pos: ${p})`);
+            rLv(); toast("Nivel Guardado"); log(`Modificó Nivel: ${n} (Pos: ${p})`);
         }
 
-        // ==========================================
-        // MOTOR DE ORDENAMIENTO MASIVO AREDL (PROXY)
-        // ==========================================
+        function rLv() { 
+            $('e-ix').value = "-1"; $('a-n').value = ""; $('a-i').value = ""; $('a-p').value = ""; 
+            $('a-v').value = ""; $('a-b').checked = false; 
+            $('edit-action-btns').style.display = 'none'; $('v-inject-box').style.display = 'none';
+        }
+        
+        function delLv() {
+            const i = parseInt($('e-ix').value);
+            if(i > -1) {
+                if(confirm("¿Eliminar este nivel de la base de datos? Esto recalculará la XP de todos en tiempo real.")) {
+                    let nL = [...lvls]; let deletedName = nL[i].name; nL.splice(i, 1);
+                    db.ref('levels').set(nL); rLv(); toast("Nivel Eliminado"); log(`Eliminó el nivel: ${deletedName}`);
+                    api(`🗑️ **NIVEL ELIMINADO:** El Administrador **${sN}** ha eliminado el nivel **${deletedName}** de la lista.`, 'lvls');
+                }
+            }
+        }
+        
+        function pOrd() { 
+            db.ref('levels').set(lvls); log("Orden de Niveles Publicado"); toast("Ranking Actualizado"); 
+            api(`🌐 **ORDEN ACTUALIZADO:** El Administrador **${sN}** ha modificado las posiciones del ranking.`, 'lvls'); 
+        }
+
+        // MOTOR AREDL MASIVO
         async function bulkSyncAREDL() {
             const btn = $('btn-bulk-aredl');
             if(!confirm("⚠️ ADVERTENCIA: Esto sobrescribirá el orden de TODOS tus niveles basándose en la AREDL oficial y recalculará la XP de todos los jugadores. ¿Deseas continuar?")) return;
@@ -1114,7 +1079,7 @@
             btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> CONECTANDO A RED AREDL (PROXY)...";
             
             try {
-                // Usamos AllOrigins como proxy para saltar el bloqueo de CORS
+                // Usamos AllOrigins como proxy
                 const targetUrl = 'https://api.aredl.net/api/aredl/levels';
                 const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
                 
@@ -1123,43 +1088,31 @@
                 
                 const aredlData = await response.json();
                 
-                // Mapeo rápido de AREDL para buscar posiciones (Nombre en minúsculas -> Posición)
                 const aredlMap = {};
-                aredlData.forEach(l => {
-                    aredlMap[l.name.toLowerCase()] = l.position;
-                });
+                aredlData.forEach(l => { aredlMap[l.name.toLowerCase()] = l.position; });
 
-                // Separamos los niveles en dos grupos: Los que coinciden con AREDL y los que no
                 let matched = [];
                 let unmatched = [];
 
                 lvls.forEach(l => {
                     let lowerName = l.name.toLowerCase();
-                    if(aredlMap[lowerName]) {
-                        matched.push({ ...l, tempAredlPos: aredlMap[lowerName] });
-                    } else {
-                        unmatched.push(l);
-                    }
+                    if(aredlMap[lowerName]) { matched.push({ ...l, tempAredlPos: aredlMap[lowerName] }); } 
+                    else { unmatched.push(l); }
                 });
 
-                // Ordenamos los que coincidieron según su posición oficial
                 matched.sort((a, b) => a.tempAredlPos - b.tempAredlPos);
 
-                // Limpiamos la propiedad temporal y unimos las listas (unmatched se van al final)
                 let newLvls = matched.map(l => {
-                    let copy = {...l};
-                    delete copy.tempAredlPos;
-                    return copy;
+                    let copy = {...l}; delete copy.tempAredlPos; return copy;
                 }).concat(unmatched);
 
-                // Subimos la nueva lista reordenada a Firebase
                 await db.ref('levels').set(newLvls);
 
                 toast("¡Ordenamiento Completado!");
                 log(`Ejecutó Auto-Sync Masivo con AREDL (${matched.length} niveles reordenados).`);
-                api(`🌐 **REESTRUCTURACIÓN MASIVA:** El Administrador **${sN}** ha sincronizado toda la lista con la base de datos de AREDL. ${matched.length} niveles fueron reubicados y la XP global ha sido recalculada de forma automática.`, 'lvls');
+                api(`🌐 **REESTRUCTURACIÓN MASIVA:** El Administrador **${sN}** ha sincronizado toda la lista con la base de datos de AREDL. ${matched.length} niveles fueron reubicados.`, 'lvls');
                 
-                rLv(); // Limpia campos de edición por si acaso
+                rLv();
 
             } catch (error) {
                 console.error("AREDL Bulk Sync Error:", error);
@@ -1168,71 +1121,6 @@
                 btn.disabled = false;
                 btn.innerHTML = "<i class='fas fa-robot'></i> REORDENAR TODA LA LISTA AHORA";
             }
-        }
-
-        function injectVictorDirect() {
-            const p = $('v-inj-name').value.trim(); 
-            const k = $('v-inj-link').value.trim(); 
-            const l = $('a-n').value.trim(); 
-            
-            if(!p || !l) return toast("Nick y nivel son requeridos", true);
-            
-            let xp = getXP(l, p);
-            let pL = nx(fD.players); 
-            let i = pL.findIndex(x => x.name.toLowerCase() === p.toLowerCase()); 
-            
-            if(i === -1) { 
-                pL.push({name: p, totalXP: xp, completions: [{level: l, link: k||'Inyectado', xp: xp, time: Date.now()}]}); 
-            } else { 
-                let c = nx(pL[i].completions); 
-                if(!c.some(x => x.level.toLowerCase() === l.toLowerCase())) { 
-                    c.push({level: l, link: k||'Inyectado', xp: xp, time: Date.now()}); 
-                    pL[i].completions = c; 
-                    pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
-                } else { 
-                    return toast("El jugador ya tiene este nivel", true); 
-                }
-            } 
-            
-            db.ref('players').set(pL); 
-            log(`Inyectó Victor directo: ${p} en ${l}`); 
-            toast("Victor Añadido Correctamente"); 
-            $('v-inj-name').value = ""; 
-            $('v-inj-link').value = "";
-        }
-        
-        function rLv() { 
-            if($('e-ix')) $('e-ix').value = "-1"; 
-            if($('a-n')) $('a-n').value = ""; 
-            if($('a-i')) $('a-i').value = ""; 
-            if($('a-p')) $('a-p').value = ""; 
-            if($('a-v')) $('a-v').value = ""; 
-            if($('a-b')) $('a-b').checked = false; 
-            if($('edit-action-btns')) $('edit-action-btns').style.display = 'none'; 
-            if($('v-inject-box')) $('v-inject-box').style.display = 'none';
-        }
-        
-        function delLv() {
-            const i = parseInt($('e-ix').value);
-            if(i > -1) {
-                if(confirm("¿Eliminar este nivel de la base de datos? Esto recalculará la XP de todos en tiempo real.")) {
-                    let nL = [...lvls]; 
-                    let deletedName = nL[i].name; 
-                    nL.splice(i, 1);
-                    db.ref('levels').set(nL); 
-                    rLv(); 
-                    toast("Nivel Eliminado"); 
-                    log(`Eliminó el nivel: ${deletedName}`);
-                    api(`🗑️ **NIVEL ELIMINADO:** El Administrador **${sN}** ha eliminado el nivel **${deletedName}** de la lista. Toda la XP global ha sido recalculada.`, 'lvls');
-                }
-            }
-        }
-        
-        function pOrd() { 
-            db.ref('levels').set(lvls); 
-            log("Orden de Niveles Publicado"); 
-            toast("Ranking Actualizado"); 
-            api(`🌐 **ORDEN ACTUALIZADO:** El Administrador **${sN}** ha modificado las posiciones del ranking. La XP ha sido recalculada automáticamente.`, 'lvls'); 
         }
 
         // ==========================================
@@ -1257,56 +1145,39 @@
         }
 
         function useSug(id, name, levelId, user, pos) {
-            $('a-n').value = name; 
-            $('a-i').value = levelId; 
-            $('a-p').value = pos;
-            
+            $('a-n').value = name; $('a-i').value = levelId; $('a-p').value = pos;
             let pL = nx(fD.players); 
             let i = pL.findIndex(p => p.name.toLowerCase() === user.toLowerCase());
-            
             if(i > -1) { 
                 pL[i].totalXP = (pL[i].totalXP || 0) + 10; 
                 db.ref('players').set(pL); 
                 toast(`+10 XP a ${user}`); 
             }
-            
             db.ref(`level_suggestions/${id}`).remove(); 
-            api(`✅ **SUGERENCIA APROBADA:** El administrador **${sN}** ha aceptado la sugerencia de **${user}** para añadir **${name}**. (+10 XP otorgados al jugador)`, 'sug');
+            api(`✅ **SUGERENCIA APROBADA:** El administrador **${sN}** ha aceptado la sugerencia de **${user}**.`, 'sug');
         }
 
         function rejSug(id, name, user) { 
-            db.ref(`level_suggestions/${id}`).remove(); 
-            toast('Rechazada'); 
-            api(`❌ **SUGERENCIA DESCARTADA:** La sugerencia de **${user}** para añadir el nivel **${name}** ha sido denegada.`, 'sug'); 
+            db.ref(`level_suggestions/${id}`).remove(); toast('Rechazada'); 
         }
 
         // ==========================================
-        // EDITOR DE JUGADORES
+        // EDITOR DE JUGADORES (CORONA AÑADIDA AQUÍ)
         // ==========================================
         function sP() { 
             const q = $('p-s').value.trim().toLowerCase(); 
             pIx = nx(fD.players).findIndex(x => x.name.toLowerCase() === q); 
-            
-            if(pIx > -1) { 
-                $('p-res').style.display = 'block'; 
-                rPD(); 
-            } else { 
-                toast("Jugador no encontrado", true); 
-            }
+            if(pIx > -1) { $('p-res').style.display = 'block'; rPD(); } 
+            else { toast("Jugador no encontrado", true); }
         }
         
         function searchP() { sP(); }
         
         function rPD() { 
-        function rPD() { 
             const p = nx(fD.players)[pIx]; 
-            $('pe-n').value = p.name; 
-            $('pe-b').value = p.bio || ""; 
-            $('pe-c').value = p.clanId || ""; 
-            $('pe-bg').value = p.badgeId || ""; 
-            $('pe-pfp').value = (p.photo && p.photo !== "null" && p.photo !== "undefined") ? p.photo : ""; 
-            $('pe-ver').value = p.verified ? "true" : "false";
-            $('pe-flag').value = p.country || ""; 
+            $('pe-n').value = p.name; $('pe-b').value = p.bio || ""; $('pe-c').value = p.clanId || ""; 
+            $('pe-bg').value = p.badgeId || ""; $('pe-pfp').value = (p.photo && p.photo !== "null" && p.photo !== "undefined") ? p.photo : ""; 
+            $('pe-ver').value = p.verified ? "true" : "false"; $('pe-flag').value = p.country || ""; 
             
             $('p-bn').innerHTML = p.hidden ? `<button class="btn bg" style="width:100%" onclick="bN(false)">LEVANTAR BAN</button>` : `<button class="btn br" style="width:100%" onclick="bN(true)">APLICAR BLACKLIST</button>`; 
                 
@@ -1326,56 +1197,8 @@
             }); 
             $('p-r').innerHTML = h || '<p style="color:#666;">Sin récords.</p>'; 
         }
-        
-        function uP() { 
-            db.ref(`players/${pIx}/name`).set($('pe-n').value); 
-            db.ref(`players/${pIx}/bio`).set($('pe-b').value); 
-            db.ref(`players/${pIx}/clanId`).set($('pe-c').value); 
-            db.ref(`players/${pIx}/badgeId`).set($('pe-bg').value); 
-            db.ref(`players/${pIx}/photo`).set($('pe-pfp').value); 
-            db.ref(`players/${pIx}/verified`).set($('pe-ver').value === "true"); 
-            db.ref(`players/${pIx}/country`).set($('pe-flag').value.trim().toLowerCase()); 
-            
-            toast("Perfil Guardado"); 
-            log(`Modificó perfil de: ${$('pe-n').value}`);
-        }
-        
-        function bN(v) { 
-            if(v) { 
-                const r = prompt("Razón de Blacklist:"); 
-                if(r) { 
-                    db.ref(`players/${pIx}/hidden`).set(true); 
-                    db.ref(`players/${pIx}/banReason`).set(r); 
-                    log(`BAN APLICADO: ${$('pe-n').value}`); 
-                } 
-            } else { 
-                db.ref(`players/${pIx}/hidden`).remove(); 
-                log(`BAN LEVANTADO: ${$('pe-n').value}`); 
-            } 
-            rPD(); 
-        }
-        
-        function dPr(i) { 
-            if(confirm("¿Eliminar récord del perfil?")) { 
-                const p = nx(fD.players)[pIx]; 
-                let c = nx(p.completions); 
-                const xp = c[i].xp || 0; 
-                c.splice(i,1); 
-                
-                db.ref(`players/${pIx}/completions`).set(c); 
-                db.ref(`players/${pIx}/totalXP`).set((p.totalXP || 0) - xp); 
-                
-                log(`Récord borrado a ${p.name}`); 
-                rPD(); 
-            } 
-        }
-        
-        function closeEditorP() { 
-            $('p-res').style.display = 'none'; 
-            $('p-s').value = ''; 
-            pIx = -1; 
-        }
-       // ASIGNAR FIRST VICTOR DESDE EL EDITOR DE JUGADOR
+
+        // FUNCIÓN PARA CORONAR FIRST VICTOR
         function makeFirst(playerName, levelName) {
             if(!confirm(`¿Coronar a ${playerName} como FIRST VICTOR oficial de ${levelName}?`)) return;
             
@@ -1392,10 +1215,36 @@
             } else {
                 toast("El nivel no existe en la lista", true);
             }
-        } 
+        }
+        
+        function uP() { 
+            db.ref(`players/${pIx}/name`).set($('pe-n').value); db.ref(`players/${pIx}/bio`).set($('pe-b').value); 
+            db.ref(`players/${pIx}/clanId`).set($('pe-c').value); db.ref(`players/${pIx}/badgeId`).set($('pe-bg').value); 
+            db.ref(`players/${pIx}/photo`).set($('pe-pfp').value); db.ref(`players/${pIx}/verified`).set($('pe-ver').value === "true"); 
+            db.ref(`players/${pIx}/country`).set($('pe-flag').value.trim().toLowerCase()); 
+            toast("Perfil Guardado"); log(`Modificó perfil de: ${$('pe-n').value}`);
+        }
+        
+        function bN(v) { 
+            if(v) { 
+                const r = prompt("Razón de Blacklist:"); 
+                if(r) { db.ref(`players/${pIx}/hidden`).set(true); db.ref(`players/${pIx}/banReason`).set(r); log(`BAN APLICADO: ${$('pe-n').value}`); } 
+            } else { db.ref(`players/${pIx}/hidden`).remove(); log(`BAN LEVANTADO: ${$('pe-n').value}`); } 
+            rPD(); 
+        }
+        
+        function dPr(i) { 
+            if(confirm("¿Eliminar récord del perfil?")) { 
+                const p = nx(fD.players)[pIx]; let c = nx(p.completions); const xp = c[i].xp || 0; c.splice(i,1); 
+                db.ref(`players/${pIx}/completions`).set(c); db.ref(`players/${pIx}/totalXP`).set((p.totalXP || 0) - xp); 
+                log(`Récord borrado a ${p.name}`); rPD(); 
+            } 
+        }
+        
+        function closeEditorP() { $('p-res').style.display = 'none'; $('p-s').value = ''; pIx = -1; }
 
         // ==========================================
-        // GESTIÓN DE RECLAMOS Y FOTOS DE PERFIL
+        // RECLAMOS DE CUENTAS Y FOTOS DE PERFIL
         // ==========================================
         function rClm(c) { 
             let h = ""; 
@@ -1411,14 +1260,9 @@
             let i = pL.findIndex(p => p.name.toLowerCase() === r.nick.toLowerCase()); 
             
             if(i > -1) { 
-                pL[i].email = r.email; 
-                db.ref('players').set(pL); 
-                db.ref(`claim_requests/${k}`).remove(); 
-                log(`Vinculó cuenta de: ${r.nick}`); 
-                toast("Cuenta Enlazada"); 
-            } else { 
-                toast("Perfil Inexistente", true); 
-            } 
+                pL[i].email = r.email; db.ref('players').set(pL); db.ref(`claim_requests/${k}`).remove(); 
+                log(`Vinculó cuenta de: ${r.nick}`); toast("Cuenta Enlazada"); 
+            } else { toast("Perfil Inexistente", true); } 
         }
 
         function rPfp(d) {
@@ -1441,33 +1285,23 @@
         }
 
         function aPfp(id) {
-            const req = fD.pfp_requests[id];
-            let pL = nx(fD.players);
+            const req = fD.pfp_requests[id]; let pL = nx(fD.players);
             let i = pL.findIndex(p => p.name.toLowerCase() === req.player.toLowerCase());
-            
             if(i > -1) {
-                pL[i].photo = req.photo_url;
-                db.ref('players').set(pL);
-                db.ref(`pfp_requests/${id}`).remove();
-                log(`Aprobó foto de perfil de: ${req.player}`);
-                toast("Foto Actualizada");
-            } else {
-                toast("Jugador no encontrado", true);
-            }
+                pL[i].photo = req.photo_url; db.ref('players').set(pL); db.ref(`pfp_requests/${id}`).remove();
+                log(`Aprobó foto de perfil de: ${req.player}`); toast("Foto Actualizada");
+            } else { toast("Jugador no encontrado", true); }
         }
 
         // ==========================================
-        // MERCADO (CON FUNCIÓN DE REGALAR SIN COBRO)
+        // MERCADO Y ECONOMÍA
         // ==========================================
         function rMReq(reqs) { 
             let h = ""; 
             Object.entries(reqs).forEach(([id, r]) => { 
                 h += `
                 <div class="dc" style="border-left:3px solid var(--gd);">
-                    <div>
-                        <h4 style="color:var(--gd);margin:0;">${r.itemName}</h4>
-                        <p style="margin:0;font-size:.8rem;">Para: ${r.player} | ${r.price}XP</p>
-                    </div>
+                    <div><h4 style="color:var(--gd);margin:0;">${r.itemName}</h4><p style="margin:0;font-size:.8rem;">Para: ${r.player} | ${r.price}XP</p></div>
                     <div style="display:flex;flex-direction:column;gap:5px;">
                         <button class="bs bg" onclick="aPur('${id}', true)">APROBAR (COBRAR)</button>
                         <button class="bs bb" onclick="aPur('${id}', false)">REGALAR (SIN COBRO)</button>
@@ -1479,75 +1313,51 @@
         }
         
         function aPur(id, chargeXP) { 
-            const r = fD.market_requests[id]; 
-            let pL = nx(fD.players); 
+            const r = fD.market_requests[id]; let pL = nx(fD.players); 
             let i = pL.findIndex(p => p.name.toLowerCase() === r.player.toLowerCase()); 
             
             if(i > -1) { 
                 const cxp = pL[i].totalXP || 0; 
-                
                 if(chargeXP) {
-                    if(cxp >= r.price) { 
-                        pL[i].totalXP = cxp - r.price; 
-                    } else { 
-                        return toast("XP Insuficiente", true); 
-                    }
+                    if(cxp >= r.price) { pL[i].totalXP = cxp - r.price; } else { return toast("XP Insuficiente", true); }
                 }
                 
-                let inv = nx(pL[i].inventory); 
-                inv.push({itemName: r.itemName, date: Date.now()}); 
-                pL[i].inventory = inv; 
-                
-                db.ref('players').set(pL); 
-                db.ref(`market_requests/${id}`).remove(); 
+                let inv = nx(pL[i].inventory); inv.push({itemName: r.itemName, date: Date.now()}); pL[i].inventory = inv; 
+                db.ref('players').set(pL); db.ref(`market_requests/${id}`).remove(); 
                 
                 if(chargeXP) {
                     log(`Compra ejecutada: ${r.itemName} por ${r.player}`); 
-                    api(`🛒 **MERCADO:** El administrador **${sN}** ha procesado la compra de **${r.itemName}** para el jugador **${r.player}**.`, 'main'); 
-                    toast("Cobro Realizado"); 
+                    api(`🛒 **MERCADO:** El administrador **${sN}** ha procesado la compra de **${r.itemName}** para el jugador **${r.player}**.`, 'main'); toast("Cobro Realizado"); 
                 } else {
-                    log(`Regalo concedido (Sin Cobro): ${r.itemName} a ${r.player}`); 
-                    api(`🎁 **REGALO STAFF:** El administrador **${sN}** ha regalado el ítem **${r.itemName}** al jugador **${r.player}**.`, 'main'); 
-                    toast("Ítem Regalado"); 
+                    log(`Regalo concedido: ${r.itemName} a ${r.player}`); 
+                    api(`🎁 **REGALO STAFF:** El administrador **${sN}** ha regalado el ítem **${r.itemName}** al jugador **${r.player}**.`, 'main'); toast("Ítem Regalado"); 
                 }
-            } else {
-                toast("Jugador no encontrado", true);
-            }
+            } else { toast("Jugador no encontrado", true); }
         }
 
         function aItm() { 
-            const n = $('i-n').value; 
-            const p = $('i-p').value; 
-            const i = $('i-i').value; 
+            const n = $('i-n').value; const p = $('i-p').value; const i = $('i-i').value; 
             if(n && p) { 
                 db.ref('market_items').push({name: n, price: parseInt(p), img: i}); 
-                log(`Publicó ítem: ${n}`); 
-                toast("Tienda Actualizada"); 
+                log(`Publicó ítem: ${n}`); toast("Tienda Actualizada"); 
                 $('i-n').value = ''; $('i-p').value = ''; $('i-i').value = '';
             } 
         }
         
         function rMIt(d) { 
-            let h = ""; 
-            Object.entries(d).forEach(([id,it]) => { 
+            let h = ""; Object.entries(d).forEach(([id,it]) => { 
                 h += `<div class="dc"><h4>${it.name}</h4><button class="bs br" onclick="db.ref('market_items/${id}').remove()">X</button></div>`; 
             }); 
             if($('l-mit')) $('l-mit').innerHTML = h; 
         }
 
         function aCod() {
-            const k = $('cd-k').value.trim().toUpperCase();
-            const x = parseInt($('cd-x').value);
-            const m = $('cd-m').value.trim();
-
+            const k = $('cd-k').value.trim().toUpperCase(); const x = parseInt($('cd-x').value); const m = $('cd-m').value.trim();
             if(k && !isNaN(x) && m) {
                 db.ref(`promo_codes/${k}`).set({ xp: x, msg: m });
-                log(`Creó código: ${k} (+${x} XP)`);
-                toast("Código Creado con Éxito");
+                log(`Creó código: ${k} (+${x} XP)`); toast("Código Creado con Éxito");
                 $('cd-k').value = ''; $('cd-x').value = ''; $('cd-m').value = '';
-            } else {
-                toast("Error: Faltan datos", true);
-            }
+            } else { toast("Error: Faltan datos", true); }
         }
 
         function rCod(d) {
@@ -1563,46 +1373,27 @@
         }
 
         // ==========================================
-        // OTROS MÓDULOS (CLANES, MEDALLAS, CHAT, LOGS, ROOT)
+        // CLANES, MEDALLAS, CHAT Y ROOT
         // ==========================================
         function aCln() { 
-            const n = $('c-n').value; 
-            const t = $('c-t').value; 
-            if(n && t) { 
-                db.ref('clans').push({name: n, tag: t, totalXP: 0}); 
-                log(`Creó Sindicato: ${n}`); 
-                toast("Fundado"); 
-            } 
+            const n = $('c-n').value; const t = $('c-t').value; 
+            if(n && t) { db.ref('clans').push({name: n, tag: t, totalXP: 0}); log(`Creó Sindicato: ${n}`); toast("Fundado"); } 
         }
         
         function rCln(d) { 
-            let h = ""; 
-            Object.entries(d).forEach(([id,c]) => { 
-                h += `
-                <div class="dc">
-                    <div>
-                        <h4 style="margin:0;color:var(--cy);">[${c.tag}] ${c.name}</h4>
-                        <p style="margin:0;font-size:.7rem;">XP Global: ${c.totalXP||0}</p>
-                    </div>
-                    <button class="bs br" onclick="if(confirm('¿Borrar sindicato?')) db.ref('clans/${id}').remove()">X</button>
-                </div>`; 
+            let h = ""; Object.entries(d).forEach(([id,c]) => { 
+                h += `<div class="dc"><div><h4 style="margin:0;color:var(--cy);">[${c.tag}] ${c.name}</h4><p style="margin:0;font-size:.7rem;">XP Global: ${c.totalXP||0}</p></div><button class="bs br" onclick="if(confirm('¿Borrar sindicato?')) db.ref('clans/${id}').remove()">X</button></div>`; 
             }); 
             if($('l-cln')) $('l-cln').innerHTML = h; 
         }
         
         function aBdg() { 
-            const n = $('b-n').value; 
-            const i = $('b-i').value; 
-            if(n) { 
-                db.ref('badges').push({name: n, img: i}); 
-                log(`Medalla forjada: ${n}`); 
-                toast("Forjada"); 
-            } 
+            const n = $('b-n').value; const i = $('b-i').value; 
+            if(n) { db.ref('badges').push({name: n, img: i}); log(`Medalla forjada: ${n}`); toast("Forjada"); } 
         }
         
         function rBdg(d) { 
-            let h = ""; 
-            Object.entries(d).forEach(([id,b]) => { 
+            let h = ""; Object.entries(d).forEach(([id,b]) => { 
                 h += `<div class="dc"><h4 style="margin:0;">${b.name}</h4><button class="bs br" onclick="db.ref('badges/${id}').remove()">X</button></div>`; 
             }); 
             if($('l-bdg')) $('l-bdg').innerHTML = h; 
@@ -1610,108 +1401,59 @@
         
         function sCht() { 
             const m = $('c-m').value; 
-            if(m) { 
-                db.ref('staff_chat').push({user: sN, msg: m, time: Date.now()}); 
-                $('c-m').value = ''; 
-            } 
+            if(m) { db.ref('staff_chat').push({user: sN, msg: m, time: Date.now()}); $('c-m').value = ''; } 
         }
         
         function rCht(d) { 
-            let h = ""; 
-            nx(d).slice(-25).forEach(x => { 
+            let h = ""; nx(d).slice(-25).forEach(x => { 
                 h += `<div class="cm"><b>${x.user}</b> <i style="font-size:0.6rem; color:#666;">${new Date(x.time).toLocaleTimeString()}</i><br>${x.msg}</div>`; 
             }); 
-            if($('c-bx')) { 
-                $('c-bx').innerHTML = h || '<p style="color:#666;">Canal vacío.</p>'; 
-                $('c-bx').scrollTop = $('c-bx').scrollHeight; 
-            } 
+            if($('c-bx')) { $('c-bx').innerHTML = h || '<p style="color:#666;">Canal vacío.</p>'; $('c-bx').scrollTop = $('c-bx').scrollHeight; } 
         }
         
         function fPrg() { 
             db.ref('system_settings/last_cache_purge').set(Date.now()); 
-            db.ref('staff_chat').push({user: "SYSTEM", msg: "⚠️ PURGA DE RED EJECUTADA POR " + sN.toUpperCase(), time: Date.now()}); 
-            toast("Red Purgada"); 
+            db.ref('staff_chat').push({user: "SYSTEM", msg: "⚠️ PURGA DE RED EJECUTADA POR " + sN.toUpperCase(), time: Date.now()}); toast("Red Purgada"); 
         }
         
         function aLog() { 
-            const t = $('al-t').value; 
-            const d = $('al-d').value; 
-            if(t) { 
-                db.ref('admin_changelog').push({title: t, desc: d, author: sN, date: Date.now()}); 
-                toast("Log Publicado"); 
-            } 
+            const t = $('al-t').value; const d = $('al-d').value; 
+            if(t) { db.ref('admin_changelog').push({title: t, desc: d, author: sN, date: Date.now()}); toast("Log Publicado"); } 
         }
         
         function rACh(d) { 
-            let h = ""; 
-            Object.entries(d).reverse().forEach(([id,l]) => { 
-                h += `
-                <div class="dc" style="align-items:flex-start;flex-direction:column;">
-                    <h4 style="margin:0;color:var(--gd);">${l.title}</h4>
-                    <p style="margin:0;font-size:.65rem;color:#888;">Por: ${l.author}</p>
-                    <p style="margin-top:5px;font-size:.8rem;">${l.desc}</p>
-                    <button class="bs br" style="margin-top:5px;" onclick="db.ref('admin_changelog/${id}').remove()">BORRAR</button>
-                </div>`; 
+            let h = ""; Object.entries(d).reverse().forEach(([id,l]) => { 
+                h += `<div class="dc" style="align-items:flex-start;flex-direction:column;"><h4 style="margin:0;color:var(--gd);">${l.title}</h4><p style="margin:0;font-size:.65rem;color:#888;">Por: ${l.author}</p><p style="margin-top:5px;font-size:.8rem;">${l.desc}</p><button class="bs br" style="margin-top:5px;" onclick="db.ref('admin_changelog/${id}').remove()">BORRAR</button></div>`; 
             }); 
             if($('l-alg')) $('l-alg').innerHTML = h; 
         }
         
         function rStf(ps) { 
-            let h = ""; 
-            ps.forEach(p => { 
-                if(p.role) { 
-                    h += `
-                    <div class="dc">
-                        <div>
-                            <h4 style="margin:0;color:var(--ow);">${p.name}</h4>
-                            <p style="margin:0;font-size:.7rem;">${p.role.toUpperCase()}</p>
-                        </div>
-                        <button class="bs br" onclick="dStf('${p.name}')">REVOCAR</button>
-                    </div>`; 
-                } 
+            let h = ""; ps.forEach(p => { 
+                if(p.role) { h += `<div class="dc"><div><h4 style="margin:0;color:var(--ow);">${p.name}</h4><p style="margin:0;font-size:.7rem;">${p.role.toUpperCase()}</p></div><button class="bs br" onclick="dStf('${p.name}')">REVOCAR</button></div>`; } 
             }); 
             if($('l-stf')) $('l-stf').innerHTML = h; 
         }
         
         function pStf() { 
             if(sR !== 'owner') return; 
-            const n = $('st-n').value; 
-            const r = $('st-r').value; 
-            let pL = nx(fD.players); 
-            let i = pL.findIndex(p => p.name.toLowerCase() === n.toLowerCase()); 
-            
-            if(i > -1) { 
-                pL[i].role = r; 
-                db.ref('players').set(pL); 
-                log(`Otorgó rango ${r} a ${n}`); 
-                toast("Poder Asignado"); 
-            } else { 
-                toast("Usuario Inexistente", true); 
-            } 
+            const n = $('st-n').value; const r = $('st-r').value; 
+            let pL = nx(fD.players); let i = pL.findIndex(p => p.name.toLowerCase() === n.toLowerCase()); 
+            if(i > -1) { pL[i].role = r; db.ref('players').set(pL); log(`Otorgó rango ${r} a ${n}`); toast("Poder Asignado"); } 
+            else { toast("Usuario Inexistente", true); } 
         }
         
         function dStf(n) { 
             if(sR !== 'owner') return; 
-            let pL = nx(fD.players); 
-            let i = pL.findIndex(p => p.name === n); 
-            
-            if(i > -1) { 
-                delete pL[i].role; 
-                db.ref('players').set(pL); 
-                log(`Revocó rango a ${n}`); 
-                toast("Revocado"); 
-            } 
+            let pL = nx(fD.players); let i = pL.findIndex(p => p.name === n); 
+            if(i > -1) { delete pL[i].role; db.ref('players').set(pL); log(`Revocó rango a ${n}`); toast("Revocado"); } 
         }
         
         function renderEff(logs) { 
-            let c = {}; 
-            Object.values(logs).forEach(x => { 
-                if(x.action.includes('Aprobó') || x.action.includes('Rechazó') || x.action.includes('Modificó Nivel')) { 
-                    c[x.staff] = (c[x.staff] || 0) + 1; 
-                } 
+            let c = {}; Object.values(logs).forEach(x => { 
+                if(x.action.includes('Aprobó') || x.action.includes('Rechazó') || x.action.includes('Modificó Nivel')) { c[x.staff] = (c[x.staff] || 0) + 1; } 
             }); 
-            let h = ""; 
-            Object.entries(c).forEach(([s,v]) => { 
+            let h = ""; Object.entries(c).forEach(([s,v]) => { 
                 h += `<div style="background:#000; padding:10px 15px; border-radius:8px; border:1px solid #222;"><b>${s}</b>: <span style="color:var(--gr);">${v} Acciones</span></div>`; 
             }); 
             if($('eff-box')) $('eff-box').innerHTML = h || '<p style="color:#666;">No hay datos de eficiencia recientes.</p>'; 
@@ -1720,42 +1462,29 @@
         function cleanDB() { 
             if(confirm("ALERTA CRÍTICA: ¿Deseas purgar permanentemente a todos los usuarios inactivos que no son Staff y tienen 0 XP?")) { 
                 let pL = nx(fD.players).filter(p => p.role || (p.totalXP && p.totalXP > 0) || (p.completions && Object.keys(p.completions).length > 0)); 
-                db.ref('players').set(pL).then(() => { 
-                    log("PURGA DE INACTIVOS EJECUTADA EN LA BD"); 
-                    toast("Purga Completada"); 
-                    location.reload(); 
-                }); 
+                db.ref('players').set(pL).then(() => { log("PURGA DE INACTIVOS EJECUTADA EN LA BD"); toast("Purga Completada"); location.reload(); }); 
             } 
         }
         
         function sCfg() { 
-            db.ref('system_settings/discord/url').set($('cf-w1').value); 
-            db.ref('system_settings/discord/url_sug').set($('cf-w2').value); 
-            db.ref('system_settings/discord/url_lvls').set($('cf-w3').value); 
-            db.ref('system_settings/custom_css').set($('cf-cs').value); 
-            log("Configuración Root Actualizada"); 
-            toast("Sistema Guardado"); 
+            db.ref('system_settings/discord/url').set($('cf-w1').value); db.ref('system_settings/discord/url_sug').set($('cf-w2').value); 
+            db.ref('system_settings/discord/url_lvls').set($('cf-w3').value); db.ref('system_settings/custom_css').set($('cf-cs').value); 
+            log("Configuración Root Actualizada"); toast("Sistema Guardado"); 
         }
         
         function tLck(v) { 
-            db.ref('system_settings/lockdown_active').set(v); 
-            log(`LOCKDOWN ACTIVADO: ${v}`); 
-            if(v) $('sl-id').style.background = "var(--ac)"; 
-            else $('sl-id').style.background = "#222"; 
+            db.ref('system_settings/lockdown_active').set(v); log(`LOCKDOWN ACTIVADO: ${v}`); 
+            if(v) $('sl-id').style.background = "var(--ac)"; else $('sl-id').style.background = "#222"; 
         }
         
         function bDB() { 
             const d = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fD)); 
-            const a = document.createElement('a'); 
-            a.href = d; 
-            a.download = `SCULLY_DB_BACKUP_${Date.now()}.json`; 
-            a.click(); 
+            const a = document.createElement('a'); a.href = d; a.download = `SCULLY_DB_BACKUP_${Date.now()}.json`; a.click(); 
             log("Backup JSON Descargado"); 
         }
         
         function rDB(e) { 
-            const f = e.target.files[0]; 
-            if(!f) return; 
+            const f = e.target.files[0]; if(!f) return; 
             const r = new FileReader(); 
             r.onload = function(ev) { 
                 try { 
@@ -1763,13 +1492,10 @@
                     if(confirm("PELIGRO: ¿Estás seguro de que quieres sobrescribir toda la Base de Datos OMNI con este archivo?")) { 
                         db.ref('/').set(j).then(() => location.reload()); 
                     } 
-                } catch(er) { 
-                    toast("JSON Corrupto/Inválido", true); 
-                } 
+                } catch(er) { toast("JSON Corrupto/Inválido", true); } 
             }; 
             r.readAsText(f); 
         }
     </script>
 </body>
-</html>
-
+</html>    
