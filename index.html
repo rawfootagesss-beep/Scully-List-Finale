@@ -1101,13 +1101,37 @@
             
             let vList = [];
             victorsRaw.forEach(p => { 
-                if (p.name !== l.first) { 
-                    let r = nexus(p.completions).find(x => x.level.toLowerCase() === l.name.toLowerCase()); 
-                    if(r) {
-                        vList.push({ name: p.name, verified: p.verified, link: r.link, time: r.time || 0, activeCosmetic: p.activeCosmetic });
-                    }
-                } 
+                let r = nexus(p.completions).find(x => x.level.toLowerCase() === l.name.toLowerCase()); 
+                if(r) {
+                    vList.push({ name: p.name, verified: p.verified, link: r.link, time: r.time || 9999999999999, activeCosmetic: p.activeCosmetic });
+                }
             });
+
+            // ORDENACIÓN MAESTRA: Ordena a los jugadores por el timestamp de su récord
+            vList.sort((a, b) => a.time - b.time);
+            
+            let vHTML = "";
+            vList.forEach((p, i) => { 
+                let vTick = p.verified ? `<i class="fas fa-check-circle verified-tick"></i>` : ""; 
+                let cos = getCosmetic(p.activeCosmetic);
+                let isFirst = (p.name === l.first);
+                
+                vHTML += `
+                <div class="v-row" style="${isFirst ? 'background:rgba(255,215,0,0.05); border-left:2px solid var(--gd);' : ''}">
+                    <span class="notranslate ${cos.eC}" style="color:${cos.nC}; ${cos.tG}; font-weight:800; font-size:1rem;">
+                        <small style="color:#666; margin-right:5px;">#${i+1}</small> ${p.name} ${vTick}
+                        ${isFirst ? '<i class="fas fa-crown" style="color:var(--gd); font-size:0.7rem; margin-left:5px;" title="First Victor"></i>' : ''}
+                    </span>
+                    <a href="${p.link}" target="_blank" style="color:var(--cy); text-decoration:none; font-weight:800; font-size:0.75rem; background:rgba(0,255,255,0.1); padding:8px 15px; border-radius:8px; border:1px solid rgba(0,255,255,0.2);">
+                        <i class="fas fa-play"></i> VER PRUEBA
+                    </a>
+                </div>`; 
+            });
+            
+            document.getElementById('c-victors').innerHTML = vHTML || '<p style="padding:20px; text-align:center; color:#555;">El nivel permanece invicto.</p>'; 
+            document.getElementById('cinemaModal').style.display = "flex"; 
+            document.body.style.overflow = "hidden";
+        }
 
             vList.sort((a, b) => a.time - b.time);
             
@@ -1351,3 +1375,4 @@
     </script>
 </body>
 </html>
+
