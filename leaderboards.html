@@ -161,6 +161,38 @@
             .podium-crown { top: -15px; }
             #personal-tracker { bottom: 10px; right: 10px; left: 10px; text-align: center; }
         }
+
+        /* =========================================
+           [OMNI-NEW] BARRA DE FILTROS DEL RANKING
+           ========================================= */
+        .filter-bar {
+            display: flex; gap: 12px; flex-wrap: wrap;
+            align-items: center; margin-bottom: 25px;
+            background: rgba(0,0,0,0.5); padding: 18px 20px;
+            border-radius: 15px; border: 1px solid rgba(255,255,255,0.06);
+        }
+        .filter-search {
+            flex: 1; min-width: 180px; background: transparent;
+            border: 1px solid #2a2a2a; color: #fff; padding: 10px 15px;
+            border-radius: 10px; font-family: 'JetBrains Mono'; font-size: 0.8rem;
+            outline: none; transition: 0.3s;
+        }
+        .filter-search:focus { border-color: var(--cyan); }
+        .filter-search::placeholder { color: #444; }
+        .filter-chip {
+            padding: 8px 16px; border-radius: 20px; font-size: 0.72rem;
+            font-weight: 800; cursor: pointer; transition: 0.2s; border: 1px solid #2a2a2a;
+            background: transparent; color: #666; text-transform: uppercase;
+            letter-spacing: 1px; font-family: 'JetBrains Mono';
+            white-space: nowrap;
+        }
+        .filter-chip:hover { border-color: var(--accent); color: var(--accent); }
+        .filter-chip.active { background: var(--accent); border-color: var(--accent); color: #000; }
+        .filter-count {
+            margin-left: auto; font-family: 'JetBrains Mono'; font-size: 0.7rem; color: #555;
+            white-space: nowrap;
+        }
+
     </style>
 </head>
 <body>
@@ -190,6 +222,20 @@
             <div id="pfp-requests-list">
                 <p style="color:#666; font-size:0.8rem;">Cargando base de datos...</p>
             </div>
+        </div>
+
+
+        <!-- [OMNI-NEW] Barra de filtros interactiva -->
+        <div class="filter-bar">
+            <input type="text" class="filter-search" id="rank-search"
+                placeholder="&#xf002;  Buscar jugador..." oninput="applyFilters()">
+            <button class="filter-chip active" id="chip-all"     onclick="setFilter('all')">Todos</button>
+            <button class="filter-chip"        id="chip-top10"   onclick="setFilter('top10')">Top 10</button>
+            <button class="filter-chip"        id="chip-verified" onclick="setFilter('verified')">
+                <i class="fas fa-check-circle" style="margin-right:4px;"></i>Verificados
+            </button>
+            <button class="filter-chip"        id="chip-cosmetic" onclick="setFilter('cosmetic')">Con Cosmético</button>
+            <span class="filter-count" id="filter-count">-- jugadores</span>
         </div>
 
         <div id="podium-display" class="podium-container"></div>
@@ -240,6 +286,12 @@
         let isStaff = false;
         let myName = "Desconocido";
         const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
+
+        // [OMNI-SEC] Sanitizador anti-XSS para datos de usuario en innerHTML
+        function escapeHTML(str) {
+            if (typeof str !== 'string') return '';
+            return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+        }
 
         // VERIFICAR ROL DE STAFF (PARA EL PANEL DE FOTOS Y TRACKER PERSONAL)
         auth.onAuthStateChanged(user => {
@@ -309,7 +361,13 @@
                 let pts = 0;
                 uniqueLevels.forEach(name => {
                     let idx = levels.findIndex(l => l.name === name);
-                    if(idx > -1) { pts += Math.max(100 - (idx * 0.6), 5) * (levels[idx].bounty ? 2 : 1); }
+                    if(idx > -1) {
+                        let base = Math.max(100 - (idx * 0.6), 5);
+                        if(levels[idx].bounty) base *= 2;
+                        // [FIX] Bonus x2 si el jugador es el First Victor de este nivel
+                        if(levels[idx].first && levels[idx].first.toLowerCase() === p.name.toLowerCase()) base *= 2;
+                        pts += base;
+                    }
                 });
                 
                 pts += (p.totalXP || 0);
@@ -432,7 +490,8 @@
                     flagHtml = `<img src="https://flagcdn.com/w40/${p.country.toLowerCase()}.png" class="player-flag" title="${p.country.toUpperCase()}" alt="${p.country}">`;
                 }
 
-                let bio = p.bio ? p.bio : "<i>Sin biografía establecida.</i>";
+                // [OMNI-SEC] Bio sanitizada: el usuario podría haber escrito HTML/JS en su bio
+                let bio = p.bio ? escapeHTML(p.bio) : "<i>Sin biografía establecida.</i>";
                 
                 let safePfp = (p.photo && p.photo !== "null" && p.photo !== "undefined" && p.photo.trim() !== "") ? p.photo : (p.pfp && p.pfp !== "null" && p.pfp !== "undefined" && p.pfp.trim() !== "") ? p.pfp : 'https://i.imgur.com/8pw98K4.png';
                 let isMeStyle = (p.name === myName) ? "border-color: var(--cyan); background: rgba(0, 255, 255, 0.05);" : `border: ${cos.bS};`;
@@ -518,6 +577,38 @@
 
         function closeModal() { document.getElementById('playerModal').style.display = "none"; }
         window.onclick = function(event) { let modal = document.getElementById('playerModal'); if (event.target == modal) { closeModal(); } }
-    </script>
+    
+        // =============================================
+        // [OMNI-NEW] LÓGICA DE FILTROS DEL RANKING
+        // =============================================
+        let activeFilter = 'all';
+        let searchQuery = '';
+
+        function setFilter(f) {
+            activeFilter = f;
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            document.getElementById('chip-' + f)?.classList.add('active');
+            applyFilters();
+        }
+
+        function applyFilters() {
+            searchQuery = document.getElementById('rank-search')?.value.toLowerCase().trim() || '';
+            let filtered = [...globalPlayers];
+
+            if (activeFilter === 'top10')    filtered = filtered.slice(0, 10);
+            if (activeFilter === 'verified') filtered = filtered.filter(p => p.verified);
+            if (activeFilter === 'cosmetic') filtered = filtered.filter(p => p.activeCosmetic);
+
+            if (searchQuery) {
+                filtered = filtered.filter(p => p.name.toLowerCase().includes(searchQuery));
+            }
+
+            const count = document.getElementById('filter-count');
+            if (count) count.innerText = filtered.length + ' jugadores';
+
+            renderLeaderboard(filtered);
+        }
+
+        </script>
 </body>
 </html>
