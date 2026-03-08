@@ -583,10 +583,17 @@
     </div>
 
     <div id="aiModal" class="modal">
-        <div class="modal-content" style="border-color:var(--cyan);">
-            <h2 style="color:var(--cyan); font-family:'JetBrains Mono'; margin-top:0;"><i class="fas fa-brain"></i> SCULLY AI ENGINE</h2>
-            <div id="aiText" style="font-size:1.1rem; margin:30px 0; color:#fff; line-height:1.6;">Analizando red neuronal...</div>
-            <button type="button" class="btn-scully" onclick="document.getElementById('aiModal').style.display='none'" style="background:var(--cyan); color:#000; width:100%; justify-content:center; border:none;">CERRAR</button>
+        <div class="modal-content" style="border-color:var(--cyan); max-width:600px; text-align:left;">
+            <span style="position:absolute; top:15px; right:20px; color:#888; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('aiModal').style.display='none'">✕</span>
+            <h2 style="color:var(--cyan); font-family:'JetBrains Mono'; margin-top:0; font-size:1rem; letter-spacing:2px; text-transform:uppercase;">
+                <i class="fas fa-brain"></i> SCULLY AI ENGINE
+            </h2>
+            <div id="aiText" style="font-size:0.9rem; margin:20px 0; color:#fff; line-height:1.7;">
+                <span style="color:#555; font-family:'JetBrains Mono';">Inicializando...</span>
+            </div>
+            <button type="button" class="btn-scully" onclick="document.getElementById('aiModal').style.display='none'" style="background:var(--cyan); color:#000; width:100%; justify-content:center; border:none; margin-top:10px;">
+                <i class="fas fa-times"></i> CERRAR ANÁLISIS
+            </button>
         </div>
     </div>
 
@@ -1100,32 +1107,60 @@
             let code = originalCode.toUpperCase(); 
             let m = document.getElementById("mensaje-codigo");
             let pE = document.getElementById("easter-egg-anubis");
+            const inputEl = document.getElementById("input-codigo");
 
             if(!currentUserData.key) { m.innerText = "Inicia sesión primero."; m.style.color = "var(--red)"; return; }
-            
-            let uC = JSON.parse(localStorage.getItem('codigos_omni_' + currentUserData.name) || '[]');
-            if(uC.includes(code)) { m.innerText = "Ya canjeaste este código."; m.style.color = "#888"; return; }
+            if(!code) return;
 
+            // [FIX CÓDIGO-VISIBLE] Limpiamos el input ANTES de mostrar el resultado
+            // para que el código nunca quede visible en pantalla junto al mensaje.
+            inputEl.value = "";
+
+            // Easter egg Anubis (no da XP, no necesita validación)
             if(code === "ANUBIS") { 
                 pE.style.display = "flex"; setTimeout(()=> pE.style.display = "none", 4000); 
-                document.getElementById("input-codigo").value = ""; return; 
-            }
-            if(code === "MATRIX" || code === "SCULLYVIP" || code === "BLOODLUST" || code === "RAINBOW") {
-                db.ref(`players/${currentUserData.key}/inventory`).push({itemName: code});
-                m.innerText = "¡Cosmético Desbloqueado!"; m.style.color = "var(--green)";
-                uC.push(code); localStorage.setItem('codigos_omni_' + currentUserData.name, JSON.stringify(uC));
-                document.getElementById("input-codigo").value = ""; return;
+                return; 
             }
 
-            m.innerText = "Validando...";
-            db.ref(`promo_codes/${code}`).once('value').then(snap => {
-                const data = snap.val();
-                if (data) {
-                    db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => { db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0) + data.xp); }); 
-                    m.innerHTML = `<span style="color:var(--green)">+${data.xp} XP</span> | <i>"${data.msg}"</i>`;
-                    uC.push(code); localStorage.setItem('codigos_omni_' + currentUserData.name, JSON.stringify(uC));
-                    document.getElementById("input-codigo").value = "";
-                } else { m.innerText = "Código inválido."; m.style.color = "var(--red)"; }
+            // [FIX SEGURIDAD] Verificar si ya canjeó este código consultando Firebase
+            // en lugar de solo localStorage, para que no sea bypasseable.
+            m.innerText = "Verificando..."; m.style.color = "#aaa";
+
+            db.ref(`players/${currentUserData.key}/usedCodes`).once('value').then(snapCodes => {
+                const usedCodes = snapCodes.val() || {};
+
+                if(usedCodes[code]) {
+                    m.innerText = "Código ya canjeado anteriormente.";
+                    m.style.color = "#555";
+                    return;
+                }
+
+                // Códigos de cosméticos hardcodeados (easter eggs de la comunidad)
+                const cosmeticCodes = ["MATRIX", "SCULLYVIP", "BLOODLUST", "RAINBOW"];
+                if(cosmeticCodes.includes(code)) {
+                    db.ref(`players/${currentUserData.key}/inventory`).push({itemName: code});
+                    db.ref(`players/${currentUserData.key}/usedCodes/${code}`).set(Date.now());
+                    // [FIX CÓDIGO-VISIBLE] Mensaje genérico sin revelar el código
+                    m.innerHTML = `<span style="color:var(--green)"><i class="fas fa-gem"></i> ¡Cosmético secreto desbloqueado!</span>`;
+                    m.style.color = "var(--green)";
+                    return;
+                }
+
+                // Códigos de XP desde Firebase
+                db.ref(`promo_codes/${code}`).once('value').then(snap => {
+                    const data = snap.val();
+                    if(data) {
+                        db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => {
+                            db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0) + data.xp);
+                        });
+                        db.ref(`players/${currentUserData.key}/usedCodes/${code}`).set(Date.now());
+                        // [FIX CÓDIGO-VISIBLE] Solo mostramos la recompensa, nunca el código
+                        m.innerHTML = `<span style="color:var(--green)">+${data.xp} XP</span> <span style="color:#666">— ${data.msg}</span>`;
+                    } else {
+                        m.innerText = "Código inválido.";
+                        m.style.color = "var(--red)";
+                    }
+                });
             });
         }
 
@@ -1276,20 +1311,173 @@
                 btn.innerHTML = "<i class='fas fa-download'></i> FORJAR TITAN CARD 3.0"; btn.disabled = false;
             };
             
-            img.onerror = () => { img.crossOrigin = "Anonymous"; img.src = "https://i.imgur.com/6D2g3wU.png"; }; 
-            img.src = (p.photo && p.photo !== "null" && p.photo !== "undefined" && p.photo.trim() !== "") ? p.photo : "https://i.imgur.com/6D2g3wU.png";
+            // [FIX] Usar foto real del jugador desde Firebase (photo > pfp > default)
+            const safePfpCard = (p.photo && p.photo !== "null" && p.photo !== "undefined" && p.photo.trim() !== "")
+                ? p.photo
+                : (p.pfp && p.pfp !== "null" && p.pfp !== "undefined" && p.pfp.trim() !== "")
+                ? p.pfp
+                : "https://i.imgur.com/6D2g3wU.png";
+
+            img.onerror = () => {
+                // Si la foto falla (CORS), intentamos con el proxy de imgur como fallback
+                img.crossOrigin = "Anonymous";
+                img.src = "https://i.imgur.com/6D2g3wU.png";
+            };
+            img.src = safePfpCard;
         }
 
-        function runScullyAI() { 
-            document.getElementById('aiModal').style.display = 'block'; const aiText = document.getElementById('aiText'); 
-            aiText.innerHTML = "Sincronizando red neuronal con base de datos..."; 
-            
-            setTimeout(() => { 
-                const lvls = nexus(fullData.levels); 
-                if(lvls.length < 3) { aiText.innerHTML = "Nodos insuficientes."; return; } 
-                const target = lvls[Math.floor(Math.random() * (lvls.length / 1.5))].name; 
-                aiText.innerHTML = `<span style="color:#888; font-size:0.8rem;">ANÁLISIS COMPLETADO.</span><br><br>Siguiente objetivo recomendado:<br><b style="color:var(--cyan); font-size:2.2rem; text-transform:uppercase; display:block; margin-top:10px;">${target}</b><br><span style="font-size:0.8rem; color:#aaa;">Probabilidad matemática de éxito: ${Math.floor(Math.random() * 60 + 20)}%</span>`; 
-            }, 1800); 
+        function runScullyAI() {
+            document.getElementById('aiModal').style.display = 'flex';
+            const aiText = document.getElementById('aiText');
+            const lvls = nexus(fullData.levels);
+            const allPlayers = nexus(fullData.players);
+
+            if(lvls.length < 3) { aiText.innerHTML = "<span style='color:var(--red)'>Nodos insuficientes para el análisis.</span>"; return; }
+
+            // Fase 1: animación de boot
+            let bootLines = [
+                '> CONECTANDO CON NÚCLEO OMNI...',
+                '> CARGANDO MATRIZ DE NIVELES...',
+                '> ESCANEANDO PERFIL DE COMBATE...',
+                '> CALCULANDO VECTORES DE XP...',
+                '> ANALIZANDO RANKING GLOBAL...',
+                '> GENERANDO RECOMENDACIÓN TÁCTICA...'
+            ];
+            let lineIdx = 0;
+            aiText.innerHTML = `<div id="ai-boot" style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#555; text-align:left; line-height:2;"></div>`;
+            const bootEl = document.getElementById('ai-boot');
+            const bootInterval = setInterval(() => {
+                if(lineIdx < bootLines.length) {
+                    bootEl.innerHTML += bootLines[lineIdx] + '<br>';
+                    lineIdx++;
+                } else {
+                    clearInterval(bootInterval);
+                    renderAIResult();
+                }
+            }, 280);
+
+            function renderAIResult() {
+                // ---- Recopilar datos del jugador logueado ----
+                let myData = null;
+                if(currentUserData.name) {
+                    myData = allPlayers.find(p => p.name === currentUserData.name);
+                }
+
+                // ---- Calcular XP de todos para ranking ----
+                let rankedPlayers = allPlayers.map(p => {
+                    let xp = 0;
+                    nexus(p.completions).forEach(c => {
+                        let idx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase());
+                        if(idx > -1) {
+                            let base = Math.max(100 - (idx * 0.6), 5);
+                            if(lvls[idx].bounty) base *= 2;
+                            if(lvls[idx].first && lvls[idx].first.toLowerCase() === p.name.toLowerCase()) base *= 2;
+                            xp += base;
+                        } else { xp += c.xp || 0; }
+                    });
+                    return { name: p.name, totalXP: xp + (p.totalXP || 0) };
+                }).sort((a,b) => b.totalXP - a.totalXP);
+
+                let myRank = currentUserData.name ? rankedPlayers.findIndex(p => p.name === currentUserData.name) + 1 : -1;
+                let nextPlayer = myRank > 1 ? rankedPlayers[myRank - 2] : null;
+                let myTotalXP = myRank > 0 ? rankedPlayers[myRank - 1].totalXP : 0;
+
+                // ---- Niveles pendientes con XP potencial ----
+                let myCompletedNames = myData ? nexus(myData.completions).map(c => c.level.toLowerCase()) : [];
+                let pending = lvls
+                    .map((l, idx) => {
+                        let base = Math.max(100 - (idx * 0.6), 5);
+                        if(l.bounty) base *= 2;
+                        return { name: l.name, xp: base, idx, bounty: l.bounty || false };
+                    })
+                    .filter(l => !myCompletedNames.includes(l.name.toLowerCase()))
+                    .sort((a, b) => b.xp - a.xp);
+
+                // ---- Top 3 recomendaciones ----
+                let top3 = pending.slice(0, 3);
+                // ---- El más asequible (mejor xp/dificultad, no el top 1) ----
+                let smartPick = pending[Math.min(Math.floor(pending.length * 0.15), pending.length - 1)];
+
+                // ---- Construir la respuesta ----
+                let html = '';
+
+                if(myData && myRank > 0) {
+                    // Jugador logueado con perfil
+                    let rankColor = myRank === 1 ? 'var(--gold)' : myRank <= 3 ? 'var(--cyan)' : myRank <= 10 ? 'var(--green)' : '#aaa';
+                    let gapHtml = nextPlayer
+                        ? `<span style="color:var(--red); font-size:0.8rem;">↑ A <b>${(nextPlayer.totalXP - myTotalXP).toFixed(1)} XP</b> de superar a <b>${nextPlayer.name}</b></span>`
+                        : `<span style="color:var(--gold); font-size:0.8rem;"><i class="fas fa-crown"></i> Eres el Titán #1 de OMNI</span>`;
+
+                    html += `
+                    <div style="background:rgba(0,0,0,0.5); border:1px solid #222; border-radius:12px; padding:18px; margin-bottom:18px; text-align:left;">
+                        <div style="font-size:0.65rem; color:#555; font-family:'JetBrains Mono'; margin-bottom:8px;">ESTADO DE COMBATE — ${currentUserData.name.toUpperCase()}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                            <span style="font-size:2rem; font-weight:900; color:${rankColor}; font-family:'JetBrains Mono';">#${myRank}</span>
+                            <div style="text-align:right;">
+                                <div style="color:#fff; font-weight:800;">${myTotalXP.toFixed(1)} XP</div>
+                                ${gapHtml}
+                            </div>
+                        </div>
+                        <div style="margin-top:10px; font-size:0.75rem; color:#666;">
+                            ${myCompletedNames.length} niveles completados · ${pending.length} pendientes
+                        </div>
+                    </div>`;
+
+                    if(smartPick) {
+                        html += `
+                    <div style="margin-bottom:12px;">
+                        <div style="font-size:0.65rem; color:#555; font-family:'JetBrains Mono'; margin-bottom:8px; text-transform:uppercase;">Objetivo Recomendado</div>
+                        <div style="background:rgba(0,255,255,0.05); border:1px solid rgba(0,255,255,0.2); border-radius:12px; padding:16px;">
+                            <b style="color:var(--cyan); font-size:1.4rem; text-transform:uppercase; display:block;">${smartPick.name}</b>
+                            <span style="color:#aaa; font-size:0.8rem;">
+                                +${smartPick.xp.toFixed(1)} XP · Posición #${smartPick.idx + 1}
+                                ${smartPick.bounty ? ' · <span style="color:var(--gold);"><i class="fas fa-fire"></i> BOUNTY</span>' : ''}
+                            </span>
+                        </div>
+                    </div>`;
+                    }
+
+                    if(top3.length > 0) {
+                        html += `<div style="font-size:0.65rem; color:#555; font-family:'JetBrains Mono'; margin-bottom:8px; text-transform:uppercase;">Top Niveles por XP Potencial</div>`;
+                        html += `<div style="display:flex; flex-direction:column; gap:6px;">`;
+                        top3.forEach((l, i) => {
+                            let colors = ['var(--gold)', 'var(--accent)', '#aaa'];
+                            html += `<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); border:1px solid #1a1a1a; border-radius:8px; padding:10px 14px;">
+                                <span style="color:${colors[i]}; font-weight:800; text-transform:uppercase; font-size:0.85rem;">${l.name}</span>
+                                <span style="color:#666; font-size:0.75rem; font-family:'JetBrains Mono';">+${l.xp.toFixed(1)} XP</span>
+                            </div>`;
+                        });
+                        html += `</div>`;
+                    }
+
+                } else {
+                    // Usuario no logueado o sin perfil — análisis del top del ranking
+                    let topLevel = lvls[0];
+                    let bountyLevels = lvls.filter(l => l.bounty);
+                    let topPlayer = rankedPlayers[0];
+
+                    html += `
+                    <div style="text-align:center; margin-bottom:20px;">
+                        <div style="font-size:0.65rem; color:#555; font-family:'JetBrains Mono'; margin-bottom:12px;">ANÁLISIS GENERAL DE LA RED</div>
+                        <b style="color:var(--cyan); font-size:1.6rem; text-transform:uppercase; display:block; margin-bottom:6px;">${topLevel.name}</b>
+                        <span style="color:#888; font-size:0.8rem;">El reto más difícil de la lista</span>
+                    </div>
+                    <div style="background:rgba(0,0,0,0.4); border-radius:10px; padding:14px; font-size:0.8rem; color:#aaa; margin-bottom:12px;">
+                        <b style="color:var(--gold);">Líder actual:</b> ${topPlayer?.name || 'N/A'} con ${topPlayer?.totalXP.toFixed(1) || 0} XP
+                    </div>`;
+
+                    if(bountyLevels.length > 0) {
+                        html += `<div style="background:rgba(255,215,0,0.05); border:1px dashed rgba(255,215,0,0.3); border-radius:10px; padding:14px; font-size:0.8rem;">
+                            <b style="color:var(--gold);"><i class="fas fa-fire"></i> ${bountyLevels.length} nivel(es) con Contrato Activo (Doble XP)</b><br>
+                            <span style="color:#888;">${bountyLevels.map(l => l.name).join(', ')}</span>
+                        </div>`;
+                    }
+
+                    html += `<p style="color:#555; font-size:0.75rem; margin-top:15px; font-family:'JetBrains Mono';">Inicia sesión para un análisis personalizado.</p>`;
+                }
+
+                aiText.innerHTML = html;
+            }
         }
 
         let tributeClicks = 0; let tributeTimer;
@@ -1305,10 +1493,25 @@
                         document.body.appendChild(star); setTimeout(() => star.remove(), 1500);
                     }, i * 200);
                 }
+                // [FIX XP-INF] El tributo solo da XP una vez por jugador.
+                // El flag tributeClaimed se guarda en Firebase, no en localStorage.
                 if(currentUserData.key) {
-                    db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => { db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0) + 1); });
-                    setTimeout(() => alert("🌟 TRIBUTO A 2PARX: Has honrado su legado. +1 XP de Lealtad ha sido sumado a tu billetera."), 1000);
-                } else { setTimeout(() => alert("🌟 TRIBUTO A 2PARX: Has honrado su legado. Inicia sesión para recibir tu recompensa la próxima vez."), 1000); }
+                    db.ref(`players/${currentUserData.key}/tributeClaimed`).once('value').then(snap => {
+                        if(snap.val()) {
+                            // Ya reclamó — solo muestra el homenaje visual, sin XP
+                            setTimeout(() => omniToast('🕊️ Ya honraste el legado de 2PARX. El tributo permanece.', 'gold', 4000), 1000);
+                        } else {
+                            // Primera vez — da la XP y marca como reclamado
+                            db.ref(`players/${currentUserData.key}`).update({
+                                totalXP: (fullData.players ? (Object.values(fullData.players).find(p => p.name === currentUserData.name)?.totalXP || 0) : 0) + 1,
+                                tributeClaimed: true
+                            });
+                            setTimeout(() => omniToast('🌟 TRIBUTO A 2PARX: Has honrado su legado. +1 XP de Lealtad ha sido sumado a tu billetera.', 'gold', 5000), 1000);
+                        }
+                    });
+                } else {
+                    setTimeout(() => omniToast('🌟 TRIBUTO A 2PARX: Inicia sesión para recibir tu recompensa.', 'gold', 4000), 1000);
+                }
             }
         }
 
