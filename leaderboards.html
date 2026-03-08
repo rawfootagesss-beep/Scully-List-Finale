@@ -362,7 +362,7 @@
                 uniqueLevels.forEach(name => {
                     let idx = levels.findIndex(l => l.name === name);
                     if(idx > -1) {
-                        let base = Math.max(100 - (idx * 0.6), 5);
+                        let base = Math.max(250 - (idx * 2), 5);
                         if(levels[idx].bounty) base *= 2;
                         // [FIX] Bonus x2 si el jugador es el First Victor de este nivel
                         if(levels[idx].first && levels[idx].first.toLowerCase() === p.name.toLowerCase()) base *= 2;
@@ -373,7 +373,7 @@
                 pts += (p.totalXP || 0);
 
                 p.pts = parseFloat(pts.toFixed(1));
-                p.lvl = Math.floor(p.pts / 50);
+                p.lvl = Math.floor(p.pts / 125);
                 p.isVerifier = levels.some(l => l.first?.toLowerCase() === p.name.toLowerCase());
             });
 
