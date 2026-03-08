@@ -12,24 +12,23 @@
         :root { 
             --bg: #050505; --gold: #ffd700; --red: #ff3333; 
             --cyan: #00ffff; --green: #00ff66; --purple: #cc00ff;
-            --border: rgba(255,255,255,0.1); 
+            --border: rgba(255,255,255,0.1); --card: rgba(15,15,15,0.9);
         }
         
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; margin: 0; padding: 20px; overflow-x: hidden; }
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; 
+            margin: 0; padding: 20px; overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 0%, rgba(255,215,0,0.03) 0%, transparent 70%);
+        }
         
-        .container { max-width: 1100px; margin: 0 auto; padding-bottom: 50px; }
+        .container { max-width: 1200px; margin: 0 auto; padding-bottom: 50px; }
         
         header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 20px; position: relative; }
         .back-btn { position: absolute; left: 0; top: 10px; color: #aaa; text-decoration: none; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
         .back-btn:hover { color: var(--gold); }
-        h1 { color: var(--gold); text-transform: uppercase; font-size: clamp(1.8rem, 5vw, 3rem); margin: 0; text-shadow: 0 0 20px rgba(255,215,0,0.3); }
+        h1 { color: var(--gold); text-transform: uppercase; font-size: clamp(1.8rem, 5vw, 3rem); margin: 0; text-shadow: 0 0 20px rgba(255,215,0,0.3); font-family: 'JetBrains Mono'; }
         
-        /* BILLETERA DEL USUARIO */
-        .user-wallet { background: rgba(0,255,255,0.05); padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 30px; border: 1px solid var(--cyan); box-shadow: 0 0 20px rgba(0,255,255,0.1); }
-        .user-wallet h2 { margin: 0; color: var(--cyan); font-family: 'JetBrains Mono'; font-size: 2rem; }
-        .user-wallet p { margin: 5px 0 0; color: #888; font-size: 0.85rem; text-transform: uppercase; }
-
         /* PANEL DE ADMIN OCULTO */
         #admin-panel { display: none; background: rgba(255,51,51,0.05); border: 1px dashed var(--red); padding: 20px; border-radius: 10px; margin-bottom: 30px; }
         .admin-title { color: var(--red); margin-top: 0; font-family: 'JetBrains Mono'; text-transform: uppercase; font-size: 1rem; }
@@ -41,18 +40,38 @@
         .btn-debug { background: var(--cyan); color: #000; border: none; padding: 12px 25px; cursor: pointer; font-weight: 800; border-radius: 5px; text-transform: uppercase; transition: 0.3s; }
         .btn-debug:hover { background: #00cccc; box-shadow: 0 0 15px rgba(0,255,255,0.4); }
 
-        /* CUADRÍCULA DEL MERCADO */
+        /* LAYOUT PRINCIPAL: BILLETERA + TIENDA */
+        .market-layout { display: flex; gap: 30px; align-items: flex-start; flex-wrap: wrap; }
+        
+        /* PANEL IZQUIERDO (BILLETERA Y TERMINAL) */
+        .side-panel { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 20px; }
+        
+        .user-wallet { background: rgba(0,255,255,0.05); padding: 25px; border-radius: 15px; text-align: center; border: 1px solid var(--cyan); box-shadow: inset 0 0 20px rgba(0,255,255,0.05), 0 10px 30px rgba(0,0,0,0.8); }
+        .user-wallet h2 { margin: 0; color: var(--cyan); font-family: 'JetBrains Mono'; font-size: 2.5rem; text-shadow: 0 0 15px rgba(0,255,255,0.4); }
+        .user-wallet p { margin: 5px 0 0; color: #888; font-size: 0.85rem; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
+
+        .terminal { background: rgba(0,0,0,0.9); border: 1px solid var(--border); border-radius: 15px; padding: 15px; font-family: 'JetBrains Mono'; font-size: 0.7rem; color: var(--cyan); height: 150px; overflow-y: hidden; position: relative; }
+        .terminal::after { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px); background-size: 100% 4px; pointer-events: none; }
+        .t-line { margin-bottom: 5px; opacity: 0; animation: typeLine 0.1s forwards; }
+        @keyframes typeLine { to { opacity: 1; } }
+
+        /* PANEL DERECHO (TIENDA) */
+        .shop-panel { flex: 2.5; min-width: 300px; }
         .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
         
         /* TARJETA DE PRODUCTO */
         .item-card { 
-            background: rgba(15,15,15,0.9); border: 1px solid var(--border); padding: 25px 20px; 
+            background: var(--card); border: 1px solid var(--border); padding: 25px 20px; 
             border-radius: 15px; text-align: center; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             position: relative; display: flex; flex-direction: column; justify-content: space-between;
+            overflow: hidden;
         }
-        .item-card:hover { transform: translateY(-10px); border-color: var(--color-hover, var(--gold)); box-shadow: 0 10px 30px var(--shadow-hover, rgba(255,215,0,0.2)); }
+        .item-card:hover { transform: translateY(-10px); border-color: var(--color-hover, var(--gold)); box-shadow: 0 10px 30px var(--shadow-hover, rgba(255,215,0,0.2)); z-index: 10; }
+        .item-card::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%); opacity:0; transition:0.4s; pointer-events: none; }
+        .item-card:hover::before { opacity:1; }
         
-        .item-icon { font-size: 3.5rem; margin-bottom: 15px; text-shadow: 0 0 15px currentColor; }
+        .item-icon { font-size: 3.5rem; margin-bottom: 15px; text-shadow: 0 0 15px currentColor; transition: 0.3s; }
+        .item-card:hover .item-icon { transform: scale(1.1); }
         .item-title { margin: 0 0 10px; font-size: 1.2rem; text-transform: uppercase; font-weight: 800; }
         .item-desc { color: #888; font-size: 0.8rem; line-height: 1.4; margin-bottom: 20px; flex-grow: 1; }
         
@@ -65,7 +84,8 @@
             color: var(--color-hover, var(--gold)); padding: 12px; flex-grow: 1; 
             cursor: pointer; transition: 0.3s; border-radius: 8px; font-weight: 800; text-transform: uppercase; 
         }
-        .btn-buy:hover { background: var(--color-hover, var(--gold)); color: #000; }
+        .btn-buy:hover:not(:disabled) { background: var(--color-hover, var(--gold)); color: #000; }
+        .btn-buy:disabled { opacity: 0.5; cursor: not-allowed; }
         
         .btn-gift {
             background: transparent; border: 2px solid var(--purple); 
@@ -89,12 +109,22 @@
         .card-glitch:hover .item-icon { animation: shake 0.5s infinite; }
         @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 20% { transform: translate(-1px, -2px) rotate(-1deg); } 40% { transform: translate(-3px, 0px) rotate(1deg); } 60% { transform: translate(3px, 2px) rotate(0deg); } 80% { transform: translate(1px, -1px) rotate(1deg); } 100% { transform: translate(-1px, 2px) rotate(-1deg); } }
 
-        /* MODAL DE REGALO */
+        /* MODALES */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .modal-content { background: #0a0a0a; padding: 30px; border-radius: 15px; border: 1px solid var(--purple); text-align: center; width: 90%; max-width: 400px; position: relative; }
         .modal-close { position: absolute; top: 15px; right: 20px; color: #888; font-size: 1.5rem; cursor: pointer; }
 
-        @media(max-width: 600px) {
+        /* PROTOCOLO DE COMPRA (CINEMÁTICO) */
+        #purchaseModal .modal-content { border-color: var(--gold); box-shadow: 0 0 50px rgba(255,215,0,0.15); animation: zoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-width: 450px; }
+        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .m-icon { font-size: 4rem; color: var(--gold); margin-bottom: 20px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .loader-bar { width: 100%; height: 4px; background: #222; border-radius: 4px; margin: 20px 0; overflow: hidden; position: relative; }
+        .loader-fill { position: absolute; top: 0; left: 0; height: 100%; background: var(--gold); width: 0%; transition: 0.5s ease; }
+
+        @media(max-width: 900px) {
+            .market-layout { flex-direction: column; }
+            .side-panel { position: static; width: 100%; }
             .back-btn { position: static; display: block; margin-bottom: 15px; }
         }
     </style>
@@ -104,14 +134,9 @@
     <div class="container">
         <header>
             <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> VOLVER AL HUB OMNI</a>
-            <h1><i class="fas fa-store"></i> Mercado de Cosméticos</h1>
-            <p style="color:#888; margin-top:5px; font-size:0.9rem;">Personaliza tu presencia o envía regalos a la comunidad.</p>
+            <h1><i class="fas fa-store"></i> Black Market</h1>
+            <p style="color:#888; margin-top:5px; font-size:0.9rem;">Intercambio Oficial de Puntos OMNI. Personaliza tu presencia.</p>
         </header>
-
-        <div class="user-wallet">
-            <p>Billetera XP Disponible</p>
-            <h2><i class="fas fa-coins"></i> <span id="wallet-xp">--</span></h2>
-        </div>
 
         <div id="admin-panel">
             <h3 class="admin-title"><i class="fas fa-terminal"></i> Inyector de Ítems Dinámicos (Admin)</h3>
@@ -126,11 +151,25 @@
             </div>
         </div>
 
-        <h3 style="color:#aaa; text-transform:uppercase; font-size:0.9rem; border-bottom:1px dashed #333; padding-bottom:10px;"><i class="fas fa-box-open"></i> Catálogo Oficial</h3>
-        
-        <div class="market-grid" id="store-items">
+        <div class="market-layout">
+            
+            <div class="side-panel">
+                <div class="user-wallet">
+                    <p>Billetera XP Disponible</p>
+                    <h2><i class="fas fa-coins"></i> <span id="wallet-xp">--</span></h2>
+                </div>
+                
+                <div class="terminal" id="term-box"></div>
             </div>
 
+            <div class="shop-panel">
+                <h3 style="color:#aaa; text-transform:uppercase; font-size:0.9rem; border-bottom:1px dashed #333; padding-bottom:10px; margin-top:0;"><i class="fas fa-box-open"></i> Catálogo de Suministros</h3>
+                <div class="market-grid" id="store-items">
+                    <p style="color:#666; width:100%; text-align:center; grid-column: 1 / -1;"><i class="fas fa-sync-alt fa-spin"></i> Cargando inventario...</p>
+                </div>
+            </div>
+            
+        </div>
     </div>
 
     <div id="giftModal" class="modal">
@@ -143,12 +182,31 @@
         </div>
     </div>
 
+    <div id="purchaseModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-microchip m-icon" id="pm-icon"></i>
+            <h2 id="pm-title" style="margin:0 0 10px; text-transform:uppercase; color:var(--gold); font-family:'JetBrains Mono';">PROTOCOLO INICIADO</h2>
+            <p id="pm-desc" style="color:#aaa; font-size:0.85rem; margin:0;">Verificando fondos encriptados...</p>
+            <div class="loader-bar"><div class="loader-fill" id="pm-bar"></div></div>
+            <p id="pm-log" style="font-family:'JetBrains Mono'; font-size:0.65rem; color:var(--cyan); margin:0; text-align:left;"></p>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'en,es', autoDisplay: false}, 'google_translate_element'); }
+        function toggleLanguage() {
+            var select = document.querySelector('.goog-te-combo');
+            if(select) { select.value = select.value === 'en' ? 'es' : 'en'; select.dispatchEvent(new Event('change')); } 
+            else { alert("Cargando traductor. Intenta en un segundo."); }
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     
     <script>
-        // CONFIGURACIÓN FIREBASE 
+        // CONFIGURACIÓN FIREBASE
         const firebaseConfig = { 
             apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
             authDomain: "scullylist.firebaseapp.com", 
@@ -162,8 +220,12 @@
         const auth = firebase.auth(); 
         const db = firebase.database();
         
+        let fullData = {};
+        let myPlayer = null;
         let currentUser = null;
+        let myIndex = -1;
         let pendingGift = null;
+        const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
 
         // CATÁLOGO OFICIAL 
         const officialCatalog = [
@@ -174,99 +236,243 @@
             { id: "glitch", name: "Anomalía Glitch", price: 350, icon: "fas fa-bug", color: "#00ffff", desc: "El sistema falla al leer tu nombre. Efecto de estática cibernética incluido.", extraClass: "card-glitch" },
             { id: "demon", name: "Aura Demoníaca", price: 400, icon: "fas fa-skull", color: "#ff3333", desc: "Demuestra tu letalidad. Borde rojo punteado y texto color sangre brillante.", extraClass: "" },
             { id: "vip", name: "Estatus VIP Dorada", price: 500, icon: "fas fa-crown", color: "#ffd700", desc: "El clásico de la realeza. Brillo dorado absoluto en todo el ecosistema de The Scully List.", extraClass: "" },
-            { id: "nyan", name: "Nyan Cat Trail", price: 777, icon: "fas fa-cat", color: "#ff00ff", desc: "¡Efecto Arcoíris animado súper legendario! Deja una estela multicolor a tu paso. (Extremadamente raro)", extraClass: "card-nyan" }
+            { id: "nyan", name: "Nyan Cat Trail", price: 777, icon: "fas fa-cat", color: "#ff00ff", desc: "¡Efecto Arcoíris animado súper legendario! Deja una estela multicolor a tu paso.", extraClass: "card-nyan" }
         ];
 
-        // VERIFICAR USUARIO Y ROL
+        // =========================================
+        // EFECTOS DE CONSOLA (TERMINAL)
+        // =========================================
+        const term = document.getElementById('term-box');
+        function printLog(msg, color="var(--cyan)") {
+            const l = document.createElement('div');
+            l.className = 't-line';
+            l.innerHTML = `> <span style="color:${color}">${msg}</span>`;
+            term.appendChild(l);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        setTimeout(() => printLog("Iniciando Handshake con servidor principal..."), 500);
+        setTimeout(() => printLog("Desencriptando Catálogo de Cosméticos..."), 1500);
+
+        // MOTOR COSMÉTICO (Colores automáticos)
+        function getCosmetic(ac) {
+            let nC = "#fff", tG = "", bS = "1px solid var(--border)", eC = "", bgBtn = "rgba(255,255,255,0.05)", hoverC = "#fff";
+            if(!ac) return {nC, tG, bS, eC, bgBtn, hoverC};
+            ac = ac.toUpperCase(); 
+            
+            if(ac.includes("VIP") || ac.includes("DORADO")){ nC="var(--gold)"; bS="1px solid var(--gold)"; bgBtn="rgba(255,215,0,0.1)"; hoverC="var(--gold)"; }
+            else if(ac.includes("HACKER") || ac.includes("MATRIX")){ nC="var(--green)"; tG="text-shadow:0 0 5px var(--green); font-family:'JetBrains Mono';"; bS="1px dashed var(--green)"; bgBtn="rgba(0,255,102,0.1)"; hoverC="var(--green)"; }
+            else if(ac.includes("AURA") || ac.includes("DEMON")){ nC="var(--red)"; bS="1px solid var(--red)"; tG="text-shadow:0 0 5px var(--red);"; bgBtn="rgba(255,51,51,0.1)"; hoverC="var(--red)"; }
+            else if(ac.includes("HIELO") || ac.includes("ICE")){ nC="#00ccff"; tG="text-shadow: 0 0 8px #00ccff;"; bS="1px solid #00ccff"; bgBtn="rgba(0,204,255,0.1)"; hoverC="#00ccff"; }
+            else if(ac.includes("FUEGO") || ac.includes("FIRE")){ nC="#ff5500"; tG="text-shadow: 0 0 8px #ff5500;"; bS="1px solid #ff5500"; bgBtn="rgba(255,85,0,0.1)"; hoverC="#ff5500"; }
+            else if(ac.includes("RAINBOW") || ac.includes("NYAN")){ eC="rbw-text"; bS="1px solid #ff00ff"; bgBtn="rgba(204,0,255,0.1)"; hoverC="#ff00ff"; nC="#ff00ff"; }
+            else if(ac.includes("GLITCH")){ eC="glitch-text"; bS="1px solid #00ffff"; tG="text-shadow: 2px 0 red, -2px 0 blue;"; bgBtn="rgba(0,255,255,0.1)"; hoverC="#00ffff"; nC="#00ffff"; }
+            
+            return {nC, tG, bS, eC, bgBtn, hoverC};
+        }
+
+        // =========================================
+        // CARGA DE DATOS Y RENDERIZADO BILLETERA
+        // =========================================
         auth.onAuthStateChanged(user => {
-            if(user) {
-                db.ref('players').once('value').then(snap => {
-                    const players = snap.val();
-                    for(let key in players) {
-                        if(players[key].email === user.email) {
-                            currentUser = { ...players[key], key: key };
-                            document.getElementById('wallet-xp').innerText = (currentUser.totalXP || 0).toFixed(1);
-                            
-                            // SI ES ADMIN O SCORE, MOSTRAR PANEL DE INYECCIÓN
-                            let role = currentUser.role || '';
-                            if(role === 'admin' || currentUser.name.toLowerCase() === 'score') {
-                                document.getElementById('admin-panel').style.display = 'block';
-                            }
-                            break;
+            db.ref('/').on('value', snap => {
+                fullData = snap.val() || {};
+                const lvls = nx(fullData.levels);
+                let players = nx(fullData.players);
+
+                if(user) {
+                    // Encontrar tu perfil exacto
+                    myIndex = players.findIndex(p => p.email && p.email.toLowerCase() === user.email.toLowerCase());
+                    if(myIndex > -1) {
+                        let originalKey = Object.keys(fullData.players)[myIndex];
+                        myPlayer = { ...players[myIndex], key: originalKey };
+                        currentUser = myPlayer; // Sincroniza tu variable antigua
+
+                        // Recalcular XP Real (Igual que en el Index)
+                        let realXp = 0;
+                        nx(myPlayer.completions).forEach(c => {
+                            let idx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase());
+                            if(idx > -1) { realXp += Math.max(100 - (idx * 0.6), 5) * (lvls[idx].bounty ? 2 : 1); } 
+                            else { realXp += c.xp || 0; }
+                        });
+                        myPlayer.calcXp = realXp + (myPlayer.totalXP || 0);
+                        
+                        renderWallet();
+                        
+                        // Panel Admin
+                        let role = myPlayer.role || '';
+                        if(role === 'admin' || myPlayer.name.toLowerCase() === 'score') {
+                            document.getElementById('admin-panel').style.display = 'block';
                         }
+                    } else {
+                        renderGuestWallet();
                     }
-                });
-            } else {
-                document.getElementById('wallet-xp').innerText = "Inicia Sesión";
-            }
+                } else {
+                    renderGuestWallet();
+                }
+
+                // Renderizar Tienda con los dinámicos
+                renderStore(fullData.market_items || {});
+            });
         });
 
-        // RENDERIZAR TIENDA (Combina Oficiales + Firebase Dinámicos)
+        function renderWallet() {
+            if(!myPlayer) return;
+            const w = document.getElementById('wallet-xp');
+            w.innerText = myPlayer.calcXp.toFixed(1);
+            
+            if(!w.dataset.logged) { // Evita spam en la consola
+                setTimeout(() => printLog(`Acceso autorizado. Identidad confirmada: ${myPlayer.name}`, "var(--green)"), 2500);
+                w.dataset.logged = "true";
+            }
+        }
+
+        function renderGuestWallet() {
+            document.getElementById('wallet-xp').innerText = "INICIA SESIÓN";
+            document.getElementById('wallet-xp').parentElement.style.color = "#888";
+            
+            const termLog = document.getElementById('term-box').innerHTML;
+            if(!termLog.includes("Advertencia")) {
+                setTimeout(() => printLog("Advertencia: Usuario no identificado. Transacciones bloqueadas.", "var(--red)"), 2500);
+            }
+        }
+
+        // =========================================
+        // CATÁLOGO DE TIENDA DINÁMICO
+        // =========================================
         function renderStore(dynamicItems) {
             const grid = document.getElementById('store-items');
             let html = "";
 
-            officialCatalog.forEach(item => {
-                html += buildCard(item.id, item.name, item.price, item.icon, item.color, item.desc, item.extraClass, false);
-            });
-
+            // Combinar y Ordenar (Oficiales + Dinámicos)
+            let combined = [...officialCatalog];
             if(dynamicItems) {
                 for(let key in dynamicItems) {
                     let d = dynamicItems[key];
                     if(d.active !== false) { 
-                        html += buildCard(key, d.name, d.price, d.icon || 'fas fa-star', d.color || '#00ffff', "Ítem Temporal del Evento Admin.", "card-dynamic", true);
+                        combined.push({ id: key, name: d.name, price: d.price, icon: d.icon || 'fas fa-star', color: d.color || '#00ffff', desc: "Ítem Temporal del Evento Admin.", extraClass: "card-dynamic", isDynamic: true });
                     }
                 }
             }
+            
+            combined.sort((a,b) => b.price - a.price);
 
+            // Revisar qué posees o está en proceso
+            let myInv = myPlayer ? nx(myPlayer.inventory).map(i => i.itemName.toLowerCase()) : [];
+            let myReqs = myPlayer ? nx(fullData.market_requests).filter(r => r.player === myPlayer.name).map(r => r.itemName.toLowerCase()) : [];
+
+            combined.forEach(item => {
+                let cos = getCosmetic(item.name); 
+                let isOwned = myInv.includes(item.name.toLowerCase());
+                let isPending = myReqs.includes(item.name.toLowerCase());
+                
+                let btnHtml = "";
+                let cardStyle = `border: ${cos.bS};`;
+                
+                if(isOwned) {
+                    btnHtml = `<button class="btn-buy" disabled style="color:var(--green); border-color:var(--green); background:rgba(0,255,102,0.05);"><i class="fas fa-check"></i> ADQUIRIDO</button>`;
+                    cardStyle = `border: 1px solid var(--green); opacity: 0.6;`;
+                } else if(isPending) {
+                    btnHtml = `<button class="btn-buy" disabled style="color:var(--cyan); border-color:var(--cyan); background:rgba(0,255,255,0.05);"><i class="fas fa-clock"></i> EN PROCESO</button>`;
+                    cardStyle = `border: 1px solid var(--cyan); opacity: 0.8;`;
+                } else {
+                    let canAfford = myPlayer && myPlayer.calcXp >= item.price;
+                    let cursorStyle = canAfford ? '' : 'cursor:not-allowed; opacity:0.3;';
+                    let onclickEvent = canAfford ? `onclick="initPurchase('${item.id}', '${item.name}', ${item.price})"` : `onclick="alert('XP Insuficiente. Sigue completando demons.')"`;
+                    
+                    btnHtml = `<button class="btn-buy" style="background:${cos.bgBtn}; border-color:${cos.nC}; color:${cos.nC}; ${cursorStyle}" ${onclickEvent} onmouseover="this.style.background='${cos.hoverC}'; this.style.color='#000';" onmouseout="this.style.background='${cos.bgBtn}'; this.style.color='${cos.nC}';"><i class="fas fa-shopping-cart"></i> FORJAR CONTRATO</button>`;
+                }
+
+                let badge = item.isDynamic ? `<span style="position:absolute; top:10px; right:10px; background:${item.color}; color:#000; font-size:0.6rem; padding:2px 6px; border-radius:3px; font-weight:bold;">NUEVO</span>` : "";
+
+                html += `
+                <div class="item-card ${item.extraClass || ''}" style="${cardStyle} --color-hover: ${cos.nC || item.color}; --shadow-hover: ${cos.nC || item.color}44;">
+                    ${badge}
+                    <i class="${item.icon} item-icon" style="color: ${cos.nC || item.color};"></i>
+                    <h3 class="item-title ${cos.eC}" style="color: ${cos.nC || item.color}; ${cos.tG}">${item.name}</h3>
+                    <p class="item-desc">${item.desc}</p>
+                    
+                    <div style="margin-top:auto;">
+                        <div class="item-price" style="color:${cos.nC || item.color}; border-color:${cos.nC || '#333'};"><i class="fas fa-coins"></i> ${item.price} XP</div>
+                        <div class="action-buttons">
+                            ${btnHtml}
+                            <button class="btn-gift" title="Regalar a alguien" onclick="openGiftModal('${item.id}', '${item.name}', ${item.price})"><i class="fas fa-gift"></i></button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            
             grid.innerHTML = html;
         }
 
-        // Creador de Tarjetas HTML
-        function buildCard(id, name, price, icon, color, desc, extraClass, isDynamic) {
-            let badge = isDynamic ? `<span style="position:absolute; top:10px; right:10px; background:${color}; color:#000; font-size:0.6rem; padding:2px 6px; border-radius:3px; font-weight:bold;">NUEVO</span>` : "";
+        // =========================================
+        // LÓGICA DE COMPRA CINEMATOGRÁFICA
+        // =========================================
+        function initPurchase(id, name, price) {
+            if(!myPlayer) return;
             
-            return `
-            <div class="item-card ${extraClass}" style="--color-hover: ${color}; --shadow-hover: ${color}44;">
-                ${badge}
-                <i class="${icon} item-icon" style="color: ${color};"></i>
-                <h3 class="item-title" style="color: ${color};">${name}</h3>
-                <p class="item-desc">${desc}</p>
-                <div class="item-price">${price} XP</div>
-                <div class="action-buttons">
-                    <button class="btn-buy" onclick="buyItem('${id}', '${name}', ${price})">COMPRAR</button>
-                    <button class="btn-gift" title="Regalar a alguien" onclick="openGiftModal('${id}', '${name}', ${price})"><i class="fas fa-gift"></i></button>
-                </div>
-            </div>`;
+            const modal = document.getElementById('purchaseModal');
+            const icon = document.getElementById('pm-icon');
+            const title = document.getElementById('pm-title');
+            const desc = document.getElementById('pm-desc');
+            const bar = document.getElementById('pm-bar');
+            const logT = document.getElementById('pm-log');
+
+            modal.style.display = 'flex';
+            icon.className = "fas fa-microchip m-icon"; icon.style.color = "var(--gold)"; icon.style.animation = "pulse 2s infinite";
+            title.innerText = "PROTOCOLO INICIADO"; title.style.color = "var(--gold)";
+            desc.innerText = `Autorizando contrato por: ${name}`;
+            bar.style.width = "0%"; bar.style.background = "var(--gold)";
+            logT.innerHTML = "> Verificando identidad de red...<br>";
+
+            // Fase 1: Verificación
+            setTimeout(() => {
+                bar.style.width = "30%";
+                logT.innerHTML += "> Identidad aceptada.<br>> Analizando fondos en Billetera XP...<br>";
+                
+                // Fase 2: Envío de Petición a DB
+                setTimeout(() => {
+                    bar.style.width = "70%";
+                    logT.innerHTML += "> Fondos suficientes. Encriptando paquete...<br>";
+                    
+                    db.ref('market_requests').push({
+                        player: myPlayer.name,
+                        itemName: name,
+                        price: price,
+                        date: Date.now()
+                    }).then(() => {
+                        // Fase 3: Éxito
+                        setTimeout(() => {
+                            bar.style.width = "100%"; bar.style.background = "var(--green)";
+                            icon.className = "fas fa-check-circle m-icon"; icon.style.color = "var(--green)"; icon.style.animation = "none";
+                            title.innerText = "CONTRATO ENVIADO"; title.style.color = "var(--green)";
+                            desc.innerText = `El Staff validará el cobro de ${price} XP pronto.`;
+                            logT.innerHTML += "> <span style='color:var(--green)'>Petición enviada a los Altos Mandos.</span>";
+                            
+                            printLog(`Transacción solicitada: [${name}]`, "var(--gold)");
+
+                            setTimeout(() => { modal.style.display = 'none'; }, 3500);
+                        }, 1000);
+                    }).catch(e => {
+                        // Fase 3: Error DB
+                        bar.style.background = "var(--red)";
+                        icon.className = "fas fa-times-circle m-icon"; icon.style.color = "var(--red)"; icon.style.animation = "none";
+                        title.innerText = "ERROR CRÍTICO"; title.style.color = "var(--red)";
+                        desc.innerText = "Fallo al comunicar con la red central.";
+                        logT.innerHTML += `> <span style='color:var(--red)'>Error: ${e.message}</span>`;
+                        setTimeout(() => { modal.style.display = 'none'; }, 4000);
+                    });
+
+                }, 1500);
+            }, 1000);
         }
 
-        // ESCUCHAR ÍTEMS DINÁMICOS
-        db.ref('market_dynamic_items').on('value', snap => {
-            renderStore(snap.val());
-        });
-
-        // 1-CLICK COMPRA
-        function buyItem(itemId, itemName, price) {
-            if(!currentUser) return alert("⚠️ Error: Debes iniciar sesión para realizar transacciones.");
-            if((currentUser.totalXP || 0) < price) return alert(`❌ Fondos insuficientes. Necesitas ${price} XP.`);
-            
-            let newXP = currentUser.totalXP - price;
-            
-            // Actualizar Billetera, Inventario y Equipar instantáneamente
-            db.ref(`players/${currentUser.key}/totalXP`).set(newXP);
-            db.ref(`players/${currentUser.key}/inventory`).push({ itemName: itemId, purchasedAt: Date.now() });
-            db.ref(`players/${currentUser.key}/activeCosmetic`).set(itemId);
-            
-            currentUser.totalXP = newXP;
-            document.getElementById('wallet-xp').innerText = newXP.toFixed(1);
-            
-            alert(`✅ ¡Transacción exitosa! El cosmético [ ${itemName} ] ha sido equipado en tu perfil.`);
-        }
-
+        // =========================================
         // LÓGICA DE REGALOS PÚBLICOS
+        // =========================================
         function openGiftModal(itemId, itemName, price) {
-            if(!currentUser) return alert("⚠️ Error: Debes iniciar sesión para regalar.");
-            if((currentUser.totalXP || 0) < price) return alert(`❌ Fondos insuficientes para regalar este ítem.`);
+            if(!myPlayer) return alert("⚠️ Error: Debes iniciar sesión para regalar.");
+            if((myPlayer.calcXp || 0) < price) return alert(`❌ Fondos insuficientes. Necesitas ${price} XP para regalar esto.`);
             
             pendingGift = { id: itemId, name: itemName, price: price };
             document.getElementById('gift-item-name').innerText = itemName;
@@ -282,7 +488,6 @@
             let receiverName = document.getElementById('gift-receiver').value.trim();
             if(!receiverName) return;
 
-            // Buscar al jugador en la BD
             db.ref('players').once('value').then(snap => {
                 let players = snap.val();
                 let receiverKey = null;
@@ -290,36 +495,34 @@
 
                 for(let k in players) {
                     if(players[k].name.toLowerCase() === receiverName.toLowerCase()) {
-                        receiverKey = k;
-                        realReceiverName = players[k].name;
-                        break;
+                        receiverKey = k; realReceiverName = players[k].name; break;
                     }
                 }
 
-                if(!receiverKey) return alert("❌ Error: Jugador no encontrado en la red OMNI.");
-                if(receiverKey === currentUser.key) return alert("❌ No puedes enviarte un regalo a ti mismo.");
+                if(!receiverKey) return alert("❌ Error: Jugador destino no encontrado en la base de datos.");
+                if(receiverKey === myPlayer.key) return alert("❌ No puedes enviarte un regalo a ti mismo.");
 
-                // Procesar transacción
-                let newXP = currentUser.totalXP - pendingGift.price;
-                db.ref(`players/${currentUser.key}/totalXP`).set(newXP);
-                db.ref(`players/${receiverKey}/inventory`).push({ itemName: pendingGift.id, receivedFrom: currentUser.name, date: Date.now() });
+                // Procesar transacción directa (resta de tu totalXP puro)
+                let newTotalXP = (myPlayer.totalXP || 0) - pendingGift.price;
+                db.ref(`players/${myPlayer.key}/totalXP`).set(newTotalXP);
+                db.ref(`players/${receiverKey}/inventory`).push({ itemName: pendingGift.name, receivedFrom: myPlayer.name, date: Date.now() });
                 
-                // NOTIFICACIÓN EN EL CHAT GLOBAL (REGALO PÚBLICO)
+                // Anuncio Público
                 db.ref('global_chat').push({ 
                     user: "OMNI BOT", 
-                    text: `🎁 ¡Transacción Pública! [${currentUser.name}] ha gastado ${pendingGift.price} XP para regalarle [${pendingGift.name}] a [${realReceiverName}]. ¡Qué generosidad!`, 
+                    text: `🎁 ¡Transacción Pública! [${myPlayer.name}] ha gastado ${pendingGift.price} XP para regalarle [${pendingGift.name}] a [${realReceiverName}].`, 
                     time: Date.now() 
                 });
 
-                currentUser.totalXP = newXP;
-                document.getElementById('wallet-xp').innerText = newXP.toFixed(1);
-                
-                alert(`✅ ¡Regalo enviado con éxito a ${realReceiverName} y anunciado en el Chat Global!`);
+                printLog(`Regalo enviado exitosamente a ${realReceiverName}`, "var(--purple)");
+                alert(`✅ ¡Regalo de ${pendingGift.name} enviado a ${realReceiverName}!`);
                 closeGiftModal();
             });
         }
 
-        // LÓGICA DEL PANEL ADMIN (AÑADIR ITEMS Y PURGAR XP)
+        // =========================================
+        // LÓGICA DEL PANEL ADMIN
+        // =========================================
         function addNewItem() {
             let name = document.getElementById('add-name').value.trim();
             let price = parseInt(document.getElementById('add-price').value);
@@ -329,17 +532,15 @@
             if(!name || isNaN(price)) return alert("El nombre y el precio son obligatorios.");
             
             db.ref('market_dynamic_items').push({ name: name, price: price, icon: icon, color: color, createdAt: Date.now() });
-            
-            alert(`Ítem [${name}] inyectado exitosamente en el mercado global.`);
+            alert(`Ítem [${name}] inyectado exitosamente.`);
             document.getElementById('add-name').value = ""; document.getElementById('add-price').value = "";
         }
 
         function resetMyXP() {
-            if(!currentUser) return;
-            if(confirm("⚠️ MODO DEBUG ADMIN ACTIVADO\n\n¿Seguro que quieres PURGAR tu Billetera XP a 0?\nEsto limpiará tus excesos de XP tras las pruebas.")) {
-                db.ref(`players/${currentUser.key}/totalXP`).set(0).then(() => {
-                    alert("✅ PURGA COMPLETADA. Tu XP ha sido sincronizada a los niveles completados reales.");
-                    currentUser.totalXP = 0; document.getElementById('wallet-xp').innerText = "0.0";
+            if(!myPlayer) return;
+            if(confirm("⚠️ MODO DEBUG ACTIVADO\n\n¿Purgar tu Billetera de XP 'manual' a 0?\nSolo te quedarás con la XP que hayas ganado pasándote niveles.")) {
+                db.ref(`players/${myPlayer.key}/totalXP`).set(0).then(() => {
+                    alert("✅ PURGA COMPLETADA. Tu billetera ahora refleja solo tus méritos.");
                 });
             }
         }
