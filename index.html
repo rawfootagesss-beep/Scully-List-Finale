@@ -1,4 +1,16 @@
-<!DOCTYPE html>
+                    navLogin.href = "perfil.html"; 
+                    navLogin.onclick = null; 
+                }
+                
+                const btnManage = document.getElementById('btn-manage-account');
+                if (btnManage) { btnManage.innerHTML = '<i class="fas fa-user"></i> MI PERFIL TITÁN'; btnManage.href = "perfil.html"; }
+
+                const ci = document.getElementById('g-chat-input'); 
+                const cb = document.getElementById('g-chat-btn');
+                if (ci && cb) { 
+                    ci.disabled = false; ci.placeholder = `Conectado como ${me.name}. Escribe a la comunidad...`; 
+                    cb.style.opacity = "1"; cb.style.pointerEvents = "all"; 
+                }<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -551,7 +563,7 @@
         </div>
     </div>
    <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">UN PODEROSO ENEMIGO</div>
-    <script type="text/javascript">
+<script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
                 pageLanguage: 'es', 
@@ -592,7 +604,7 @@
         const db = firebase.database();
         
         let fullData = {}; 
-        let currentAuthUser = null; // Guarda la sesión real
+        let currentAuthUser = null; 
         let currentUserData = { name: null, key: null }; 
         const nexus = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
 
@@ -662,7 +674,8 @@
             fullData = snap.val() || {};
             
             if (fullData.system_settings && fullData.system_settings.lockdown_active) { 
-                document.getElementById('lockdownScreen').style.display = 'flex'; return; 
+                document.getElementById('lockdownScreen').style.display = 'flex'; 
+                return; 
             } else { 
                 document.getElementById('lockdownScreen').style.display = 'none'; 
             }
@@ -687,11 +700,9 @@
                 document.getElementById('ticker-box').innerHTML = Object.values(fullData.admin_changelog).reverse().slice(0, 5).map(l => `<span class="log-item"><i class="fas fa-code" style="color:var(--accent)"></i> ${l.title}</span>`).join("") || "OPERANDO AL 100%"; 
             }
 
-            // Cada vez que la base de datos se actualiza, revisamos la identidad
             if(currentAuthUser) checkIdentity();
         });
 
-        // Esta función une Auth con la BD de forma inquebrantable
         function checkIdentity() {
             if (!currentAuthUser || !fullData.players) return;
 
@@ -702,9 +713,7 @@
                 let p = fullData.players[key];
                 if (p && p.email && typeof p.email === 'string') {
                     if (p.email.trim().toLowerCase() === currentAuthUser.email.trim().toLowerCase()) { 
-                        me = p; 
-                        miLlaveDB = key; 
-                        break; 
+                        me = p; miLlaveDB = key; break; 
                     }
                 } 
             }
@@ -712,14 +721,9 @@
             const navLogin = document.getElementById('nav-login');
 
             if (me && miLlaveDB) {
-                // Éxito: El perfil existe y coincide
                 currentUserData = { name: me.name, key: miLlaveDB };
                 
-                if (navLogin) { 
-                    navLogin.innerHTML = '<i class="fas fa-user-circle"></i> Mi Perfil'; 
-                    navLogin.href = "perfil.html"; 
-                    navLogin.onclick = null; 
-                }
+                if (navLogin) { navLogin.innerHTML = '<i class="fas fa-user-circle"></i> Mi Perfil'; navLogin.href = "perfil.html"; navLogin.onclick = null; }
                 
                 const btnManage = document.getElementById('btn-manage-account');
                 if (btnManage) { btnManage.innerHTML = '<i class="fas fa-user"></i> MI PERFIL TITÁN'; btnManage.href = "perfil.html"; }
@@ -739,7 +743,6 @@
                 if (document.getElementById('helperBtn')) document.getElementById('helperBtn').style.display = (role === 'helper' || role === 'mod' || role === 'admin' || isOwner) ? "inline-flex" : "none"; 
                 
             } else {
-                // Auto-Reparador: Sesión iniciada pero cuenta fantasma
                 currentUserData = { name: null, key: null };
                 if (navLogin) { 
                     navLogin.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:var(--gold)"></i> Vincular Cuenta'; 
@@ -751,20 +754,13 @@
                             nick = nick.trim();
                             let targetKey = null;
                             for(let k in fullData.players) {
-                                if(fullData.players[k].name && fullData.players[k].name.toLowerCase() === nick.toLowerCase()) {
-                                    targetKey = k; break;
-                                }
+                                if(fullData.players[k].name && fullData.players[k].name.toLowerCase() === nick.toLowerCase()) { targetKey = k; break; }
                             }
                             if(targetKey) {
                                 db.ref('players/' + targetKey).update({ email: currentAuthUser.email.trim().toLowerCase() });
                                 alert("¡Cuenta vinculada exitosamente! Ya puedes enviar récords.");
                             } else {
-                                db.ref('players').push({
-                                    name: nick,
-                                    email: currentAuthUser.email.trim().toLowerCase(),
-                                    totalXP: 0,
-                                    role: 'player'
-                                });
+                                db.ref('players').push({ name: nick, email: currentAuthUser.email.trim().toLowerCase(), totalXP: 0, role: 'player' });
                                 alert("¡Perfil Titán creado con éxito! Ya puedes enviar récords.");
                             }
                         }
@@ -774,7 +770,7 @@
         }
 
         // =========================================
-        // RENDERIZADOS
+        // RENDERIZADOS Y NIVELES
         // =========================================
         function renderThrone(lvls) { 
             if(!lvls[0]) return; 
@@ -823,12 +819,12 @@
         }
 
         // =========================================
-        // ENVÍO DE RÉCORDS (BLINDADO Y ASÍNCRONO)
+        // ENVÍO DE RÉCORDS
         // =========================================
         function openRecordModal() {
             if (!currentUserData.key) {
                 alert("⚠️ ACCESO DENEGADO: El sistema no detecta un perfil vinculado a tu sesión. Si acabas de loguearte, usa el botón amarillo 'Vincular Cuenta' en el menú de arriba.");
-                return; // Ya NO te redirige al login.html a la fuerza
+                return;
             }
             document.getElementById('rec-username').innerText = currentUserData.name;
             document.getElementById('recModal').style.display = 'flex';
@@ -864,53 +860,38 @@
             }
 
             const btn = document.getElementById('btn-enviar-rec') || (event ? event.target : null);
-            if(btn) {
-                btn.disabled = true;
-                btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> PROCESANDO ENVÍO...";
-            }
+            if(btn) { btn.disabled = true; btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> PROCESANDO ENVÍO..."; }
 
             try {
                 await db.ref('submissions').push({
-                    player: currentUserData.name,
-                    level: lvl,
-                    link: link,
-                    raw: raw,
-                    comments: com,
-                    time: Date.now()
+                    player: currentUserData.name, level: lvl, link: link, raw: raw, comments: com, time: Date.now()
                 });
 
                 const u = fullData.system_settings?.discord?.url;
                 if(u) {
                     fetch(u, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            content: `📥 **NUEVO ENVÍO:** **${currentUserData.name}** ha subido un récord para **${lvl}**.\n🔗 Prueba: ${link}`, 
-                            username: "SCULLY SYSTEM" 
-                        })
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content: `📥 **NUEVO ENVÍO:** **${currentUserData.name}** ha subido un récord para **${lvl}**.\n🔗 Prueba: ${link}`, username: "SCULLY SYSTEM" })
                     }).catch(()=>{});
                 }
 
                 alert("✅ ¡Récord enviado con éxito! Un moderador lo revisará pronto y se añadirá a tu cuenta.");
                 
                 document.getElementById('recModal').style.display = 'none';
-                document.getElementById('rec-lvl').value = "";
-                document.getElementById('rec-link').value = "";
-                document.getElementById('rec-raw').value = "";
-                document.getElementById('rec-com').value = "";
+                document.getElementById('rec-lvl').value = ""; document.getElementById('rec-link').value = "";
+                document.getElementById('rec-raw').value = ""; document.getElementById('rec-com').value = "";
                 document.getElementById('rec-thumb-box').style.display='none';
 
             } catch (error) {
                 alert("Hubo un error de conexión con la Base de Datos: " + error.message);
             } finally {
-                if(btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = "ENVIAR PARA VERIFICACIÓN";
-                }
+                if(btn) { btn.disabled = false; btn.innerHTML = "ENVIAR PARA VERIFICACIÓN"; }
             }
         }
 
-        // BUSCADOR DE JUGADORES
+        // =========================================
+        // BUSCADOR, CHAT Y ECONOMÍA
+        // =========================================
         function searchPublicPlayer(e) {
             if(e && e.preventDefault) e.preventDefault();
             const q = document.getElementById('pub-search').value.trim().toLowerCase(); 
@@ -924,11 +905,8 @@
                 let realXp = 0; 
                 nexus(p.completions).forEach(c => { 
                     let idx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase()); 
-                    if(idx > -1) { 
-                        realXp += Math.max(100 - (idx * 0.6), 5) * (lvls[idx].bounty ? 2 : 1); 
-                    } else { 
-                        realXp += c.xp || 0; 
-                    } 
+                    if(idx > -1) { realXp += Math.max(100 - (idx * 0.6), 5) * (lvls[idx].bounty ? 2 : 1); } 
+                    else { realXp += c.xp || 0; } 
                 }); 
                 p.calcXp = realXp + (p.totalXP || 0); 
             });
@@ -952,17 +930,12 @@
                     </div>
                 </div>`;
                 res.style.display = "block";
-            } else { 
-                res.innerHTML = "<p style='color:var(--red); margin:0;'>Jugador no encontrado.</p>"; 
-                res.style.display = "block"; 
-            }
+            } else { res.innerHTML = "<p style='color:var(--red); margin:0;'>Jugador no encontrado.</p>"; res.style.display = "block"; }
         }
 
-        // CHAT GLOBAL
         function renderGlobalChat(chatData) {
             const box = document.getElementById('global-chat-box'); 
-            let html = ""; 
-            const pL = nexus(fullData.players);
+            let html = ""; const pL = nexus(fullData.players);
             
             Object.values(chatData).slice(-40).forEach(msg => {
                 let p = pL.find(x => x.name === msg.user); 
@@ -987,41 +960,30 @@
             if (!currentUserData.name) return alert("Inicia sesión primero."); 
             const input = document.getElementById('g-chat-input');
             if (input.value.trim().length > 0) { 
-                db.ref('global_chat').push({ user: currentUserData.name, text: input.value.trim(), time: Date.now() }); 
-                input.value = ''; 
+                db.ref('global_chat').push({ user: currentUserData.name, text: input.value.trim(), time: Date.now() }); input.value = ''; 
             }
         }
 
-        // ECONOMÍA: RECLAMO DIARIO
         function claimDailyXP() {
-            if (!currentUserData.key) {
-                alert("Debes iniciar sesión para reclamar XP diaria.");
-                return;
-            }
-
+            if (!currentUserData.key) return alert("Debes iniciar sesión para reclamar XP diaria.");
+            
             let msgBox = document.getElementById("daily-claim-msg");
             let lastClaim = localStorage.getItem('daily_claim_' + currentUserData.name) || 0;
-            let now = Date.now();
-            let timePassed = now - parseInt(lastClaim);
+            let now = Date.now(); let timePassed = now - parseInt(lastClaim);
 
             if (timePassed >= 86400000) { 
                 db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => {
                     db.ref(`players/${currentUserData.key}/totalXP`).set((v.val() || 0) + 5);
                 });
-                
                 localStorage.setItem('daily_claim_' + currentUserData.name, now);
-                msgBox.innerText = "¡Has reclamado +5 XP! Tu billetera ha sido actualizada. Vuelve mañana.";
-                msgBox.style.color = "var(--green)";
+                msgBox.innerText = "¡Has reclamado +5 XP! Tu billetera ha sido actualizada. Vuelve mañana."; msgBox.style.color = "var(--green)";
             } else {
                 let timeLeft = 86400000 - timePassed;
-                let hours = Math.floor(timeLeft / (1000 * 60 * 60));
-                let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                msgBox.innerText = `Aún no. Debes esperar ${hours}h y ${minutes}m para tu próximo reclamo.`;
-                msgBox.style.color = "var(--red)";
+                let hours = Math.floor(timeLeft / (1000 * 60 * 60)); let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                msgBox.innerText = `Aún no. Debes esperar ${hours}h y ${minutes}m para tu próximo reclamo.`; msgBox.style.color = "var(--red)";
             }
         }
 
-        // ECONOMÍA: CANJEAR CÓDIGOS
         function canjearCodigo() {
             let originalCode = document.getElementById("input-codigo").value.trim(); 
             let code = originalCode.toUpperCase(); 
@@ -1048,20 +1010,14 @@
             db.ref(`promo_codes/${code}`).once('value').then(snap => {
                 const data = snap.val();
                 if (data) {
-                    db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => { 
-                        db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0) + data.xp); 
-                    }); 
+                    db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => { db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0) + data.xp); }); 
                     m.innerHTML = `<span style="color:var(--green)">+${data.xp} XP</span> | <i>"${data.msg}"</i>`;
-                    uC.push(code);
-                    localStorage.setItem('codigos_omni_' + currentUserData.name, JSON.stringify(uC));
+                    uC.push(code); localStorage.setItem('codigos_omni_' + currentUserData.name, JSON.stringify(uC));
                     document.getElementById("input-codigo").value = "";
-                } else {
-                    m.innerText = "Código inválido."; m.style.color = "var(--red)";
-                }
+                } else { m.innerText = "Código inválido."; m.style.color = "var(--red)"; }
             });
         }
 
-        // SMART SUBMIT SUGERENCIAS
         function previewSugThumb(){ 
             const v = document.getElementById('sug-v').value.match(/(?:youtu\.be\/|v=)([^"&?\/\s]{11})/); 
             if(v) { 
@@ -1073,20 +1029,17 @@
         
         function sendSuggestion(e){ 
             if(e) e.preventDefault();
-            const n = document.getElementById('sug-n').value; 
-            const p = document.getElementById('sug-pos').value; 
-            const v = document.getElementById('sug-v').value; 
+            const n = document.getElementById('sug-n').value; const p = document.getElementById('sug-pos').value; const v = document.getElementById('sug-v').value; 
             
             if(n && p && v.length === 11) { 
                 db.ref('level_suggestions').push({ name: n, position: parseInt(p), video: v, user: currentUserData.name || "Anónimo" }); 
-                alert("Sugerencia enviada. ¡Si un Admin la acepta, ganarás +10 XP!"); 
-                document.getElementById('sugModal').style.display='none'; 
-            } else { 
-                alert("Datos inválidos."); 
-            }
+                alert("Sugerencia enviada. ¡Si un Admin la acepta, ganarás +10 XP!"); document.getElementById('sugModal').style.display='none'; 
+            } else { alert("Datos inválidos."); }
         }
 
-        // CINEMA MODE
+        // =========================================
+        // CINEMA MODE Y ORDEN DE VICTORS (NUEVO)
+        // =========================================
         function openCinema(idx) {
             const l = nexus(fullData.levels)[idx]; 
             if (!l) return;
@@ -1107,7 +1060,7 @@
                 }
             });
 
-            // ORDENACIÓN MAESTRA: Ordena a los jugadores por el timestamp de su récord
+            // ORDENA POR FECHA
             vList.sort((a, b) => a.time - b.time);
             
             let vHTML = "";
@@ -1132,26 +1085,6 @@
             document.getElementById('cinemaModal').style.display = "flex"; 
             document.body.style.overflow = "hidden";
         }
-
-            vList.sort((a, b) => a.time - b.time);
-            
-            let vHTML = "";
-            vList.forEach(p => { 
-                let vTick = p.verified ? `<i class="fas fa-check-circle verified-tick"></i>` : ""; 
-                let cos = getCosmetic(p.activeCosmetic);
-                vHTML += `
-                <div class="v-row">
-                    <span class="notranslate ${cos.eC}" style="color:${cos.nC}; ${cos.tG}; font-weight:800; font-size:1rem;">${p.name} ${vTick}</span>
-                    <a href="${p.link}" target="_blank" style="color:var(--cyan); text-decoration:none; font-weight:800; font-size:0.75rem; background:rgba(0,255,255,0.1); padding:8px 15px; border-radius:8px; border:1px solid rgba(0,255,255,0.2);">
-                        <i class="fas fa-play"></i> VER PRUEBA
-                    </a>
-                </div>`; 
-            });
-            
-            document.getElementById('c-victors').innerHTML = vHTML || '<p style="padding:20px; text-align:center; color:#555;">El nivel permanece invicto.</p>'; 
-            document.getElementById('cinemaModal').style.display = "flex"; 
-            document.body.style.overflow = "hidden";
-        }
         
         function closeCinema() { 
             document.getElementById('cinemaModal').style.display = "none"; 
@@ -1159,220 +1092,125 @@
             document.body.style.overflow = "auto"; 
         }
 
-        // GENERADOR TITAN CARD
+        // =========================================
+        // TITAN CARD Y EASTER EGGS
+        // =========================================
         function generateTitanCard() {
             let nick = document.getElementById('tc-nick').value.trim(); 
             if (!nick) return alert("Ingresa el Nick.");
             
-            let pL = nexus(fullData.players); 
-            const lvls = nexus(fullData.levels);
+            let pL = nexus(fullData.players); const lvls = nexus(fullData.levels);
             
             pL.forEach(p => { 
                 let realXp = 0; 
                 nexus(p.completions).forEach(c => { 
                     let lIdx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase()); 
                     let cXp = lIdx > -1 ? Math.max(100 - (lIdx * 0.6), 5) * (lvls[lIdx].bounty ? 2 : 1) : (c.xp || 0); 
-                    c.realXp = cXp; 
-                    realXp += cXp; 
+                    c.realXp = cXp; realXp += cXp; 
                 }); 
                 p.calcXp = realXp + (p.totalXP || 0); 
             });
             
             pL.sort((a,b) => b.calcXp - a.calcXp); 
             let pIndex = pL.findIndex(x => x.name.toLowerCase() === nick.toLowerCase()); 
-            
             if (pIndex === -1) return alert("Perfil no encontrado.");
             
             let p = pL[pIndex]; 
             const btn = document.getElementById('btn-forge'); 
-            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> FORJANDO..."; 
-            btn.disabled = true;
+            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> FORJANDO..."; btn.disabled = true;
             
-            const canvas = document.createElement('canvas'); 
-            canvas.width = 900; 
-            canvas.height = 500; 
-            const ctx = canvas.getContext('2d');
+            const canvas = document.createElement('canvas'); canvas.width = 900; canvas.height = 500; const ctx = canvas.getContext('2d');
             
-            ctx.fillStyle = '#0a0a0a'; 
-            ctx.fillRect(0, 0, 900, 500); 
-            ctx.strokeStyle = '#151515'; 
-            ctx.lineWidth = 1;
-            
+            ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, 900, 500); ctx.strokeStyle = '#151515'; ctx.lineWidth = 1;
             for(let i = 0; i < 900; i += 30) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 500); ctx.stroke(); } 
             for(let i = 0; i < 500; i += 30) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(900, i); ctx.stroke(); }
             
-            ctx.strokeStyle = p.verified ? '#00ccff' : '#ff6600'; 
-            ctx.lineWidth = 10; 
-            ctx.strokeRect(10, 10, 880, 480);
+            ctx.strokeStyle = p.verified ? '#00ccff' : '#ff6600'; ctx.lineWidth = 10; ctx.strokeRect(10, 10, 880, 480);
             
-            const img = new Image(); 
-            img.crossOrigin = "Anonymous"; 
+            const img = new Image(); img.crossOrigin = "Anonymous"; 
             
             img.onload = () => {
-                ctx.save(); 
-                ctx.beginPath(); 
-                ctx.arc(100, 110, 60, 0, Math.PI * 2, true); 
-                ctx.closePath(); 
-                ctx.clip(); 
-                ctx.drawImage(img, 40, 50, 120, 120); 
-                ctx.restore(); 
+                ctx.save(); ctx.beginPath(); ctx.arc(100, 110, 60, 0, Math.PI * 2, true); ctx.closePath(); ctx.clip(); ctx.drawImage(img, 40, 50, 120, 120); ctx.restore(); 
+                ctx.beginPath(); ctx.arc(100, 110, 60, 0, Math.PI * 2, true); ctx.lineWidth = 5; ctx.strokeStyle = p.verified ? "#00ccff" : "#ff6600"; ctx.stroke();
                 
-                ctx.beginPath(); 
-                ctx.arc(100, 110, 60, 0, Math.PI * 2, true); 
-                ctx.lineWidth = 5; 
-                ctx.strokeStyle = p.verified ? "#00ccff" : "#ff6600"; 
-                ctx.stroke();
+                ctx.fillStyle = p.verified ? '#00ccff' : '#ff6600'; ctx.font = 'bold 50px "Courier New"'; ctx.fillText(p.name.toUpperCase() + (p.verified ? " [V]" : ""), 180, 100); 
+                ctx.fillStyle = '#aaaaaa'; ctx.font = 'bold 20px "Courier New"'; ctx.fillText(p.role ? "ROLE: " + p.role.toUpperCase() : "CLASS: TITAN", 180, 135); 
                 
-                ctx.fillStyle = p.verified ? '#00ccff' : '#ff6600'; 
-                ctx.font = 'bold 50px "Courier New"'; 
-                ctx.fillText(p.name.toUpperCase() + (p.verified ? " [V]" : ""), 180, 100); 
-                
-                ctx.fillStyle = '#aaaaaa'; 
-                ctx.font = 'bold 20px "Courier New"'; 
-                ctx.fillText(p.role ? "ROLE: " + p.role.toUpperCase() : "CLASS: TITAN", 180, 135); 
-                
-                ctx.fillStyle = '#ffffff'; 
-                ctx.font = 'bold 35px Arial'; 
-                ctx.fillText("RANK GLOBAL: #" + (pIndex + 1), 40, 230); 
-                ctx.fillText("XP BILLETERA: " + p.calcXp.toFixed(1), 40, 280);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 35px Arial'; ctx.fillText("RANK GLOBAL: #" + (pIndex + 1), 40, 230); ctx.fillText("XP BILLETERA: " + p.calcXp.toFixed(1), 40, 280);
                 
                 let cN = (p.clanId && fullData.clans && fullData.clans[p.clanId]) ? fullData.clans[p.clanId].name : "LOBO SOLITARIO"; 
-                ctx.fillStyle = '#00ffff'; 
-                ctx.font = 'bold 25px Arial'; 
-                ctx.fillText("SINDICATO: " + cN.toUpperCase(), 40, 330); 
+                ctx.fillStyle = '#00ffff'; ctx.font = 'bold 25px Arial'; ctx.fillText("SINDICATO: " + cN.toUpperCase(), 40, 330); 
                 
-                if (p.bio) { 
-                    ctx.fillStyle = '#888888'; 
-                    ctx.font = 'italic 16px Arial'; 
-                    ctx.fillText('"' + p.bio.substring(0, 55) + '..."', 40, 370); 
-                }
+                if (p.bio) { ctx.fillStyle = '#888888'; ctx.font = 'italic 16px Arial'; ctx.fillText('"' + p.bio.substring(0, 55) + '..."', 40, 370); }
                 
                 let comps = nexus(p.completions).sort((a,b) => (b.realXp || 0) - (a.realXp || 0)); 
-                ctx.fillStyle = p.verified ? '#00ccff' : '#ff6600'; 
-                ctx.font = 'bold 22px "Courier New"'; 
-                ctx.fillText("TOP 5 VICTORIAS:", 500, 210); 
+                ctx.fillStyle = p.verified ? '#00ccff' : '#ff6600'; ctx.font = 'bold 22px "Courier New"'; ctx.fillText("TOP 5 VICTORIAS:", 500, 210); 
+                ctx.fillStyle = '#ffffff'; ctx.font = '18px Arial';
                 
-                ctx.fillStyle = '#ffffff'; 
-                ctx.font = '18px Arial';
+                for(let k = 0; k < Math.min(5, comps.length); k++) { ctx.fillText(`> ${comps[k].level} (+${(comps[k].realXp||0).toFixed(1)} Pts)`, 500, 245 + (k * 25)); }
+                if(comps.length === 0) { ctx.fillText("> Sin registros aún.", 500, 245); }
                 
-                for(let k = 0; k < Math.min(5, comps.length); k++) {
-                    ctx.fillText(`> ${comps[k].level} (+${(comps[k].realXp||0).toFixed(1)} Pts)`, 500, 245 + (k * 25)); 
-                }
-                if(comps.length === 0) {
-                    ctx.fillText("> Sin registros aún.", 500, 245);
-                }
+                ctx.fillStyle = '#333333'; ctx.font = 'bold 20px "Courier New"'; ctx.fillText("SYS.OMNI - THE SCULLY LIST IDENTITY", 40, 460);
                 
-                ctx.fillStyle = '#333333'; 
-                ctx.font = 'bold 20px "Courier New"'; 
-                ctx.fillText("SYS.OMNI - THE SCULLY LIST IDENTITY", 40, 460);
+                const link = document.createElement('a'); link.download = `OMNI_TITAN_CARD_${p.name}.png`; link.href = canvas.toDataURL("image/png"); link.click();
                 
-                const link = document.createElement('a'); 
-                link.download = `OMNI_TITAN_CARD_${p.name}.png`; 
-                link.href = canvas.toDataURL("image/png"); 
-                link.click();
-                
-                document.getElementById('tc-modal').style.display = 'none'; 
-                document.getElementById('tc-nick').value = ''; 
-                btn.innerHTML = "<i class='fas fa-download'></i> FORJAR TITAN CARD 3.0"; 
-                btn.disabled = false;
+                document.getElementById('tc-modal').style.display = 'none'; document.getElementById('tc-nick').value = ''; 
+                btn.innerHTML = "<i class='fas fa-download'></i> FORJAR TITAN CARD 3.0"; btn.disabled = false;
             };
             
-            img.onerror = () => { 
-                img.crossOrigin = "Anonymous"; 
-                img.src = "https://i.imgur.com/6D2g3wU.png"; 
-            }; 
-            
+            img.onerror = () => { img.crossOrigin = "Anonymous"; img.src = "https://i.imgur.com/6D2g3wU.png"; }; 
             img.src = (p.photo && p.photo !== "null" && p.photo !== "undefined" && p.photo.trim() !== "") ? p.photo : "https://i.imgur.com/6D2g3wU.png";
         }
 
-        // SCULLY AI ENGINE
         function runScullyAI() { 
-            document.getElementById('aiModal').style.display = 'block'; 
-            const aiText = document.getElementById('aiText'); 
+            document.getElementById('aiModal').style.display = 'block'; const aiText = document.getElementById('aiText'); 
             aiText.innerHTML = "Sincronizando red neuronal con base de datos..."; 
             
             setTimeout(() => { 
                 const lvls = nexus(fullData.levels); 
-                if(lvls.length < 3) { 
-                    aiText.innerHTML = "Nodos insuficientes."; 
-                    return; 
-                } 
+                if(lvls.length < 3) { aiText.innerHTML = "Nodos insuficientes."; return; } 
                 const target = lvls[Math.floor(Math.random() * (lvls.length / 1.5))].name; 
-                
-                aiText.innerHTML = `
-                    <span style="color:#888; font-size:0.8rem;">ANÁLISIS COMPLETADO.</span><br><br>
-                    Siguiente objetivo recomendado:<br>
-                    <b style="color:var(--cyan); font-size:2.2rem; text-transform:uppercase; display:block; margin-top:10px;">${target}</b><br>
-                    <span style="font-size:0.8rem; color:#aaa;">Probabilidad matemática de éxito: ${Math.floor(Math.random() * 60 + 20)}%</span>
-                `; 
+                aiText.innerHTML = `<span style="color:#888; font-size:0.8rem;">ANÁLISIS COMPLETADO.</span><br><br>Siguiente objetivo recomendado:<br><b style="color:var(--cyan); font-size:2.2rem; text-transform:uppercase; display:block; margin-top:10px;">${target}</b><br><span style="font-size:0.8rem; color:#aaa;">Probabilidad matemática de éxito: ${Math.floor(Math.random() * 60 + 20)}%</span>`; 
             }, 1800); 
         }
 
-        // =========================================
-        // EASTER EGGS LOGIC
-        // =========================================
-
-        let tributeClicks = 0;
-        let tributeTimer;
+        let tributeClicks = 0; let tributeTimer;
         function triggerTribute() {
-            tributeClicks++;
-            clearTimeout(tributeTimer);
-            tributeTimer = setTimeout(() => { tributeClicks = 0; }, 3000); 
-
+            tributeClicks++; clearTimeout(tributeTimer); tributeTimer = setTimeout(() => { tributeClicks = 0; }, 3000); 
             if(tributeClicks === 7) {
                 tributeClicks = 0;
-                
-                let flash = document.createElement('div');
-                flash.className = 'tribute-flash';
-                document.body.appendChild(flash);
+                let flash = document.createElement('div'); flash.className = 'tribute-flash'; document.body.appendChild(flash);
                 setTimeout(() => flash.remove(), 1200);
-
                 for(let i=0; i<7; i++) {
                     setTimeout(() => {
-                        let star = document.createElement('div');
-                        star.className = 'star-tribute';
-                        star.style.top = (Math.random() * 50) + 'vh';
-                        document.body.appendChild(star);
-                        setTimeout(() => star.remove(), 1500);
+                        let star = document.createElement('div'); star.className = 'star-tribute'; star.style.top = (Math.random() * 50) + 'vh';
+                        document.body.appendChild(star); setTimeout(() => star.remove(), 1500);
                     }, i * 200);
                 }
-
                 if(currentUserData.key) {
-                    db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => {
-                        db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0) + 1);
-                    });
+                    db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => { db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0) + 1); });
                     setTimeout(() => alert("🌟 TRIBUTO A 2PARX: Has honrado su legado. +1 XP de Lealtad ha sido sumado a tu billetera."), 1000);
-                } else {
-                    setTimeout(() => alert("🌟 TRIBUTO A 2PARX: Has honrado su legado. Inicia sesión para recibir tu recompensa la próxima vez."), 1000);
-                }
+                } else { setTimeout(() => alert("🌟 TRIBUTO A 2PARX: Has honrado su legado. Inicia sesión para recibir tu recompensa la próxima vez."), 1000); }
             }
         }
 
         let isWaveMode = false;
-        document.addEventListener('keydown', (e) => {
-            if(e.key === 'Shift' && !isWaveMode) {
-                isWaveMode = true;
-                document.body.classList.add('wave-mode');
-            }
-        });
-        document.addEventListener('keyup', (e) => {
-            if(e.key === 'Shift') {
-                isWaveMode = false;
-                document.body.classList.remove('wave-mode');
-            }
-        });
+        document.addEventListener('keydown', (e) => { if(e.key === 'Shift' && !isWaveMode) { isWaveMode = true; document.body.classList.add('wave-mode'); } });
+        document.addEventListener('keyup', (e) => { if(e.key === 'Shift') { isWaveMode = false; document.body.classList.remove('wave-mode'); } });
         document.addEventListener('mousemove', (e) => {
             if(isWaveMode) {
                 if(Math.random() > 0.4) return; 
-                let trail = document.createElement('div');
-                trail.className = 'wave-trail';
-                trail.style.left = e.pageX + 'px';
-                trail.style.top = e.pageY + 'px';
-                document.body.appendChild(trail);
-                setTimeout(() => trail.remove(), 400);
+                let trail = document.createElement('div'); trail.className = 'wave-trail'; trail.style.left = e.pageX + 'px'; trail.style.top = e.pageY + 'px';
+                document.body.appendChild(trail); setTimeout(() => trail.remove(), 400);
             }
         });
     </script>
 </body>
 </html>
 
+
+    
+                
+    
+
+                
