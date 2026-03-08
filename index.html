@@ -1,20 +1,17 @@
-<!DOCTYPE html>
+}<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Scully List | Hub OMNI v26</title>
+    <title>The Scully List | Hub OMNI v25</title>
     <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#ff6600">
     
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* =========================================
-           VARIABLES GLOBALES V26
-           ========================================= */
+        .live-feed { display: none !important; }
+        /* VARIABLES GLOBALES */
         :root { 
             --accent: #ff6600; 
             --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%); 
@@ -31,11 +28,19 @@
             --cyan: #00ffff; 
         }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+        }
         
         body { 
-            background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; 
-            margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; 
+            background: var(--bg); 
+            color: #fff; 
+            font-family: 'Lexend Deca', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden; 
+            scroll-behavior: smooth; 
         }
         
         ::-webkit-scrollbar { width: 8px; } 
@@ -43,131 +48,78 @@
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
         /* =========================================
-           SKELETON LOADERS (NUEVO V26)
+           EASTER EGGS ANIMACIONES CSS
            ========================================= */
-        @keyframes shimmer {
-            0% { background-position: -400px 0; }
-            100% { background-position: 400px 0; }
-        }
-        .skeleton {
-            background: linear-gradient(90deg, #111 25%, #1a1a1a 50%, #111 75%);
-            background-size: 800px 100%;
-            animation: shimmer 1.5s infinite linear;
-            border-radius: 12px;
-        }
-        .skeleton-card {
-            height: 85px;
-            margin-bottom: 15px;
-            border-radius: 20px;
-        }
-        .skeleton-throne {
-            height: 300px;
-            border-radius: 30px;
-            margin-bottom: 40px;
-        }
-
-        /* =========================================
-           NOTIFICACIONES BELL SYSTEM (NUEVO V26)
-           ========================================= */
-        .notif-bell {
-            position: relative; cursor: pointer; font-size: 1.2rem; color: #888;
-            transition: 0.3s; padding: 10px;
-        }
-        .notif-bell:hover { color: var(--gold); }
-        .notif-badge {
-            position: absolute; top: 2px; right: 2px; background: var(--red);
-            color: #fff; font-size: 0.55rem; font-weight: 900; width: 18px; height: 18px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            animation: pulse 1.5s infinite; box-shadow: 0 0 8px var(--red);
-        }
-        .notif-panel {
-            display: none; position: fixed; top: 60px; right: 20px; width: 350px; max-height: 450px;
-            background: #0a0a0a; border: 1px solid var(--cyan); border-radius: 15px;
-            z-index: 9999; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-            padding: 15px; animation: fadeIn 0.3s ease;
-        }
-        .notif-item {
-            padding: 12px; border-bottom: 1px solid #222; font-size: 0.8rem;
-            color: #ccc; display: flex; align-items: flex-start; gap: 10px;
-            transition: 0.2s; border-radius: 8px; cursor: default;
-        }
-        .notif-item:hover { background: rgba(255,255,255,0.02); }
-        .notif-item.unread { border-left: 3px solid var(--cyan); background: rgba(0,255,255,0.03); }
-        .notif-icon { font-size: 1.2rem; margin-top: 2px; }
-        .notif-time { font-size: 0.6rem; color: #555; margin-top: 4px; }
-
-        /* =========================================
-           ACHIEVEMENT POPUP (NUEVO V26)
-           ========================================= */
-        .achievement-popup {
-            position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
-            background: linear-gradient(135deg, #0a0a0a, #111); border: 2px solid var(--gold);
-            padding: 20px 35px; border-radius: 15px; z-index: 99999;
-            box-shadow: 0 0 40px rgba(255,215,0,0.3); display: flex; align-items: center; gap: 15px;
-            transition: top 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            font-family: 'JetBrains Mono'; min-width: 300px;
-        }
-        .achievement-popup.show { top: 30px; }
-        .achievement-popup .ach-icon { font-size: 2.5rem; }
-        .achievement-popup .ach-text h4 { margin: 0; color: var(--gold); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; }
-        .achievement-popup .ach-text p { margin: 3px 0 0; color: #fff; font-size: 0.95rem; font-weight: 800; }
-
-        /* =========================================
-           EVENT BANNER SYSTEM (NUEVO V26)
-           ========================================= */
-        .event-banner {
-            display: none; background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(204,0,255,0.1));
-            border: 1px solid var(--gold); border-radius: 15px; padding: 20px 25px;
-            margin-bottom: 25px; position: relative; overflow: hidden;
-        }
-        .event-banner::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(255,215,0,0.05), transparent, rgba(204,0,255,0.05), transparent);
-            animation: rotateBG 8s linear infinite;
-        }
-        @keyframes rotateBG { to { transform: rotate(360deg); } }
-        .event-content { position: relative; z-index: 2; }
-        .event-countdown {
-            font-family: 'JetBrains Mono'; font-size: 1.5rem; font-weight: 900;
-            color: var(--gold); letter-spacing: 2px;
-        }
-
-        /* =========================================
-           EASTER EGGS
-           ========================================= */
+        /* Easter Egg #7: Wave Cursor */
         body.wave-mode, body.wave-mode * { 
             cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='%2300ffff' stroke='%23ffffff' stroke-width='2' d='M2 22 L22 12 L2 2 Z'/></svg>"), crosshair !important; 
         }
         .wave-trail { 
-            position: fixed; width: 10px; height: 10px; background: var(--cyan); 
+            position: fixed; 
+            width: 10px; 
+            height: 10px; 
+            background: var(--cyan); 
             box-shadow: 0 0 10px var(--cyan), 0 0 20px var(--cyan); 
-            transform: rotate(45deg) translate(-50%, -50%); pointer-events: none; 
-            z-index: 999999; animation: fadeTrail 0.4s forwards ease-out; 
+            transform: rotate(45deg) translate(-50%, -50%); 
+            pointer-events: none; 
+            z-index: 999999; 
+            animation: fadeTrail 0.4s forwards ease-out; 
         }
         @keyframes fadeTrail { 
             0% { opacity: 1; transform: scale(1) rotate(45deg); } 
             100% { opacity: 0; transform: scale(0) rotate(45deg); } 
         }
 
-        .tribute-btn { cursor: pointer; transition: 0.3s; user-select: none; }
-        .tribute-btn:hover { color: var(--gold) !important; border-color: var(--gold) !important; text-shadow: 0 0 10px var(--gold); }
+        /* Easter Egg #2: Tributo a 2Parx */
+        .tribute-btn { 
+            cursor: pointer; 
+            transition: 0.3s; 
+            user-select: none; 
+        }
+        .tribute-btn:hover { 
+            color: var(--gold) !important; 
+            border-color: var(--gold) !important; 
+            text-shadow: 0 0 10px var(--gold); 
+        }
         .star-tribute { 
-            position: fixed; width: 4px; height: 4px; background: #fff; 
-            box-shadow: 0 0 15px 3px var(--gold); border-radius: 50%; 
-            z-index: 100000; pointer-events: none; animation: starFall 1.5s linear forwards; 
+            position: fixed; 
+            width: 4px; 
+            height: 4px; 
+            background: #fff; 
+            box-shadow: 0 0 15px 3px var(--gold); 
+            border-radius: 50%; 
+            z-index: 100000; 
+            pointer-events: none; 
+            animation: starFall 1.5s linear forwards; 
         }
         .star-tribute::after { 
-            content: ''; position: absolute; top: 50%; right: 100%; width: 80px; height: 1px; 
-            background: linear-gradient(90deg, transparent, var(--gold)); transform: translateY(-50%); 
+            content: ''; 
+            position: absolute; 
+            top: 50%; 
+            right: 100%; 
+            width: 80px; 
+            height: 1px; 
+            background: linear-gradient(90deg, transparent, var(--gold)); 
+            transform: translateY(-50%); 
         }
         @keyframes starFall { 
             0% { transform: translate(-10vw, -10vh) rotate(45deg); opacity: 1; } 
             100% { transform: translate(110vw, 110vh) rotate(45deg); opacity: 0; } 
         }
-        .tribute-flash { position: fixed; inset: 0; background: #fff; z-index: 999999; pointer-events: none; animation: flashAnim 1.2s forwards; }
-        @keyframes flashAnim { 0% { opacity: 1; } 100% { opacity: 0; } }
+        .tribute-flash { 
+            position: fixed; 
+            inset: 0; 
+            background: #fff; 
+            z-index: 999999; 
+            pointer-events: none; 
+            animation: flashAnim 1.2s forwards; 
+        }
+        @keyframes flashAnim { 
+            0% { opacity: 1; } 
+            100% { opacity: 0; } 
+        }
 
-        /* TRADUCTOR */
+        /* API TRADUCTOR SUTIL OCULTO */
         .goog-te-banner-frame.skiptranslate, .goog-te-gadget-icon { display: none !important; }
         body { top: 0px !important; }
         .goog-te-gadget-simple { background-color: transparent !important; border: none !important; font-size: 0 !important; }
@@ -177,27 +129,24 @@
             position: absolute; top: 15px; left: 20px; z-index: 5000; 
             background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
             color: #aaa; padding: 6px 15px; border-radius: 20px; 
-            font-size: 0.75rem; font-weight: 800; cursor: pointer; transition: 0.3s; 
-            display: flex; align-items: center; gap: 8px; 
+            font-size: 0.75rem; font-weight: 800; cursor: pointer; 
+            transition: 0.3s; display: flex; align-items: center; gap: 8px; 
         }
         .lang-toggle:hover { color: #fff; border-color: var(--cyan); background: rgba(0,255,255,0.1); }
 
         /* EFECTOS COSMÉTICOS */
-        @keyframes rbwAnim { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+        @keyframes rbwAnim { 
+            0% { background-position: 0% 50%; } 
+            100% { background-position: 200% 50%; } 
+        }
         .rbw-text { 
             background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000); 
             background-size: 200% auto; -webkit-background-clip: text; 
             color: transparent !important; animation: rbwAnim 3s linear infinite; font-weight: 900; 
         }
+
         .glitch-text { animation: shake 0.5s infinite; color: #fff; text-shadow: 2px 0 red, -2px 0 blue; }
-        @keyframes shake { 
-            0% { transform: translate(1px, 1px) rotate(0deg); } 
-            20% { transform: translate(-1px, -2px) rotate(-1deg); } 
-            40% { transform: translate(-3px, 0px) rotate(1deg); } 
-            60% { transform: translate(3px, 2px) rotate(0deg); } 
-            80% { transform: translate(1px, -1px) rotate(1deg); } 
-            100% { transform: translate(-1px, 2px) rotate(-1deg); } 
-        }
+        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 20% { transform: translate(-1px, -2px) rotate(-1deg); } 40% { transform: translate(-3px, 0px) rotate(1deg); } 60% { transform: translate(3px, 2px) rotate(0deg); } 80% { transform: translate(1px, -1px) rotate(1deg); } 100% { transform: translate(-1px, 2px) rotate(-1deg); } }
 
         /* ALERTAS Y PANELES */
         #lockdownScreen { 
@@ -256,10 +205,17 @@
         .container { width: 95%; max-width: 1200px; margin: 20px auto 40px; }
         .top-actions { display: flex; justify-content: space-between; align-items: stretch; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
         
-        .action-box { 
+        .live-feed, .action-box { 
             background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px; 
             padding: 25px; display: flex; flex-direction: column; justify-content: space-between; 
         }
+        
+        .live-feed { flex: 1.5; min-width: 300px; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+        .live-feed h3 { margin: 0 0 15px; font-size: 1rem; color: var(--cyan); text-transform: uppercase; font-family: 'JetBrains Mono'; display: flex; align-items: center; gap: 10px; }
+        .feed-scroll { display: flex; flex-direction: column; gap: 12px; max-height: 150px; overflow-y: auto; padding-right: 10px; }
+        .feed-item { font-size: 0.8rem; color: #aaa; border-left: 3px solid var(--accent); padding-left: 12px; animation: fadeIn 0.5s ease; }
+        .feed-item b { color: #fff; }
+        
         .action-box { flex: 1; min-width: 250px; text-align: center; }
         .action-box h3 { margin: 0 0 10px; font-size: 1rem; text-transform: uppercase; }
 
@@ -288,12 +244,6 @@
         .chat-info .text { margin-top: 6px; color: #eee; word-break: break-word; }
         .verified-tick { color: var(--blue); font-size: 0.75rem; }
 
-        /* CHAT RATE LIMIT INDICATOR (NUEVO V26) */
-        .chat-cooldown {
-            font-size: 0.7rem; color: var(--red); font-weight: 800;
-            text-align: center; padding: 5px; display: none;
-        }
-
         .footer-credits { padding: 80px 20px; text-align: center; background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); }
         .color-trigger { display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: var(--accent); color: #000; border-radius: 50%; cursor: pointer; box-shadow: var(--glow); margin-top: 25px; transition: 0.3s ease; font-size: 1.4rem; position: relative; overflow: hidden; }
         .color-trigger:hover { transform: scale(1.15); }
@@ -316,6 +266,87 @@
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* =========================================
+           [OMNI-NEW] SISTEMA DE TOASTS
+           ========================================= */
+        #omni-toast-container {
+            position: fixed; bottom: 30px; right: 30px; z-index: 999999;
+            display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+        }
+        .omni-toast {
+            background: rgba(10,10,10,0.97); border-left: 4px solid var(--accent);
+            color: #fff; padding: 14px 20px; border-radius: 10px;
+            font-size: 0.85rem; font-family: 'JetBrains Mono';
+            box-shadow: 0 8px 30px rgba(0,0,0,0.8); max-width: 320px;
+            pointer-events: all; animation: toastIn 0.3s ease forwards;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .omni-toast.success { border-color: var(--green); }
+        .omni-toast.error   { border-color: var(--red); }
+        .omni-toast.info    { border-color: var(--cyan); }
+        .omni-toast.gold    { border-color: var(--gold); }
+        .omni-toast.out { animation: toastOut 0.3s ease forwards; }
+        @keyframes toastIn  { from { opacity:0; transform:translateX(30px); } to { opacity:1; transform:translateX(0); } }
+        @keyframes toastOut { from { opacity:1; transform:translateX(0); }   to { opacity:0; transform:translateX(30px); } }
+
+        /* =========================================
+           [OMNI-NEW] PANEL DE PERSONALIZACIÓN FLOTANTE
+           ========================================= */
+        #custom-fab {
+            position: fixed; bottom: 30px; left: 30px; z-index: 9000;
+            width: 52px; height: 52px; border-radius: 50%;
+            background: rgba(15,15,15,0.95); border: 1px solid rgba(255,255,255,0.1);
+            color: #aaa; font-size: 1.2rem; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+        #custom-fab:hover { color: #fff; border-color: var(--accent); transform: scale(1.1) rotate(30deg); }
+        #custom-panel {
+            position: fixed; bottom: 95px; left: 30px; z-index: 9000;
+            background: rgba(8,8,8,0.98); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px; padding: 25px; width: 270px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.9); backdrop-filter: blur(20px);
+            transform: translateY(20px) scale(0.95); opacity: 0; pointer-events: none;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #custom-panel.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+        .cp-title {
+            font-family: 'JetBrains Mono'; font-size: 0.7rem; color: #555;
+            text-transform: uppercase; letter-spacing: 2px; margin: 0 0 12px;
+            padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .cp-section { margin-bottom: 18px; }
+        .cp-section label { font-size: 0.68rem; color: #777; text-transform: uppercase;
+            letter-spacing: 1px; display: block; margin-bottom: 8px; font-family: 'JetBrains Mono'; }
+        .color-presets { display: flex; gap: 7px; flex-wrap: wrap; }
+        .color-dot { width: 26px; height: 26px; border-radius: 50%; cursor: pointer;
+            border: 2px solid transparent; transition: 0.2s; position: relative; }
+        .color-dot:hover, .color-dot.active { border-color: #fff; transform: scale(1.25); }
+        .color-dot.custom-dot { background: conic-gradient(red,yellow,lime,cyan,blue,magenta,red); overflow: hidden; }
+        .color-dot.custom-dot input { opacity:0; position:absolute; inset:0; width:100%; height:100%; cursor:pointer; }
+        .font-btns { display: flex; gap: 6px; }
+        .font-btn {
+            flex: 1; padding: 8px 4px; background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;
+            color: #aaa; font-size: 0.72rem; cursor: pointer; transition: 0.2s; text-align: center;
+        }
+        .font-btn:hover, .font-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(255,102,0,0.05); }
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; }
+        .toggle-row span { font-size: 0.78rem; color: #aaa; }
+        .mini-toggle { width: 36px; height: 20px; background: #222; border-radius: 10px;
+            cursor: pointer; position: relative; transition: 0.3s; border: 1px solid #333; flex-shrink: 0; }
+        .mini-toggle::after { content:''; position:absolute; top:2px; left:2px;
+            width:14px; height:14px; background:#555; border-radius:50%; transition:0.3s; }
+        .mini-toggle.on { background: rgba(255,102,0,0.2); border-color: var(--accent); }
+        .mini-toggle.on::after { left: 18px; background: var(--accent); }
+        /* Modo compacto */
+        body.compact-mode .level-card { padding: 8px 12px; }
+        body.compact-mode .level-card img { width: 80px; height: 48px; }
+        body.compact-mode .list-grid { gap: 12px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+        /* Modo sin animaciones */
+        body.no-anim *, body.no-anim *::before, body.no-anim *::after { animation: none !important; transition: none !important; }
+
+
         @media(max-width: 900px) { 
             .mobile-menu-btn { display: block; } 
             .main-nav { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); flex-direction: column; align-items: center; justify-content:center; z-index: 2000; gap:15px; } 
@@ -328,38 +359,15 @@
             .list-grid { grid-template-columns: 1fr; }
             .level-card { flex-direction: column; text-align: center; }
             .level-card img { width: 100%; max-width: 300px; margin: 0 0 15px 0; }
-            .notif-panel { width: calc(100% - 40px); right: 20px; left: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ACHIEVEMENT POPUP -->
-    <div class="achievement-popup" id="achievement-popup">
-        <div class="ach-icon">🏆</div>
-        <div class="ach-text">
-            <h4>LOGRO DESBLOQUEADO</h4>
-            <p id="achievement-name">---</p>
-        </div>
-    </div>
-
     <div id="google_translate_element" style="display:none;"></div>
     <button class="lang-toggle notranslate" onclick="toggleLanguage()">
         <i class="fas fa-globe"></i> EN / ES
     </button>
-
-    <!-- NOTIFICATION PANEL -->
-    <div class="notif-panel" id="notif-panel">
-        <h4 style="margin:0 0 10px; color:var(--cyan); font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid #333; padding-bottom:8px;">
-            <i class="fas fa-bell"></i> Centro de Notificaciones
-        </h4>
-        <div id="notif-list">
-            <p style="color:#555; font-size:0.75rem; text-align:center; padding:20px;">Sin notificaciones nuevas.</p>
-        </div>
-        <button onclick="clearNotifications()" style="width:100%; background:rgba(255,51,51,0.1); color:var(--red); border:1px solid var(--red); padding:8px; border-radius:8px; cursor:pointer; font-weight:800; font-size:0.7rem; margin-top:10px; text-transform:uppercase;">
-            LIMPIAR TODO
-        </button>
-    </div>
 
     <div id="lockdownScreen">
         <i class="fas fa-lock" style="font-size: 4rem; color: var(--red); margin-bottom: 20px;"></i>
@@ -402,12 +410,6 @@
                 <i class="fas fa-info-circle"></i> Sobre Nosotros
             </button>
 
-            <!-- NOTIFICATION BELL (NUEVO V26) -->
-            <div class="notif-bell" id="notif-bell" onclick="toggleNotifPanel()">
-                <i class="fas fa-bell"></i>
-                <div class="notif-badge" id="notif-count" style="display:none;">0</div>
-            </div>
-
             <a href="login.html" class="btn-scully" id="nav-login"><i class="fas fa-user"></i> Acceso</a>
             
             <a href="admin.html" id="adminBtn" class="btn-scully" style="display:none; background:var(--accent); color:#000; border:none;"><i class="fas fa-terminal"></i> MASTER PANEL</a>
@@ -415,24 +417,16 @@
             <a href="helper.html" id="helperBtn" class="btn-scully" style="display:none; background:var(--green); color:#000; border:none;"><i class="fas fa-hands-helping"></i> HELPER PANEL</a>
         </div>
     </header>
-
     <main class="container">
         
-        <!-- EVENT BANNER (NUEVO V26) -->
-        <div class="event-banner" id="event-banner">
-            <div class="event-content">
-                <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
-                    <i class="fas fa-fire" style="font-size:2rem; color:var(--gold);"></i>
-                    <div>
-                        <h3 id="event-title" style="margin:0; color:var(--gold); text-transform:uppercase; font-size:1.1rem;">EVENTO ACTIVO</h3>
-                        <p id="event-desc" style="margin:5px 0 0; color:#aaa; font-size:0.85rem;">Descripción del evento.</p>
-                    </div>
-                    <div class="event-countdown" id="event-countdown">00:00:00</div>
+        <div class="top-actions">
+            <div class="live-feed">
+                <h3><i class="fas fa-satellite-dish" style="animation: pulse 2s infinite;"></i> Pulso de la Red (Live)</h3>
+                <div class="feed-scroll" id="feed-box">
+                    <div class="feed-item" style="color:#666;">Conectando con el servidor base...</div>
                 </div>
             </div>
-        </div>
-
-        <div class="top-actions">
+            
             <div class="action-box" style="border-color: var(--blue);">
                 <h3 style="color: var(--blue);"><i class="fas fa-upload"></i> Subir Victoria</h3>
                 <p style="font-size:0.75rem; color:#888; margin-bottom:20px;">¿Te pasaste un Demon de la lista? Manda tu prueba y gana Puntos Titán.</p>
@@ -450,19 +444,9 @@
             </div>
         </div>
 
-        <!-- SKELETON LOADERS (VISIBLE WHILE LOADING) -->
-        <section class="throne-section" id="throneDisplay">
-            <div class="skeleton skeleton-throne"></div>
-        </section>
+        <section class="throne-section" id="throneDisplay"></section>
         
-        <div class="list-grid" id="main-list">
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
-        </div>
+        <div class="list-grid" id="main-list"></div>
 
         <section class="status-tracker">
             <h2 style="color:var(--accent); text-transform: uppercase; font-size: clamp(1.5rem, 5vw, 2rem); margin-top:0;"><i class="fas fa-id-card"></i> Identidad Titán</h2>
@@ -516,10 +500,8 @@
         <section class="global-chat-section">
             <h2 style="color:var(--cyan); text-transform: uppercase; font-size: clamp(1.2rem, 4vw, 1.8rem); margin-top:0; border-bottom:1px solid var(--border); padding-bottom:15px;"><i class="fas fa-globe"></i> Comunidad Global</h2>
             <div class="chat-messages" id="global-chat-box"><p style="text-align:center; color:#555; margin-top:50px;">Conectando...</p></div>
-            <div class="chat-cooldown" id="chat-cooldown">⏳ Espera antes de enviar otro mensaje...</div>
             <div style="display:flex; gap:10px; background:#000; padding:15px; border-radius:15px; border:1px solid #222; flex-wrap:wrap;">
-                <input type="text" id="g-chat-input" placeholder="Inicia sesión para participar en el chat global..." disabled maxlength="300" onkeypress="if(event.keyCode==13) sendGlobalChat(event)" style="flex:1; min-width:200px; background:transparent; border:none; color:#fff; outline:none;">
-                <span id="char-counter" style="color:#555; font-size:0.65rem; align-self:center; font-family:'JetBrains Mono'; min-width:50px;">0/300</span>
+                <input type="text" id="g-chat-input" placeholder="Inicia sesión para participar en el chat global..." disabled onkeypress="if(event.keyCode==13) sendGlobalChat(event)" style="flex:1; min-width:200px; background:transparent; border:none; color:#fff; outline:none;">
                 <button type="button" id="g-chat-btn" class="btn-scully" style="background:var(--cyan); color:#000; border:none; opacity:0.5; pointer-events:none; padding:15px 25px; flex-grow:1; max-width:100px;" onclick="sendGlobalChat()">
                     <i class="fas fa-paper-plane"></i>
                 </button>
@@ -535,7 +517,6 @@
         </div>
     </footer>
 
-    <!-- MODAL: ENVIAR RÉCORD -->
     <div id="recModal" class="modal">
         <div class="modal-content" style="border-color:var(--blue);">
             <span style="position:absolute; top:15px; right:20px; color:#888; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('recModal').style.display='none'">✕</span>
@@ -557,7 +538,6 @@
         </div>
     </div>
 
-    <!-- CINEMA MODE -->
     <div id="cinemaModal" class="cinema-mod">
         <div class="cinema-bg" id="c-bg"></div>
         <div class="cinema-content">
@@ -575,7 +555,6 @@
         </div>
     </div>
 
-    <!-- MODAL: SUGERIR NIVEL -->
     <div id="sugModal" class="modal">
         <div class="modal-content" style="border-color:var(--purple);">
             <span style="position:absolute; top:15px; right:20px; color:#888; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('sugModal').style.display='none'">✕</span>
@@ -593,7 +572,6 @@
         </div>
     </div>
 
-    <!-- MODAL: TITAN CARD -->
     <div id="tc-modal" class="modal">
         <div class="modal-content" style="border-color:var(--accent);">
             <span style="position:absolute; top:15px; right:20px; color:#888; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('tc-modal').style.display='none'">✕</span>
@@ -604,7 +582,6 @@
         </div>
     </div>
 
-    <!-- MODAL: SCULLY AI -->
     <div id="aiModal" class="modal">
         <div class="modal-content" style="border-color:var(--cyan);">
             <h2 style="color:var(--cyan); font-family:'JetBrains Mono'; margin-top:0;"><i class="fas fa-brain"></i> SCULLY AI ENGINE</h2>
@@ -613,52 +590,65 @@
         </div>
     </div>
 
-    <!-- MODAL: ABOUT -->
     <div id="aboutModal" class="modal">
         <div class="modal-content" style="border-color:var(--accent); text-align: left;">
             <span style="position:absolute; top:15px; right:20px; color:#888; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('aboutModal').style.display='none'">✕</span>
+            
             <h2 style="color:var(--accent); margin-top:0; text-transform: uppercase; letter-spacing: 2px;">
                 <i class="fas fa-microchip"></i> El Ecosistema OMNI
             </h2>
+            
             <p style="color:#eee; line-height:1.6; font-size:0.9rem;">
                 <b>The Scully List</b> es un motor de competición integral para Geometry Dash diseñado para clasificar y premiar las mayores proezas de la comunidad mediante el <b>Absolute Engine</b>.
             </p>
+            
             <div style="background:rgba(255,102,0,0.05); border-left:3px solid var(--accent); padding:15px; margin:20px 0; border-radius:0 10px 10px 0;">
                 <p style="margin:0; font-size:0.85rem; color:#ccc;">
                     <b style="color:var(--accent);">NUESTRA VISIÓN:</b> Crear una identidad única para cada jugador, donde el esfuerzo se traduce en estatus, XP y recompensas exclusivas.
                 </p>
             </div>
+
             <h4 style="color:var(--cyan); text-transform:uppercase; font-size:0.8rem; margin-bottom:10px;">Ejes del Proyecto:</h4>
             <ul style="color:#aaa; font-size:0.8rem; padding-left:20px; line-height:1.8; margin-bottom: 25px;">
                 <li><b style="color:#fff;">Ranking Dinámico:</b> Clasificación basada en la dificultad real de los niveles.</li>
                 <li><b style="color:#fff;">Economía Titán:</b> Un mercado vivo alimentado por tu progreso en el juego.</li>
                 <li><b style="color:#fff;">Sindicatos:</b> La evolución de los clanes para el dominio de la escena.</li>
             </ul>
+
             <div style="background:rgba(0,0,0,0.5); border:1px dashed #444; padding:15px; border-radius:15px;">
                 <h5 style="color:var(--red); margin:0 0 8px; text-transform:uppercase; font-size:0.75rem;">
                     <i class="fas fa-tools"></i> Nota de Desarrollo
                 </h5>
                 <p style="color:#888; font-size:0.75rem; margin:0; line-height:1.5;">
-                    Actualmente nos encontramos en una <b>fase de desarrollo muy temprana</b>. Es posible que experimentes errores técnicos o inconsistencias visuales mientras optimizamos los <b>módulos del sistema</b>.
+                    Actualmente nos encontramos en una <b>fase de desarrollo muy temprana</b>. Es posible que experimentes errores técnicos o inconsistencias visuales mientras optimizamos los <b>módulos del sistema</b>. Estamos trabajando duramente día tras día para pulir cada engranaje y construir una experiencia bonita y funcional para toda la comunidad.
                 </p>
             </div>
+
             <p style="color:#444; font-size:0.65rem; margin-top:25px; text-align:center; font-family:'JetBrains Mono';">
-                SCULLY HUB // CORE VERSION 26.0 // 2026
+                SCULLY HUB // CORE VERSION 25.0 // 2026
             </p>
+
             <button type="button" class="btn-scully" style="background:var(--accent); color:#000; width:100%; justify-content:center; border:none; margin-top:15px; font-weight:800;" onclick="document.getElementById('aboutModal').style.display='none'">ENTENDIDO</button>
         </div>
     </div>
-
-    <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">UN PODEROSO ENEMIGO</div>
-
-    <script type="text/javascript">
+   <div id="easter-egg-anubis" style="display: none; position: fixed; inset: 0; background-color: black; color: darkred; font-size: 8vw; font-weight: bold; text-align: center; align-content: center; z-index: 999999;">UN PODEROSO ENEMIGO</div>
+<script type="text/javascript">
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({ pageLanguage: 'es', includedLanguages: 'en,es', autoDisplay: false }, 'google_translate_element');
+            new google.translate.TranslateElement({
+                pageLanguage: 'es', 
+                includedLanguages: 'en,es', 
+                autoDisplay: false
+            }, 'google_translate_element');
         }
+
         function toggleLanguage() {
             var select = document.querySelector('.goog-te-combo');
-            if(select) { select.value = select.value === 'en' ? 'es' : 'en'; select.dispatchEvent(new Event('change')); } 
-            else { alert("Cargando traductor automático. Intenta en un segundo."); }
+            if(select) {
+                select.value = select.value === 'en' ? 'es' : 'en';
+                select.dispatchEvent(new Event('change'));
+            } else {
+                alert("Cargando traductor automático. Intenta en un segundo.");
+            }
         }
     </script>
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
@@ -668,9 +658,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     
     <script>
-        // ==========================================
         // CONFIGURACIÓN FIREBASE
-        // ==========================================
         const firebaseConfig = { 
             apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
             authDomain: "scullylist.firebaseapp.com", 
@@ -689,68 +677,7 @@
         let currentUserData = { name: null, key: null }; 
         const nexus = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
 
-        // ==========================================
-        // MOTOR UNIVERSAL DE XP (COMPARTIDO V26)
-        // Función centralizada para que TODAS las páginas
-        // calculen la XP exactamente igual
-        // ==========================================
-        function calculateRealXP(playerData, levelsArray) {
-            let realXp = 0;
-            const comps = nexus(playerData.completions);
-            const playerName = (playerData.name || '').toLowerCase();
-            
-            comps.forEach(c => {
-                const idx = levelsArray.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase());
-                if (idx > -1) {
-                    let base = Math.max(100 - (idx * 0.6), 5);
-                    if (levelsArray[idx].bounty) base *= 2;
-                    // BONUS: First Victor x2
-                    if (levelsArray[idx].first && levelsArray[idx].first.toLowerCase() === playerName) base *= 2;
-                    realXp += base;
-                } else {
-                    realXp += c.xp || 0;
-                }
-            });
-            
-            // Also check if they're first victor on levels not in their completions
-            levelsArray.forEach((lvl, idx) => {
-                if (lvl.first && lvl.first.toLowerCase() === playerName) {
-                    const alreadyCounted = comps.some(c => c.level.toLowerCase() === lvl.name.toLowerCase());
-                    if (!alreadyCounted) {
-                        let base = Math.max(100 - (idx * 0.6), 5);
-                        if (lvl.bounty) base *= 2;
-                        base *= 2; // First Victor bonus
-                        realXp += base;
-                    }
-                }
-            });
-            
-            return realXp;
-        }
-
-        // ==========================================
-        // MOTOR UNIVERSAL DE COSMÉTICOS (COMPARTIDO V26)
-        // ==========================================
-        function getCosmetic(ac) {
-            let nC = "var(--cyan)", tG = "", bS = "4px solid var(--cyan)", eC = "";
-            if (!ac) return { nC, tG, bS, eC };
-            ac = ac.toUpperCase();
-            
-            if (ac.includes("VIP") || ac.includes("DORADO")) { nC = "var(--gold)"; bS = "4px solid var(--gold)"; }
-            else if (ac.includes("HACKER") || ac.includes("MATRIX")) { nC = "var(--green)"; tG = "color:var(--green); text-shadow:0 0 5px var(--green); font-family:'JetBrains Mono';"; bS = "4px solid var(--green)"; }
-            else if (ac.includes("AURA") || ac.includes("DEMON")) { nC = "var(--red)"; bS = "4px dashed var(--red)"; tG = "color:#ffaaaa; text-shadow:0 0 5px var(--red);"; }
-            else if (ac.includes("HIELO") || ac.includes("ICE")) { nC = "#aaddff"; tG = "text-shadow: 0 0 8px #00aaff;"; bS = "4px solid #00aaff"; }
-            else if (ac.includes("FUEGO") || ac.includes("FIRE")) { nC = "#ff5500"; tG = "text-shadow: 0 0 8px #ff2200;"; bS = "4px solid #ff5500"; }
-            else if (ac.includes("FANTASMA") || ac.includes("GHOST")) { nC = "#ddd"; tG = "opacity:0.8; text-shadow: 0 0 5px #fff;"; bS = "4px solid #ccc"; }
-            else if (ac.includes("RAINBOW") || ac.includes("ARCOIRIS") || ac.includes("NYAN")) { eC = "rbw-text"; bS = "4px solid #ff00ff"; }
-            else if (ac.includes("GLITCH")) { eC = "glitch-text"; bS = "4px solid #00ffff"; tG = "text-shadow: 2px 0 red, -2px 0 blue;"; }
-            
-            return { nC, tG, bS, eC };
-        }
-
-        // ==========================================
         // UI & TEMA
-        // ==========================================
         const savedColor = localStorage.getItem('scully-theme-color') || '#ff6600'; 
         updateThemeColor(savedColor);
         
@@ -763,11 +690,14 @@
             const nav = document.getElementById('mainNavigation'); 
             const icon = document.getElementById('mob-icon'); 
             nav.classList.toggle('active'); 
+            
             if (nav.classList.contains('active')) { 
-                icon.classList.remove('fa-bars'); icon.classList.add('fa-times'); 
+                icon.classList.remove('fa-bars'); 
+                icon.classList.add('fa-times'); 
                 document.body.style.overflow = 'hidden'; 
             } else { 
-                icon.classList.remove('fa-times'); icon.classList.add('fa-bars'); 
+                icon.classList.remove('fa-times'); 
+                icon.classList.add('fa-bars'); 
                 document.body.style.overflow = 'auto'; 
             }
         }
@@ -778,202 +708,51 @@
             return (match && match[1]) ? match[1] : url.trim(); 
         }
 
-        // ==========================================
-        // NOTIFICATION SYSTEM (NUEVO V26)
-        // ==========================================
-        let notifPanelOpen = false;
-
-        function toggleNotifPanel() {
-            notifPanelOpen = !notifPanelOpen;
-            document.getElementById('notif-panel').style.display = notifPanelOpen ? 'block' : 'none';
+        // MOTOR UNIVERSAL DE COSMÉTICOS
+        function getCosmetic(ac) {
+            let nC = "var(--cyan)", tG = "", bS = "4px solid var(--cyan)", eC = "";
+            if(!ac) return {nC, tG, bS, eC};
+            ac = ac.toUpperCase(); 
+            
+            if(ac.includes("VIP")||ac.includes("DORADO")){ nC="var(--gold)"; bS="4px solid var(--gold)"; }
+            else if(ac.includes("HACKER")||ac.includes("MATRIX")){ nC="var(--green)"; tG="color:var(--green); text-shadow:0 0 5px var(--green); font-family:'JetBrains Mono';"; bS="4px solid var(--green)"; }
+            else if(ac.includes("AURA")||ac.includes("DEMON")){ nC="var(--red)"; bS="4px dashed var(--red)"; tG="color:#ffaaaa; text-shadow:0 0 5px var(--red);"; }
+            else if(ac.includes("HIELO")||ac.includes("ICE")){ nC="#aaddff"; tG="text-shadow: 0 0 8px #00aaff;"; bS="4px solid #00aaff"; }
+            else if(ac.includes("FUEGO")||ac.includes("FIRE")){ nC="#ff5500"; tG="text-shadow: 0 0 8px #ff2200;"; bS="4px solid #ff5500"; }
+            else if(ac.includes("FANTASMA")||ac.includes("GHOST")){ nC="#ddd"; tG="opacity:0.8; text-shadow: 0 0 5px #fff;"; bS="4px solid #ccc"; }
+            else if(ac.includes("RAINBOW")||ac.includes("ARCOIRIS")||ac.includes("NYAN")){ eC="rbw-text"; bS="4px solid #ff00ff"; }
+            else if(ac.includes("GLITCH")){ eC="glitch-text"; bS="4px solid #00ffff"; tG="text-shadow: 2px 0 red, -2px 0 blue;"; }
+            
+            return {nC, tG, bS, eC};
         }
 
-        // Close notification panel when clicking outside
-        document.addEventListener('click', function(e) {
-            const panel = document.getElementById('notif-panel');
-            const bell = document.getElementById('notif-bell');
-            if (notifPanelOpen && !panel.contains(e.target) && !bell.contains(e.target)) {
-                notifPanelOpen = false;
-                panel.style.display = 'none';
-            }
-        });
-
-        function renderNotifications() {
-            if (!currentUserData.name || !fullData.notifications) return;
-            
-            const myNotifs = [];
-            const allNotifs = fullData.notifications || {};
-            
-            for (let id in allNotifs) {
-                const n = allNotifs[id];
-                if (n.target && n.target.toLowerCase() === currentUserData.name.toLowerCase()) {
-                    myNotifs.push({ ...n, id: id });
-                }
-            }
-            
-            myNotifs.sort((a, b) => (b.time || 0) - (a.time || 0));
-            
-            const unreadCount = myNotifs.filter(n => !n.read).length;
-            const badge = document.getElementById('notif-count');
-            if (unreadCount > 0) {
-                badge.style.display = 'flex';
-                badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
-            } else {
-                badge.style.display = 'none';
-            }
-            
-            let html = "";
-            myNotifs.slice(0, 20).forEach(n => {
-                let icon = "fas fa-info-circle";
-                let iconColor = "var(--cyan)";
-                
-                if (n.type === 'record_approved') { icon = "fas fa-check-circle"; iconColor = "var(--green)"; }
-                else if (n.type === 'record_rejected') { icon = "fas fa-times-circle"; iconColor = "var(--red)"; }
-                else if (n.type === 'xp_gained') { icon = "fas fa-coins"; iconColor = "var(--gold)"; }
-                else if (n.type === 'achievement') { icon = "fas fa-trophy"; iconColor = "var(--gold)"; }
-                else if (n.type === 'market') { icon = "fas fa-shopping-cart"; iconColor = "var(--purple)"; }
-                
-                html += `
-                <div class="notif-item ${n.read ? '' : 'unread'}" onclick="markNotifRead('${n.id}')">
-                    <i class="${icon} notif-icon" style="color:${iconColor};"></i>
-                    <div style="flex:1;">
-                        <div style="color:#eee; font-weight:600;">${n.message || 'Notificación del sistema'}</div>
-                        <div class="notif-time">${n.time ? new Date(n.time).toLocaleString() : ''}</div>
-                    </div>
-                </div>`;
-            });
-            
-            document.getElementById('notif-list').innerHTML = html || "<p style='color:#555; font-size:0.75rem; text-align:center; padding:20px;'>Sin notificaciones nuevas.</p>";
-        }
-
-        function markNotifRead(id) {
-            db.ref(`notifications/${id}/read`).set(true);
-        }
-
-        function clearNotifications() {
-            if (!currentUserData.name || !fullData.notifications) return;
-            for (let id in fullData.notifications) {
-                if (fullData.notifications[id].target && fullData.notifications[id].target.toLowerCase() === currentUserData.name.toLowerCase()) {
-                    db.ref(`notifications/${id}`).remove();
-                }
-            }
-        }
-
-        // Helper function for other systems to push notifications
-        function pushNotification(targetPlayer, message, type) {
-            db.ref('notifications').push({
-                target: targetPlayer,
-                message: message,
-                type: type || 'info',
-                time: Date.now(),
-                read: false
-            });
-        }
-
-        // ==========================================
-        // ACHIEVEMENT SYSTEM (NUEVO V26)
-        // ==========================================
-        const ACHIEVEMENTS = {
-            'PRIMER_PASO': { name: 'Primer Paso', desc: 'Completa tu primer nivel', icon: '🎮', check: (p) => nexus(p.completions).length >= 1 },
-            'VERIFICADOR': { name: 'Verificador Original', desc: 'Sé First Victor de un nivel', icon: '���', check: (p, lvls) => lvls.some(l => l.first?.toLowerCase() === p.name.toLowerCase()) },
-            'MAGNATE': { name: 'Magnate', desc: 'Acumula 1000 XP', icon: '💰', check: (p) => (p.calcXp || 0) >= 1000 },
-            'COLECCIONISTA': { name: 'Coleccionista', desc: 'Posee 5 cosméticos', icon: '🎨', check: (p) => nexus(p.inventory).length >= 5 },
-            'VETERANO': { name: 'Veterano', desc: 'Completa 10 niveles', icon: '⚔️', check: (p) => nexus(p.completions).length >= 10 },
-            'LEYENDA': { name: 'Leyenda', desc: 'Completa 25 niveles', icon: '🌟', check: (p) => nexus(p.completions).length >= 25 },
-            'MAQUINA': { name: 'La Máquina', desc: 'Completa 50 niveles', icon: '🤖', check: (p) => nexus(p.completions).length >= 50 },
-            'TOP10': { name: 'Elite', desc: 'Alcanza el Top 10 del ranking', icon: '🔥', check: (p) => (p.globalRank || 999) <= 10 },
-            'TOP3': { name: 'Semidiós', desc: 'Alcanza el Top 3 del ranking', icon: '⚡', check: (p) => (p.globalRank || 999) <= 3 },
-            'NUMERO1': { name: 'Titán Absoluto', desc: 'Alcanza el primer lugar', icon: '🏆', check: (p) => (p.globalRank || 999) === 1 },
-        };
-
-        function checkAchievements(playerData, levelsArray) {
-            if (!currentUserData.key) return;
-            
-            const existing = nexus(playerData.achievements || {});
-            const existingNames = existing.map(a => a.id);
-            
-            for (let achId in ACHIEVEMENTS) {
-                if (existingNames.includes(achId)) continue;
-                
-                const ach = ACHIEVEMENTS[achId];
-                if (ach.check(playerData, levelsArray)) {
-                    // Unlock achievement
-                    db.ref(`players/${currentUserData.key}/achievements`).push({ id: achId, unlocked: Date.now() });
-                    showAchievementPopup(ach.icon, ach.name);
-                    pushNotification(currentUserData.name, `🏆 Logro desbloqueado: ${ach.name} — ${ach.desc}`, 'achievement');
-                }
-            }
-        }
-
-        function showAchievementPopup(icon, name) {
-            const popup = document.getElementById('achievement-popup');
-            popup.querySelector('.ach-icon').innerText = icon;
-            document.getElementById('achievement-name').innerText = name;
-            popup.classList.add('show');
-            setTimeout(() => popup.classList.remove('show'), 4000);
-        }
-
-        // ==========================================
-        // EVENT BANNER SYSTEM (NUEVO V26)
-        // ==========================================
-        function renderEventBanner() {
-            const event = fullData.active_event;
-            if (!event || !event.active) {
-                document.getElementById('event-banner').style.display = 'none';
-                return;
-            }
-            
-            document.getElementById('event-title').innerText = event.title || 'EVENTO ACTIVO';
-            document.getElementById('event-desc').innerText = event.description || '';
-            document.getElementById('event-banner').style.display = 'block';
-            
-            if (event.end_time) {
-                updateEventCountdown(event.end_time);
-                if (!window._eventInterval) {
-                    window._eventInterval = setInterval(() => updateEventCountdown(event.end_time), 1000);
-                }
-            }
-        }
-
-        function updateEventCountdown(endTime) {
-            const now = Date.now();
-            const diff = endTime - now;
-            
-            if (diff <= 0) {
-                document.getElementById('event-countdown').innerText = 'FINALIZADO';
-                return;
-            }
-            
-            const h = Math.floor(diff / 3600000);
-            const m = Math.floor((diff % 3600000) / 60000);
-            const s = Math.floor((diff % 60000) / 1000);
-            
-            document.getElementById('event-countdown').innerText = 
-                `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-        }
-
-        // ==========================================
-        // SISTEMA MAESTRO DE IDENTIDAD V26
-        // ==========================================
+        // =========================================
+        // SISTEMA MAESTRO DE IDENTIDAD (EL REPARADOR)
+        // =========================================
         auth.onAuthStateChanged(user => {
-            if (user) { currentAuthUser = user; checkIdentity(); } 
-            else { currentAuthUser = null; currentUserData = { name: null, key: null }; }
+            if (user) {
+                currentAuthUser = user;
+                checkIdentity();
+            } else {
+                currentAuthUser = null;
+                currentUserData = { name: null, key: null };
+            }
         });
 
         db.ref('/').on('value', snap => {
             fullData = snap.val() || {};
             
             if (fullData.system_settings && fullData.system_settings.lockdown_active) { 
-                document.getElementById('lockdownScreen').style.display = 'flex'; return; 
+                document.getElementById('lockdownScreen').style.display = 'flex'; 
+                return; 
             } else { 
                 document.getElementById('lockdownScreen').style.display = 'none'; 
             }
             
             renderThrone(nexus(fullData.levels)); 
             renderLevels(nexus(fullData.levels)); 
+            renderLiveFeed(fullData.staff_logs || {}); 
             renderGlobalChat(fullData.global_chat || {});
-            renderNotifications();
-            renderEventBanner();
 
             if (fullData.system_settings?.global_alert) {
                 const aE = document.getElementById('globalAlert');
@@ -990,7 +769,7 @@
                 document.getElementById('ticker-box').innerHTML = Object.values(fullData.admin_changelog).reverse().slice(0, 5).map(l => `<span class="log-item"><i class="fas fa-code" style="color:var(--accent)"></i> ${l.title}</span>`).join("") || "OPERANDO AL 100%"; 
             }
 
-            if (currentAuthUser) checkIdentity();
+            if(currentAuthUser) checkIdentity();
         });
 
         function checkIdentity() {
@@ -1032,22 +811,6 @@
                 if (document.getElementById('modBtn')) document.getElementById('modBtn').style.display = (role === 'mod' || role === 'admin' || isOwner) ? "inline-flex" : "none"; 
                 if (document.getElementById('helperBtn')) document.getElementById('helperBtn').style.display = (role === 'helper' || role === 'mod' || role === 'admin' || isOwner) ? "inline-flex" : "none"; 
                 
-                // CHECK ACHIEVEMENTS (V26)
-                const lvls = nexus(fullData.levels);
-                const allPlayers = nexus(fullData.players);
-                
-                // Calculate rank for achievement checking
-                let ranked = allPlayers.map(p => ({
-                    ...p,
-                    calcXp: calculateRealXP(p, lvls) + (p.totalXP || 0)
-                })).sort((a, b) => b.calcXp - a.calcXp);
-                
-                const myRankIndex = ranked.findIndex(p => p.name === me.name);
-                me.calcXp = calculateRealXP(me, lvls) + (me.totalXP || 0);
-                me.globalRank = myRankIndex + 1;
-                
-                checkAchievements(me, lvls);
-                
             } else {
                 currentUserData = { name: null, key: null };
                 if (navLogin) { 
@@ -1056,13 +819,13 @@
                     navLogin.onclick = (e) => {
                         e.preventDefault();
                         let nick = prompt("⚠️ Detectamos tu sesión pero no tu perfil Titán.\n\nIngresa tu NICK EXACTO para vincular tu correo al ranking o crear un perfil nuevo:");
-                        if (nick && nick.trim() !== "") {
+                        if(nick && nick.trim() !== "") {
                             nick = nick.trim();
                             let targetKey = null;
-                            for (let k in fullData.players) {
-                                if (fullData.players[k].name && fullData.players[k].name.toLowerCase() === nick.toLowerCase()) { targetKey = k; break; }
+                            for(let k in fullData.players) {
+                                if(fullData.players[k].name && fullData.players[k].name.toLowerCase() === nick.toLowerCase()) { targetKey = k; break; }
                             }
-                            if (targetKey) {
+                            if(targetKey) {
                                 db.ref('players/' + targetKey).update({ email: currentAuthUser.email.trim().toLowerCase() });
                                 alert("¡Cuenta vinculada exitosamente! Ya puedes enviar récords.");
                             } else {
@@ -1075,11 +838,11 @@
             }
         }
 
-        // ==========================================
+        // =========================================
         // RENDERIZADOS Y NIVELES
-        // ==========================================
+        // =========================================
         function renderThrone(lvls) { 
-            if (!lvls[0]) return; 
+            if(!lvls[0]) return; 
             document.getElementById('throneDisplay').innerHTML = `
             <div class="throne-card" onclick="openCinema(0)" style="background-image: linear-gradient(to right, rgba(0,0,0,0.95) 40%, transparent), url('https://img.youtube.com/vi/${lvls[0].id}/maxresdefault.jpg');">
                 <div class="throne-info">
@@ -1106,7 +869,7 @@
                 
                 htmlContent += `
                 <div class="level-card" onclick="openCinema(${i})" style="${bS}">
-                    <img src="https://img.youtube.com/vi/${lvls[i].id}/mqdefault.jpg" loading="lazy">
+                    <img src="https://img.youtube.com/vi/${lvls[i].id}/mqdefault.jpg">
                     <div>
                         <h3 style="font-size:1rem; margin:0; text-transform:uppercase;">${lvls[i].name}</h3>
                         <p style="color:${xC}; font-weight:800; font-size:0.7rem; margin-top:5px;">${bI} +${xp} XP</p>
@@ -1117,9 +880,16 @@
             document.getElementById('main-list').innerHTML = htmlContent || "<p style='text-align:center;'>Red vacía.</p>"; 
         }
 
-        // ==========================================
-        // ENV��O DE RÉCORDS
-        // ==========================================
+        function renderLiveFeed(logs) { 
+            document.getElementById('feed-box').innerHTML = Object.values(logs).reverse().slice(0, 6).map(l => {
+                let col = l.action.includes('Rechazó') ? '#ff3333' : (l.action.includes('Aprobó') ? '#00ff66' : '#aaa');
+                return `<div class="feed-item"><i class="fas fa-bolt" style="color:var(--accent);"></i> [${new Date(l.timestamp).toLocaleTimeString()}] <b class="notranslate" style="color:var(--cyan);">${l.staff}</b>: <span style="color:${col}">${l.action}</span></div>`;
+            }).join('') || "Escuchando señales..."; 
+        }
+
+        // =========================================
+        // ENVÍO DE RÉCORDS
+        // =========================================
         function openRecordModal() {
             if (!currentUserData.key) {
                 alert("⚠️ ACCESO DENEGADO: El sistema no detecta un perfil vinculado a tu sesión. Si acabas de loguearte, usa el botón amarillo 'Vincular Cuenta' en el menú de arriba.");
@@ -1129,29 +899,37 @@
             document.getElementById('recModal').style.display = 'flex';
         }
 
-        function previewRecThumb() { 
+        function previewRecThumb(){ 
             const input = document.getElementById('rec-link').value;
             const v = input.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
-            if (v) { 
+            if(v) { 
                 document.getElementById('rec-thumb-img').src = `https://img.youtube.com/vi/${v[1]}/mqdefault.jpg`; 
-                document.getElementById('rec-thumb-box').style.display = 'block'; 
+                document.getElementById('rec-thumb-box').style.display='block'; 
             } else {
-                document.getElementById('rec-thumb-box').style.display = 'none'; 
+                document.getElementById('rec-thumb-box').style.display='none'; 
             }
         }
 
         async function submitRecord(event) {
-            if (event) event.preventDefault(); 
-            if (!currentUserData.key) { alert("⚠️ Error de sesión."); return; }
+            if(event) event.preventDefault(); 
+
+            if (!currentUserData.key) {
+                alert("⚠️ Error de sesión: No hay un perfil válido detectado. Recarga la página o vincula tu cuenta.");
+                return;
+            }
 
             const lvl = document.getElementById('rec-lvl').value.trim();
             const link = document.getElementById('rec-link').value.trim();
             const raw = document.getElementById('rec-raw').value.trim();
             const com = document.getElementById('rec-com').value.trim();
-            if (!lvl || !link) { alert("Error: El nombre del nivel y el link de YouTube son obligatorios."); return; }
 
-            const btn = document.getElementById('btn-enviar-rec');
-            if (btn) { btn.disabled = true; btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> PROCESANDO ENVÍO..."; }
+            if (!lvl || !link) {
+                alert("Error: El nombre del nivel y el link de YouTube son obligatorios.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-enviar-rec') || (event ? event.target : null);
+            if(btn) { btn.disabled = true; btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> PROCESANDO ENVÍO..."; }
 
             try {
                 await db.ref('submissions').push({
@@ -1159,44 +937,58 @@
                 });
 
                 const u = fullData.system_settings?.discord?.url;
-                if (u) {
+                if(u) {
                     fetch(u, {
                         method: 'POST', headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ content: `📥 **NUEVO ENVÍO:** **${currentUserData.name}** ha subido un récord para **${lvl}**.\n🔗 Prueba: ${link}`, username: "SCULLY SYSTEM" })
-                    }).catch(() => {});
+                    }).catch(()=>{});
                 }
 
-                alert("✅ ¡Récord enviado con éxito! Un moderador lo revisará pronto.");
+                alert("✅ ¡Récord enviado con éxito! Un moderador lo revisará pronto y se añadirá a tu cuenta.");
                 
                 document.getElementById('recModal').style.display = 'none';
                 document.getElementById('rec-lvl').value = ""; document.getElementById('rec-link').value = "";
                 document.getElementById('rec-raw').value = ""; document.getElementById('rec-com').value = "";
-                document.getElementById('rec-thumb-box').style.display = 'none';
+                document.getElementById('rec-thumb-box').style.display='none';
 
             } catch (error) {
-                alert("Hubo un error de conexión: " + error.message);
+                alert("Hubo un error de conexión con la Base de Datos: " + error.message);
             } finally {
-                if (btn) { btn.disabled = false; btn.innerHTML = "ENVIAR PARA VERIFICACIÓN"; }
+                if(btn) { btn.disabled = false; btn.innerHTML = "ENVIAR PARA VERIFICACIÓN"; }
             }
         }
 
-        // ==========================================
-        // BUSCADOR PÚBLICO
-        // ==========================================
+        // =========================================
+        // BUSCADOR, CHAT Y ECONOMÍA
+        // =========================================
         function searchPublicPlayer(e) {
-            if (e && e.preventDefault) e.preventDefault();
+            if(e && e.preventDefault) e.preventDefault();
             const q = document.getElementById('pub-search').value.trim().toLowerCase(); 
             const res = document.getElementById('pub-search-res'); 
-            if (!q) return;
+            if(!q) return;
 
             let pL = nexus(fullData.players); 
             const lvls = nexus(fullData.levels);
             
-            pL.forEach(p => { p.calcXp = calculateRealXP(p, lvls) + (p.totalXP || 0); });
-            pL.sort((a, b) => b.calcXp - a.calcXp); 
+            pL.forEach(p => { 
+                let realXp = 0; 
+                nexus(p.completions).forEach(c => { 
+                    let idx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase()); 
+                    if(idx > -1) {
+                        let base = Math.max(100 - (idx * 0.6), 5);
+                        if(lvls[idx].bounty) base *= 2;
+                        // [FIX] Bonus x2 si es First Victor del nivel
+                        if(lvls[idx].first && lvls[idx].first.toLowerCase() === p.name.toLowerCase()) base *= 2;
+                        realXp += base;
+                    } else { realXp += c.xp || 0; } 
+                }); 
+                p.calcXp = realXp + (p.totalXP || 0); 
+            });
+            
+            pL.sort((a,b) => b.calcXp - a.calcXp); 
             let pIndex = pL.findIndex(x => x.name.toLowerCase() === q);
             
-            if (pIndex > -1) {
+            if(pIndex > -1) {
                 let p = pL[pIndex]; 
                 let cN = (p.clanId && fullData.clans && fullData.clans[p.clanId]) ? fullData.clans[p.clanId].name : "Ninguno"; 
                 let vH = p.verified ? `<i class="fas fa-check-circle verified-tick"></i>` : "";
@@ -1212,56 +1004,42 @@
                     </div>
                 </div>`;
                 res.style.display = "block";
-            } else { 
-                res.innerHTML = "<p style='color:var(--red); margin:0;'>Jugador no encontrado.</p>"; 
-                res.style.display = "block"; 
-            }
+            } else { res.innerHTML = "<p style='color:var(--red); margin:0;'>Jugador no encontrado.</p>"; res.style.display = "block"; }
         }
 
-        // ==========================================
-        // CHAT GLOBAL CON RATE LIMIT + FILTRO (V26)
-        // ==========================================
-        let lastChatTime = 0;
-        const CHAT_COOLDOWN = 3000; // 3 seconds
-        const MAX_CHAT_LENGTH = 300;
-        const BANNED_WORDS = ['puta', 'mierda', 'perra', 'verga', 'pene', 'fuck', 'shit', 'bitch', 'dick', 'nigger', 'faggot'];
-
-        // Character counter
-        document.addEventListener('DOMContentLoaded', () => {
-            const chatInput = document.getElementById('g-chat-input');
-            if (chatInput) {
-                chatInput.addEventListener('input', () => {
-                    const counter = document.getElementById('char-counter');
-                    if (counter) counter.innerText = `${chatInput.value.length}/${MAX_CHAT_LENGTH}`;
-                });
-            }
-        });
-
-        function filterMessage(text) {
-            let filtered = text;
-            BANNED_WORDS.forEach(word => {
-                const regex = new RegExp(word, 'gi');
-                filtered = filtered.replace(regex, '*'.repeat(word.length));
-            });
-            return filtered;
+        // =========================================
+        // [OMNI-SEC] SANITIZADOR ANTI-XSS GLOBAL
+        // Escapa caracteres peligrosos antes de inyectar
+        // cualquier dato de usuario al DOM via innerHTML.
+        // =========================================
+        function escapeHTML(str) {
+            if (typeof str !== 'string') return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
         }
 
         function renderGlobalChat(chatData) {
             const box = document.getElementById('global-chat-box'); 
-            let html = ""; 
-            const pL = nexus(fullData.players);
+            let html = ""; const pL = nexus(fullData.players);
             
             Object.values(chatData).slice(-40).forEach(msg => {
                 let p = pL.find(x => x.name === msg.user); 
                 let vH = (p && p.verified) ? `<i class="fas fa-check-circle verified-tick"></i>` : "";
                 let cos = getCosmetic(p ? p.activeCosmetic : "");
+                // [OMNI-SEC] Texto del mensaje sanitizado contra XSS almacenado
+                let safeText = escapeHTML(msg.text);
+                let safeUser = escapeHTML(msg.user);
                 
                 html += `
                 <div class="chat-bubble" style="border-left:${cos.bS}; margin-bottom: 10px;">
                     <div class="chat-info">
-                        <b class="${cos.eC} notranslate" style="color:${cos.nC}; ${cos.tG}">${msg.user} ${vH}</b> 
+                        <b class="${cos.eC} notranslate" style="color:${cos.nC}; ${cos.tG}">${safeUser} ${vH}</b> 
                         <span style="font-size:0.65rem; color:#666; margin-left:8px;">${new Date(msg.time).toLocaleTimeString()}</span>
-                        <div class="text" style="margin-top:6px; color:#eee; ${cos.tG}">${filterMessage(msg.text)}</div>
+                        <div class="text" style="margin-top:6px; color:#eee; ${cos.tG}">${safeText}</div>
                     </div>
                 </div>`;
             });
@@ -1270,58 +1048,51 @@
         }
 
         function sendGlobalChat(e) {
-            if (e && e.preventDefault) e.preventDefault();
+            if(e && e.preventDefault) e.preventDefault();
             if (!currentUserData.name) return alert("Inicia sesión primero."); 
-            
             const input = document.getElementById('g-chat-input');
-            const text = input.value.trim();
-            
-            // Validations
-            if (text.length === 0) return;
-            if (text.length > MAX_CHAT_LENGTH) return alert(`Mensaje demasiado largo. Máximo ${MAX_CHAT_LENGTH} caracteres.`);
-            
-            // Rate limit
-            const now = Date.now();
-            if (now - lastChatTime < CHAT_COOLDOWN) {
-                const cooldownEl = document.getElementById('chat-cooldown');
-                cooldownEl.style.display = 'block';
-                setTimeout(() => cooldownEl.style.display = 'none', CHAT_COOLDOWN);
-                return;
+            if (input.value.trim().length > 0) { 
+                db.ref('global_chat').push({ user: currentUserData.name, text: input.value.trim(), time: Date.now() }); input.value = ''; 
             }
-            
-            lastChatTime = now;
-            const filtered = filterMessage(text);
-            
-            db.ref('global_chat').push({ user: currentUserData.name, text: filtered, time: Date.now() }); 
-            input.value = '';
-            document.getElementById('char-counter').innerText = '0/300';
         }
 
-        // ==========================================
-        // ECONOMÍA TITÁN
-        // ==========================================
+        // [OMNI-SEC] Daily Claim protegido en Firebase.
+        // La fecha del último claim se guarda en el servidor
+        // bajo /players/{key}/lastDailyClaim para que no pueda
+        // ser manipulada borrando el localStorage del navegador.
         function claimDailyXP() {
             if (!currentUserData.key) return alert("Debes iniciar sesión para reclamar XP diaria.");
-            
             let msgBox = document.getElementById("daily-claim-msg");
-            let lastClaim = localStorage.getItem('daily_claim_' + currentUserData.name) || 0;
-            let now = Date.now(); 
-            let timePassed = now - parseInt(lastClaim);
+            msgBox.innerText = "Verificando con el servidor...";
+            msgBox.style.color = "#aaa";
 
-            if (timePassed >= 86400000) { 
-                db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => {
-                    db.ref(`players/${currentUserData.key}/totalXP`).set((v.val() || 0) + 5);
-                });
-                localStorage.setItem('daily_claim_' + currentUserData.name, now);
-                msgBox.innerText = "¡Has reclamado +5 XP! Tu billetera ha sido actualizada. Vuelve mañana."; 
-                msgBox.style.color = "var(--green)";
-            } else {
-                let timeLeft = 86400000 - timePassed;
-                let hours = Math.floor(timeLeft / (1000 * 60 * 60)); 
-                let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                msgBox.innerText = `Aún no. Debes esperar ${hours}h y ${minutes}m para tu próximo reclamo.`; 
+            db.ref(`players/${currentUserData.key}`).once('value').then(snap => {
+                const pData = snap.val();
+                if (!pData) return;
+                const now = Date.now();
+                const lastClaim = pData.lastDailyClaim || 0;
+                const timePassed = now - lastClaim;
+
+                if (timePassed >= 86400000) {
+                    const newXP = (pData.totalXP || 0) + 5;
+                    db.ref(`players/${currentUserData.key}`).update({
+                        totalXP: newXP,
+                        lastDailyClaim: now
+                    }).then(() => {
+                        msgBox.innerText = "¡+5 XP reclamados! Tu billetera ha sido actualizada. Vuelve mañana.";
+                        msgBox.style.color = "var(--green)";
+                    });
+                } else {
+                    const timeLeft = 86400000 - timePassed;
+                    const hours = Math.floor(timeLeft / 3600000);
+                    const minutes = Math.floor((timeLeft % 3600000) / 60000);
+                    msgBox.innerText = `Aún no. Vuelve en ${hours}h ${minutes}m.`;
+                    msgBox.style.color = "var(--red)";
+                }
+            }).catch(() => {
+                msgBox.innerText = "Error de conexión. Inténtalo de nuevo.";
                 msgBox.style.color = "var(--red)";
-            }
+            });
         }
 
         function canjearCodigo() {
@@ -1330,17 +1101,17 @@
             let m = document.getElementById("mensaje-codigo");
             let pE = document.getElementById("easter-egg-anubis");
 
-            if (!currentUserData.key) { m.innerText = "Inicia sesión primero."; m.style.color = "var(--red)"; return; }
+            if(!currentUserData.key) { m.innerText = "Inicia sesión primero."; m.style.color = "var(--red)"; return; }
             
             let uC = JSON.parse(localStorage.getItem('codigos_omni_' + currentUserData.name) || '[]');
-            if (uC.includes(code)) { m.innerText = "Ya canjeaste este código."; m.style.color = "#888"; return; }
+            if(uC.includes(code)) { m.innerText = "Ya canjeaste este código."; m.style.color = "#888"; return; }
 
-            if (code === "ANUBIS") { 
-                pE.style.display = "flex"; setTimeout(() => pE.style.display = "none", 4000); 
+            if(code === "ANUBIS") { 
+                pE.style.display = "flex"; setTimeout(()=> pE.style.display = "none", 4000); 
                 document.getElementById("input-codigo").value = ""; return; 
             }
-            if (code === "MATRIX" || code === "SCULLYVIP" || code === "BLOODLUST" || code === "RAINBOW") {
-                db.ref(`players/${currentUserData.key}/inventory`).push({ itemName: code });
+            if(code === "MATRIX" || code === "SCULLYVIP" || code === "BLOODLUST" || code === "RAINBOW") {
+                db.ref(`players/${currentUserData.key}/inventory`).push({itemName: code});
                 m.innerText = "¡Cosmético Desbloqueado!"; m.style.color = "var(--green)";
                 uC.push(code); localStorage.setItem('codigos_omni_' + currentUserData.name, JSON.stringify(uC));
                 document.getElementById("input-codigo").value = ""; return;
@@ -1350,9 +1121,7 @@
             db.ref(`promo_codes/${code}`).once('value').then(snap => {
                 const data = snap.val();
                 if (data) {
-                    db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => { 
-                        db.ref(`players/${currentUserData.key}/totalXP`).set((v.val() || 0) + data.xp); 
-                    }); 
+                    db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => { db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0) + data.xp); }); 
                     m.innerHTML = `<span style="color:var(--green)">+${data.xp} XP</span> | <i>"${data.msg}"</i>`;
                     uC.push(code); localStorage.setItem('codigos_omni_' + currentUserData.name, JSON.stringify(uC));
                     document.getElementById("input-codigo").value = "";
@@ -1360,32 +1129,28 @@
             });
         }
 
-        function previewSugThumb() { 
+        function previewSugThumb(){ 
             const v = document.getElementById('sug-v').value.match(/(?:youtu\.be\/|v=)([^"&?\/\s]{11})/); 
-            if (v) { 
+            if(v) { 
+                document.getElementById('sug-v').value = v[1]; 
                 document.getElementById('sug-thumb-img').src = `https://img.youtube.com/vi/${v[1]}/mqdefault.jpg`; 
-                document.getElementById('sug-thumb-box').style.display = 'block'; 
-            } else {
-                document.getElementById('sug-thumb-box').style.display = 'none';
-            }
+                document.getElementById('sug-thumb-img').style.display='block'; 
+            } 
         }
         
-        function sendSuggestion(e) { 
-            if (e) e.preventDefault();
-            const n = document.getElementById('sug-n').value.trim(); 
-            const p = document.getElementById('sug-pos').value; 
-            const v = extraerYouTubeID(document.getElementById('sug-v').value); 
+        function sendSuggestion(e){ 
+            if(e) e.preventDefault();
+            const n = document.getElementById('sug-n').value; const p = document.getElementById('sug-pos').value; const v = document.getElementById('sug-v').value; 
             
-            if (n && p && v.length === 11) { 
+            if(n && p && v.length === 11) { 
                 db.ref('level_suggestions').push({ name: n, position: parseInt(p), video: v, user: currentUserData.name || "Anónimo" }); 
-                alert("Sugerencia enviada. ¡Si un Admin la acepta, ganarás +10 XP!"); 
-                document.getElementById('sugModal').style.display = 'none'; 
-            } else { alert("Datos inv��lidos. Asegúrate de rellenar todo correctamente."); }
+                alert("Sugerencia enviada. ¡Si un Admin la acepta, ganarás +10 XP!"); document.getElementById('sugModal').style.display='none'; 
+            } else { alert("Datos inválidos."); }
         }
 
-        // ==========================================
-        // CINEMA MODE V26 — VARIABLES CSS CORREGIDAS
-        // ==========================================
+        // =========================================
+        // CINEMA MODE Y ORDEN DE VICTORS (NUEVO)
+        // =========================================
         function openCinema(idx) {
             const l = nexus(fullData.levels)[idx]; 
             if (!l) return;
@@ -1401,35 +1166,27 @@
             let vList = [];
             victorsRaw.forEach(p => { 
                 let r = nexus(p.completions).find(x => x.level.toLowerCase() === l.name.toLowerCase()); 
-                if (r) {
+                if(r) {
                     vList.push({ name: p.name, verified: p.verified, link: r.link, time: r.time || 9999999999999, activeCosmetic: p.activeCosmetic });
                 }
             });
 
-            // Add first victor if not in completions
-            if (l.first) {
-                const firstExists = vList.some(v => v.name.toLowerCase() === l.first.toLowerCase());
-                if (!firstExists) {
-                    vList.unshift({ name: l.first, verified: false, link: `https://youtube.com/watch?v=${l.id}`, time: 0, activeCosmetic: null });
-                }
-            }
-
+            // ORDENA POR FECHA
             vList.sort((a, b) => a.time - b.time);
             
             let vHTML = "";
             vList.forEach((p, i) => { 
                 let vTick = p.verified ? `<i class="fas fa-check-circle verified-tick"></i>` : ""; 
                 let cos = getCosmetic(p.activeCosmetic);
-                let isFirst = (l.first && p.name.toLowerCase() === l.first.toLowerCase());
+                let isFirst = (p.name === l.first);
                 
-                // FIX V26: Use proper CSS variable names (--gold, --cyan) instead of (--gd, --cy)
                 vHTML += `
-                <div class="v-row" style="${isFirst ? 'background:rgba(255,215,0,0.05); border-left:2px solid var(--gold);' : ''}">
+                <div class="v-row" style="${isFirst ? 'background:rgba(255,215,0,0.05); border-left:2px solid var(--gd);' : ''}">
                     <span class="notranslate ${cos.eC}" style="color:${cos.nC}; ${cos.tG}; font-weight:800; font-size:1rem;">
-                        <small style="color:#666; margin-right:5px;">#${i + 1}</small> ${p.name} ${vTick}
-                        ${isFirst ? '<i class="fas fa-crown" style="color:var(--gold); font-size:0.7rem; margin-left:5px;" title="First Victor"></i>' : ''}
+                        <small style="color:#666; margin-right:5px;">#${i+1}</small> ${p.name} ${vTick}
+                        ${isFirst ? '<i class="fas fa-crown" style="color:var(--gd); font-size:0.7rem; margin-left:5px;" title="First Victor"></i>' : ''}
                     </span>
-                    <a href="${p.link}" target="_blank" style="color:var(--cyan); text-decoration:none; font-weight:800; font-size:0.75rem; background:rgba(0,255,255,0.1); padding:8px 15px; border-radius:8px; border:1px solid rgba(0,255,255,0.2);">
+                    <a href="${p.link}" target="_blank" style="color:var(--cy); text-decoration:none; font-weight:800; font-size:0.75rem; background:rgba(0,255,255,0.1); padding:8px 15px; border-radius:8px; border:1px solid rgba(0,255,255,0.2);">
                         <i class="fas fa-play"></i> VER PRUEBA
                     </a>
                 </div>`; 
@@ -1446,26 +1203,33 @@
             document.body.style.overflow = "auto"; 
         }
 
-        // ==========================================
-        // TITAN CARD V26
-        // ==========================================
+        // =========================================
+        // TITAN CARD Y EASTER EGGS
+        // =========================================
         function generateTitanCard() {
             let nick = document.getElementById('tc-nick').value.trim(); 
             if (!nick) return alert("Ingresa el Nick.");
             
-            let pL = nexus(fullData.players); 
-            const lvls = nexus(fullData.levels);
+            let pL = nexus(fullData.players); const lvls = nexus(fullData.levels);
             
-            pL.forEach(p => {
-                p.calcXp = calculateRealXP(p, lvls) + (p.totalXP || 0);
-                // Tag realXp on each completion for sorting
-                nexus(p.completions).forEach(c => {
-                    let lIdx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase());
-                    c.realXp = lIdx > -1 ? Math.max(100 - (lIdx * 0.6), 5) * (lvls[lIdx].bounty ? 2 : 1) : (c.xp || 0);
-                });
+            pL.forEach(p => { 
+                let realXp = 0; 
+                nexus(p.completions).forEach(c => { 
+                    let lIdx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase()); 
+                    let cXp = 0;
+                    if(lIdx > -1) {
+                        let base = Math.max(100 - (lIdx * 0.6), 5);
+                        if(lvls[lIdx].bounty) base *= 2;
+                        // [FIX] Bonus x2 si es First Victor del nivel
+                        if(lvls[lIdx].first && lvls[lIdx].first.toLowerCase() === p.name.toLowerCase()) base *= 2;
+                        cXp = base;
+                    } else { cXp = c.xp || 0; }
+                    c.realXp = cXp; realXp += cXp; 
+                }); 
+                p.calcXp = realXp + (p.totalXP || 0); 
             });
             
-            pL.sort((a, b) => b.calcXp - a.calcXp); 
+            pL.sort((a,b) => b.calcXp - a.calcXp); 
             let pIndex = pL.findIndex(x => x.name.toLowerCase() === nick.toLowerCase()); 
             if (pIndex === -1) return alert("Perfil no encontrado.");
             
@@ -1476,8 +1240,8 @@
             const canvas = document.createElement('canvas'); canvas.width = 900; canvas.height = 500; const ctx = canvas.getContext('2d');
             
             ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, 900, 500); ctx.strokeStyle = '#151515'; ctx.lineWidth = 1;
-            for (let i = 0; i < 900; i += 30) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 500); ctx.stroke(); } 
-            for (let i = 0; i < 500; i += 30) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(900, i); ctx.stroke(); }
+            for(let i = 0; i < 900; i += 30) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 500); ctx.stroke(); } 
+            for(let i = 0; i < 500; i += 30) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(900, i); ctx.stroke(); }
             
             ctx.strokeStyle = p.verified ? '#00ccff' : '#ff6600'; ctx.lineWidth = 10; ctx.strokeRect(10, 10, 880, 480);
             
@@ -1497,76 +1261,225 @@
                 
                 if (p.bio) { ctx.fillStyle = '#888888'; ctx.font = 'italic 16px Arial'; ctx.fillText('"' + p.bio.substring(0, 55) + '..."', 40, 370); }
                 
-                let comps = nexus(p.completions).sort((a, b) => (b.realXp || 0) - (a.realXp || 0)); 
+                let comps = nexus(p.completions).sort((a,b) => (b.realXp || 0) - (a.realXp || 0)); 
                 ctx.fillStyle = p.verified ? '#00ccff' : '#ff6600'; ctx.font = 'bold 22px "Courier New"'; ctx.fillText("TOP 5 VICTORIAS:", 500, 210); 
                 ctx.fillStyle = '#ffffff'; ctx.font = '18px Arial';
                 
-                for (let k = 0; k < Math.min(5, comps.length); k++) { ctx.fillText(`> ${comps[k].level} (+${(comps[k].realXp || 0).toFixed(1)} Pts)`, 500, 245 + (k * 25)); }
-                if (comps.length === 0) { ctx.fillText("> Sin registros aún.", 500, 245); }
+                for(let k = 0; k < Math.min(5, comps.length); k++) { ctx.fillText(`> ${comps[k].level} (+${(comps[k].realXp||0).toFixed(1)} Pts)`, 500, 245 + (k * 25)); }
+                if(comps.length === 0) { ctx.fillText("> Sin registros aún.", 500, 245); }
                 
-                ctx.fillStyle = '#333333'; ctx.font = 'bold 20px "Courier New"'; ctx.fillText("SYS.OMNI V26 - THE SCULLY LIST IDENTITY", 40, 460);
+                ctx.fillStyle = '#333333'; ctx.font = 'bold 20px "Courier New"'; ctx.fillText("SYS.OMNI - THE SCULLY LIST IDENTITY", 40, 460);
                 
                 const link = document.createElement('a'); link.download = `OMNI_TITAN_CARD_${p.name}.png`; link.href = canvas.toDataURL("image/png"); link.click();
                 
                 document.getElementById('tc-modal').style.display = 'none'; document.getElementById('tc-nick').value = ''; 
-                btn.innerHTML = "<i class='fas fa-download'></i> PROCESAR Y DESCARGAR IMAGEN"; btn.disabled = false;
+                btn.innerHTML = "<i class='fas fa-download'></i> FORJAR TITAN CARD 3.0"; btn.disabled = false;
             };
             
             img.onerror = () => { img.crossOrigin = "Anonymous"; img.src = "https://i.imgur.com/6D2g3wU.png"; }; 
             img.src = (p.photo && p.photo !== "null" && p.photo !== "undefined" && p.photo.trim() !== "") ? p.photo : "https://i.imgur.com/6D2g3wU.png";
         }
 
-        // ==========================================
-        // SCULLY AI
-        // ==========================================
         function runScullyAI() { 
-            document.getElementById('aiModal').style.display = 'block'; 
-            const aiText = document.getElementById('aiText'); 
+            document.getElementById('aiModal').style.display = 'block'; const aiText = document.getElementById('aiText'); 
             aiText.innerHTML = "Sincronizando red neuronal con base de datos..."; 
             
             setTimeout(() => { 
                 const lvls = nexus(fullData.levels); 
-                if (lvls.length < 3) { aiText.innerHTML = "Nodos insuficientes."; return; } 
+                if(lvls.length < 3) { aiText.innerHTML = "Nodos insuficientes."; return; } 
                 const target = lvls[Math.floor(Math.random() * (lvls.length / 1.5))].name; 
                 aiText.innerHTML = `<span style="color:#888; font-size:0.8rem;">ANÁLISIS COMPLETADO.</span><br><br>Siguiente objetivo recomendado:<br><b style="color:var(--cyan); font-size:2.2rem; text-transform:uppercase; display:block; margin-top:10px;">${target}</b><br><span style="font-size:0.8rem; color:#aaa;">Probabilidad matemática de éxito: ${Math.floor(Math.random() * 60 + 20)}%</span>`; 
             }, 1800); 
         }
 
-        // ==========================================
-        // EASTER EGGS
-        // ==========================================
         let tributeClicks = 0; let tributeTimer;
         function triggerTribute() {
-            tributeClicks++; clearTimeout(tributeTimer); 
-            tributeTimer = setTimeout(() => { tributeClicks = 0; }, 3000); 
-            if (tributeClicks === 7) {
+            tributeClicks++; clearTimeout(tributeTimer); tributeTimer = setTimeout(() => { tributeClicks = 0; }, 3000); 
+            if(tributeClicks === 7) {
                 tributeClicks = 0;
                 let flash = document.createElement('div'); flash.className = 'tribute-flash'; document.body.appendChild(flash);
                 setTimeout(() => flash.remove(), 1200);
-                for (let i = 0; i < 7; i++) {
+                for(let i=0; i<7; i++) {
                     setTimeout(() => {
                         let star = document.createElement('div'); star.className = 'star-tribute'; star.style.top = (Math.random() * 50) + 'vh';
                         document.body.appendChild(star); setTimeout(() => star.remove(), 1500);
                     }, i * 200);
                 }
-                if (currentUserData.key) {
-                    db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => { db.ref(`players/${currentUserData.key}/totalXP`).set((v.val() || 0) + 1); });
+                if(currentUserData.key) {
+                    db.ref(`players/${currentUserData.key}/totalXP`).once('value').then(v => { db.ref(`players/${currentUserData.key}/totalXP`).set((v.val()||0) + 1); });
                     setTimeout(() => alert("🌟 TRIBUTO A 2PARX: Has honrado su legado. +1 XP de Lealtad ha sido sumado a tu billetera."), 1000);
                 } else { setTimeout(() => alert("🌟 TRIBUTO A 2PARX: Has honrado su legado. Inicia sesión para recibir tu recompensa la próxima vez."), 1000); }
             }
         }
 
         let isWaveMode = false;
-        document.addEventListener('keydown', (e) => { if (e.key === 'Shift' && !isWaveMode) { isWaveMode = true; document.body.classList.add('wave-mode'); } });
-        document.addEventListener('keyup', (e) => { if (e.key === 'Shift') { isWaveMode = false; document.body.classList.remove('wave-mode'); } });
+        document.addEventListener('keydown', (e) => { if(e.key === 'Shift' && !isWaveMode) { isWaveMode = true; document.body.classList.add('wave-mode'); } });
+        document.addEventListener('keyup', (e) => { if(e.key === 'Shift') { isWaveMode = false; document.body.classList.remove('wave-mode'); } });
         document.addEventListener('mousemove', (e) => {
-            if (isWaveMode) {
-                if (Math.random() > 0.4) return; 
-                let trail = document.createElement('div'); trail.className = 'wave-trail'; 
-                trail.style.left = e.pageX + 'px'; trail.style.top = e.pageY + 'px';
+            if(isWaveMode) {
+                if(Math.random() > 0.4) return; 
+                let trail = document.createElement('div'); trail.className = 'wave-trail'; trail.style.left = e.pageX + 'px'; trail.style.top = e.pageY + 'px';
                 document.body.appendChild(trail); setTimeout(() => trail.remove(), 400);
             }
         });
+
+        // =============================================
+        // [OMNI-NEW] SISTEMA DE TOASTS NO-BLOQUEANTES
+        // Reemplaza alert() con notificaciones suaves.
+        // tipo: 'success' | 'error' | 'info' | 'gold'
+        // =============================================
+        function omniToast(msg, tipo = 'info', duracion = 4000) {
+            const container = document.getElementById('omni-toast-container');
+            if (!container) return;
+            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-bolt', gold: 'fa-crown' };
+            const t = document.createElement('div');
+            t.className = `omni-toast ${tipo}`;
+            t.innerHTML = `<i class="fas ${icons[tipo] || 'fa-bolt'}" style="flex-shrink:0;"></i><span>${msg}</span>`;
+            container.appendChild(t);
+            setTimeout(() => {
+                t.classList.add('out');
+                setTimeout(() => t.remove(), 300);
+            }, duracion);
+        }
+
+        // =============================================
+        // [OMNI-NEW] PANEL DE PERSONALIZACIÓN FLOTANTE
+        // =============================================
+        let customPanelOpen = false;
+        function toggleCustomPanel() {
+            customPanelOpen = !customPanelOpen;
+            document.getElementById('custom-panel').classList.toggle('open', customPanelOpen);
+        }
+        document.addEventListener('click', e => {
+            if (customPanelOpen && !e.target.closest('#custom-panel') && !e.target.closest('#custom-fab')) {
+                customPanelOpen = false;
+                document.getElementById('custom-panel').classList.remove('open');
+            }
+        });
+
+        function applyColor(color) {
+            updateThemeColor(color);
+            document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            omniToast('Color de acento actualizado', 'info', 2000);
+        }
+
+        function applyFont(type) {
+            const map = {
+                lexend: "'Lexend Deca', sans-serif",
+                mono:   "'JetBrains Mono', monospace",
+                system: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+            };
+            document.body.style.fontFamily = map[type];
+            localStorage.setItem('omni-font', type);
+            document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('font-btn-' + type)?.classList.add('active');
+            omniToast('Tipografía cambiada', 'info', 2000);
+        }
+
+        function togglePref(key) {
+            const toggle = document.getElementById('toggle-' + key);
+            const isOn = toggle.classList.toggle('on');
+            localStorage.setItem('omni-pref-' + key, isOn ? '1' : '0');
+            if (key === 'compact') document.body.classList.toggle('compact-mode', isOn);
+            if (key === 'anim')    document.body.classList.toggle('no-anim', isOn);
+            if (key === 'chat') {
+                const chatSec = document.querySelector('.global-chat-section');
+                if (chatSec) chatSec.style.display = isOn ? 'none' : '';
+            }
+            omniToast(isOn ? 'Opción activada' : 'Opción desactivada', 'info', 1500);
+        }
+
+        function resetPrefs() {
+            ['compact','anim','chat'].forEach(k => { localStorage.removeItem('omni-pref-' + k); });
+            localStorage.removeItem('omni-font');
+            document.body.classList.remove('compact-mode','no-anim');
+            document.body.style.fontFamily = '';
+            const chatSec = document.querySelector('.global-chat-section');
+            if (chatSec) chatSec.style.display = '';
+            updateThemeColor('#ff6600');
+            document.querySelectorAll('.mini-toggle').forEach(t => t.classList.remove('on'));
+            document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('font-btn-lexend')?.classList.add('active');
+            omniToast('Preferencias reseteadas al estado original', 'gold', 3000);
+        }
+
+        // Carga las preferencias guardadas al iniciar
+        (function loadPrefs() {
+            const font = localStorage.getItem('omni-font');
+            if (font) { applyFont(font); }
+            ['compact','anim','chat'].forEach(k => {
+                if (localStorage.getItem('omni-pref-' + k) === '1') {
+                    const toggle = document.getElementById('toggle-' + k);
+                    if (toggle) toggle.classList.add('on');
+                    if (k === 'compact') document.body.classList.add('compact-mode');
+                    if (k === 'anim')    document.body.classList.add('no-anim');
+                    if (k === 'chat') {
+                        const chatSec = document.querySelector('.global-chat-section');
+                        if (chatSec) chatSec.style.display = 'none';
+                    }
+                }
+            });
+        })();
+
     </script>
+
+    <!-- [OMNI-NEW] Toast container -->
+    <div id="omni-toast-container"></div>
+
+    <!-- [OMNI-NEW] Panel de personalización flotante -->
+    <button id="custom-fab" onclick="toggleCustomPanel()" title="Personalizar interfaz">
+        <i class="fas fa-sliders-h"></i>
+    </button>
+
+    <div id="custom-panel">
+        <p class="cp-title"><i class="fas fa-palette" style="margin-right:6px;"></i>Personalizar OMNI</p>
+
+        <div class="cp-section">
+            <label>Color de Acento</label>
+            <div class="color-presets">
+                <div class="color-dot" style="background:#ff6600;" onclick="applyColor('#ff6600')" title="OMNI Orange"></div>
+                <div class="color-dot" style="background:#00ffff;" onclick="applyColor('#00ffff')" title="Cyan"></div>
+                <div class="color-dot" style="background:#ffd700;" onclick="applyColor('#ffd700')" title="Gold VIP"></div>
+                <div class="color-dot" style="background:#cc00ff;" onclick="applyColor('#cc00ff')" title="Morado"></div>
+                <div class="color-dot" style="background:#00ff66;" onclick="applyColor('#00ff66')" title="Matrix Verde"></div>
+                <div class="color-dot" style="background:#ff3333;" onclick="applyColor('#ff3333')" title="Rojo Alerta"></div>
+                <div class="color-dot" style="background:#00aaff;" onclick="applyColor('#00aaff')" title="Azul Eléctrico"></div>
+                <div class="color-dot custom-dot" title="Color personalizado">
+                    <input type="color" id="cp-custom-color" oninput="applyColor(this.value)">
+                </div>
+            </div>
+        </div>
+
+        <div class="cp-section">
+            <label>Tipografía</label>
+            <div class="font-btns">
+                <button class="font-btn active" id="font-btn-lexend" onclick="applyFont('lexend')" style="font-family:'Lexend Deca'">Lexend</button>
+                <button class="font-btn" id="font-btn-mono" onclick="applyFont('mono')" style="font-family:'JetBrains Mono'">Mono</button>
+                <button class="font-btn" id="font-btn-system" onclick="applyFont('system')">System</button>
+            </div>
+        </div>
+
+        <div class="cp-section">
+            <label>Opciones de Vista</label>
+            <div class="toggle-row">
+                <span><i class="fas fa-compress-alt" style="margin-right:6px; color:var(--accent);"></i>Modo Compacto</span>
+                <div class="mini-toggle" id="toggle-compact" onclick="togglePref('compact')"></div>
+            </div>
+            <div class="toggle-row">
+                <span><i class="fas fa-wind" style="margin-right:6px; color:var(--cyan);"></i>Reducir Animaciones</span>
+                <div class="mini-toggle" id="toggle-anim" onclick="togglePref('anim')"></div>
+            </div>
+            <div class="toggle-row">
+                <span><i class="fas fa-eye-slash" style="margin-right:6px; color:var(--purple);"></i>Ocultar Chat</span>
+                <div class="mini-toggle" id="toggle-chat" onclick="togglePref('chat')"></div>
+            </div>
+        </div>
+
+        <button onclick="resetPrefs()" style="width:100%; background:transparent; border:1px dashed #333; color:#555; padding:8px; border-radius:8px; cursor:pointer; font-size:0.7rem; font-family:'JetBrains Mono'; transition:0.2s;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='#333';this.style.color='#555'">
+            <i class="fas fa-undo"></i> RESETEAR PREFERENCIAS
+        </button>
+    </div>
+
 </body>
 </html>
