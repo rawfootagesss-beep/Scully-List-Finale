@@ -311,6 +311,7 @@
                     <button class="btn" style="width:100%;" onclick="iRec()"><i class="fas fa-syringe"></i> EJECUTAR INYECCIÓN DE RÉCORD</button>
                 </div>
             </div>
+            
             <div id="t-lvls" class="tab">
                 <h2 class="title"><i class="fas fa-database" style="color:var(--pu);"></i> Editor de Niveles</h2>
                 
@@ -810,7 +811,7 @@
                     rMReq(fD.market_requests||{}); 
                     rMIt(fD.market_items||{});
                     rClm(fD.claim_requests||{}); 
-                    rPfp(fD.pfp_requests||{});
+                    rPfp(fD.pfp_requests||{}); 
                     rCln(fD.clans||{}); 
                     rBdg(fD.badges||{}); 
                     rCht(fD.staff_chat||{});
@@ -1035,7 +1036,7 @@
         }
 
         // ==========================================
-        // EDITOR DE NIVELES E INYECCIÓN DE VICTORS DIRECTA
+        // EDITOR DE NIVELES Y SINCRONIZACIÓN AREDL
         // ==========================================
         function rLvs(d) { 
             let h = ""; 
@@ -1066,7 +1067,7 @@
             
             if($('edit-action-btns')) $('edit-action-btns').style.display = 'flex'; 
             if($('v-inject-box')) $('v-inject-box').style.display = 'block'; 
-            if($('aredl-sync-box')) $('aredl-sync-box').style.display = 'block';
+            if($('aredl-sync-box')) $('aredl-sync-box').style.display = 'block'; // MUESTRA CAJA AREDL
             if($('t-lvls')) $('t-lvls').scrollIntoView(); 
         }
         
@@ -1103,32 +1104,33 @@
             log(`Modificó Nivel: ${n} (Pos: ${p})`);
         }
 
-        // SISTEMA DE RECALCULO AUTOMÁTICO AREDL
+        // --- MOTOR AREDL ---
         async function syncWithAREDL() {
             const levelName = $('a-n').value.trim();
             const statusText = $('aredl-status');
             const currentIdx = parseInt($('e-ix').value);
 
             if (!levelName) return toast("Escribe el nombre del nivel", true);
-            if (currentIdx === -1) return toast("Edita un nivel existente primero", true);
+            if (currentIdx === -1) return toast("Selecciona un nivel de la lista primero", true);
             
-            statusText.innerText = "Consultando satélites AREDL...";
+            statusText.innerText = "Conectando con la API de AREDL...";
             statusText.style.color = "var(--bl)";
 
             try {
                 const response = await fetch(`https://api.aredl.net/api/aredl/levels`);
+                if (!response.ok) throw new Error("Error en respuesta de servidor");
+                
                 const data = await response.json();
-
                 const aredlLevel = data.find(l => l.name.toLowerCase() === levelName.toLowerCase());
 
                 if (!aredlLevel) {
-                    statusText.innerText = "Error: Nivel no encontrado en AREDL.";
+                    statusText.innerText = "❌ Nivel no encontrado en el ranking AREDL.";
                     statusText.style.color = "var(--rd)";
                     return;
                 }
 
                 const aredlPosition = aredlLevel.position; 
-                statusText.innerHTML = `Detectado en puesto <b>#${aredlPosition}</b>. Sincronizando...`;
+                statusText.innerHTML = `✅ Detectado en puesto <b>#${aredlPosition}</b>. Reubicando...`;
 
                 let nL = [...lvls]; 
                 let levelToMove = nL[currentIdx]; 
@@ -1142,18 +1144,19 @@
                 await db.ref('levels').set(nL);
 
                 toast(`Sincronizado: ${levelName} movido al #${aredlPosition}`);
-                log(`AREDL Sync: ${levelName} movido a #${aredlPosition}`);
+                log(`AREDL Sync: ${levelName} a #${aredlPosition}`);
                 
-                rLv();
-                statusText.innerText = "";
+                statusText.innerText = "Sincronización completada con éxito.";
+                statusText.style.color = "var(--gr)";
                 
+                setTimeout(() => rLv(), 2000);
                 api(`📡 **SINCRO AREDL:** El nivel **${levelName}** ha sido reubicado automáticamente en el Top **#${aredlPosition}** basándose en la lista oficial.`, 'lvls');
 
             } catch (error) {
-                console.error(error);
-                statusText.innerText = "Fallo de conexión con AREDL.";
+                console.error("AREDL Error:", error);
+                statusText.innerText = "⚠️ Error de conexión: La API de AREDL está saturada o bloqueada.";
                 statusText.style.color = "var(--rd)";
-                toast("Error de API", true);
+                toast("Error de Sincronización", true);
             }
         }
 
