@@ -126,6 +126,7 @@
 
         .btn { background: var(--ac); color: #000; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 800; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; } 
         .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3); }
+        .btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
         .dl { display: flex; flex-direction: column; gap: 10px; max-height: 450px; overflow-y: auto; padding-right: 5px; } 
         .dc { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--bd); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; transition: 0.2s; } 
@@ -311,9 +312,16 @@
                     <button class="btn" style="width:100%;" onclick="iRec()"><i class="fas fa-syringe"></i> EJECUTAR INYECCIÓN DE RÉCORD</button>
                 </div>
             </div>
-            
             <div id="t-lvls" class="tab">
                 <h2 class="title"><i class="fas fa-database" style="color:var(--pu);"></i> Editor de Niveles</h2>
+
+                <div class="panel" style="border-color: #38b6ff; background: rgba(56, 182, 255, 0.05);">
+                    <h3 style="margin:0 0 10px; color:#38b6ff; font-size:1rem;"><i class="fas fa-sort-amount-down"></i> Auto-Ordenamiento AREDL Masivo</h3>
+                    <p style="font-size:0.75rem; color:#aaa; margin-bottom:15px;">Se conecta mediante un túnel proxy a la base de datos oficial de AREDL y reordena <b>absolutamente todos tus niveles</b> automáticamente (del más difícil al más fácil). Los niveles que no existan en la AREDL se enviarán al fondo de la lista.</p>
+                    <button type="button" id="btn-bulk-aredl" class="btn" style="background:#38b6ff; color:#000; width:100%; font-weight:900;" onclick="bulkSyncAREDL()">
+                        <i class="fas fa-robot"></i> REORDENAR TODA LA LISTA AHORA
+                    </button>
+                </div>
                 
                 <div class="panel" style="border-color:var(--bl);">
                     <h3 style="margin:0 0 15px;color:var(--bl);font-size:1rem;"><i class="fas fa-lightbulb"></i> Sugerencias de la Comunidad</h3>
@@ -342,16 +350,6 @@
                     <div id="edit-action-btns" style="display:none; gap:10px; margin-top:10px;">
                         <button class="btn" style="background:transparent;color:var(--ac);border:1px solid var(--ac);flex:1;" onclick="rLv()"><i class="fas fa-times"></i> CANCELAR EDICIÓN</button>
                         <button class="btn" style="background:var(--rd);color:#fff;flex:1;" onclick="delLv()"><i class="fas fa-trash"></i> ELIMINAR NIVEL</button>
-                    </div>
-
-                    <div id="aredl-sync-box" style="display:none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #444;">
-                        <p style="font-size: 0.7rem; color: #aaa; margin-bottom: 10px;">
-                            <i class="fas fa-sync-alt"></i> Sincronización con Base de Datos AREDL
-                        </p>
-                        <button type="button" class="btn" style="background: #38b6ff; color: #000; width: 100%;" onclick="syncWithAREDL()">
-                            <i class="fas fa-robot"></i> REORDENAR SEGÚN AREDL
-                        </button>
-                        <p id="aredl-status" style="font-size: 0.65rem; margin-top: 8px; color: var(--bl);"></p>
                     </div>
 
                     <div id="v-inject-box" style="display:none; margin-top:20px; padding-top:15px; border-top:1px solid #333;">
@@ -811,7 +809,7 @@
                     rMReq(fD.market_requests||{}); 
                     rMIt(fD.market_items||{});
                     rClm(fD.claim_requests||{}); 
-                    rPfp(fD.pfp_requests||{}); 
+                    rPfp(fD.pfp_requests||{});
                     rCln(fD.clans||{}); 
                     rBdg(fD.badges||{}); 
                     rCht(fD.staff_chat||{});
@@ -1036,7 +1034,7 @@
         }
 
         // ==========================================
-        // EDITOR DE NIVELES Y SINCRONIZACIÓN AREDL
+        // EDITOR DE NIVELES E INYECCIÓN DIRECTA
         // ==========================================
         function rLvs(d) { 
             let h = ""; 
@@ -1067,7 +1065,8 @@
             
             if($('edit-action-btns')) $('edit-action-btns').style.display = 'flex'; 
             if($('v-inject-box')) $('v-inject-box').style.display = 'block'; 
-            if($('aredl-sync-box')) $('aredl-sync-box').style.display = 'block'; // MUESTRA CAJA AREDL
+            // Eliminamos la caja individual ya que ahora tenemos la masiva
+            if($('aredl-sync-box')) $('aredl-sync-box').style.display = 'none'; 
             if($('t-lvls')) $('t-lvls').scrollIntoView(); 
         }
         
@@ -1104,59 +1103,70 @@
             log(`Modificó Nivel: ${n} (Pos: ${p})`);
         }
 
-        // --- MOTOR AREDL ---
-        async function syncWithAREDL() {
-            const levelName = $('a-n').value.trim();
-            const statusText = $('aredl-status');
-            const currentIdx = parseInt($('e-ix').value);
+        // ==========================================
+        // MOTOR DE ORDENAMIENTO MASIVO AREDL (PROXY)
+        // ==========================================
+        async function bulkSyncAREDL() {
+            const btn = $('btn-bulk-aredl');
+            if(!confirm("⚠️ ADVERTENCIA: Esto sobrescribirá el orden de TODOS tus niveles basándose en la AREDL oficial y recalculará la XP de todos los jugadores. ¿Deseas continuar?")) return;
 
-            if (!levelName) return toast("Escribe el nombre del nivel", true);
-            if (currentIdx === -1) return toast("Selecciona un nivel de la lista primero", true);
+            btn.disabled = true;
+            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> CONECTANDO A RED AREDL (PROXY)...";
             
-            statusText.innerText = "Conectando con la API de AREDL...";
-            statusText.style.color = "var(--bl)";
-
             try {
-                const response = await fetch(`https://api.aredl.net/api/aredl/levels`);
-                if (!response.ok) throw new Error("Error en respuesta de servidor");
+                // Usamos AllOrigins como proxy para saltar el bloqueo de CORS
+                const targetUrl = 'https://api.aredl.net/api/aredl/levels';
+                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
                 
-                const data = await response.json();
-                const aredlLevel = data.find(l => l.name.toLowerCase() === levelName.toLowerCase());
-
-                if (!aredlLevel) {
-                    statusText.innerText = "❌ Nivel no encontrado en el ranking AREDL.";
-                    statusText.style.color = "var(--rd)";
-                    return;
-                }
-
-                const aredlPosition = aredlLevel.position; 
-                statusText.innerHTML = `✅ Detectado en puesto <b>#${aredlPosition}</b>. Reubicando...`;
-
-                let nL = [...lvls]; 
-                let levelToMove = nL[currentIdx]; 
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error("Error en el proxy o API caída.");
                 
-                nL.splice(currentIdx, 1);
-                let targetIndex = aredlPosition - 1;
+                const aredlData = await response.json();
                 
-                if(targetIndex >= nL.length) nL.push(levelToMove);
-                else nL.splice(targetIndex, 0, levelToMove);
+                // Mapeo rápido de AREDL para buscar posiciones (Nombre en minúsculas -> Posición)
+                const aredlMap = {};
+                aredlData.forEach(l => {
+                    aredlMap[l.name.toLowerCase()] = l.position;
+                });
 
-                await db.ref('levels').set(nL);
+                // Separamos los niveles en dos grupos: Los que coinciden con AREDL y los que no
+                let matched = [];
+                let unmatched = [];
 
-                toast(`Sincronizado: ${levelName} movido al #${aredlPosition}`);
-                log(`AREDL Sync: ${levelName} a #${aredlPosition}`);
+                lvls.forEach(l => {
+                    let lowerName = l.name.toLowerCase();
+                    if(aredlMap[lowerName]) {
+                        matched.push({ ...l, tempAredlPos: aredlMap[lowerName] });
+                    } else {
+                        unmatched.push(l);
+                    }
+                });
+
+                // Ordenamos los que coincidieron según su posición oficial
+                matched.sort((a, b) => a.tempAredlPos - b.tempAredlPos);
+
+                // Limpiamos la propiedad temporal y unimos las listas (unmatched se van al final)
+                let newLvls = matched.map(l => {
+                    let copy = {...l};
+                    delete copy.tempAredlPos;
+                    return copy;
+                }).concat(unmatched);
+
+                // Subimos la nueva lista reordenada a Firebase
+                await db.ref('levels').set(newLvls);
+
+                toast("¡Ordenamiento Completado!");
+                log(`Ejecutó Auto-Sync Masivo con AREDL (${matched.length} niveles reordenados).`);
+                api(`🌐 **REESTRUCTURACIÓN MASIVA:** El Administrador **${sN}** ha sincronizado toda la lista con la base de datos de AREDL. ${matched.length} niveles fueron reubicados y la XP global ha sido recalculada de forma automática.`, 'lvls');
                 
-                statusText.innerText = "Sincronización completada con éxito.";
-                statusText.style.color = "var(--gr)";
-                
-                setTimeout(() => rLv(), 2000);
-                api(`📡 **SINCRO AREDL:** El nivel **${levelName}** ha sido reubicado automáticamente en el Top **#${aredlPosition}** basándose en la lista oficial.`, 'lvls');
+                rLv(); // Limpia campos de edición por si acaso
 
             } catch (error) {
-                console.error("AREDL Error:", error);
-                statusText.innerText = "⚠️ Error de conexión: La API de AREDL está saturada o bloqueada.";
-                statusText.style.color = "var(--rd)";
-                toast("Error de Sincronización", true);
+                console.error("AREDL Bulk Sync Error:", error);
+                alert("Error de conexión: El proxy o la API de AREDL están fallando. Intenta más tarde.\nDetalle: " + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = "<i class='fas fa-robot'></i> REORDENAR TODA LA LISTA AHORA";
             }
         }
 
@@ -1200,8 +1210,6 @@
             if($('a-b')) $('a-b').checked = false; 
             if($('edit-action-btns')) $('edit-action-btns').style.display = 'none'; 
             if($('v-inject-box')) $('v-inject-box').style.display = 'none';
-            if($('aredl-sync-box')) $('aredl-sync-box').style.display = 'none';
-            if($('aredl-status')) $('aredl-status').innerText = "";
         }
         
         function delLv() {
