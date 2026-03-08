@@ -706,6 +706,11 @@
             if(!user) return location.href="login.html"; 
             cEm = user.email;
             
+            // [OMNI-SEC] Mientras se verifica el rol, ocultamos
+            // todo el contenido del panel para evitar que un usuario
+            // sin permisos vea la UI antes de ser redirigido.
+            if($('loader')) $('loader').style.display = 'flex';
+
             try {
                 db.ref('players').once('value').then(s => {
                     const me = nx(s.val()).find(x => x.email && x.email.toLowerCase() === user.email.toLowerCase());
@@ -731,21 +736,38 @@
                         }, 300);
                         
                         initEngine();
-                    } else { 
+                    } else {
+                        // [OMNI-SEC] Acceso denegado: muestra cuenta regresiva
+                        // y redirige al inicio automáticamente en 5s.
+                        let countdown = 5;
                         if($('loader')) {
-                            $('loader').innerHTML = `
-                                <h2 style="color:var(--rd);font-family:'JetBrains Mono';">ACCESO DENEGADO</h2>
-                                <p style="color:#aaa; max-width:300px; text-align:center;">No tienes permisos de Administrador.</p>
-                                <div class="brand" onclick="handleSecretTap()" style="margin-top:20px;padding:20px;background:#111;border-radius:15px;cursor:pointer;">
-                                    <h1 style="color:#fff;font-family:'JetBrains Mono'; margin:0;">SYS.<span style="color:var(--ac);">OMNI</span></h1>
-                                    <p style="font-size:0.5rem;color:#666;margin:10px 0 0;">TOCA 5 VECES</p>
-                                </div>
-                                <div class="ig" id="root-box" style="display:none; margin-top:15px; width:100%; max-width:300px;">
-                                    <input type="password" id="o-k" placeholder="Código de Recuperación..." style="text-align:center;">
-                                    <button class="btn" style="width:100%;" onclick="eOwC()">EJECUTAR</button>
-                                </div>
-                                <button onclick="location.href='index.html'" style="margin-top:30px;padding:10px 20px;background:var(--rd);color:#fff;border:none;border-radius:5px;font-weight:bold;cursor:pointer;">VOLVER AL INICIO</button>
-                            `;
+                            const updateMsg = () => {
+                                $('loader').innerHTML = `
+                                    <h2 style="color:var(--rd);font-family:'JetBrains Mono';">ACCESO DENEGADO</h2>
+                                    <p style="color:#aaa; max-width:300px; text-align:center;">No tienes permisos de Administrador.</p>
+                                    <p style="color:var(--rd); font-family:'JetBrains Mono'; font-size:1.5rem; margin-top:10px;">
+                                        Redirigiendo en <b>${countdown}</b>s...
+                                    </p>
+                                    <div class="brand" onclick="handleSecretTap()" style="margin-top:20px;padding:20px;background:#111;border-radius:15px;cursor:pointer;">
+                                        <h1 style="color:#fff;font-family:'JetBrains Mono'; margin:0;">SYS.<span style="color:var(--ac);">OMNI</span></h1>
+                                        <p style="font-size:0.5rem;color:#666;margin:10px 0 0;">TOCA 5 VECES</p>
+                                    </div>
+                                    <div class="ig" id="root-box" style="display:none; margin-top:15px; width:100%; max-width:300px;">
+                                        <input type="password" id="o-k" placeholder="Código de Recuperación..." style="text-align:center;">
+                                        <button class="btn" style="width:100%;" onclick="eOwC()">EJECUTAR</button>
+                                    </div>
+                                    <button onclick="location.href='index.html'" style="margin-top:30px;padding:10px 20px;background:var(--rd);color:#fff;border:none;border-radius:5px;font-weight:bold;cursor:pointer;">VOLVER AL INICIO</button>
+                                `;
+                            };
+                            updateMsg();
+                            const timer = setInterval(() => {
+                                countdown--;
+                                updateMsg();
+                                if (countdown <= 0) {
+                                    clearInterval(timer);
+                                    location.href = 'index.html';
+                                }
+                            }, 1000);
                         }
                     }
                 }).catch(err => {
@@ -841,9 +863,9 @@
             let calcedList = [...pList].map(p => {
                 let comps = nx(p.completions); let realXp = 0;
                 comps.forEach(c => {
-                    let lIdx = currentLvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase());
-                    if(lIdx > -1) { realXp += Math.max(100 - (lIdx * 0.6), 5) * (currentLvls[lIdx].bounty ? 2 : 1); } 
-                    else { realXp += c.xp || 0; }
+                    // [FIX] Usar getXP() que ya incluye el bonus x2 de First Victor
+                    let xpVal = getXP(c.level, p.name);
+                    realXp += xpVal > 0 ? xpVal : (c.xp || 0);
                 });
                 return {...p, calcXp: realXp};
             });
@@ -1498,4 +1520,4 @@
         }
     </script>
 </body>
-</html>    
+</html>
