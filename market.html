@@ -1,501 +1,509 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OMNI | Black Market</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root { 
-            --bg: #050505; --gold: #ffd700; --red: #ff3333; 
-            --cyan: #00ffff; --green: #00ff66; --purple: #cc00ff;
-            --border: rgba(255,255,255,0.1); --card: rgba(15,15,15,0.9);
-        }
-        
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { 
-            background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; 
-            margin: 0; padding: 20px; overflow-x: hidden;
-            background-image: radial-gradient(circle at 50% 0%, rgba(255,215,0,0.03) 0%, transparent 70%);
-        }
-        
-        .container { max-width: 1200px; margin: 0 auto; padding-bottom: 50px; }
-        
-        header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 20px; position: relative; }
-        .back-btn { position: absolute; left: 0; top: 10px; color: #aaa; text-decoration: none; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
-        .back-btn:hover { color: var(--gold); }
-        h1 { color: var(--gold); text-transform: uppercase; font-size: clamp(1.8rem, 5vw, 3rem); margin: 0; text-shadow: 0 0 20px rgba(255,215,0,0.3); font-family: 'JetBrains Mono'; }
-        
-        /* PANEL DE ADMIN OCULTO Y SWITCHES */
-        #admin-panel { display: none; background: rgba(255,51,51,0.05); border: 1px dashed var(--red); padding: 20px; border-radius: 10px; margin-bottom: 30px; }
-        .admin-title { color: var(--red); margin-top: 0; font-family: 'JetBrains Mono'; text-transform: uppercase; font-size: 1rem; }
-        .admin-inputs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
-        .g-input { flex: 1; min-width: 150px; background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 5px; font-family: inherit; }
-        .g-input:focus { border-color: var(--red); }
-        .btn-admin { background: var(--red); color: #fff; border: none; padding: 12px 25px; cursor: pointer; font-weight: 800; border-radius: 5px; text-transform: uppercase; transition: 0.3s;}
-        .btn-admin:hover { background: #cc0000; }
-        .btn-debug { background: var(--cyan); color: #000; border: none; padding: 12px 25px; cursor: pointer; font-weight: 800; border-radius: 5px; text-transform: uppercase; transition: 0.3s; }
-        .btn-debug:hover { background: #00cccc; box-shadow: 0 0 15px rgba(0,255,255,0.4); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>OMNI | Black Market</title>
 
-        .toggles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; background: #000; padding: 15px; border-radius: 8px; border: 1px solid #333; }
-        .toggle-item { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #aaa; background: #111; padding: 8px 12px; border-radius: 6px; }
-        
-        /* THE SWITCH */
-        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .4s; border-radius: 20px; }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--green); }
-        input:checked + .slider:before { transform: translateX(20px); }
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        /* LAYOUT PRINCIPAL: BILLETERA + TIENDA */
-        .market-layout { display: flex; gap: 30px; align-items: flex-start; flex-wrap: wrap; }
-        
-        .side-panel { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 20px; }
-        .user-wallet { background: rgba(0,255,255,0.05); padding: 25px; border-radius: 15px; text-align: center; border: 1px solid var(--cyan); box-shadow: inset 0 0 20px rgba(0,255,255,0.05), 0 10px 30px rgba(0,0,0,0.8); }
-        .user-wallet h2 { margin: 0; color: var(--cyan); font-family: 'JetBrains Mono'; font-size: 2.5rem; text-shadow: 0 0 15px rgba(0,255,255,0.4); }
-        .user-wallet p { margin: 5px 0 0; color: #888; font-size: 0.85rem; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
+<style>
+:root { 
+    --bg: #050505; --gold: #ffd700; --red: #ff3333; 
+    --cyan: #00ffff; --green: #00ff66; --purple: #cc00ff;
+    --border: rgba(255,255,255,0.1); --card: rgba(15,15,15,0.9);
+}
+* { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+body { 
+    background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; 
+    margin: 0; padding: 20px; overflow-x: hidden;
+    background-image: radial-gradient(circle at 50% 0%, rgba(255,215,0,0.03) 0%, transparent 70%);
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+.container { max-width: 1200px; margin: 0 auto; padding-bottom: 50px; }
 
-        .terminal { background: rgba(0,0,0,0.9); border: 1px solid var(--border); border-radius: 15px; padding: 15px; font-family: 'JetBrains Mono'; font-size: 0.7rem; color: var(--cyan); height: 150px; overflow-y: hidden; position: relative; }
-        .terminal::after { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px); background-size: 100% 4px; pointer-events: none; }
-        .t-line { margin-bottom: 5px; opacity: 0; animation: typeLine 0.1s forwards; }
-        @keyframes typeLine { to { opacity: 1; } }
+header { text-align:center; margin-bottom:30px; border-bottom:1px solid rgba(255,215,0,0.3); padding-bottom:20px; position:relative; }
+.back-btn { position:absolute; left:0; top:10px; color:#aaa; text-decoration:none; font-size:0.85rem; font-weight:bold; transition:0.3s; }
+.back-btn:hover { color:var(--gold); }
+h1 { color:var(--gold); text-transform:uppercase; font-size:clamp(1.8rem,5vw,3rem); margin:0; text-shadow:0 0 20px rgba(255,215,0,0.3); font-family:'JetBrains Mono'; }
 
-        /* PANEL DERECHO (TIENDA) */
-        .shop-panel { flex: 2.5; min-width: 300px; }
-        .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-        
-        /* TARJETA DE PRODUCTO */
-        .item-card { 
-            background: var(--card); border: 1px solid var(--border); padding: 25px 20px; 
-            border-radius: 15px; text-align: center; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            position: relative; display: flex; flex-direction: column; justify-content: space-between;
-            overflow: hidden;
-        }
-        .item-card:hover { transform: translateY(-10px); border-color: var(--color-hover, var(--gold)); box-shadow: 0 10px 30px var(--shadow-hover, rgba(255,215,0,0.2)); z-index: 10; }
-        
-        .item-icon { font-size: 3.5rem; margin-bottom: 15px; text-shadow: 0 0 15px currentColor; transition: 0.3s; }
-        .item-card:hover .item-icon { transform: scale(1.1); }
-        .item-title { margin: 0 0 10px; font-size: 1.2rem; text-transform: uppercase; font-weight: 800; }
-        .item-desc { color: #888; font-size: 0.8rem; line-height: 1.4; margin-bottom: 20px; flex-grow: 1; }
-        
-        .item-price { background: #000; border: 1px dashed #333; padding: 10px; border-radius: 8px; color: var(--gold); font-family: 'JetBrains Mono'; font-weight: 800; font-size: 1.2rem; margin-bottom: 15px; }
-        
-        .action-buttons { display: flex; gap: 8px; width: 100%; }
-        .btn-buy { background: transparent; border: 2px solid var(--color-hover, var(--gold)); color: var(--color-hover, var(--gold)); padding: 12px; flex-grow: 1; cursor: pointer; transition: 0.3s; border-radius: 8px; font-weight: 800; text-transform: uppercase; }
-        .btn-buy:hover:not(:disabled) { background: var(--color-hover, var(--gold)); color: #000; }
-        .btn-buy:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-gift { background: transparent; border: 2px solid var(--purple); color: var(--purple); padding: 12px 15px; cursor: pointer; transition: 0.3s; border-radius: 8px; font-weight: 800; }
-        .btn-gift:hover { background: var(--purple); color: #fff; box-shadow: 0 0 15px rgba(204,0,255,0.4); }
+.lang-toggle { 
+    position: absolute; top: 10px; right: 0; z-index: 5000; 
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
+    color: #aaa; padding: 6px 15px; border-radius: 20px; 
+    font-size: 0.75rem; font-weight: 800; cursor: pointer; transition: 0.3s; 
+    display: flex; align-items: center; gap: 8px; 
+}
+.lang-toggle:hover { color: #fff; border-color: var(--cyan); background: rgba(0,255,255,0.1); }
 
-        /* =========================================
-           EFECTOS ESPECIALES / MEMES (CSS)
-           ========================================= */
-        
-        /* 1. LOBOTOMY (Fire in the hole) */
-        .card-lobotomy { border-color: #00ff00 !important; }
-        .card-lobotomy:hover { animation: violentShake 0.15s infinite; box-shadow: 0 0 30px rgba(0,255,0,0.6); }
-        @keyframes violentShake { 
-            0% { transform: translate(3px, 3px) rotate(1deg); } 
-            25% { transform: translate(-3px, 2px) rotate(-1deg); } 
-            50% { transform: translate(-3px, -3px) rotate(2deg); } 
-            75% { transform: translate(3px, -2px) rotate(-2deg); } 
-            100% { transform: translate(2px, 2px) rotate(0deg); } 
-        }
-        .lobotomy-text { color: #00ff00; font-weight: 900; text-shadow: 3px 3px 0px #ff0000; font-family: 'Comic Sans MS', sans-serif; }
+/* ALERTA MARKET CLOSED */
+#market-alert { display:none; background:var(--red); color:#fff; padding:12px; text-align:center; font-weight:800; text-transform:uppercase; letter-spacing:2px; border-radius:10px; margin-bottom:25px; }
 
-        /* 2. DEVIL VORTEX SAWS */
-        .card-dv { border: 2px dashed #888 !important; position: relative; }
-        .card-dv::before { 
-            content: '⚙️ ⚙️ ⚙️ ⚙️ ⚙️'; position: absolute; top: 10px; right: 10px; 
-            font-size: 0.8rem; color: #aaa; filter: grayscale(100%); 
-            animation: spinSaw 2s linear infinite; letter-spacing: 2px; opacity: 0.3;
-        }
-        @keyframes spinSaw { 100% { transform: rotate(360deg); } }
-        .dv-text { text-decoration: line-through dashed #888; color: #ccc; font-family: 'JetBrains Mono'; letter-spacing: 3px; }
+/* PANEL ADMIN */
+#admin-panel { display:none; background:rgba(255,51,51,0.05); border:1px dashed var(--red); padding:20px; border-radius:10px; margin-bottom:30px; }
+.admin-title { color:var(--red); margin-top:0; font-family:'JetBrains Mono'; text-transform:uppercase; font-size:1rem; }
+.admin-inputs { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+.g-input { flex:1; min-width:150px; background:#000; border:1px solid #333; color:#fff; padding:12px; border-radius:5px; font-family:inherit; }
+.g-input:focus { border-color:var(--red); }
+.btn-admin { background:var(--red); color:#fff; border:none; padding:12px 25px; cursor:pointer; font-weight:800; border-radius:5px; text-transform:uppercase; transition:0.3s;}
+.btn-admin:hover { background:#cc0000; }
+.btn-debug { background:var(--cyan); color:#000; border:none; padding:12px 25px; cursor:pointer; font-weight:800; border-radius:5px; text-transform:uppercase; transition:0.3s; }
+.btn-debug:hover { background:#00cccc; box-shadow:0 0 15px rgba(0,255,255,0.4); }
 
-        /* 3. NYAN CAT */
-        @keyframes rainbowBorder { 0% { border-color: #ff0000; box-shadow: 0 0 20px rgba(255,0,0,0.4); } 25% { border-color: #ffff00; box-shadow: 0 0 20px rgba(255,255,0,0.4); } 50% { border-color: #00ff00; box-shadow: 0 0 20px rgba(0,255,0,0.4); } 75% { border-color: #00ffff; box-shadow: 0 0 20px rgba(0,255,255,0.4); } 100% { border-color: #ff00ff; box-shadow: 0 0 20px rgba(255,0,255,0.4); } }
-        .card-nyan { animation: rainbowBorder 3s infinite alternate; }
-        .card-nyan:hover { transform: scale(1.05) rotate(2deg); }
-        .rbw-text { background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000); background-size: 200% auto; -webkit-background-clip: text; color: transparent !important; animation: rbwAnim 3s linear infinite; font-weight: 900; }
-        @keyframes rbwAnim { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
-        
-        /* 4. GLITCH */
-        .card-glitch:hover .item-icon { animation: shake 0.5s infinite; }
-        .glitch-text { animation: shake 0.5s infinite; color: #fff; text-shadow: 2px 0 red, -2px 0 blue; }
-        @keyframes shake { 0%,100% { transform: translate(0,0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(2px, -2px); } 60% { transform: translate(-2px, -2px); } 80% { transform: translate(2px, 2px); } }
+.toggles-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; background:#000; padding:15px; border-radius:8px; border:1px solid #333; }
+.toggle-item { display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:#aaa; background:#111; padding:8px 12px; border-radius:6px; }
+.switch { position:relative; display:inline-block; width:40px; height:20px; }
+.switch input { opacity:0; width:0; height:0; }
+.slider { position:absolute; cursor:pointer; inset:0; background-color:#444; transition:.4s; border-radius:20px; }
+.slider:before { position:absolute; content:""; height:14px; width:14px; left:3px; bottom:3px; background-color:white; transition:.4s; border-radius:50%; }
+input:checked + .slider { background-color: var(--green); }
+input:checked + .slider:before { transform: translateX(20px); }
 
-        /* MODALES */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: #0a0a0a; padding: 30px; border-radius: 15px; border: 1px solid var(--purple); text-align: center; width: 90%; max-width: 400px; position: relative; }
-        .modal-close { position: absolute; top: 15px; right: 20px; color: #888; font-size: 1.5rem; cursor: pointer; }
+.market-layout { display:flex; gap:30px; align-items:flex-start; flex-wrap:wrap; }
+.side-panel { flex:1; min-width:300px; display:flex; flex-direction:column; gap:20px; position:sticky; top:20px; }
+.user-wallet { background:rgba(0,255,255,0.05); padding:25px; border-radius:15px; text-align:center; border:1px solid var(--cyan); box-shadow:inset 0 0 20px rgba(0,255,255,0.05),0 10px 30px rgba(0,0,0,0.8); }
+.user-wallet h2 { margin:0; color:var(--cyan); font-family:'JetBrains Mono'; font-size:2.5rem; text-shadow:0 0 15px rgba(0,255,255,0.4); }
+.user-wallet p { margin:5px 0 0; color:#888; font-size:0.85rem; text-transform:uppercase; font-weight:800; letter-spacing:1px; }
 
-        #purchaseModal .modal-content { border-color: var(--gold); box-shadow: 0 0 50px rgba(255,215,0,0.15); animation: zoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-width: 450px; }
-        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .m-icon { font-size: 4rem; color: var(--gold); margin-bottom: 20px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        .loader-bar { width: 100%; height: 4px; background: #222; border-radius: 4px; margin: 20px 0; overflow: hidden; position: relative; }
-        .loader-fill { position: absolute; top: 0; left: 0; height: 100%; background: var(--gold); width: 0%; transition: 0.5s ease; }
+.preview-box { background:#111; border:1px dashed #333; padding:15px; border-radius:12px; text-align:center; }
+.preview-name { font-size:1.1rem; font-weight:900; text-transform:uppercase; }
+.preview-desc { font-size:0.75rem; color:#777; margin-top:5px; }
 
-        @media(max-width: 900px) { .market-layout { flex-direction: column; } .side-panel { position: static; width: 100%; } .back-btn { position: static; display: block; margin-bottom: 15px; } }
-    </style>
+.inventory-box { background:#0a0a0a; border:1px solid #333; padding:15px; border-radius:12px; max-height:220px; overflow-y:auto; }
+.inventory-item { display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; padding:8px 0; border-bottom:1px solid #111; }
+.inv-btn { background:#000; border:1px solid var(--green); color:var(--green); padding:4px 10px; border-radius:6px; font-size:0.65rem; font-weight:800; cursor:pointer; transition:0.2s; }
+.inv-btn:hover { background:var(--green); color:#000; }
+
+.terminal { background:rgba(0,0,0,0.9); border:1px solid var(--border); border-radius:15px; padding:15px; font-family:'JetBrains Mono'; font-size:0.7rem; color:var(--cyan); height:150px; overflow-y:hidden; position:relative; }
+.terminal::after { content:''; position:absolute; inset:0; background:linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px); background-size:100% 4px; pointer-events:none; }
+.t-line { margin-bottom:5px; opacity:0; animation:typeLine 0.1s forwards; }
+@keyframes typeLine { to { opacity:1; } }
+
+.shop-panel { flex:2.5; min-width:300px; }
+.market-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; }
+
+.item-card { 
+    background: var(--card); border:1px solid var(--border); padding:25px 20px; 
+    border-radius:15px; text-align:center; transition:0.4s cubic-bezier(0.175,0.885,0.32,1.275); 
+    position:relative; display:flex; flex-direction:column; justify-content:space-between;
+}
+.item-card:hover { transform:translateY(-10px); border-color:var(--color-hover,var(--gold)); box-shadow:0 10px 30px var(--shadow-hover,rgba(255,215,0,0.2)); z-index:10; }
+.item-icon { font-size:3.5rem; margin-bottom:15px; text-shadow:0 0 15px currentColor; transition:0.3s; }
+.item-card:hover .item-icon { transform:scale(1.1); }
+.item-title { margin:0 0 10px; font-size:1.2rem; text-transform:uppercase; font-weight:800; }
+.item-desc { color:#888; font-size:0.8rem; line-height:1.4; margin-bottom:20px; flex-grow:1; }
+.item-price { background:#000; border:1px dashed #333; padding:10px; border-radius:8px; color:var(--gold); font-family:'JetBrains Mono'; font-weight:800; font-size:1.2rem; margin-bottom:15px; }
+.action-buttons { display:flex; gap:8px; width:100%; }
+.btn-buy { background:transparent; border:2px solid var(--color-hover,var(--gold)); color:var(--color-hover,var(--gold)); padding:12px; flex-grow:1; cursor:pointer; transition:0.3s; border-radius:8px; font-weight:800; text-transform:uppercase; }
+.btn-buy:hover:not(:disabled) { background:var(--color-hover,var(--gold)); color:#000; }
+.btn-buy:disabled { opacity:0.5; cursor:not-allowed; }
+.btn-gift { background:transparent; border:2px solid var(--purple); color:var(--purple); padding:12px 15px; cursor:pointer; transition:0.3s; border-radius:8px; font-weight:800; }
+.btn-gift:hover { background:var(--purple); color:#fff; box-shadow:0 0 15px rgba(204,0,255,0.4); }
+
+/* FX */
+.card-lobotomy { border-color:#00ff00 !important; }
+.card-lobotomy:hover { animation: violentShake 0.15s infinite; box-shadow:0 0 30px rgba(0,255,0,0.6); }
+@keyframes violentShake { 0% { transform:translate(3px,3px) rotate(1deg); } 25% { transform:translate(-3px,2px) rotate(-1deg); } 50% { transform:translate(-3px,-3px) rotate(2deg); } 75% { transform:translate(3px,-2px) rotate(-2deg); } 100% { transform:translate(2px,2px) rotate(0deg); } }
+.lobotomy-text { color:#00ff00; font-weight:900; text-shadow:3px 3px 0px #ff0000; font-family:'Comic Sans MS', sans-serif; }
+.card-dv { border:2px dashed #888 !important; position:relative; }
+.card-dv::before { content:'⚙️ ⚙️ ⚙️ ⚙️ ⚙️'; position:absolute; top:10px; right:10px; font-size:0.8rem; color:#aaa; filter:grayscale(100%); animation:spinSaw 2s linear infinite; letter-spacing:2px; opacity:0.3; }
+@keyframes spinSaw { 100% { transform:rotate(360deg); } }
+.dv-text { text-decoration:line-through dashed #888; color:#ccc; font-family:'JetBrains Mono'; letter-spacing:3px; }
+@keyframes rainbowBorder { 0% { border-color:#ff0000; box-shadow:0 0 20px rgba(255,0,0,0.4); } 25% { border-color:#ffff00; box-shadow:0 0 20px rgba(255,255,0,0.4); } 50% { border-color:#00ff00; box-shadow:0 0 20px rgba(0,255,0,0.4); } 75% { border-color:#00ffff; box-shadow:0 0 20px rgba(0,255,255,0.4); } 100% { border-color:#ff00ff; box-shadow:0 0 20px rgba(255,0,255,0.4); } }
+.card-nyan { animation: rainbowBorder 3s infinite alternate; }
+.card-nyan:hover { transform:scale(1.05) rotate(2deg); }
+.rbw-text { background:linear-gradient(90deg,#ff0000,#ffff00,#00ff00,#00ffff,#0000ff,#ff00ff,#ff0000); background-size:200% auto; -webkit-background-clip:text; color:transparent!important; animation:rbwAnim 3s linear infinite; font-weight:900; }
+@keyframes rbwAnim { 0% { background-position:0% 50%; } 100% { background-position:200% 50%; } }
+.card-glitch:hover .item-icon { animation:shake 0.5s infinite; }
+.glitch-text { animation:shake 0.5s infinite; color:#fff; text-shadow:2px 0 red,-2px 0 blue; }
+@keyframes shake { 0%,100% { transform:translate(0,0); } 20% { transform:translate(-2px,2px); } 40% { transform:translate(2px,-2px); } 60% { transform:translate(-2px,-2px); } 80% { transform:translate(2px,2px); } }
+
+.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10000; align-items:center; justify-content:center; backdrop-filter:blur(5px); }
+.modal-content { background:#0a0a0a; padding:30px; border-radius:15px; border:1px solid var(--purple); text-align:center; width:90%; max-width:400px; position:relative; }
+.modal-close { position:absolute; top:15px; right:20px; color:#888; font-size:1.5rem; cursor:pointer; }
+
+#purchaseModal .modal-content { border-color:var(--gold); box-shadow:0 0 50px rgba(255,215,0,0.15); animation:zoomIn 0.3s cubic-bezier(0.175,0.885,0.32,1.275); max-width:450px; }
+@keyframes zoomIn { from { transform:scale(0.8); opacity:0; } to { transform:scale(1); opacity:1; } }
+.m-icon { font-size:4rem; color:var(--gold); margin-bottom:20px; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.1); } }
+.loader-bar { width:100%; height:4px; background:#222; border-radius:4px; margin:20px 0; overflow:hidden; position:relative; }
+.loader-fill { position:absolute; top:0; left:0; height:100%; background:var(--gold); width:0%; transition:0.5s ease; }
+
+/* toast */
+#toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(50px); background:var(--green); color:#000; padding:12px 20px; border-radius:10px; font-weight:800; opacity:0; transition:0.3s; z-index:20000; }
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+@media(max-width:900px){ .market-layout{flex-direction:column;} .side-panel{position:static;width:100%;} .back-btn{position:static;display:block;margin-bottom:15px;} }
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> VOLVER AL HUB OMNI</a>
-            <h1><i class="fas fa-store"></i> Black Market</h1>
-            <p style="color:#888; margin-top:5px; font-size:0.9rem;">Intercambio Oficial de Puntos OMNI. Personaliza tu presencia.</p>
-        </header>
+<div id="google_translate_element" style="display:none;"></div>
+<button class="lang-toggle notranslate" onclick="toggleLanguage()"><i class="fas fa-globe"></i> EN / ES</button>
 
-        <div id="admin-panel">
-            <h3 class="admin-title"><i class="fas fa-terminal"></i> Inyector de Ítems Dinámicos (Admin)</h3>
-            <p style="color:#888; font-size:0.8rem; margin-bottom:15px;">Añade cosméticos temporales a la base de datos o limpia tu XP de las pruebas.</p>
-            <div class="admin-inputs">
-                <input type="text" id="add-name" class="g-input" placeholder="Nombre (Ej: Halo de Tormenta)">
-                <input type="number" id="add-price" class="g-input" placeholder="Precio en XP">
-                <input type="text" id="add-icon" class="g-input" placeholder="Icono (Ej: fas fa-bolt)">
-                <input type="color" id="add-color" class="g-input" style="padding: 5px; max-width: 80px;" value="#00ffff" title="Color del Ítem">
-                <button class="btn-admin" onclick="addNewItem()"><i class="fas fa-upload"></i> PUBLICAR</button>
-                <button class="btn-debug" onclick="resetMyXP()"><i class="fas fa-sync"></i> PURGAR MI XP</button>
-            </div>
-            
-            <h4 style="color:#fff; margin:0 0 10px; font-size:0.9rem; border-top:1px solid #333; padding-top:15px;"><i class="fas fa-power-off"></i> Gestor de Catálogo Activo</h4>
-            <div class="toggles-grid" id="admin-toggles">
-                </div>
-        </div>
+<div class="container">
+<header>
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> VOLVER AL HUB OMNI</a>
+    <h1><i class="fas fa-store"></i> Black Market</h1>
+    <p style="color:#888; margin-top:5px; font-size:0.9rem;">Intercambio Oficial de Puntos OMNI. Personaliza tu presencia.</p>
+</header>
 
-        <div class="market-layout">
-            <div class="side-panel">
-                <div class="user-wallet">
-                    <p>Billetera XP Disponible</p>
-                    <h2><i class="fas fa-coins"></i> <span id="wallet-xp">--</span></h2>
-                </div>
-                <div class="terminal" id="term-box"></div>
-            </div>
+<div id="market-alert"></div>
 
-            <div class="shop-panel">
-                <h3 style="color:#aaa; text-transform:uppercase; font-size:0.9rem; border-bottom:1px dashed #333; padding-bottom:10px; margin-top:0;"><i class="fas fa-box-open"></i> Catálogo de Suministros</h3>
-                <div class="market-grid" id="store-items">
-                    <p style="color:#666; width:100%; text-align:center; grid-column: 1 / -1;"><i class="fas fa-sync-alt fa-spin"></i> Cargando inventario...</p>
-                </div>
-            </div>
-        </div>
+<div id="admin-panel">
+    <h3 class="admin-title"><i class="fas fa-terminal"></i> Inyector de Ítems Dinámicos (Admin)</h3>
+    <p style="color:#888; font-size:0.8rem; margin-bottom:15px;">Añade cosméticos temporales a la base de datos o limpia tu XP de las pruebas.</p>
+    <div class="admin-inputs">
+        <input type="text" id="add-name" class="g-input" placeholder="Nombre (Ej: Halo de Tormenta)">
+        <input type="number" id="add-price" class="g-input" placeholder="Precio en XP">
+        <input type="text" id="add-icon" class="g-input" placeholder="Icono (Ej: fas fa-bolt)">
+        <input type="color" id="add-color" class="g-input" style="padding:5px; max-width:80px;" value="#00ffff" title="Color del Ítem">
+        <button class="btn-admin" onclick="addNewItem()"><i class="fas fa-upload"></i> PUBLICAR</button>
+        <button class="btn-debug" onclick="resetMyXP()"><i class="fas fa-sync"></i> PURGAR MI XP</button>
+    </div>
+    <h4 style="color:#fff; margin:0 0 10px; font-size:0.9rem; border-top:1px solid #333; padding-top:15px;"><i class="fas fa-power-off"></i> Gestor de Catálogo Activo</h4>
+    <div class="toggles-grid" id="admin-toggles"></div>
+    <div id="admin-dyn-list" style="margin-top:15px;"></div>
+</div>
+
+<div class="market-layout">
+<div class="side-panel">
+    <div class="user-wallet">
+        <p>Billetera XP Disponible</p>
+        <h2><i class="fas fa-coins"></i> <span id="wallet-xp">--</span></h2>
     </div>
 
-    <div id="giftModal" class="modal">
-        <div class="modal-content" style="box-shadow: 0 0 30px rgba(204,0,255,0.2);">
-            <span class="modal-close" onclick="closeGiftModal()">✕</span>
-            <h2 style="color:var(--purple); margin-top:0; text-transform:uppercase;"><i class="fas fa-gift"></i> Sistema de Regalos</h2>
-            <p style="color:#aaa; font-size:0.85rem;">Estás a punto de regalar <b><span id="gift-item-name" style="color:#fff;"></span></b>.</p>
-            <input type="text" id="gift-receiver" class="g-input" placeholder="Nick exacto del jugador destino..." style="margin:20px 0; width:100%;">
-            <button class="btn-buy" style="--color-hover: var(--purple); width:100%;" onclick="sendGift()"><i class="fas fa-paper-plane"></i> ENVIAR REGALO</button>
-        </div>
+    <div class="preview-box">
+        <div class="preview-name" id="preview-name">TU NOMBRE</div>
+        <div class="preview-desc" id="preview-desc">Vista previa de cosméticos</div>
     </div>
 
-    <div id="purchaseModal" class="modal">
-        <div class="modal-content">
-            <i class="fas fa-microchip m-icon" id="pm-icon"></i>
-            <h2 id="pm-title" style="margin:0 0 10px; text-transform:uppercase; color:var(--gold); font-family:'JetBrains Mono';">PROTOCOLO INICIADO</h2>
-            <p id="pm-desc" style="color:#aaa; font-size:0.85rem; margin:0;">Verificando fondos encriptados...</p>
-            <div class="loader-bar"><div class="loader-fill" id="pm-bar"></div></div>
-            <p id="pm-log" style="font-family:'JetBrains Mono'; font-size:0.65rem; color:var(--cyan); margin:0; text-align:left;"></p>
-        </div>
+    <div class="inventory-box">
+        <h4 style="margin:0 0 8px; font-size:0.8rem; color:#888;"><i class="fas fa-box"></i> INVENTARIO</h4>
+        <div id="inventory-list" style="font-size:0.8rem; color:#777;">Cargando inventario...</div>
     </div>
-    <script type="text/javascript">
-        function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'en,es', autoDisplay: false}, 'google_translate_element'); }
-        function toggleLanguage() { var select = document.querySelector('.goog-te-combo'); if(select) { select.value = select.value === 'en' ? 'es' : 'en'; select.dispatchEvent(new Event('change')); } }
-    </script>
-    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-    
-    <script>
-        const firebaseConfig = { 
-            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
-            authDomain: "scullylist.firebaseapp.com", 
-            databaseURL: "https://scullylist-default-rtdb.firebaseio.com", 
-            projectId: "scullylist", 
-            storageBucket: "scullylist.firebasestorage.app", 
-            messagingSenderId: "498548914021", 
-            appId: "1:498548914021:web:59128b5e06b36a4e81938c" 
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth(); 
-        const db = firebase.database();
-        
-        let fullData = {};
-        let disabledItems = {}; // Para el control de admin
-        let myPlayer = null;
-        let currentUser = null;
-        let myIndex = -1;
-        let pendingGift = null;
-        const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
+    <div class="terminal" id="term-box"></div>
+</div>
 
-        // CATÁLOGO OFICIAL (CON MEMES INCLUIDOS)
-        const officialCatalog = [
-            { id: "ghost", name: "Modo Fantasma", price: 100, icon: "fas fa-ghost", color: "#aaaaaa", desc: "Vuelve tu nombre semi-transparente en los Leaderboards. Ideal para acechar en las sombras." },
-            { id: "ice", name: "Núcleo de Hielo", price: 200, icon: "fas fa-snowflake", color: "#00aaff", desc: "Emana un aura congelada con destellos celestes en tu perfil." },
-            { id: "matrix", name: "Hacker Matrix", price: 250, icon: "fas fa-terminal", color: "#00ff66", desc: "Convierte tu fuente a estilo terminal verde brillante. Demuestra quién domina el código." },
-            { id: "fire", name: "Llamas de Fuego", price: 300, icon: "fas fa-fire", color: "#ff5500", desc: "Una sombra ardiente de color naranja intenso que rodeará tu identidad OMNI." },
-            { id: "glitch", name: "Anomalía Glitch", price: 350, icon: "fas fa-bug", color: "#00ffff", desc: "El sistema falla al leer tu nombre. Efecto de estática cibernética incluido.", extraClass: "card-glitch" },
-            { id: "demon", name: "Aura Demoníaca", price: 400, icon: "fas fa-skull", color: "#ff3333", desc: "Demuestra tu letalidad. Borde rojo y texto color sangre brillante." },
-            { id: "vip", name: "Estatus VIP Dorada", price: 500, icon: "fas fa-crown", color: "#ffd700", desc: "El clásico de la realeza. Brillo dorado absoluto en todo el ecosistema de The Scully List." },
-            { id: "dvsaws", name: "Devil Vortex Saws", price: 540, icon: "fas fa-cog", color: "#aaaaaa", desc: "Tributo a la optimización. Añade las infames 54 sierras giratorias ocultas en tu presencia.", extraClass: "card-dv" },
-            { id: "lobotomy", name: "Aura Lobotomy", price: 600, icon: "fas fa-smile-beam", color: "#00ff00", desc: "FIRE IN THE HOLE! Efecto caótico, tóxico y ruidoso que hará temblar violentamente tu tarjeta.", extraClass: "card-lobotomy" },
-            { id: "nyan", name: "Nyan Cat Trail", price: 777, icon: "fas fa-cat", color: "#ff00ff", desc: "¡Efecto Arcoíris animado súper legendario! Deja una estela multicolor a tu paso.", extraClass: "card-nyan" }
-        ];
+<div class="shop-panel">
+    <h3 style="color:#aaa; text-transform:uppercase; font-size:0.9rem; border-bottom:1px dashed #333; padding-bottom:10px; margin-top:0;"><i class="fas fa-box-open"></i> Catálogo de Suministros</h3>
+    <div class="market-grid" id="store-items">
+        <p style="color:#666; width:100%; text-align:center; grid-column:1 / -1;"><i class="fas fa-sync-alt fa-spin"></i> Cargando inventario...</p>
+    </div>
+</div>
+</div>
+</div>
 
-        // TERMINAL LOG
-        const term = document.getElementById('term-box');
-        function printLog(msg, color="var(--cyan)") {
-            const l = document.createElement('div'); l.className = 't-line';
-            l.innerHTML = `> <span style="color:${color}">${msg}</span>`;
-            term.appendChild(l); term.scrollTop = term.scrollHeight;
+<div id="giftModal" class="modal">
+    <div class="modal-content" style="box-shadow:0 0 30px rgba(204,0,255,0.2);">
+        <span class="modal-close" onclick="closeGiftModal()">✕</span>
+        <h2 style="color:var(--purple); margin-top:0; text-transform:uppercase;"><i class="fas fa-gift"></i> Sistema de Regalos</h2>
+        <p style="color:#aaa; font-size:0.85rem;">Estás a punto de regalar <b><span id="gift-item-name" style="color:#fff;"></span></b>.</p>
+        <input type="text" id="gift-receiver" class="g-input" placeholder="Nick exacto del jugador destino..." style="margin:20px 0; width:100%;">
+        <button class="btn-buy" style="--color-hover: var(--purple); width:100%;" onclick="sendGift()"><i class="fas fa-paper-plane"></i> ENVIAR REGALO</button>
+    </div>
+</div>
+
+<div id="purchaseModal" class="modal">
+    <div class="modal-content">
+        <i class="fas fa-microchip m-icon" id="pm-icon"></i>
+        <h2 id="pm-title" style="margin:0 0 10px; text-transform:uppercase; color:var(--gold); font-family:'JetBrains Mono';">PROTOCOLO INICIADO</h2>
+        <p id="pm-desc" style="color:#aaa; font-size:0.85rem; margin:0;">Verificando fondos encriptados...</p>
+        <div class="loader-bar"><div class="loader-fill" id="pm-bar"></div></div>
+        <p id="pm-log" style="font-family:'JetBrains Mono'; font-size:0.65rem; color:var(--cyan); margin:0; text-align:left;"></p>
+    </div>
+</div>
+
+<div id="toast">Mensaje</div>
+
+<script type="text/javascript">
+function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'es',includedLanguages:'en,es',autoDisplay:false},'google_translate_element');}
+function toggleLanguage(){var select=document.querySelector('.goog-te-combo');if(select){select.value=select.value==='en'?'es':'en';select.dispatchEvent(new Event('change'));}}
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+
+<script>
+const firebaseConfig = { 
+    apiKey:"AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
+    authDomain:"scullylist.firebaseapp.com", 
+    databaseURL:"https://scullylist-default-rtdb.firebaseio.com", 
+    projectId:"scullylist", 
+    storageBucket:"scullylist.firebasestorage.app", 
+    messagingSenderId:"498548914021", 
+    appId:"1:498548914021:web:59128b5e06b36a4e81938c" 
+};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth();
+const db=firebase.database();
+
+let fullData={}, myPlayer=null, myKey=null, disabledItems={}, pendingGift=null;
+const nx=o=>o?(Array.isArray(o)?o.filter(Boolean):Object.values(o)):[];
+
+const officialCatalog=[ 
+    { id:"ghost",name:"Modo Fantasma",price:100,icon:"fas fa-ghost",color:"#aaaaaa",desc:"Vuelve tu nombre semi-transparente en los Leaderboards. Ideal para acechar en las sombras."},
+    { id:"ice",name:"Núcleo de Hielo",price:200,icon:"fas fa-snowflake",color:"#00aaff",desc:"Emana un aura congelada con destellos celestes en tu perfil."},
+    { id:"matrix",name:"Hacker Matrix",price:250,icon:"fas fa-terminal",color:"#00ff66",desc:"Convierte tu fuente a estilo terminal verde brillante. Demuestra quién domina el código."},
+    { id:"fire",name:"Llamas de Fuego",price:300,icon:"fas fa-fire",color:"#ff5500",desc:"Una sombra ardiente de color naranja intenso que rodeará tu identidad OMNI."},
+    { id:"glitch",name:"Anomalía Glitch",price:350,icon:"fas fa-bug",color:"#00ffff",desc:"El sistema falla al leer tu nombre. Efecto de estática cibernética incluido.",extraClass:"card-glitch"},
+    { id:"demon",name:"Aura Demoníaca",price:400,icon:"fas fa-skull",color:"#ff3333",desc:"Demuestra tu letalidad. Borde rojo y texto color sangre brillante."},
+    { id:"vip",name:"Estatus VIP Dorada",price:500,icon:"fas fa-crown",color:"#ffd700",desc:"El clásico de la realeza. Brillo dorado absoluto en todo el ecosistema de The Scully List."},
+    { id:"dvsaws",name:"Devil Vortex Saws",price:540,icon:"fas fa-cog",color:"#aaaaaa",desc:"Tributo a la optimización. Añade las infames 54 sierras giratorias ocultas en tu presencia.",extraClass:"card-dv"},
+    { id:"lobotomy",name:"Aura Lobotomy",price:600,icon:"fas fa-smile-beam",color:"#00ff00",desc:"FIRE IN THE HOLE! Efecto caótico y tóxico.",extraClass:"card-lobotomy"},
+    { id:"nyan",name:"Nyan Cat Trail",price:777,icon:"fas fa-cat",color:"#ff00ff",desc:"¡Efecto Arcoíris animado súper legendario!",extraClass:"card-nyan"}
+];
+
+const term=document.getElementById('term-box');
+function printLog(msg,color="var(--cyan)"){const l=document.createElement('div');l.className='t-line';l.innerHTML=`> <span style="color:${color}">${msg}</span>`;term.appendChild(l);term.scrollTop=term.scrollHeight;}
+
+function toast(msg,isErr=false){const t=document.getElementById('toast');t.innerText=msg;t.style.background=isErr?"var(--red)":"var(--green)";t.style.color=isErr?"#fff":"#000";t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+
+function getPlayersWithKeys(obj){return Object.entries(obj||{}).map(([k,v])=>({key:k,...v}));}
+
+function getCosmetic(ac){ let nC="#fff",tG="",bS="1px solid var(--border)",eC="",bgBtn="rgba(255,255,255,0.05)",hoverC="#fff";
+    if(!ac) return {nC,tG,bS,eC,bgBtn,hoverC};
+    ac=ac.toUpperCase();
+    if(ac.includes("VIP")||ac.includes("DORADO")){nC="var(--gold)";bS="1px solid var(--gold)";bgBtn="rgba(255,215,0,0.1)";hoverC="var(--gold)";}
+    else if(ac.includes("HACKER")||ac.includes("MATRIX")){nC="var(--green)";tG="text-shadow:0 0 5px var(--green); font-family:'JetBrains Mono';";bS="1px dashed var(--green)";bgBtn="rgba(0,255,102,0.1)";hoverC="var(--green)";}
+    else if(ac.includes("AURA")||ac.includes("DEMON")){nC="var(--red)";bS="1px solid var(--red)";tG="text-shadow:0 0 5px var(--red);";bgBtn="rgba(255,51,51,0.1)";hoverC="var(--red)";}
+    else if(ac.includes("HIELO")||ac.includes("ICE")){nC="#00ccff";tG="text-shadow: 0 0 8px #00ccff;";bS="1px solid #00ccff";bgBtn="rgba(0,204,255,0.1)";hoverC="#00ccff";}
+    else if(ac.includes("FUEGO")||ac.includes("FIRE")){nC="#ff5500";tG="text-shadow: 0 0 8px #ff5500;";bS="1px solid #ff5500";bgBtn="rgba(255,85,0,0.1)";hoverC="#ff5500";}
+    else if(ac.includes("LOBOTOMY")||ac.includes("HOLE")){eC="lobotomy-text";nC="#00ff00";bS="2px solid #00ff00";bgBtn="rgba(0,255,0,0.1)";hoverC="#00ff00";}
+    else if(ac.includes("DEVIL")||ac.includes("SAWS")){eC="dv-text";nC="#ccc";bS="2px dashed #888";bgBtn="rgba(200,200,200,0.1)";hoverC="#ccc";}
+    else if(ac.includes("RAINBOW")||ac.includes("NYAN")){eC="rbw-text";bS="1px solid #ff00ff";bgBtn="rgba(204,0,255,0.1)";hoverC="#ff00ff";nC="#ff00ff";}
+    else if(ac.includes("GLITCH")){eC="glitch-text";bS="1px solid #00ffff";tG="text-shadow: 2px 0 red, -2px 0 blue;";bgBtn="rgba(0,255,255,0.1)";hoverC="#00ffff";nC="#00ffff";}
+    return {nC,tG,bS,eC,bgBtn,hoverC};
+}
+
+auth.onAuthStateChanged(user=>{
+    db.ref('/').on('value', snap=>{
+        fullData=snap.val()||{};
+        disabledItems=fullData.market_disabled||{};
+        const players=getPlayersWithKeys(fullData.players||{});
+
+        if(user){
+            const me=players.find(p=>p.email && p.email.toLowerCase()===user.email.toLowerCase());
+            if(me){myPlayer=me; myKey=me.key;}
+            else {myPlayer=null; myKey=null;}
         }
-        setTimeout(() => printLog("Iniciando Handshake..."), 500);
 
-        // LÓGICA DE MOTOR COSMÉTICO
-        function getCosmetic(ac) {
-            let nC = "#fff", tG = "", bS = "1px solid var(--border)", eC = "", bgBtn = "rgba(255,255,255,0.05)", hoverC = "#fff";
-            if(!ac) return {nC, tG, bS, eC, bgBtn, hoverC};
-            ac = ac.toUpperCase(); 
-            
-            if(ac.includes("VIP") || ac.includes("DORADO")){ nC="var(--gold)"; bS="1px solid var(--gold)"; bgBtn="rgba(255,215,0,0.1)"; hoverC="var(--gold)"; }
-            else if(ac.includes("HACKER") || ac.includes("MATRIX")){ nC="var(--green)"; tG="text-shadow:0 0 5px var(--green); font-family:'JetBrains Mono';"; bS="1px dashed var(--green)"; bgBtn="rgba(0,255,102,0.1)"; hoverC="var(--green)"; }
-            else if(ac.includes("AURA") || ac.includes("DEMON")){ nC="var(--red)"; bS="1px solid var(--red)"; tG="text-shadow:0 0 5px var(--red);"; bgBtn="rgba(255,51,51,0.1)"; hoverC="var(--red)"; }
-            else if(ac.includes("HIELO") || ac.includes("ICE")){ nC="#00ccff"; tG="text-shadow: 0 0 8px #00ccff;"; bS="1px solid #00ccff"; bgBtn="rgba(0,204,255,0.1)"; hoverC="#00ccff"; }
-            else if(ac.includes("FUEGO") || ac.includes("FIRE")){ nC="#ff5500"; tG="text-shadow: 0 0 8px #ff5500;"; bS="1px solid #ff5500"; bgBtn="rgba(255,85,0,0.1)"; hoverC="#ff5500"; }
-            else if(ac.includes("LOBOTOMY") || ac.includes("HOLE")){ eC="lobotomy-text"; nC="#00ff00"; bS="2px solid #00ff00"; bgBtn="rgba(0,255,0,0.1)"; hoverC="#00ff00"; }
-            else if(ac.includes("DEVIL") || ac.includes("SAWS")){ eC="dv-text"; nC="#ccc"; bS="2px dashed #888"; bgBtn="rgba(200,200,200,0.1)"; hoverC="#ccc"; }
-            else if(ac.includes("RAINBOW") || ac.includes("NYAN")){ eC="rbw-text"; bS="1px solid #ff00ff"; bgBtn="rgba(204,0,255,0.1)"; hoverC="#ff00ff"; nC="#ff00ff"; }
-            else if(ac.includes("GLITCH")){ eC="glitch-text"; bS="1px solid #00ffff"; tG="text-shadow: 2px 0 red, -2px 0 blue;"; bgBtn="rgba(0,255,255,0.1)"; hoverC="#00ffff"; nC="#00ffff"; }
-            
-            return {nC, tG, bS, eC, bgBtn, hoverC};
+        renderWallet();
+        renderInventory();
+        renderStore(fullData.market_dynamic_items||{});
+        handleMarketAlert();
+        if(myPlayer && (myPlayer.role==="admin" || myPlayer.name.toLowerCase()==="score")){
+            document.getElementById('admin-panel').style.display="block";
+            renderAdminToggles(fullData.market_dynamic_items||{});
+            renderDynamicList(fullData.market_dynamic_items||{});
         }
+    });
+});
 
-        // CARGA DE DATOS
-        auth.onAuthStateChanged(user => {
-            db.ref('/').on('value', snap => {
-                fullData = snap.val() || {};
-                const lvls = nx(fullData.levels);
-                let players = nx(fullData.players);
-                disabledItems = fullData.market_disabled || {}; // Control de estado (on/off)
+function handleMarketAlert(){
+    if(fullData.system_settings?.market_lockdown){
+        const a=document.getElementById('market-alert');
+        a.innerText=fullData.system_settings.market_lockdown_msg || "MERCADO CERRADO POR MANTENIMIENTO";
+        a.style.display="block";
+    } else document.getElementById('market-alert').style.display="none";
+}
 
-                if(user) {
-                    myIndex = players.findIndex(p => p.email && p.email.toLowerCase() === user.email.toLowerCase());
-                    if(myIndex > -1) {
-                        let originalKey = Object.keys(fullData.players)[myIndex];
-                        myPlayer = { ...players[myIndex], key: originalKey };
-                        currentUser = myPlayer;
+function renderWallet(){
+    const w=document.getElementById('wallet-xp');
+    if(myPlayer){ w.innerText=(myPlayer.totalXP||0).toFixed(1); printLog(`Identidad confirmada: ${myPlayer.name}`, "var(--green)"); }
+    else { w.innerText="Inicia Sesión"; printLog("Usuario no identificado. Compras bloqueadas.", "var(--red)"); }
+}
 
-                        let realXp = 0;
-                        nx(myPlayer.completions).forEach(c => {
-                            let idx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase());
-                            if(idx > -1) { realXp += Math.max(100 - (idx * 0.6), 5) * (lvls[idx].bounty ? 2 : 1); } 
-                            else { realXp += c.xp || 0; }
-                        });
-                        myPlayer.calcXp = realXp + (myPlayer.totalXP || 0);
-                        
-                        renderWallet();
-                        
-                        let role = myPlayer.role || '';
-                        if(role === 'admin' || myPlayer.name.toLowerCase() === 'score') {
-                            document.getElementById('admin-panel').style.display = 'block';
-                            renderAdminToggles(fullData.market_dynamic_items || {});
-                        }
-                    } else { renderGuestWallet(); }
-                } else { renderGuestWallet(); }
+function renderInventory(){
+    const box=document.getElementById('inventory-list');
+    if(!myPlayer){ box.innerHTML="Debes iniciar sesión."; return; }
+    const inv=nx(myPlayer.inventory);
+    if(inv.length===0){ box.innerHTML="Inventario vacío."; return; }
+    box.innerHTML=inv.map(i=>`
+        <div class="inventory-item">
+            <span>${i.itemName}</span>
+            <button class="inv-btn" onclick="equipItem('${i.itemName}')">EQUIPAR</button>
+        </div>`).join("");
+}
 
-                renderStore(fullData.market_dynamic_items || {});
+function equipItem(name){
+    if(!myPlayer) return;
+    db.ref(`players/${myKey}/activeCosmetic`).set(name);
+    toast("Cosmético equipado");
+    const cos=getCosmetic(name);
+    document.getElementById('preview-name').className="preview-name "+cos.eC;
+    document.getElementById('preview-name').style.color=cos.nC;
+    document.getElementById('preview-name').style.cssText+=cos.tG;
+    document.getElementById('preview-name').innerText=myPlayer.name;
+    document.getElementById('preview-desc').innerText="Cosmético activo: "+name;
+}
+
+function renderStore(dynamicItems){
+    const grid=document.getElementById('store-items');
+    let combined=[...officialCatalog];
+
+    for(let key in dynamicItems){
+        let d=dynamicItems[key];
+        combined.push({id:key,name:d.name,price:d.price,icon:d.icon||'fas fa-star',color:d.color||'#00ffff',desc:"Ítem Temporal.",extraClass:"card-dynamic",isDynamic:true});
+    }
+    combined.sort((a,b)=>b.price-a.price);
+
+    let myInv=myPlayer?nx(myPlayer.inventory).map(i=>i.itemName.toLowerCase()):[];
+    let myReqs=myPlayer?nx(fullData.market_requests).filter(r=>r.player===myPlayer.name).map(r=>r.itemName.toLowerCase()):[];
+
+    let html="";
+    combined.forEach(item=>{
+        if(disabledItems[item.id]) return;
+        let cos=getCosmetic(item.name);
+        let isOwned=myInv.includes(item.name.toLowerCase());
+        let isPending=myReqs.includes(item.name.toLowerCase());
+
+        let btnHtml="", cardStyle=`border:${cos.bS};`;
+        if(isOwned){ btnHtml=`<button class="btn-buy" disabled style="color:var(--green); border-color:var(--green); background:rgba(0,255,102,0.05);"><i class="fas fa-check"></i> ADQUIRIDO</button>`; cardStyle=`border:1px solid var(--green); opacity:0.6;`; }
+        else if(isPending){ btnHtml=`<button class="btn-buy" disabled style="color:var(--cyan); border-color:var(--cyan); background:rgba(0,255,255,0.05);"><i class="fas fa-clock"></i> EN PROCESO</button>`; cardStyle=`border:1px solid var(--cyan); opacity:0.8;`; }
+        else {
+            let canAfford=myPlayer && (myPlayer.totalXP||0)>=item.price;
+            let onclickEvent=canAfford?`onclick="initPurchase('${item.id}','${item.name}',${item.price})"`:`onclick="toast('XP insuficiente', true)"`;
+            btnHtml=`<button class="btn-buy" style="background:${cos.bgBtn}; border-color:${cos.nC}; color:${cos.nC};" ${onclickEvent}><i class="fas fa-shopping-cart"></i> FORJAR</button>`;
+        }
+        let badge=item.isDynamic?`<span style="position:absolute; top:10px; right:10px; background:${item.color}; color:#000; font-size:0.6rem; padding:2px 6px; border-radius:3px; font-weight:bold;">NUEVO</span>`:"";
+
+        html+=`
+        <div class="item-card ${item.extraClass||''}" style="${cardStyle} --color-hover:${cos.nC||item.color}; --shadow-hover:${cos.nC||item.color}44;">
+            ${badge}
+            <i class="${item.icon} item-icon" style="color:${cos.nC||item.color};"></i>
+            <h3 class="item-title ${cos.eC}" style="color:${cos.nC||item.color}; ${cos.tG}">${item.name}</h3>
+            <p class="item-desc">${item.desc}</p>
+            <div style="margin-top:auto;">
+                <div class="item-price" style="color:${cos.nC||item.color}; border-color:${cos.nC||'#333'};"><i class="fas fa-coins"></i> ${item.price} XP</div>
+                <div class="action-buttons">
+                    ${btnHtml}
+                    <button class="btn-gift" onclick="openGiftModal('${item.id}','${item.name}',${item.price})"><i class="fas fa-gift"></i></button>
+                </div>
+            </div>
+        </div>`;
+    });
+    grid.innerHTML=html || "<p style='color:#666; width:100%; text-align:center; grid-column:1 / -1;'>Mercado cerrado.</p>";
+}
+
+function initPurchase(id,name,price){
+    if(!myPlayer) return;
+    const cooldown=localStorage.getItem("market_cd");
+    if(cooldown && Date.now()-cooldown<8000){ return toast("Espera unos segundos", true); }
+    localStorage.setItem("market_cd", Date.now());
+
+    const modal=document.getElementById('purchaseModal');
+    const icon=document.getElementById('pm-icon');
+    const title=document.getElementById('pm-title');
+    const desc=document.getElementById('pm-desc');
+    const bar=document.getElementById('pm-bar');
+    const logT=document.getElementById('pm-log');
+    modal.style.display='flex';
+    icon.className="fas fa-microchip m-icon"; icon.style.color="var(--gold)"; icon.style.animation="pulse 2s infinite";
+    title.innerText="PROTOCOLO INICIADO"; title.style.color="var(--gold)"; desc.innerText=`Autorizando contrato por: ${name}`;
+    bar.style.width="0%"; bar.style.background="var(--gold)"; logT.innerHTML="> Verificando identidad...<br>";
+
+    setTimeout(()=>{
+        bar.style.width="30%"; logT.innerHTML+="> Aceptada.<br>> Analizando Billetera XP...<br>";
+        setTimeout(()=>{
+            bar.style.width="70%"; logT.innerHTML+="> Encriptando paquete...<br>";
+            db.ref('market_requests').push({player:myPlayer.name,itemName:name,price:price,date:Date.now()}).then(()=>{
+                setTimeout(()=>{
+                    bar.style.width="100%"; bar.style.background="var(--green)";
+                    icon.className="fas fa-check-circle m-icon"; icon.style.color="var(--green)"; icon.style.animation="none";
+                    title.innerText="CONTRATO ENVIADO"; title.style.color="var(--green)";
+                    desc.innerText=`El Staff validará el cobro de ${price} XP pronto.`;
+                    logT.innerHTML+="> <span style='color:var(--green)'>Petición enviada.</span>";
+                    printLog(`Transacción solicitada: [${name}]`, "var(--gold)");
+                    setTimeout(()=>modal.style.display='none',3500);
+                },1000);
             });
+        },1500);
+    },1000);
+}
+
+/* REGALOS */
+function openGiftModal(itemId,itemName,price){
+    if(!myPlayer) return toast("Inicia sesión", true);
+    if((myPlayer.totalXP||0)<price) return toast("XP insuficiente", true);
+    pendingGift={id:itemId,name:itemName,price:price};
+    document.getElementById('gift-item-name').innerText=itemName;
+    document.getElementById('giftModal').style.display='flex';
+}
+function closeGiftModal(){ document.getElementById('giftModal').style.display='none'; document.getElementById('gift-receiver').value=''; }
+function sendGift(){
+    let receiverName=document.getElementById('gift-receiver').value.trim();
+    if(!receiverName) return;
+    db.ref('players').once('value').then(snap=>{
+        const players=getPlayersWithKeys(snap.val());
+        let receiver=players.find(p=>p.name.toLowerCase()===receiverName.toLowerCase());
+        if(!receiver) return toast("Jugador no encontrado", true);
+        if(receiver.key===myKey) return toast("No puedes regalarte", true);
+
+        db.ref(`players/${myKey}/totalXP`).transaction(current=>{
+            if((current||0)>=pendingGift.price) return (current||0)-pendingGift.price;
+            return;
+        },(err,committed)=>{
+            if(!committed) return toast("Fondos insuficientes", true);
+            db.ref(`players/${receiver.key}/inventory`).push({itemName:pendingGift.name,receivedFrom:myPlayer.name,date:Date.now()});
+            db.ref('global_chat').push({user:"OMNI BOT",text:`🎁 ¡Transacción Pública! [${myPlayer.name}] ha gastado ${pendingGift.price} XP para regalarle [${pendingGift.name}] a [${receiver.name}].`,time:Date.now()});
+            printLog(`Regalo enviado a ${receiver.name}`, "var(--purple)");
+            toast("Regalo enviado");
+            closeGiftModal();
         });
+    });
+}
 
-        function renderWallet() {
-            if(!myPlayer) return;
-            const w = document.getElementById('wallet-xp');
-            w.innerText = myPlayer.calcXp.toFixed(1);
-            if(!w.dataset.logged) { setTimeout(() => printLog(`Identidad confirmada: ${myPlayer.name}`, "var(--green)"), 1500); w.dataset.logged = "true"; }
-        }
-
-        function renderGuestWallet() {
-            document.getElementById('wallet-xp').innerText = "Inicia Sesión";
-            const termLog = document.getElementById('term-box').innerHTML;
-            if(!termLog.includes("Advertencia")) { setTimeout(() => printLog("Usuario no identificado. Compras bloqueadas.", "var(--red)"), 1500); }
-        }
-
-        // RENDER CATÁLOGO (Filtra los apagados)
-        function renderStore(dynamicItems) {
-            const grid = document.getElementById('store-items');
-            let html = "";
-            let combined = [...officialCatalog];
-
-            if(dynamicItems) {
-                for(let key in dynamicItems) {
-                    let d = dynamicItems[key];
-                    combined.push({ id: key, name: d.name, price: d.price, icon: d.icon || 'fas fa-star', color: d.color || '#00ffff', desc: "Ítem Temporal.", extraClass: "card-dynamic", isDynamic: true });
-                }
-            }
-            
-            combined.sort((a,b) => b.price - a.price);
-
-            let myInv = myPlayer ? nx(myPlayer.inventory).map(i => i.itemName.toLowerCase()) : [];
-            let myReqs = myPlayer ? nx(fullData.market_requests).filter(r => r.player === myPlayer.name).map(r => r.itemName.toLowerCase()) : [];
-
-            combined.forEach(item => {
-                // Si el item está deshabilitado en Firebase, NO SE RENDERIZA
-                if(disabledItems[item.id]) return;
-
-                let cos = getCosmetic(item.name); 
-                let isOwned = myInv.includes(item.name.toLowerCase());
-                let isPending = myReqs.includes(item.name.toLowerCase());
-                
-                let btnHtml = ""; let cardStyle = `border: ${cos.bS};`;
-                
-                if(isOwned) {
-                    btnHtml = `<button class="btn-buy" disabled style="color:var(--green); border-color:var(--green); background:rgba(0,255,102,0.05);"><i class="fas fa-check"></i> ADQUIRIDO</button>`;
-                    cardStyle = `border: 1px solid var(--green); opacity: 0.6;`;
-                } else if(isPending) {
-                    btnHtml = `<button class="btn-buy" disabled style="color:var(--cyan); border-color:var(--cyan); background:rgba(0,255,255,0.05);"><i class="fas fa-clock"></i> EN PROCESO</button>`;
-                    cardStyle = `border: 1px solid var(--cyan); opacity: 0.8;`;
-                } else {
-                    let canAfford = myPlayer && myPlayer.calcXp >= item.price;
-                    let cursorStyle = canAfford ? '' : 'cursor:not-allowed; opacity:0.3;';
-                    let onclickEvent = canAfford ? `onclick="initPurchase('${item.id}', '${item.name}', ${item.price})"` : `onclick="alert('XP Insuficiente. Sigue completando demons.')"`;
-                    
-                    btnHtml = `<button class="btn-buy" style="background:${cos.bgBtn}; border-color:${cos.nC}; color:${cos.nC}; ${cursorStyle}" ${onclickEvent} onmouseover="this.style.background='${cos.hoverC}'; this.style.color='#000';" onmouseout="this.style.background='${cos.bgBtn}'; this.style.color='${cos.nC}';"><i class="fas fa-shopping-cart"></i> FORJAR</button>`;
-                }
-
-                let badge = item.isDynamic ? `<span style="position:absolute; top:10px; right:10px; background:${item.color}; color:#000; font-size:0.6rem; padding:2px 6px; border-radius:3px; font-weight:bold;">NUEVO</span>` : "";
-
-                html += `
-                <div class="item-card ${item.extraClass || ''}" style="${cardStyle} --color-hover: ${cos.nC || item.color}; --shadow-hover: ${cos.nC || item.color}44;">
-                    ${badge}
-                    <i class="${item.icon} item-icon" style="color: ${cos.nC || item.color};"></i>
-                    <h3 class="item-title ${cos.eC}" style="color: ${cos.nC || item.color}; ${cos.tG}">${item.name}</h3>
-                    <p class="item-desc">${item.desc}</p>
-                    
-                    <div style="margin-top:auto;">
-                        <div class="item-price" style="color:${cos.nC || item.color}; border-color:${cos.nC || '#333'};"><i class="fas fa-coins"></i> ${item.price} XP</div>
-                        <div class="action-buttons">
-                            ${btnHtml}
-                            <button class="btn-gift" title="Regalar" onclick="openGiftModal('${item.id}', '${item.name}', ${item.price})"><i class="fas fa-gift"></i></button>
-                        </div>
-                    </div>
-                </div>`;
-            });
-            grid.innerHTML = html || "<p style='color:#666; width:100%; text-align:center; grid-column: 1 / -1;'>Mercado Cerrado. Vuelve pronto.</p>";
-        }
-
-        // RENDER DE PANEL ADMIN (Gestor de Interruptores)
-        function renderAdminToggles(dynamicItems) {
-            const box = document.getElementById('admin-toggles');
-            let html = "";
-            let allItems = [...officialCatalog];
-            if(dynamicItems) { for(let key in dynamicItems) { allItems.push({id: key, name: dynamicItems[key].name}); } }
-
-            allItems.forEach(item => {
-                let isOff = disabledItems[item.id] === true;
-                html += `
-                <div class="toggle-item">
-                    <span>${item.name}</span>
-                    <label class="switch">
-                        <input type="checkbox" ${isOff ? '' : 'checked'} onchange="toggleMarketItem('${item.id}', this.checked)">
-                        <span class="slider"></span>
-                    </label>
-                </div>`;
-            });
-            box.innerHTML = html;
-        }
-
-        function toggleMarketItem(id, isChecked) {
-            // Si está checkeado = NO disabled (removemos de la lista negra)
-            if(isChecked) { db.ref(`market_disabled/${id}`).remove(); } 
-            else { db.ref(`market_disabled/${id}`).set(true); }
-        }
-
-        // PROTOCOLO DE COMPRA
-        function initPurchase(id, name, price) {
-            if(!myPlayer) return;
-            const modal = document.getElementById('purchaseModal');
-            const icon = document.getElementById('pm-icon');
-            const title = document.getElementById('pm-title');
-            const desc = document.getElementById('pm-desc');
-            const bar = document.getElementById('pm-bar');
-            const logT = document.getElementById('pm-log');
-
-            modal.style.display = 'flex';
-            icon.className = "fas fa-microchip m-icon"; icon.style.color = "var(--gold)"; icon.style.animation = "pulse 2s infinite";
-            title.innerText = "PROTOCOLO INICIADO"; title.style.color = "var(--gold)"; desc.innerText = `Autorizando contrato por: ${name}`;
-            bar.style.width = "0%"; bar.style.background = "var(--gold)"; logT.innerHTML = "> Verificando identidad...<br>";
-
-            setTimeout(() => {
-                bar.style.width = "30%"; logT.innerHTML += "> Aceptada.<br>> Analizando Billetera XP...<br>";
-                setTimeout(() => {
-                    bar.style.width = "70%"; logT.innerHTML += "> Encriptando paquete...<br>";
-                    db.ref('market_requests').push({ player: myPlayer.name, itemName: name, price: price, date: Date.now() }).then(() => {
-                        setTimeout(() => {
-                            bar.style.width = "100%"; bar.style.background = "var(--green)";
-                            icon.className = "fas fa-check-circle m-icon"; icon.style.color = "var(--green)"; icon.style.animation = "none";
-                            title.innerText = "CONTRATO ENVIADO"; title.style.color = "var(--green)";
-                            desc.innerText = `El Staff validará el cobro de ${price} XP pronto.`;
-                            logT.innerHTML += "> <span style='color:var(--green)'>Petición enviada a los Altos Mandos.</span>";
-                            printLog(`Transacción solicitada: [${name}]`, "var(--gold)");
-                            setTimeout(() => { modal.style.display = 'none'; }, 3500);
-                        }, 1000);
-                    });
-                }, 1500);
-            }, 1000);
-        }
-
-        // REGALOS
-        function openGiftModal(itemId, itemName, price) {
-            if(!myPlayer) return alert("⚠️ Inicia sesión para regalar.");
-            if((myPlayer.calcXp || 0) < price) return alert(`❌ Necesitas ${price} XP para regalar esto.`);
-            pendingGift = { id: itemId, name: itemName, price: price };
-            document.getElementById('gift-item-name').innerText = itemName;
-            document.getElementById('giftModal').style.display = 'flex';
-        }
-        function closeGiftModal() { document.getElementById('giftModal').style.display = 'none'; document.getElementById('gift-receiver').value = ''; }
-        function sendGift() {
-            let receiverName = document.getElementById('gift-receiver').value.trim();
-            if(!receiverName) return;
-            db.ref('players').once('value').then(snap => {
-                let players = snap.val(); let receiverKey = null; let realReceiverName = "";
-                for(let k in players) { if(players[k].name.toLowerCase() === receiverName.toLowerCase()) { receiverKey = k; realReceiverName = players[k].name; break; } }
-                if(!receiverKey) return alert("❌ Jugador destino no encontrado.");
-                if(receiverKey === myPlayer.key) return alert("❌ No puedes enviarte un regalo a ti mismo.");
-
-                let newTotalXP = (myPlayer.totalXP || 0) - pendingGift.price;
-                db.ref(`players/${myPlayer.key}/totalXP`).set(newTotalXP);
-                db.ref(`players/${receiverKey}/inventory`).push({ itemName: pendingGift.name, receivedFrom: myPlayer.name, date: Date.now() });
-                db.ref('global_chat').push({ user: "OMNI BOT", text: `🎁 ¡Transacción Pública! [${myPlayer.name}] ha gastado ${pendingGift.price} XP para regalarle [${pendingGift.name}] a [${realReceiverName}].`, time: Date.now() });
-
-                printLog(`Regalo enviado a ${realReceiverName}`, "var(--purple)"); alert(`✅ ¡Regalo enviado a ${realReceiverName}!`); closeGiftModal();
-            });
-        }
-
-        // ADMIN TOOLS
-        function addNewItem() {
-            let name = document.getElementById('add-name').value.trim(); let price = parseInt(document.getElementById('add-price').value);
-            let icon = document.getElementById('add-icon').value.trim() || "fas fa-star"; let color = document.getElementById('add-color').value;
-            if(!name || isNaN(price)) return alert("Faltan datos.");
-            db.ref('market_dynamic_items').push({ name: name, price: price, icon: icon, color: color, createdAt: Date.now() });
-            document.getElementById('add-name').value = ""; document.getElementById('add-price').value = "";
-        }
-        function resetMyXP() {
-            if(!myPlayer) return;
-            if(confirm("⚠️ ¿Purgar tu Billetera de XP 'manual' a 0?")) {
-                db.ref(`players/${myPlayer.key}/totalXP`).set(0).then(() => alert("✅ PURGA COMPLETADA."));
-            }
-        }
-    </script>
+/* ADMIN */
+function addNewItem(){
+    let name=document.getElementById('add-name').value.trim();
+    let price=parseInt(document.getElementById('add-price').value);
+    let icon=document.getElementById('add-icon').value.trim()||"fas fa-star";
+    let color=document.getElementById('add-color').value;
+    if(!name||isNaN(price)) return toast("Faltan datos", true);
+    db.ref('market_dynamic_items').push({name,price,icon,color,createdAt:Date.now()});
+    document.getElementById('add-name').value=""; document.getElementById('add-price').value="";
+}
+function resetMyXP(){
+    if(!myPlayer) return;
+    if(confirm("⚠️ ¿Purgar tu Billetera de XP a 0?")){
+        db.ref(`players/${myKey}/totalXP`).set(0).then(()=>toast("XP purgada"));
+    }
+}
+function renderAdminToggles(dynamicItems){
+    const box=document.getElementById('admin-toggles');
+    let all=[...officialCatalog];
+    for(let key in dynamicItems){ all.push({id:key,name:dynamicItems[key].name}); }
+    box.innerHTML=all.map(item=>{
+        let isOff=disabledItems[item.id]===true;
+        return `<div class="toggle-item">
+            <span>${item.name}</span>
+            <label class="switch">
+                <input type="checkbox" ${isOff?'':'checked'} onchange="toggleMarketItem('${item.id}',this.checked)">
+                <span class="slider"></span>
+            </label>
+        </div>`;
+    }).join('');
+}
+function renderDynamicList(dynamicItems){
+    const box=document.getElementById('admin-dyn-list');
+    let html="<h4 style='color:#aaa; margin:20px 0 10px;'>Ítems Dinámicos Activos</h4>";
+    html+=Object.entries(dynamicItems).map(([id,d])=>`
+        <div class="toggle-item">
+            <span>${d.name}</span>
+            <button class="btn-debug" onclick="db.ref('market_dynamic_items/${id}').remove()">ELIMINAR</button>
+        </div>`).join('');
+    box.innerHTML=html;
+}
+function toggleMarketItem(id,isChecked){
+    if(isChecked) db.ref(`market_disabled/${id}`).remove();
+    else db.ref(`market_disabled/${id}`).set(true);
+}
+</script>
 </body>
 </html>
