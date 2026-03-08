@@ -1,313 +1,171 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OMNI | Acceso al Sistema</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root { 
-            --bg: #030303; 
-            --accent: #ff6600; 
-            --cyan: #00ffff; 
-            --border: rgba(255, 255, 255, 0.1); 
-            --card-bg: rgba(10, 10, 10, 0.85);
-        }
-        
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            background-color: var(--bg); 
-            color: #fff; 
-            font-family: 'Lexend Deca', sans-serif; 
-            margin: 0; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            position: relative;
-            overflow: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>OMNI | Acceso al Sistema</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{ --bg:#030303; --accent:#ff6600; --cyan:#00ffff; --border:rgba(255,255,255,0.1); --card-bg:rgba(10,10,10,0.85); }
+*{ box-sizing:border-box; outline:none; -webkit-tap-highlight-color:transparent; }
+body{ background:var(--bg); color:#fff; font-family:'Lexend Deca', sans-serif; margin:0; display:flex; justify-content:center; align-items:center; min-height:100vh; position:relative; overflow:hidden; }
+.bg-grid{ position:absolute; inset:0; background-image:linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px); background-size:40px 40px; z-index:0; animation:moveGrid 20s linear infinite;}
+.bg-glow{ position:absolute; width:600px; height:600px; background:radial-gradient(circle, rgba(255,102,0,0.05) 0%, transparent 60%); top:50%; left:50%; transform:translate(-50%, -50%); z-index:0;}
+@keyframes moveGrid{ 0%{transform:translateY(0);} 100%{transform:translateY(40px);} }
 
-        /* FONDO ANIMADO CIBERNÉTICO */
-        .bg-grid {
-            position: absolute;
-            inset: 0;
-            background-image: 
-                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: 0;
-            animation: moveGrid 20s linear infinite;
-        }
-        .bg-glow {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(255, 102, 0, 0.05) 0%, transparent 60%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 0;
-        }
+.back-btn{ position:absolute; top:30px; left:30px; color:#888; text-decoration:none; font-size:1.5rem; transition:0.3s; z-index:10; background:rgba(255,255,255,0.05); width:45px; height:45px; display:flex; justify-content:center; align-items:center; border-radius:50%; border:1px solid var(--border);}
+.back-btn:hover{ color:#fff; border-color:var(--cyan); background:rgba(0,255,255,0.1); transform:scale(1.1); }
 
-        @keyframes moveGrid {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(40px); }
-        }
+.auth-container{ background:var(--card-bg); border:1px solid var(--border); border-radius:25px; padding:50px 40px; width:90%; max-width:420px; box-shadow:0 20px 60px rgba(0,0,0,0.9); text-align:center; position:relative; z-index:2; backdrop-filter:blur(15px);}
+.auth-container::before{ content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg, transparent, var(--cyan), var(--accent), transparent); border-radius:25px 25px 0 0;}
 
-        .back-btn { 
-            position: absolute; 
-            top: 30px; 
-            left: 30px; 
-            color: #888; 
-            text-decoration: none; 
-            font-size: 1.5rem; 
-            transition: 0.3s; 
-            z-index: 10;
-            background: rgba(255,255,255,0.05);
-            width: 45px; height: 45px;
-            display: flex; justify-content: center; align-items: center;
-            border-radius: 50%;
-            border: 1px solid var(--border);
-        }
-        .back-btn:hover { color: #fff; border-color: var(--cyan); background: rgba(0,255,255,0.1); transform: scale(1.1); }
+.brand-logo{ font-size:3rem; color:var(--accent); margin-bottom:10px; text-shadow:0 0 20px rgba(255,102,0,0.5);}
+h1{ font-family:'JetBrains Mono'; margin:0 0 5px; color:#fff; font-size:2.2rem; text-transform:uppercase; letter-spacing:-1px;}
+h1 span{ color:var(--cyan); }
+p.subtitle{ color:#888; font-size:0.85rem; margin-bottom:35px; text-transform:uppercase; letter-spacing:1px; }
 
-        /* CONTENEDOR PRINCIPAL */
-        .auth-container { 
-            background: var(--card-bg); 
-            border: 1px solid var(--border); 
-            border-radius: 25px; 
-            padding: 50px 40px; 
-            width: 90%; 
-            max-width: 420px; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.9), inset 0 0 20px rgba(0,255,255,0.02); 
-            text-align: center; 
-            position: relative; 
-            z-index: 2;
-            backdrop-filter: blur(15px);
-        }
-        
-        .auth-container::before { 
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; 
-            background: linear-gradient(90deg, transparent, var(--cyan), var(--accent), transparent); 
-            border-radius: 25px 25px 0 0;
-        }
+.input-group{ position:relative; margin-bottom:20px; }
+.input-group i{ position:absolute; left:20px; top:50%; transform:translateY(-50%); color:#555; font-size:1.1rem; transition:0.3s; }
+.g-input{ width:100%; background:rgba(0,0,0,0.6); border:1px solid #333; color:#fff; padding:16px 20px 16px 50px; border-radius:12px; font-family:inherit; font-size:0.95rem; transition:0.3s; }
+.g-input:focus{ border-color:var(--cyan); background:rgba(0,255,255,0.02); }
+.g-input:focus + i, .g-input:not(:placeholder-shown)+i{ color:var(--cyan); }
 
-        .brand-logo { font-size: 3rem; color: var(--accent); margin-bottom: 10px; text-shadow: 0 0 20px rgba(255,102,0,0.5); }
-        h1 { font-family: 'JetBrains Mono'; margin: 0 0 5px; color: #fff; font-size: 2.2rem; text-transform: uppercase; letter-spacing: -1px; }
-        h1 span { color: var(--cyan); }
-        p.subtitle { color: #888; font-size: 0.85rem; margin-bottom: 35px; text-transform: uppercase; letter-spacing: 1px; }
+.btn{ width:100%; background:var(--accent); color:#000; border:none; padding:16px; border-radius:12px; font-weight:800; font-size:1rem; cursor:pointer; text-transform:uppercase; transition:0.3s; margin-top:10px; display:flex; justify-content:center; align-items:center; gap:10px;}
+.btn:hover{ transform:translateY(-3px); box-shadow:0 8px 25px rgba(255,102,0,0.4);}
+.btn:disabled{ opacity:0.7; cursor:not-allowed; transform:none; box-shadow:none;}
+.btn-cyan{ background:transparent; border:2px solid var(--cyan); color:var(--cyan);}
+.btn-cyan:hover{ background:var(--cyan); color:#000; box-shadow:0 8px 25px rgba(0,255,255,0.4); }
 
-        /* CASILLAS DE INPUT CON ICONOS */
-        .input-group { position: relative; margin-bottom: 20px; }
-        .input-group i { 
-            position: absolute; left: 20px; top: 50%; transform: translateY(-50%); 
-            color: #555; font-size: 1.1rem; transition: 0.3s; 
-        }
-        .g-input { 
-            width: 100%; background: rgba(0,0,0,0.6); border: 1px solid #333; color: #fff; 
-            padding: 16px 20px 16px 50px; border-radius: 12px; font-family: inherit; 
-            font-size: 0.95rem; outline: none; box-sizing: border-box; transition: 0.3s; 
-        }
-        .g-input:focus { border-color: var(--cyan); background: rgba(0,255,255,0.02); }
-        .g-input:focus + i, .g-input:not(:placeholder-shown) + i { color: var(--cyan); }
-        
-        /* BOTONES DE ACCIÓN */
-        .btn { 
-            width: 100%; background: var(--accent); color: #000; border: none; 
-            padding: 16px; border-radius: 12px; font-weight: 800; font-size: 1rem; 
-            cursor: pointer; text-transform: uppercase; transition: 0.3s; 
-            margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px;
-        }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255,102,0,0.4); }
-        .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
-        
-        .btn-cyan { background: transparent; border: 2px solid var(--cyan); color: var(--cyan); }
-        .btn-cyan:hover { background: var(--cyan); color: #000; box-shadow: 0 8px 25px rgba(0,255,255,0.4); }
+.toggle-text{ margin-top:25px; font-size:0.8rem; color:#888; cursor:pointer; transition:0.3s; display:inline-block; font-weight:bold; text-transform:uppercase;}
+.toggle-text:hover{ color:#fff; }
+.toggle-text i{ margin-right:5px; color:var(--accent); }
 
-        .toggle-text { 
-            margin-top: 25px; font-size: 0.8rem; color: #888; cursor: pointer; 
-            transition: 0.3s; display: inline-block; font-weight: bold; text-transform: uppercase; 
-        }
-        .toggle-text:hover { color: #fff; }
-        .toggle-text i { margin-right: 5px; color: var(--accent); }
-        
-        /* TRANSICIÓN DE FORMULARIOS */
-        .form-section { display: none; animation: fadeIn 0.4s ease-out forwards; }
-        .form-section.active { display: block; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+.form-section{ display:none; animation:fadeIn 0.4s ease-out forwards; }
+.form-section.active{ display:block; }
+@keyframes fadeIn{ from{opacity:0; transform:translateY(15px);} to{opacity:1; transform:translateY(0);} }
+
+.reset-link{ font-size:0.75rem; color:#888; cursor:pointer; margin-top:8px; display:inline-block; }
+.reset-link:hover{ color:var(--cyan); }
+</style>
 </head>
 <body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
 
-    <div class="bg-grid"></div>
-    <div class="bg-glow"></div>
+<a href="index.html" class="back-btn" title="Volver al Hub"><i class="fas fa-arrow-left"></i></a>
 
-    <a href="index.html" class="back-btn" title="Volver al Hub"><i class="fas fa-arrow-left"></i></a>
+<div class="auth-container">
+    <i class="fas fa-microchip brand-logo"></i>
+    <h1>SYS.<span>OMNI</span></h1>
 
-    <div class="auth-container">
-        <i class="fas fa-microchip brand-logo"></i>
-        <h1>SYS.<span>OMNI</span></h1>
-        
-        <div id="login-box" class="form-section active">
-            <p class="subtitle">Identificación Requerida</p>
-            
-            <div class="input-group">
-                <input type="email" id="log-email" class="g-input" placeholder="Correo Electrónico">
-                <i class="fas fa-envelope"></i>
-            </div>
-            
-            <div class="input-group">
-                <input type="password" id="log-pass" class="g-input" placeholder="Contraseña" onkeypress="if(event.keyCode==13) login()">
-                <i class="fas fa-lock"></i>
-            </div>
-            
-            <button class="btn" id="btn-login" onclick="login()">INICIAR SESIÓN <i class="fas fa-sign-in-alt"></i></button>
-            <span class="toggle-text" onclick="toggleForms()"><i class="fas fa-user-plus"></i> Forjar nueva identidad Titán</span>
+    <div id="login-box" class="form-section active">
+        <p class="subtitle">Identificación Requerida</p>
+        <div class="input-group">
+            <input type="email" id="log-email" class="g-input" placeholder="Correo Electrónico">
+            <i class="fas fa-envelope"></i>
         </div>
-
-        <div id="reg-box" class="form-section">
-            <p class="subtitle" style="color:var(--cyan);">Creación de Perfil Titán</p>
-            
-            <div class="input-group">
-                <input type="text" id="reg-nick" class="g-input" placeholder="Tu Nick exacto en GD">
-                <i class="fas fa-user"></i>
-            </div>
-
-            <div class="input-group">
-                <input type="email" id="reg-email" class="g-input" placeholder="Correo Electrónico">
-                <i class="fas fa-envelope"></i>
-            </div>
-
-            <div class="input-group">
-                <input type="password" id="reg-pass" class="g-input" placeholder="Contraseña (Mín. 6 letras)" onkeypress="if(event.keyCode==13) register()">
-                <i class="fas fa-key"></i>
-            </div>
-            
-            <button class="btn btn-cyan" id="btn-register" onclick="register()">CREAR CUENTA <i class="fas fa-bolt"></i></button>
-            <span class="toggle-text" onclick="toggleForms()"><i class="fas fa-undo"></i> Ya tengo acceso al sistema</span>
+        <div class="input-group">
+            <input type="password" id="log-pass" class="g-input" placeholder="Contraseña" onkeypress="if(event.keyCode==13) login()">
+            <i class="fas fa-lock"></i>
         </div>
+        <button class="btn" id="btn-login" onclick="login()">INICIAR SESIÓN <i class="fas fa-sign-in-alt"></i></button>
+        <span class="reset-link" onclick="resetPassword()">¿Olvidaste tu contraseña?</span>
+        <span class="toggle-text" onclick="toggleForms()"><i class="fas fa-user-plus"></i> Forjar nueva identidad</span>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-    
-    <script>
-        // CONFIGURACIÓN FIREBASE OMNI
-        const firebaseConfig = { 
-            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
-            authDomain: "scullylist.firebaseapp.com", 
-            databaseURL: "https://scullylist-default-rtdb.firebaseio.com", 
-            projectId: "scullylist"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth(); 
-        const db = firebase.database();
+    <div id="reg-box" class="form-section">
+        <p class="subtitle" style="color:var(--cyan);">Creación de Perfil Titán</p>
+        <div class="input-group">
+            <input type="text" id="reg-nick" class="g-input" placeholder="Tu Nick exacto en GD">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="input-group">
+            <input type="email" id="reg-email" class="g-input" placeholder="Correo Electrónico">
+            <i class="fas fa-envelope"></i>
+        </div>
+        <div class="input-group">
+            <input type="password" id="reg-pass" class="g-input" placeholder="Contraseña (Mín. 6 letras)" onkeypress="if(event.keyCode==13) register()">
+            <i class="fas fa-key"></i>
+        </div>
+        <button class="btn btn-cyan" id="btn-register" onclick="register()">CREAR CUENTA <i class="fas fa-bolt"></i></button>
+        <span class="toggle-text" onclick="toggleForms()"><i class="fas fa-undo"></i> Ya tengo acceso</span>
+    </div>
+</div>
 
-        // REDIRIGIR SI YA ESTÁ LOGUEADO
-        auth.onAuthStateChanged(user => {
-            if(user) window.location.href = "index.html";
-        });
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",authDomain:"scullylist.firebaseapp.com",databaseURL:"https://scullylist-default-rtdb.firebaseio.com",projectId:"scullylist"};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(); const db=firebase.database();
 
-        // ALTERNAR ENTRE PANTALLAS
-        function toggleForms() {
-            const l = document.getElementById('login-box');
-            const r = document.getElementById('reg-box');
-            if(l.classList.contains('active')) { 
-                l.classList.remove('active'); 
-                r.classList.add('active'); 
-            } else { 
-                r.classList.remove('active'); 
-                l.classList.add('active'); 
+auth.onAuthStateChanged(user=>{ if(user) window.location.href="index.html"; });
+
+function toggleForms(){
+    const l=document.getElementById('login-box');
+    const r=document.getElementById('reg-box');
+    l.classList.toggle('active'); r.classList.toggle('active');
+}
+
+async function login(){
+    const e=document.getElementById('log-email').value.trim();
+    const p=document.getElementById('log-pass').value;
+    if(!e || !p) return alert("⚠️ Se requieren credenciales completas.");
+
+    const btn=document.getElementById('btn-login');
+    btn.disabled=true; btn.innerHTML="<i class='fas fa-spinner fa-spin'></i> VERIFICANDO...";
+    try{
+        await auth.signInWithEmailAndPassword(e,p);
+        window.location.href="index.html";
+    }catch(err){
+        alert("❌ Acceso Denegado: " + err.message);
+        btn.disabled=false; btn.innerHTML="INICIAR SESIÓN <i class='fas fa-sign-in-alt'></i>";
+    }
+}
+
+async function register(){
+    const nick=document.getElementById('reg-nick').value.trim();
+    const email=document.getElementById('reg-email').value.trim();
+    const pass=document.getElementById('reg-pass').value;
+    if(!nick || !email || !pass) return alert("⚠️ Faltan datos.");
+    if(pass.length < 6) return alert("⚠️ Mínimo 6 caracteres.");
+
+    const btn=document.getElementById('btn-register');
+    btn.disabled=true; btn.innerHTML="<i class='fas fa-spinner fa-spin'></i> FORJANDO...";
+
+    try{
+        await auth.createUserWithEmailAndPassword(email, pass);
+        const snap=await db.ref('players').once('value');
+        const players=snap.val()||{};
+        let existingKey=null;
+        for(let key in players){
+            if(players[key].name && players[key].name.toLowerCase()===nick.toLowerCase()){
+                existingKey=key; break;
             }
         }
-
-        // LÓGICA DE INICIO DE SESIÓN
-        async function login() {
-            const e = document.getElementById('log-email').value.trim();
-            const p = document.getElementById('log-pass').value;
-            if(!e || !p) return alert("⚠️ Se requieren credenciales completas.");
-            
-            const btn = document.getElementById('btn-login');
-            btn.disabled = true;
-            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> VERIFICANDO...";
-            
-            try {
-                await auth.signInWithEmailAndPassword(e, p);
-                window.location.href = "index.html";
-            } catch (err) {
-                alert("❌ Acceso Denegado: " + err.message);
-                btn.disabled = false;
-                btn.innerHTML = "INICIAR SESIÓN <i class='fas fa-sign-in-alt'></i>";
-            }
+        if(existingKey){
+            await db.ref(`players/${existingKey}`).update({ email:email.toLowerCase() });
+            alert("✅ Perfil detectado: reclamado con éxito.");
+        }else{
+            await db.ref('players').push({ name:nick, email:email.toLowerCase(), totalXP:0, role:"player", verified:false, inventory:[], completions:[] });
+            alert("✅ Perfil creado. Bienvenido.");
         }
+        window.location.href="index.html";
+    }catch(err){
+        alert("❌ Error: " + err.message);
+        btn.disabled=false; btn.innerHTML="CREAR CUENTA <i class='fas fa-bolt'></i>";
+    }
+}
 
-        // LÓGICA MAESTRA DE REGISTRO (CON AUTO-RECLAMACIÓN)
-        async function register() {
-            const nick = document.getElementById('reg-nick').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const pass = document.getElementById('reg-pass').value;
-            
-            if(!nick || !email || !pass) return alert("⚠️ Faltan datos para procesar la identidad.");
-            if(pass.length < 6) return alert("⚠️ Protocolo de seguridad: La contraseña debe tener al menos 6 caracteres.");
-
-            const btn = document.getElementById('btn-register');
-            btn.disabled = true;
-            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> FORJANDO IDENTIDAD...";
-
-            try {
-                // 1. Crear el usuario en Auth
-                await auth.createUserWithEmailAndPassword(email, pass);
-                
-                // 2. Verificar si el nombre ya existe en la base de datos 'players'
-                const snap = await db.ref('players').once('value');
-                const players = snap.val() || {};
-                
-                let existingKey = null;
-                for(let key in players) {
-                    if(players[key].name && players[key].name.toLowerCase() === nick.toLowerCase()) {
-                        existingKey = key;
-                        break;
-                    }
-                }
-
-                if(existingKey) {
-                    // Reclamar perfil existente
-                    await db.ref(`players/${existingKey}`).update({
-                        email: email.toLowerCase()
-                    });
-                    alert("✅ ¡Identidad detectada! Has reclamado tu puesto oficial en el Ranking OMNI.");
-                } else {
-                    // Crear nuevo perfil desde cero
-                    await db.ref('players').push({
-                        name: nick,
-                        email: email.toLowerCase(),
-                        totalXP: 0,
-                        role: "player",
-                        verified: false,
-                        inventory: [],
-                        completions: []
-                    });
-                    alert("✅ ¡Bienvenido a la red! Tu perfil ha sido creado. Puedes empezar a subir tus récords.");
-                }
-
-                window.location.href = "index.html";
-
-            } catch (err) {
-                alert("❌ Error crítico en la red: " + err.message);
-                btn.disabled = false;
-                btn.innerHTML = "CREAR CUENTA <i class='fas fa-bolt'></i>";
-            }
-        }
-    </script>
+function resetPassword(){
+    const email=document.getElementById('log-email').value.trim();
+    if(!email) return alert("Escribe tu correo en el campo.");
+    auth.sendPasswordResetEmail(email)
+        .then(()=>alert("✅ Email de recuperación enviado."))
+        .catch(err=>alert("❌ Error: " + err.message));
+}
+</script>
 </body>
 </html>
