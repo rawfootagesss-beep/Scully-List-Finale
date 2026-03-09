@@ -275,7 +275,7 @@
             background: rgba(10,10,10,0.95); border: 1px solid rgba(255,255,255,0.08);
             color: #666; font-size: 1.1rem; cursor: pointer;
             display: none; align-items: center; justify-content: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.7); transition: 0.2s; position: fixed;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.7); transition: 0.2s;
         }
         #notif-bell:hover { color: #fff; border-color: var(--accent); transform: scale(1.1); }
         #notif-bell.has-new { color: var(--cyan); border-color: rgba(0,255,255,0.4);
@@ -1048,6 +1048,9 @@
                 
             } else {
                 currentUserData = { name: null, key: null };
+                // [FIX] Resetear el flag de listeners de notificaciones al cerrar sesión
+                _notifListenerActive = false;
+                document.getElementById('notif-bell').style.display = 'none';
                 if (navLogin) { 
                     navLogin.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:var(--gold)"></i> Vincular Cuenta'; 
                     navLogin.href = "#";
@@ -1064,7 +1067,7 @@
         // =========================================
         function renderThrone(lvls) { 
             if(!lvls[0]) return;
-            let xp0 = Math.max(100 - (0 * 0.6), 5);
+            let xp0 = Math.max(250 - (0 * 2), 5);
             if(lvls[0].bounty) xp0 *= 2;
             let bountyBadge = lvls[0].bounty
                 ? `<div style="background:var(--gold); color:#000; padding:5px 15px; border-radius:50px; font-size:0.6rem; font-weight:900; margin-bottom:8px; display:inline-block;"><i class="fas fa-fire"></i> BOUNTY ACTIVO — DOBLE XP</div><br>`
@@ -1107,15 +1110,16 @@
             }
 
             for (let i = 1; i < lvls.length; i++) {
-                let xp = Math.max(250 - (i * 2), 5).toFixed(1);
+                let xpNum = Math.max(250 - (i * 2), 5);
                 let bS = "", bI = '<i class="fas fa-star"></i>', xC = "var(--accent)";
                 
                 if (lvls[i].bounty) { 
-                    xp = (xp * 2).toFixed(1); 
+                    xpNum *= 2; 
                     bS = "border-color:var(--gold); box-shadow: 0 0 15px rgba(255,215,0,0.2);"; 
                     bI = '<i class="fas fa-fire"></i> BOUNTY:'; 
                     xC = "var(--gold)"; 
                 }
+                let xp = xpNum.toFixed(1);
 
                 const lvlNameLower = lvls[i].name.toLowerCase();
                 const isCompleted = myCompletions.includes(lvlNameLower);
@@ -1129,7 +1133,7 @@
                 // Badge de progreso (solo visible para el dueño de la cuenta)
                 let progBadge = '';
                 if(!isCompleted && myPct !== null && currentUserData.key) {
-                    let pClass = myPct >= 90 ? 'high' : myPct >= 100 ? 'done' : '';
+                    let pClass = myPct >= 100 ? 'done' : myPct >= 90 ? 'high' : '';
                     progBadge = `<span class="prog-badge ${pClass}" onclick="event.stopPropagation(); openProgModal('${lvls[i].name.replace(/'/g,"\\'")}', '${lvlNameLower}', ${myPct})">
                         <i class="fas fa-percentage" style="font-size:0.6rem;"></i>${myPct}%
                     </span>`;
@@ -1370,6 +1374,7 @@
             }
             db.ref('global_chat').push({ user: currentUserData.name, text, time: Date.now() });
             input.value = '';
+            updateChatCounter();
         }
 
         function updateChatCounter() {
@@ -1428,12 +1433,19 @@
 
         function clearProgress() {
             if(!currentUserData.key || !_progCurrentLevel) return;
-            if(!confirm(`¿Borrar el progreso registrado en ${_progCurrentLevel.name}?`)) return;
-            
+            // [FIX] Reemplazar confirm() bloqueante por modal inline no-bloqueante
+            const lvlName = _progCurrentLevel.name;
+            document.getElementById('prog-modal').style.display = 'none';
+            omniToast(
+                `¿Borrar progreso en "${lvlName}"? <span onclick="doConfirmClearProgress()" style="cursor:pointer; color:var(--red); font-weight:900; text-decoration:underline; margin-left:6px;">CONFIRMAR</span>`,
+                'error', 7000, true
+            );
+        }
+        function doConfirmClearProgress() {
+            if(!currentUserData.key || !_progCurrentLevel) return;
             db.ref(`players/${currentUserData.key}/levelProgress/${_progCurrentLevel.key}`).remove()
                 .then(() => {
-                    document.getElementById('prog-modal').style.display = 'none';
-                    omniToast(`Progreso en ${_progCurrentLevel.name} eliminado.`, 'info', 2500);
+                    omniToast(\`Progreso en \${_progCurrentLevel.name} eliminado.\`, 'info', 2500);
                     renderLevels(nexus(fullData.levels));
                 })
                 .catch(() => omniToast('Error al borrar.', 'error'));
@@ -1557,8 +1569,9 @@
             if(e) e.preventDefault();
             const n = document.getElementById('sug-n').value; const p = document.getElementById('sug-pos').value; const v = document.getElementById('sug-v').value; 
             
-            if(n && p && v.length === 11) { 
-                db.ref('level_suggestions').push({ name: n, position: parseInt(p), video: v, user: currentUserData.name || "Anónimo" }); 
+            const vId = extraerYouTubeID(v);
+            if(n && p && vId && vId.length === 11) { 
+                db.ref('level_suggestions').push({ name: n, position: parseInt(p), video: vId, user: currentUserData.name || "Anónimo" }); 
                 omniToast('Sugerencia enviada. +10 XP si es aceptada.', 'success', 4000);
                 document.getElementById('sugModal').style.display='none'; 
             } else { omniToast('Datos inválidos. Revisa el formulario.', 'error', 3000); }
@@ -1632,88 +1645,271 @@
         }
 
         function generateTitanCard() {
-            let nick = document.getElementById('tc-nick').value.trim(); 
+            let nick = document.getElementById('tc-nick').value.trim();
             if (!nick) { omniToast('Ingresa un nick para generar la tarjeta.', 'error'); return; }
-            
-            let pL = nexus(fullData.players); const lvls = nexus(fullData.levels);
-            
-            pL.forEach(p => { 
-                let realXp = 0; 
-                nexus(p.completions).forEach(c => { 
-                    let lIdx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase()); 
-                    let cXp = 0;
-                    if(lIdx > -1) {
-                        let base = Math.max(250 - (lIdx * 2), 5);
-                        if(lvls[lIdx].bounty) base *= 2;
-                        // [FIX] Bonus x2 si es First Victor del nivel
-                        if(lvls[lIdx].first && lvls[lIdx].first.toLowerCase() === p.name.toLowerCase()) base *= 2;
-                        cXp = base;
-                    } else { cXp = c.xp || 0; }
-                    c.realXp = cXp; realXp += cXp; 
-                }); 
-                p.calcXp = realXp + (p.totalXP || 0); 
-            });
-            
-            pL.sort((a,b) => b.calcXp - a.calcXp); 
-            let pIndex = pL.findIndex(x => x.name.toLowerCase() === nick.toLowerCase()); 
-            if (pIndex === -1) { omniToast('Perfil no encontrado en el ranking.', 'error', 3000); document.getElementById('btn-forge').innerHTML = '<i class=\'fas fa-download\'></i> PROCESAR Y DESCARGAR IMAGEN'; document.getElementById('btn-forge').disabled = false; return; }
-            
-            let p = pL[pIndex]; 
-            const btn = document.getElementById('btn-forge'); 
-            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> FORJANDO..."; btn.disabled = true;
-            
-            const canvas = document.createElement('canvas'); canvas.width = 900; canvas.height = 500; const ctx = canvas.getContext('2d');
-            
-            ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, 900, 500); ctx.strokeStyle = '#151515'; ctx.lineWidth = 1;
-            for(let i = 0; i < 900; i += 30) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 500); ctx.stroke(); } 
-            for(let i = 0; i < 500; i += 30) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(900, i); ctx.stroke(); }
-            
-            ctx.strokeStyle = p.verified ? '#00ccff' : '#ff6600'; ctx.lineWidth = 10; ctx.strokeRect(10, 10, 880, 480);
-            
-            const img = new Image(); img.crossOrigin = "Anonymous"; 
-            
-            img.onload = () => {
-                ctx.save(); ctx.beginPath(); ctx.arc(100, 110, 60, 0, Math.PI * 2, true); ctx.closePath(); ctx.clip(); ctx.drawImage(img, 40, 50, 120, 120); ctx.restore(); 
-                ctx.beginPath(); ctx.arc(100, 110, 60, 0, Math.PI * 2, true); ctx.lineWidth = 5; ctx.strokeStyle = p.verified ? "#00ccff" : "#ff6600"; ctx.stroke();
-                
-                ctx.fillStyle = p.verified ? '#00ccff' : '#ff6600'; ctx.font = 'bold 50px "Courier New"'; ctx.fillText(p.name.toUpperCase() + (p.verified ? " [V]" : ""), 180, 100); 
-                ctx.fillStyle = '#aaaaaa'; ctx.font = 'bold 20px "Courier New"'; ctx.fillText(p.role ? "ROLE: " + p.role.toUpperCase() : "CLASS: TITAN", 180, 135); 
-                
-                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 35px Arial'; ctx.fillText("RANK GLOBAL: #" + (pIndex + 1), 40, 230); ctx.fillText("XP BILLETERA: " + p.calcXp.toFixed(1), 40, 280);
-                
-                let cN = (p.clanId && fullData.clans && fullData.clans[p.clanId]) ? fullData.clans[p.clanId].name : "LOBO SOLITARIO"; 
-                ctx.fillStyle = '#00ffff'; ctx.font = 'bold 25px Arial'; ctx.fillText("SINDICATO: " + cN.toUpperCase(), 40, 330); 
-                
-                if (p.bio) { ctx.fillStyle = '#888888'; ctx.font = 'italic 16px Arial'; ctx.fillText('"' + p.bio.substring(0, 55) + '..."', 40, 370); }
-                
-                let comps = nexus(p.completions).sort((a,b) => (b.realXp || 0) - (a.realXp || 0)); 
-                ctx.fillStyle = p.verified ? '#00ccff' : '#ff6600'; ctx.font = 'bold 22px "Courier New"'; ctx.fillText("TOP 5 VICTORIAS:", 500, 210); 
-                ctx.fillStyle = '#ffffff'; ctx.font = '18px Arial';
-                
-                for(let k = 0; k < Math.min(5, comps.length); k++) { ctx.fillText(`> ${comps[k].level} (+${(comps[k].realXp||0).toFixed(1)} Pts)`, 500, 245 + (k * 25)); }
-                if(comps.length === 0) { ctx.fillText("> Sin registros aún.", 500, 245); }
-                
-                ctx.fillStyle = '#333333'; ctx.font = 'bold 20px "Courier New"'; ctx.fillText("SYS.OMNI - THE SCULLY LIST IDENTITY", 40, 460);
-                
-                const link = document.createElement('a'); link.download = `OMNI_TITAN_CARD_${p.name}.png`; link.href = canvas.toDataURL("image/png"); link.click();
-                
-                document.getElementById('tc-modal').style.display = 'none'; document.getElementById('tc-nick').value = ''; 
-                btn.innerHTML = "<i class='fas fa-download'></i> FORJAR TITAN CARD 3.0"; btn.disabled = false;
-            };
-            
-            // [FIX] Usar foto real del jugador desde Firebase (photo > pfp > default)
-            const safePfpCard = (p.photo && p.photo !== "null" && p.photo !== "undefined" && p.photo.trim() !== "")
-                ? p.photo
-                : (p.pfp && p.pfp !== "null" && p.pfp !== "undefined" && p.pfp.trim() !== "")
-                ? p.pfp
-                : "https://i.imgur.com/6D2g3wU.png";
 
-            img.onerror = () => {
-                // Si la foto falla (CORS), intentamos con el proxy de imgur como fallback
-                img.crossOrigin = "Anonymous";
-                img.src = "https://i.imgur.com/6D2g3wU.png";
-            };
-            img.src = safePfpCard;
+            let pL = nexus(fullData.players);
+            const lvls = nexus(fullData.levels);
+
+            // Calcular XP real para todos
+            pL.forEach(p => {
+                let realXp = 0;
+                nexus(p.completions).forEach(comp => {
+                    let lIdx = lvls.findIndex(x => x.name.toLowerCase() === comp.level.toLowerCase());
+                    if (lIdx > -1) {
+                        let base = Math.max(250 - (lIdx * 2), 5);
+                        if (lvls[lIdx].bounty) base *= 2;
+                        if (lvls[lIdx].first && lvls[lIdx].first.toLowerCase() === p.name.toLowerCase()) base *= 2;
+                        comp.realXp = base;
+                    } else {
+                        comp.realXp = comp.xp || 0;
+                    }
+                    realXp += comp.realXp;
+                });
+                p.calcXp = realXp + (p.totalXP || 0);
+            });
+
+            pL.sort((a, b) => b.calcXp - a.calcXp);
+            let pIndex = pL.findIndex(x => x.name.toLowerCase() === nick.toLowerCase());
+            if (pIndex === -1) {
+                omniToast('Perfil no encontrado en el ranking.', 'error', 3000);
+                return;
+            }
+
+            const p = pL[pIndex];
+            const btn = document.getElementById('btn-forge');
+            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> FORJANDO...";
+            btn.disabled = true;
+
+            // ── Canvas: 1000×560, diseño cyberpunk completo ──────────────────
+            const W = 1000, H = 560;
+            const canvas = document.createElement('canvas');
+            canvas.width = W; canvas.height = H;
+            const ctx = canvas.getContext('2d');
+
+            // Determinar color de acento del jugador
+            const cos = getCosmetic(p.activeCosmetic);
+            // accentHex: extraer valor real desde CSS var o usar raw
+            const accentRaw = cos.nC.startsWith('var(') 
+                ? getComputedStyle(document.documentElement).getPropertyValue(cos.nC.slice(4,-1).trim()).trim() || '#ff6600'
+                : cos.nC;
+            const accent = accentRaw || '#ff6600';
+            const isVerified = !!p.verified;
+
+            function hexToRgb(hex) {
+                const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.replace(/^#([a-f\d])([a-f\d])([a-f\d])$/i,'#$1$1$2$2$3$3'));
+                return r ? `${parseInt(r[1],16)},${parseInt(r[2],16)},${parseInt(r[3],16)}` : '255,102,0';
+            }
+            const accentRGB = hexToRgb(accent);
+
+            function drawCard(pfpImg) {
+                // ── Fondo ────────────────────────────────────────────────────
+                ctx.fillStyle = '#060608';
+                ctx.fillRect(0, 0, W, H);
+
+                // Grilla sutil
+                ctx.strokeStyle = 'rgba(255,255,255,0.025)';
+                ctx.lineWidth = 1;
+                for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+                for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+                // Glow lateral izquierdo
+                const glowL = ctx.createLinearGradient(0, 0, 320, 0);
+                glowL.addColorStop(0, `rgba(${accentRGB},0.18)`);
+                glowL.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = glowL;
+                ctx.fillRect(0, 0, 320, H);
+
+                // Franja izquierda de color
+                ctx.fillStyle = accent;
+                ctx.fillRect(0, 0, 5, H);
+
+                // Borde exterior sutil
+                ctx.strokeStyle = `rgba(${accentRGB},0.35)`;
+                ctx.lineWidth = 1.5;
+                ctx.strokeRect(8, 8, W-16, H-16);
+
+                // ── Foto de perfil (izquierda) ───────────────────────────────
+                const pfpX = 55, pfpY = 60, pfpR = 72;
+
+                // Sombra de la foto
+                ctx.shadowColor = accent;
+                ctx.shadowBlur = 20;
+                ctx.beginPath(); ctx.arc(pfpX + pfpR, pfpY + pfpR, pfpR, 0, Math.PI*2);
+                ctx.fillStyle = '#111'; ctx.fill();
+                ctx.shadowBlur = 0;
+
+                // Clip circular para la foto
+                ctx.save();
+                ctx.beginPath(); ctx.arc(pfpX + pfpR, pfpY + pfpR, pfpR, 0, Math.PI*2);
+                ctx.clip();
+                if (pfpImg) {
+                    ctx.drawImage(pfpImg, pfpX, pfpY, pfpR*2, pfpR*2);
+                } else {
+                    ctx.fillStyle = '#1a1a1a'; ctx.fillRect(pfpX, pfpY, pfpR*2, pfpR*2);
+                    ctx.fillStyle = '#333'; ctx.font = 'bold 48px Arial';
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText(nick.charAt(0).toUpperCase(), pfpX+pfpR, pfpY+pfpR);
+                    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+                }
+                ctx.restore();
+
+                // Anillo de la foto
+                ctx.beginPath(); ctx.arc(pfpX + pfpR, pfpY + pfpR, pfpR + 3, 0, Math.PI*2);
+                ctx.strokeStyle = accent; ctx.lineWidth = 3; ctx.stroke();
+
+                // Badge verificado
+                if (isVerified) {
+                    const bx = pfpX + pfpR*2 - 20, by = pfpY + pfpR*2 - 20;
+                    ctx.beginPath(); ctx.arc(bx, by, 14, 0, Math.PI*2);
+                    ctx.fillStyle = '#00ccff'; ctx.fill();
+                    ctx.fillStyle = '#000'; ctx.font = 'bold 14px Arial';
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText('✓', bx, by);
+                    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+                }
+
+                // ── Nombre y rol ─────────────────────────────────────────────
+                const textX = pfpX + pfpR*2 + 30;
+
+                // Label sistema
+                ctx.fillStyle = `rgba(${accentRGB},0.6)`;
+                ctx.font = '700 11px "Courier New"';
+                ctx.fillText('// THE SCULLY LIST · TITAN CARD v3.0', textX, 72);
+
+                // Nombre
+                ctx.fillStyle = accent;
+                ctx.font = `900 ${Math.min(52, Math.max(30, 52 - Math.max(0, p.name.length - 10) * 2))}px "Courier New"`;
+                ctx.fillText(p.name.toUpperCase(), textX, 124);
+
+                // Rol
+                const roleLabel = p.role ? p.role.toUpperCase() : 'TITAN';
+                const roleColors = { OWNER:'#ffd700', ADMIN:'#00ccff', MOD:'#cc00ff', HELPER:'#00ff66', TITAN:'#888' };
+                ctx.fillStyle = roleColors[roleLabel] || '#888';
+                ctx.font = '700 15px "Courier New"';
+                ctx.fillText('[ ' + roleLabel + ' ]', textX, 152);
+
+                // ── Línea divisoria ───────────────────────────────────────────
+                const divY = 210;
+                const grad = ctx.createLinearGradient(20, divY, W-20, divY);
+                grad.addColorStop(0, `rgba(${accentRGB},0.8)`);
+                grad.addColorStop(0.5, `rgba(${accentRGB},0.2)`);
+                grad.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.strokeStyle = grad; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(20, divY); ctx.lineTo(W-20, divY); ctx.stroke();
+
+                // ── Stats (fila de 3) ─────────────────────────────────────────
+                const stats = [
+                    { label: 'RANK GLOBAL', value: `#${pIndex + 1}` },
+                    { label: 'PUNTOS TITÁN', value: p.calcXp.toFixed(0) + ' XP' },
+                    { label: 'VICTORIAS',   value: String(nexus(p.completions).length) },
+                ];
+                const colW = (W - 40) / 3;
+                stats.forEach((s, i) => {
+                    const sx = 20 + i * colW + colW/2;
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = `rgba(${accentRGB},0.55)`;
+                    ctx.font = '700 11px "Courier New"';
+                    ctx.fillText(s.label, sx, 240);
+                    ctx.fillStyle = i === 0 ? accent : '#fff';
+                    ctx.font = `900 ${i === 0 ? 38 : 28}px "Courier New"`;
+                    ctx.fillText(s.value, sx, 282);
+                });
+                ctx.textAlign = 'left';
+
+                // ── Top Victorias ─────────────────────────────────────────────
+                const comps = nexus(p.completions).sort((a, b) => (b.realXp||0) - (a.realXp||0));
+                const colLeft = 30, colRight = W/2 + 20;
+                const secY = 320;
+
+                // Título izquierda
+                ctx.fillStyle = `rgba(${accentRGB},0.7)`;
+                ctx.font = '700 11px "Courier New"';
+                ctx.fillText('// TOP VICTORIAS', colLeft, secY);
+
+                ctx.fillStyle = '#fff';
+                ctx.font = '14px "Courier New"';
+                const toShow = comps.slice(0, 5);
+                if (toShow.length === 0) {
+                    ctx.fillStyle = '#333'; ctx.fillText('> Sin victorias registradas', colLeft, secY + 24);
+                } else {
+                    toShow.forEach((comp, i) => {
+                        const lvlName = comp.level.length > 22 ? comp.level.substring(0,20)+'…' : comp.level;
+                        const xpStr = '+' + (comp.realXp||0).toFixed(0) + ' XP';
+                        const rowY = secY + 22 + i * 28;
+                        // Fila alterna
+                        if (i % 2 === 0) {
+                            ctx.fillStyle = `rgba(${accentRGB},0.05)`;
+                            ctx.fillRect(colLeft - 4, rowY - 16, W/2 - 40, 24);
+                        }
+                        ctx.fillStyle = i === 0 ? accent : '#ccc';
+                        ctx.font = `${i === 0 ? '700' : '400'} 14px "Courier New"`;
+                        ctx.fillText(`${i+1}. ${lvlName}`, colLeft + 4, rowY);
+                        ctx.fillStyle = i === 0 ? accent : '#555';
+                        ctx.font = '700 12px "Courier New"';
+                        ctx.textAlign = 'right';
+                        ctx.fillText(xpStr, W/2 - 25, rowY);
+                        ctx.textAlign = 'left';
+                    });
+                }
+
+                // Título derecha — Bio o sindicato
+                ctx.fillStyle = `rgba(${accentRGB},0.7)`;
+                ctx.font = '700 11px "Courier New"';
+                ctx.fillText('// IDENTIDAD', colRight, secY);
+
+                ctx.fillStyle = '#888'; ctx.font = '13px "Courier New"';
+                const clan = (p.clanId && fullData.clans?.[p.clanId]) ? fullData.clans[p.clanId].name : 'Lobo Solitario';
+                ctx.fillStyle = '#aaa'; ctx.fillText('Sindicato: ' + clan.toUpperCase(), colRight, secY + 24);
+
+                const country = p.country || 'Desconocido';
+                ctx.fillStyle = '#aaa'; ctx.fillText('País: ' + country, colRight, secY + 48);
+
+                if (p.bio) {
+                    ctx.fillStyle = '#555'; ctx.font = 'italic 12px "Courier New"';
+                    const bioTxt = p.bio.length > 45 ? p.bio.substring(0,43)+'…' : p.bio;
+                    ctx.fillText('"' + bioTxt + '"', colRight, secY + 74);
+                }
+
+                // ── Footer ────────────────────────────────────────────────────
+                const footY = H - 28;
+                ctx.fillStyle = `rgba(${accentRGB},0.08)`;
+                ctx.fillRect(0, footY - 20, W, H);
+                ctx.fillStyle = `rgba(${accentRGB},0.4)`;
+                ctx.font = '700 10px "Courier New"';
+                ctx.fillText(`SYS.OMNI // THE SCULLY LIST // ${new Date().getFullYear()} // ID: ${(pIndex+1).toString().padStart(4,'0')}`, 20, footY);
+                ctx.textAlign = 'right';
+                ctx.fillStyle = '#333';
+                ctx.fillText('CODED BY SCORE ENGINEERING', W-20, footY);
+                ctx.textAlign = 'left';
+
+                // ── Descarga ──────────────────────────────────────────────────
+                const link = document.createElement('a');
+                link.download = `TITAN_CARD_${p.name.toUpperCase()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+
+                document.getElementById('tc-modal').style.display = 'none';
+                document.getElementById('tc-nick').value = '';
+                btn.innerHTML = "<i class='fas fa-download'></i> FORJAR TITAN CARD 3.0";
+                btn.disabled = false;
+            }
+
+            // Cargar foto del jugador
+            const safePfp = (p.photo && p.photo !== 'null' && p.photo.trim())
+                ? p.photo
+                : (p.pfp && p.pfp !== 'null' && p.pfp.trim())
+                ? p.pfp : null;
+
+            if (safePfp) {
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                img.onload  = () => drawCard(img);
+                img.onerror = () => drawCard(null);
+                img.src = safePfp;
+            } else {
+                drawCard(null);
+            }
         }
 
         function runScullyAI() {
@@ -2078,10 +2274,10 @@
             }
         });
 
-        function applyColor(color) {
+        function applyColor(color, el) {
             updateThemeColor(color);
             document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            if(el) el.classList.add('active');
             omniToast('Color de acento actualizado', 'info', 2000);
         }
 
@@ -2175,13 +2371,13 @@
         <div class="cp-section">
             <label>Color de Acento</label>
             <div class="color-presets">
-                <div class="color-dot" style="background:#ff6600;" onclick="applyColor('#ff6600')" title="OMNI Orange"></div>
-                <div class="color-dot" style="background:#00ffff;" onclick="applyColor('#00ffff')" title="Cyan"></div>
-                <div class="color-dot" style="background:#ffd700;" onclick="applyColor('#ffd700')" title="Gold VIP"></div>
-                <div class="color-dot" style="background:#cc00ff;" onclick="applyColor('#cc00ff')" title="Morado"></div>
-                <div class="color-dot" style="background:#00ff66;" onclick="applyColor('#00ff66')" title="Matrix Verde"></div>
-                <div class="color-dot" style="background:#ff3333;" onclick="applyColor('#ff3333')" title="Rojo Alerta"></div>
-                <div class="color-dot" style="background:#00aaff;" onclick="applyColor('#00aaff')" title="Azul Eléctrico"></div>
+                <div class="color-dot" style="background:#ff6600;" onclick=\"applyColor('#ff6600', this)\" title="OMNI Orange"></div>
+                <div class="color-dot" style="background:#00ffff;" onclick=\"applyColor('#00ffff', this)\" title="Cyan"></div>
+                <div class="color-dot" style="background:#ffd700;" onclick=\"applyColor('#ffd700', this)\" title="Gold VIP"></div>
+                <div class="color-dot" style="background:#cc00ff;" onclick=\"applyColor('#cc00ff', this)\" title="Morado"></div>
+                <div class="color-dot" style="background:#00ff66;" onclick=\"applyColor('#00ff66', this)\" title="Matrix Verde"></div>
+                <div class="color-dot" style="background:#ff3333;" onclick=\"applyColor('#ff3333', this)\" title="Rojo Alerta"></div>
+                <div class="color-dot" style="background:#00aaff;" onclick=\"applyColor('#00aaff', this)\" title="Azul Eléctrico"></div>
                 <div class="color-dot custom-dot" title="Color personalizado">
                     <input type="color" id="cp-custom-color" oninput="applyColor(this.value)">
                 </div>
