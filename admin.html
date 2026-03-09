@@ -1649,46 +1649,88 @@
 
             btn.disabled = true;
             btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> CONECTANDO A RED AREDL (PROXY)...";
-            
+
             try {
-                // Usamos AllOrigins como proxy
                 const targetUrl = 'https://api.aredl.net/api/aredl/levels';
                 const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-                
+
                 const response = await fetch(proxyUrl);
                 if (!response.ok) throw new Error("Error en el proxy o API caída.");
-                
+
                 const aredlData = await response.json();
-                
+
                 const aredlMap = {};
                 aredlData.forEach(l => { aredlMap[l.name.toLowerCase()] = l.position; });
 
-                let matched = [];
+                // ── Guardar posiciones ANTES ──────────────────────────
+                const oldPos = {};
+                lvls.forEach((l, i) => { oldPos[l.name.toLowerCase()] = i + 1; });
+
+                let matched   = [];
                 let unmatched = [];
 
                 lvls.forEach(l => {
-                    let lowerName = l.name.toLowerCase();
-                    if(aredlMap[lowerName]) { matched.push({ ...l, tempAredlPos: aredlMap[lowerName] }); } 
-                    else { unmatched.push(l); }
+                    const key = l.name.toLowerCase();
+                    if (aredlMap[key] !== undefined) {
+                        matched.push({ ...l, tempAredlPos: aredlMap[key] });
+                    } else {
+                        unmatched.push(l);
+                    }
                 });
 
                 matched.sort((a, b) => a.tempAredlPos - b.tempAredlPos);
 
-                let newLvls = matched.map(l => {
-                    let copy = {...l}; delete copy.tempAredlPos; return copy;
+                const newLvls = matched.map(l => {
+                    const copy = { ...l };
+                    delete copy.tempAredlPos;
+                    return copy;
                 }).concat(unmatched);
+
+                // ── Calcular diff ─────────────────────────────────────
+                const moved   = [];   // { name, from, to, delta }
+                const newPos  = {};
+                newLvls.forEach((l, i) => { newPos[l.name.toLowerCase()] = i + 1; });
+
+                for (const key of Object.keys(oldPos)) {
+                    const from = oldPos[key];
+                    const to   = newPos[key];
+                    if (to !== undefined && from !== to) {
+                        moved.push({ name: lvls.find(l => l.name.toLowerCase() === key)?.name || key, from, to, delta: to - from });
+                    }
+                }
+
+                // Ordenar por magnitud de cambio (los más dramáticos primero)
+                moved.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
 
                 await db.ref('levels').set(newLvls);
 
-                toast("¡Ordenamiento Completado!");
-                log(`Ejecutó Auto-Sync Masivo con AREDL (${matched.length} niveles reordenados).`);
-                api(`🌐 **REESTRUCTURACIÓN MASIVA:** El Administrador **${sN}** ha sincronizado toda la lista con la base de datos de AREDL. ${matched.length} niveles fueron reubicados.`, 'lvls');
-                
+                // ── Construir mensaje Discord ─────────────────────────
+                const MAX_SHOW = 20; // límite para no superar 2000 chars
+                let diffLines = '';
+                const shown = moved.slice(0, MAX_SHOW);
+
+                shown.forEach(m => {
+                    const arrow  = m.delta < 0 ? '🔺' : '🔻';
+                    const change = m.delta < 0 ? `+${Math.abs(m.delta)}` : `-${Math.abs(m.delta)}`;
+                    diffLines += `\n${arrow} **${m.name}** #${m.from} → #${m.to} (${change})`;
+                });
+
+                const extra = moved.length > MAX_SHOW ? `\n*...y ${moved.length - MAX_SHOW} niveles más.*` : '';
+                const noChange = newLvls.filter((l, i) => oldPos[l.name.toLowerCase()] === i + 1).length;
+
+                const discordMsg =
+                    `🌐 **REESTRUCTURACIÓN MASIVA AREDL** — por **${sN}**\n` +
+                    `📊 ${matched.length} analizados · **${moved.length} cambiaron de posición** · ${noChange} sin cambios · ${unmatched.length} no encontrados en AREDL` +
+                    (moved.length > 0 ? `\n\n**Cambios de posición:**${diffLines}${extra}` : '\n\n*No hubo cambios de posición.*');
+
+                log(`Auto-Sync AREDL: ${moved.length} niveles movidos de ${matched.length} analizados.`);
+                api(discordMsg, 'lvls');
+                toast(`✓ Sync completado — ${moved.length} niveles reubicados`);
                 rLv();
 
             } catch (error) {
-                console.error("AREDL Bulk Sync Error:", error);
-                aAdminToast("Error de conexión con AREDL: " + error.message, "warn", 6000);
+                console.error('AREDL Bulk Sync Error:', error);
+                aAdminToast('Error de conexión con AREDL: ' + error.message, 'warn', 6000);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = "<i class='fas fa-robot'></i> REORDENAR TODA LA LISTA AHORA";
