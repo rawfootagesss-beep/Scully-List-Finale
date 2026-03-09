@@ -941,20 +941,24 @@
                     } 
                 }
                 
-                db.ref('players').set(pL); 
+                db.ref('players').set(pL);
+                // [FIX] Escribir en /history para activar notificación al jugador
+                db.ref('history').push({player: r.player, level: r.level, status: 'Aceptado', link: r.link || '', time: Date.now()});
                 log(`Aceptó récord de ${r.player}`); 
                 api(`✅ **NUEVO RÉCORD:** **${r.player}** superó **${r.level}** (+${xp.toFixed(1)} XP) \n*Aprobado por:* ${sN}`, 'main');
             
             } else if(m === 'app') { 
                 const n = prompt("Motivo de Apelación:"); 
                 if(n) { 
-                    db.ref('history').push({player: r.player, level: r.level, status: 'Apelacion', reason: n}); 
+                    db.ref('history').push({player: r.player, level: r.level, status: 'Apelacion', link: r.link || '', reason: n, time: Date.now()}); 
                     api(`⚠️ **RÉCORD EN APELACIÓN:** **${r.player}** en **${r.level}**\n*Revisado por:* ${sN}\n*Motivo:* ${n}`, 'main'); 
                 } else return; 
             
             } else { 
                 const n = prompt("Razón de Rechazo:"); 
-                if(n) { 
+                if(n) {
+                    // [FIX BUG#2] Escribir en /history para que el jugador vea el rechazo
+                    db.ref('history').push({player: r.player, level: r.level, status: 'Rechazado', link: r.link || '', reason: n, time: Date.now()});
                     log(`Rechazó a ${r.player}`); 
                     api(`❌ **RÉCORD RECHAZADO:** **${r.player}** en **${r.level}**\n*Revisado por:* ${sN}\n*Motivo:* ${n}`, 'main'); 
                 } else return; 
