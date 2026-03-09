@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Ranking Global | Hub OMNI</title>
+    <meta name="description" content="Ranking global de The Scully List — los mejores jugadores de Geometry Dash ordenados por XP OMNI.">
+    <link rel="icon" href="https://i.imgur.com/6D2g3wU.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@800&family=Lexend+Deca:wght@400;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -141,6 +143,14 @@
 
         /* MODAL DEL PERFIL COMPLETO */
         .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
+        /* COMPARADOR */
+        #compareModal .modal-content { max-width: 700px; text-align: left; }
+        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .compare-col { background: rgba(0,0,0,0.5); border-radius: 12px; padding: 16px; border: 1px solid #1a1a1a; }
+        .compare-stat { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #111; font-size: 0.78rem; }
+        .compare-stat:last-child { border: none; }
+        .compare-winner { color: var(--gold); font-weight: 900; }
+        @media(max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
         .modal-content { background: #0a0a0a; margin: 5vh auto; padding: 35px; width: 90%; max-width: 550px; border-radius: 30px; border: 1px solid var(--border); text-align: center; position: relative; max-height: 85vh; overflow-y: auto; }
         .status-pill { padding: 12px; border-radius: 12px; margin-bottom: 8px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.3s; }
         .status-pill:hover { background: rgba(255,255,255,0.05); transform: translateX(5px); border-color: var(--accent); }
@@ -154,12 +164,29 @@
             .player-card { flex-direction: column; align-items: center; text-align: center; }
             .player-info { text-align: center; }
             .player-info h3 { justify-content: center; }
+            .player-bio { max-width: 100%; }
             .player-stats { flex-direction: row; justify-content: center; width: 100%; }
             .req-box { flex-direction: column; text-align: center; }
             .req-info { flex-direction: column; }
-            .podium-card { width: 100%; height: auto !important; order: 0 !important; }
-            .podium-crown { top: -15px; }
-            #personal-tracker { bottom: 10px; right: 10px; left: 10px; text-align: center; }
+            .podium-container { gap: 10px; }
+            .podium-card { width: 100%; height: auto !important; order: 0 !important; padding: 20px; }
+            .podium-crown { top: -15px; font-size: 1.8rem; }
+            .podium-badge { position: static; margin-top: 12px; display: inline-block; }
+            #personal-tracker { bottom: 10px; right: 10px; left: 10px; text-align: center; font-size: 0.85rem; }
+            .filter-bar { padding: 12px; gap: 8px; }
+            .filter-chip { padding: 6px 12px; font-size: 0.65rem; }
+            .filter-search { min-width: unset; }
+            .modal-content { padding: 24px 18px; margin: 8vh auto; }
+            .leaderboard-container { width: 100%; padding: 0 12px; box-sizing: border-box; }
+            .rank-number { font-size: 1.6rem; width: 36px; }
+            .player-pfp { width: 50px; height: 50px; }
+            .btn-hub { padding: 8px 14px; font-size: 0.7rem; }
+            header { padding: 40px 15px 15px; }
+        }
+        @media(max-width: 400px) {
+            h1 { font-size: 1.6rem; }
+            .player-card { padding: 12px; gap: 12px; }
+            .stat-badge { font-size: 0.68rem; padding: 4px 8px; }
         }
 
         /* =========================================
@@ -252,12 +279,26 @@
         <div class="modal-content" id="modal-body"></div>
     </div>
 
+    <div id="compareModal" class="modal">
+        <div class="modal-content" id="compare-body">
+            <span onclick="closeCompare()" style="position:absolute;top:20px;right:25px;cursor:pointer;font-size:1.8rem;color:#666;">&times;</span>
+            <h3 style="margin:0 0 5px;color:var(--cyan);text-transform:uppercase;font-family:'JetBrains Mono';">Comparar Jugadores</h3>
+            <p style="color:#555;font-size:0.78rem;margin:0 0 16px;">Comparando con: <b style="color:#fff;" id="compare-base-name"></b></p>
+            <div style="display:flex;gap:10px;">
+                <input id="compare-search" type="text" placeholder="Buscar jugador B..."
+                    style="flex:1;background:#0a0a0a;border:1px solid #333;color:#fff;padding:12px 15px;border-radius:10px;font-family:'JetBrains Mono';font-size:0.8rem;outline:none;"
+                    oninput="runCompare()">
+            </div>
+            <div id="compare-result" style="margin-top:16px;"></div>
+        </div>
+    </div>
+
     <script type="text/javascript">
         function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'en,es', autoDisplay: false}, 'google_translate_element'); }
         function toggleLanguage() {
             var select = document.querySelector('.goog-te-combo');
             if(select) { select.value = select.value === 'en' ? 'es' : 'en'; select.dispatchEvent(new Event('change')); } 
-            else { alert("Cargando traductor automático. Intenta en un segundo."); }
+            else { console.warn("Traductor no cargado aún."); }
         }
     </script>
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
@@ -286,6 +327,14 @@
         let isStaff = false;
         let myName = "Desconocido";
         const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
+
+        // Helper centralizado: photo > pfp > fallback (elimina duplicación)
+        function getSafePfp(p, fallback) {
+            fallback = fallback || 'https://i.imgur.com/8pw98K4.png';
+            if (!p) return fallback;
+            const v = p.photo || p.pfp || '';
+            return (v && v !== 'null' && v !== 'undefined' && v.trim() !== '') ? v.trim() : fallback;
+        }
 
         // [OMNI-SEC] Sanitizador anti-XSS para datos de usuario en innerHTML
         function escapeHTML(str) {
@@ -360,7 +409,7 @@
                 
                 let pts = 0;
                 uniqueLevels.forEach(name => {
-                    let idx = levels.findIndex(l => l.name === name);
+                    let idx = levels.findIndex(l => l.name.toLowerCase() === name.toLowerCase());
                     if(idx > -1) {
                         let base = Math.max(250 - (idx * 2), 5);
                         if(levels[idx].bounty) base *= 2;
@@ -436,15 +485,19 @@
         }
 
         function approvePfp(id, playerName, photoUrl) {
-            let pL = nx(fullData.players);
-            let i = pL.findIndex(p => p.name.toLowerCase() === playerName.toLowerCase());
-            if(i > -1) {
-                pL[i].photo = photoUrl;
-                db.ref('players').set(pL).then(() => {
+            // [FIX] Update puntual — no reescribir todo el nodo /players
+            const allKeys = Object.keys(fullData.players || {});
+            const targetKey = allKeys.find(k => fullData.players[k].name?.toLowerCase() === playerName.toLowerCase());
+            if (targetKey) {
+                db.ref(`players/${targetKey}/photo`).set(photoUrl).then(() => {
                     db.ref(`pfp_requests/${id}`).remove();
                     db.ref('staff_logs').push({staff: myName, action: `Aprobó PFP de ${playerName}`, timestamp: Date.now()});
                 });
-            } else { alert("Error: Jugador no encontrado en la BD."); }
+            } else {
+                // Toast de error inline
+                const p = document.getElementById('pfp-requests-list');
+                if(p) p.insertAdjacentHTML('afterbegin', '<p style="color:var(--red);font-size:0.8rem;margin:0 0 8px;">Error: Jugador no encontrado en la BD.</p>');
+            }
         }
         function rejectPfp(id) { db.ref(`pfp_requests/${id}`).remove(); }
 
@@ -456,7 +509,7 @@
             
             top3.forEach((p, index) => {
                 let cos = getCosmetic(p.activeCosmetic);
-                let safePfp = (p.photo && p.photo !== "null" && p.photo !== "undefined" && p.photo.trim() !== "") ? p.photo : (p.pfp && p.pfp !== "null" && p.pfp !== "undefined" && p.pfp.trim() !== "") ? p.pfp : 'https://i.imgur.com/8pw98K4.png';
+                let safePfp = getSafePfp(p);
                 let isMe = (p.name === myName) ? "box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);" : ""; // Resalta si el podio eres tú
 
                 podiumHtml += `
@@ -493,7 +546,7 @@
                 // [OMNI-SEC] Bio sanitizada: el usuario podría haber escrito HTML/JS en su bio
                 let bio = p.bio ? escapeHTML(p.bio) : "<i>Sin biografía establecida.</i>";
                 
-                let safePfp = (p.photo && p.photo !== "null" && p.photo !== "undefined" && p.photo.trim() !== "") ? p.photo : (p.pfp && p.pfp !== "null" && p.pfp !== "undefined" && p.pfp.trim() !== "") ? p.pfp : 'https://i.imgur.com/8pw98K4.png';
+                let safePfp = getSafePfp(p);
                 let isMeStyle = (p.name === myName) ? "border-color: var(--cyan); background: rgba(0, 255, 255, 0.05);" : `border: ${cos.bS};`;
 
                 html += `
@@ -551,7 +604,7 @@
             if(p.country && p.country.trim() !== "") { flagProfileHtml = `<img src="https://flagcdn.com/w40/${p.country.toLowerCase()}.png" class="player-flag" style="margin-right:10px;">`; }
 
             let vTick = p.verified ? `<i class="fas fa-check-circle" style="color:var(--cyan); font-size:1.2rem; margin-left:8px;"></i>` : "";
-            let safePfpModal = (p.photo && p.photo !== "null" && p.photo !== "undefined" && p.photo.trim() !== "") ? p.photo : (p.pfp && p.pfp !== "null" && p.pfp !== "undefined" && p.pfp.trim() !== "") ? p.pfp : 'https://i.imgur.com/8pw98K4.png';
+            let safePfpModal = getSafePfp(p);
 
             document.getElementById('modal-body').innerHTML = `
                 <span onclick="closeModal()" style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.8rem; color:#666; transition:0.3s;">&times;</span>
@@ -572,10 +625,72 @@
                     </div>
                 </div>
             `;
+            // Añadir botón comparar al modal
+            document.getElementById('modal-body').insertAdjacentHTML('beforeend', `
+                <button onclick="openCompare(${index})" style="margin-top:18px; width:100%; padding:10px; background:transparent; border:1px solid #333; border-radius:10px; color:#555; font-size:0.75rem; font-weight:800; cursor:pointer; transition:0.3s; text-transform:uppercase; font-family:'JetBrains Mono';" onmouseover="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseout="this.style.borderColor='#333';this.style.color='#555'">
+                    <i class="fas fa-balance-scale" style="margin-right:6px;"></i> Comparar con otro jugador
+                </button>
+            `);
             document.getElementById('playerModal').style.display = "block";
         }
 
         function closeModal() { document.getElementById('playerModal').style.display = "none"; }
+
+        // ── COMPARADOR DE 2 JUGADORES ─────────────────────────
+        let compareBaseIndex = -1;
+        function openCompare(baseIdx) {
+            compareBaseIndex = baseIdx;
+            closeModal();
+            // Mostrar buscador en el modal comparador
+            const p = globalPlayers[baseIdx];
+            document.getElementById('compare-base-name').textContent = p.name;
+            document.getElementById('compare-search').value = '';
+            document.getElementById('compare-result').innerHTML = '';
+            document.getElementById('compareModal').style.display = 'block';
+        }
+        function closeCompare() { document.getElementById('compareModal').style.display = 'none'; }
+        function runCompare() {
+            const q = document.getElementById('compare-search').value.trim().toLowerCase();
+            if (!q || compareBaseIndex < 0) return;
+            const p1 = globalPlayers[compareBaseIndex];
+            const p2 = globalPlayers.find(p => p.name.toLowerCase().includes(q));
+            if (!p2) { document.getElementById('compare-result').innerHTML = '<p style="color:#555;text-align:center;font-size:0.8rem;">Jugador no encontrado.</p>'; return; }
+            const rank1 = globalPlayers.indexOf(p1) + 1;
+            const rank2 = globalPlayers.indexOf(p2) + 1;
+            const comps1 = (p1.completions ? (Array.isArray(p1.completions)?p1.completions:Object.values(p1.completions)) : []).length;
+            const comps2 = (p2.completions ? (Array.isArray(p2.completions)?p2.completions:Object.values(p2.completions)) : []).length;
+            const lvl1 = p1.lvl || 0, lvl2 = p2.lvl || 0;
+            const pts1 = p1.pts || 0, pts2 = p2.pts || 0;
+            function w(v1, v2, hi=true) { // winner: higher is better
+                const better = hi ? v1 > v2 : v1 < v2;
+                return [better ? 'compare-winner' : '', better ? '' : 'compare-winner'];
+            }
+            const [w1r,w2r] = w(rank1, rank2, false); // lower rank = better
+            const [w1p,w2p] = w(pts1, pts2);
+            const [w1c,w2c] = w(comps1, comps2);
+            const [w1l,w2l] = w(lvl1, lvl2);
+            document.getElementById('compare-result').innerHTML = `
+                <div class="compare-grid">
+                    <div class="compare-col">
+                        <div style="font-size:0.7rem;color:#555;font-family:'JetBrains Mono';margin-bottom:10px;">JUGADOR A</div>
+                        <div style="font-weight:900;font-size:1.1rem;margin-bottom:12px;color:#fff;">${escapeHTML(p1.name)}</div>
+                        <div class="compare-stat"><span style="color:#555;">Rank</span><span class="${w1r}">#${rank1}</span></div>
+                        <div class="compare-stat"><span style="color:#555;">XP</span><span class="${w1p}">${pts1.toFixed(0)}</span></div>
+                        <div class="compare-stat"><span style="color:#555;">Demons</span><span class="${w1c}">${comps1}</span></div>
+                        <div class="compare-stat"><span style="color:#555;">Nivel</span><span class="${w1l}">${lvl1}</span></div>
+                        <div class="compare-stat"><span style="color:#555;">Verificado</span><span>${p1.verified?'✓':'—'}</span></div>
+                    </div>
+                    <div class="compare-col">
+                        <div style="font-size:0.7rem;color:#555;font-family:'JetBrains Mono';margin-bottom:10px;">JUGADOR B</div>
+                        <div style="font-weight:900;font-size:1.1rem;margin-bottom:12px;color:#fff;">${escapeHTML(p2.name)}</div>
+                        <div class="compare-stat"><span style="color:#555;">Rank</span><span class="${w2r}">#${rank2}</span></div>
+                        <div class="compare-stat"><span style="color:#555;">XP</span><span class="${w2p}">${pts2.toFixed(0)}</span></div>
+                        <div class="compare-stat"><span style="color:#555;">Demons</span><span class="${w2c}">${comps2}</span></div>
+                        <div class="compare-stat"><span style="color:#555;">Nivel</span><span class="${w2l}">${lvl2}</span></div>
+                        <div class="compare-stat"><span style="color:#555;">Verificado</span><span>${p2.verified?'✓':'—'}</span></div>
+                    </div>
+                </div>`;
+        }
         window.onclick = function(event) { let modal = document.getElementById('playerModal'); if (event.target == modal) { closeModal(); } }
     
         // =============================================
