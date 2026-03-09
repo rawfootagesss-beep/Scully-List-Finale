@@ -663,6 +663,22 @@
                     style="width:100%; background:#0a0a0a; border:1px solid #333; color:#fff; padding:11px 14px; border-radius:8px; font-size:0.82rem; box-sizing:border-box; outline:none; font-family:'Lexend Deca',sans-serif;">
             </div>
 
+            <!-- BLOQUE: NIVEL DESCONOCIDO — Promover a Lista -->
+            <div id="r-promote-box" style="display:none; background:rgba(204,0,255,0.06); border:1px solid rgba(204,0,255,0.3); border-radius:12px; padding:14px; margin-bottom:12px;">
+                <p style="margin:0 0 6px; font-size:0.62rem; color:var(--pu); font-family:'JetBrains Mono'; text-transform:uppercase; letter-spacing:1px; font-weight:900;"><i class="fas fa-plus-circle" style="margin-right:5px;"></i>Nivel no está en la lista</p>
+                <p style="margin:0 0 12px; font-size:0.75rem; color:#888; line-height:1.5;">Puedes añadir este nivel a la lista con el jugador como verificador y luego aceptar el récord.</p>
+                <div style="display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap;">
+                    <label style="font-size:0.7rem; color:#666; white-space:nowrap;">Posición:</label>
+                    <input type="number" id="r-promote-pos" min="1" placeholder="Ej: 50"
+                        style="width:90px; background:#0a0a0a; border:1px solid rgba(204,0,255,0.3); color:#fff; padding:7px 10px; border-radius:8px; font-size:0.8rem; outline:none;">
+                    <label style="font-size:0.7rem; color:#666; white-space:nowrap;">¿Bounty?</label>
+                    <input type="checkbox" id="r-promote-bounty" style="width:auto; margin:0; accent-color:var(--pu);">
+                </div>
+                <button id="b-promote" class="btn" style="width:100%; background:linear-gradient(135deg,rgba(204,0,255,0.25),rgba(204,0,255,0.1)); border:1px solid var(--pu); color:var(--pu); padding:11px; font-size:0.82rem; font-weight:900;">
+                    <i class="fas fa-list-alt" style="margin-right:7px;"></i> AÑADIR A LA LISTA Y ACEPTAR RÉCORD
+                </button>
+            </div>
+
             <!-- ACCIONES -->
             <div style="display:flex; flex-direction:column; gap:8px;">
                 <button id="b-ac" class="btn bg" style="width:100%; font-size:0.85rem; padding:13px;">
@@ -1113,7 +1129,10 @@
                     <!-- ACCIONES -->
                     <div style="display:flex; gap:8px; padding:10px 14px; border-top:1px solid #111; flex-wrap:wrap;">
                         <button class="bs bb" onclick="oRev('${id}')" style="flex:2; min-width:80px;"><i class="fas fa-search" style="margin-right:4px;"></i> Revisar</button>
-                        <button class="bs bg" onclick="quickAccept('${id}')" ${type==='unk'?'disabled title="Nivel no está en la lista"':''} style="flex:1; min-width:70px; ${type==='unk'?'opacity:0.4;cursor:not-allowed;':''}"><i class="fas fa-check"></i> Aceptar</button>
+                        ${type==='unk'
+                            ? `<button class="bs" onclick="promoteToList('${id}')" style="flex:2;min-width:100px;background:rgba(204,0,255,0.12);border:1px solid var(--pu);color:var(--pu);"><i class="fas fa-list-alt" style="margin-right:4px;"></i> Añadir a Lista</button>`
+                            : `<button class="bs bg" onclick="quickAccept('${id}')" style="flex:1;min-width:70px;"><i class="fas fa-check"></i> Aceptar</button>`
+                        }
                         <button class="bs br" onclick="quickReject('${id}')" style="flex:1; min-width:70px;"><i class="fas fa-times"></i> Rechazar</button>
                     </div>
                 </div>`;
@@ -1231,6 +1250,24 @@
             reasonBox.style.display = 'none';
             if ($('r-reason-input')) $('r-reason-input').value = '';
 
+            // Bloque "Promover a lista" — solo visible si el nivel no está
+            const promoteBox = $('r-promote-box');
+            if (type === 'unk') {
+                promoteBox.style.display = 'block';
+                if ($('r-promote-pos')) $('r-promote-pos').value = '';
+                if ($('r-promote-bounty')) $('r-promote-bounty').checked = false;
+                $('b-promote').onclick = () => promoteAndAccept(id, r);
+                // Deshabilitar el botón normal de aceptar
+                $('b-ac').disabled = true;
+                $('b-ac').style.opacity = '0.35';
+                $('b-ac').title = 'Añade el nivel a la lista primero usando el bloque morado';
+            } else {
+                promoteBox.style.display = 'none';
+                $('b-ac').disabled = false;
+                $('b-ac').style.opacity = '1';
+                $('b-ac').title = '';
+            }
+
             // Botones — con reason box inline
             $('b-ac').onclick = () => {
                 reasonBox.style.display = 'none';
@@ -1333,6 +1370,81 @@
             db.ref(`submissions/${id}`).remove(); 
             cMod('m-rev'); 
             toast("Procesado");
+        }
+
+        // ── PROMOVER NIVEL DESCONOCIDO A LA LISTA ────────────────────
+        function promoteToList(id) {
+            // Llamado desde la card — abre el modal con bloque promote visible
+            oRev(id);
+        }
+
+        function promoteAndAccept(id, r) {
+            const posInput = $('r-promote-pos');
+            const bounty   = $('r-promote-bounty')?.checked || false;
+            const pos      = parseInt(posInput?.value);
+            const link     = r.link || '';
+            const videoId  = (link.match(/[\w-]{11}/) || [])[0] || '';
+
+            if (!pos || pos < 1) {
+                toast('Escribe una posición válida (Ej: 50)', true);
+                posInput?.focus();
+                return;
+            }
+
+            // 1. Añadir el nivel a /levels con el jugador como verificador (first)
+            const newLevel = {
+                name:   r.level,
+                id:     videoId,
+                first:  r.player,   // el que subió el récord es el verificador
+                bounty: bounty
+            };
+            let nL = [...lvls];
+            const targetIndex = Math.min(pos - 1, nL.length);
+            nL.splice(targetIndex, 0, newLevel);
+            db.ref('levels').set(nL);
+            log(`Añadió nivel "${r.level}" en #${pos} con verificador ${r.player}`);
+            api(`🆕 **NIVEL AÑADIDO:** **${r.level}** en el Top #${pos} — verificador: **${r.player}** (promovido desde récord pendiente)`, 'lvls');
+
+            // 2. Aceptar el récord automáticamente ahora que el nivel existe en la lista
+            //    Calcular XP con la nueva posición
+            const xp = Math.max(250 - targetIndex * 2, 5) * (bounty ? 2 : 1) * 2; // ×2 por First Victor
+            const playerKeys = Object.keys(fD.players || {});
+            const pKey = playerKeys.find(k => fD.players[k].name?.toLowerCase() === r.player.toLowerCase());
+
+            if (pKey) {
+                const existing = fD.players[pKey];
+                const comps = existing.completions
+                    ? (Array.isArray(existing.completions) ? [...existing.completions] : Object.values(existing.completions))
+                    : [];
+                comps.push({ level: r.level, link: link, xp: xp, time: Date.now() });
+                db.ref(`players/${pKey}`).update({
+                    completions: comps,
+                    totalXP: (existing.totalXP || 0) + xp
+                });
+            } else {
+                // Jugador nuevo
+                db.ref('players').push({
+                    name: r.player, totalXP: xp,
+                    completions: [{ level: r.level, link: link, xp: xp, time: Date.now() }]
+                });
+            }
+
+            // 3. Escribir en /history para notificar al jugador
+            db.ref('history').push({
+                player: r.player, level: r.level,
+                status: 'Aceptado',
+                link:   link,
+                reason: `Nivel añadido a la lista — eres el verificador oficial (+${xp} XP, First Victor)`,
+                time:   Date.now()
+            });
+
+            // 4. Eliminar el submission de la bandeja
+            db.ref(`submissions/${id}`).remove();
+            log(`Aceptó récord de ${r.player} (nivel nuevo: ${r.level})`);
+            api(`✅ **RÉCORD ACEPTADO:** **${r.player}** verificó **${r.level}** (+${xp} XP — First Victor) | Aprobado por ${sN}`, 'main');
+
+            cMod('m-rev');
+            toast(`✓ "${r.level}" añadido en #${pos} · ${r.player} es el verificador · +${xp} XP`);
         }
 
         function previewInjection() {
