@@ -1,460 +1,819 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Scully List | Mi Perfil Titán</title>
-<link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root { 
-    --accent: #ff6600; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
-    --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
-    --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
-    --green: #00ff66; --red: #ff3333; --blue: #00ccff; --yellow: #ffff00; --gold: #ffd700; --cyan: #00ffff;
-}
-body { background:var(--bg); color:#fff; font-family:'Lexend Deca', sans-serif; margin:0; padding:20px; display:flex; justify-content:center; overflow-x:hidden; }
-::-webkit-scrollbar{ width:6px; }
-::-webkit-scrollbar-thumb{ background:var(--accent); border-radius:10px; }
-.profile-container{ width:100%; max-width:900px; margin-top:40px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Scully List | Mi Perfil Titán</title>
+    <meta name="description" content="Tu perfil OMNI — gestiona tu identidad en The Scully List.">
+    <link rel="icon" href="https://i.imgur.com/6D2g3wU.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --accent: #ff6600; --accent-grad: linear-gradient(135deg, var(--accent) 0%, #ff9900 100%);
+            --bg: #030303; --card-bg: rgba(15, 15, 15, 0.85);
+            --glow: 0 0 25px rgba(255, 102, 0, 0.3); --border: rgba(255, 255, 255, 0.05);
+            --green: #00ff66; --red: #ff3333; --blue: #00ccff; --yellow: #ffff00; --gold: #ffd700; --cyan: #00ffff;
+        }
 
-.header{ display:flex; justify-content:space-between; align-items:center; background:var(--card-bg); padding:25px 30px; border-radius:25px; border:1px solid var(--border); margin-bottom:25px; box-shadow:0 10px 30px rgba(0,0,0,0.5); flex-wrap:wrap; gap:15px; }
-.header h1{ margin:0; font-size:1.8rem; font-weight:800; letter-spacing:-1px; text-transform:uppercase; }
-.header h1 span{ background:var(--accent-grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.header-btns{ display:flex; gap:10px; flex-wrap:wrap; }
-.btn-hub{ background:rgba(255,255,255,0.03); border:1px solid var(--border); color:#fff; padding:10px 20px; text-decoration:none; font-size:0.75rem; border-radius:50px; font-weight:600; transition:0.3s; display:inline-flex; align-items:center; gap:8px; }
-.btn-hub:hover{ background:var(--border); }
-.btn-logout{ background:rgba(255,51,51,0.1); color:var(--red); border:1px solid var(--red); padding:10px 20px; text-decoration:none; font-size:0.75rem; border-radius:50px; font-weight:600; transition:0.3s; cursor:pointer; display:inline-flex; align-items:center; gap:8px; }
-.btn-logout:hover{ background:var(--red); color:#000; box-shadow:0 0 15px rgba(255,51,51,0.3); }
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Lexend Deca', sans-serif; 
+            margin: 0; padding: 20px; display: flex; justify-content: center; overflow-x: hidden; 
+        }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
-.panel{ background:var(--card-bg); border-radius:25px; border:1px solid var(--border); padding:35px; margin-bottom:25px; }
-.panel h2{ margin-top:0; font-size:1.3rem; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border); padding-bottom:15px; text-transform:uppercase; }
+        .profile-container { width: 100%; max-width: 800px; margin-top: 40px; }
+        
+        .header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: var(--card-bg); padding: 25px 30px; border-radius: 25px; 
+            border: 1px solid var(--border); margin-bottom: 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); flex-wrap: wrap; gap: 15px; 
+        }
+        .header h1 { margin: 0; font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; text-transform: uppercase; }
+        .header h1 span { background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .header-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-hub { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: #fff; padding: 10px 20px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-hub:hover { background: var(--border); }
+        .btn-logout { background: rgba(255,51,51,0.1); color: var(--red); border: 1px solid var(--red); padding: 10px 20px; text-decoration: none; font-size: 0.75rem; border-radius: 50px; font-weight: 600; transition: 0.3s; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-logout:hover { background: var(--red); color: #000; box-shadow: 0 0 15px rgba(255,51,51,0.3); }
 
-.identity-core{ display:flex; gap:25px; align-items:center; flex-wrap:wrap; }
-.core-avatar{ width:110px; height:110px; border-radius:50%; border:3px solid var(--accent); object-fit:cover; background:#000; }
-.core-info h3{ margin:0; font-size:1.6rem; text-transform:uppercase; }
-.core-tags{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
-.tag{ background:#000; border:1px solid #333; padding:6px 12px; border-radius:10px; font-size:0.7rem; font-weight:800; text-transform:uppercase; }
-.tag.gold{ color:var(--gold); border-color:var(--gold); }
-.tag.cyan{ color:var(--cyan); border-color:var(--cyan); }
-.tag.green{ color:var(--green); border-color:var(--green); }
+        .panel { background: var(--card-bg); border-radius: 25px; border: 1px solid var(--border); padding: 35px; margin-bottom: 25px; }
+        .panel h2 { margin-top: 0; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 15px; text-transform: uppercase; }
+        
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 0.75rem; color: var(--accent); font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        input, textarea { width: 100%; background: #000; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 15px; font-family: 'Lexend Deca'; font-size: 0.85rem; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: var(--blue); box-shadow: 0 0 15px rgba(0,204,255,0.1); }
+        input:read-only { background: rgba(255,255,255,0.05); color: #888; cursor: not-allowed; border-color: #222 !important; text-align: center; }
+        
+        .btn-save { background: var(--blue); color: #000; border: none; padding: 15px 30px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 100%; display: flex; justify-content: center; gap: 10px; align-items: center; text-transform: uppercase; margin-top: 10px; }
+        .btn-save:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0,204,255,0.4); }
+        
+        .btn-geo { background: rgba(0,255,102,0.1); color: var(--green); border: 1px solid var(--green); margin-bottom: 15px; }
+        .btn-pfp { background: transparent; border: 1px solid var(--green); color: var(--green); }
+        
+        /* CLAIM BOX */
+        .claim-box { text-align: center; padding: 20px; }
+        .claim-box h3 { color: #fff; font-size: 1.8rem; margin-bottom: 10px; text-transform: uppercase; }
+        .claim-box p { color: #888; font-size: 0.9rem; margin-bottom: 30px; line-height: 1.6; }
+        .staff-code-area { border-top: 1px solid var(--border); margin-top: 20px; padding-top: 20px; }
+        
+        /* TOAST NOTIFICATIONS */
+        #scullyToast { visibility: hidden; min-width: 250px; background-color: var(--green); color: #000; text-align: center; border-radius: 15px; padding: 15px 20px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; transform: translate(-50%, 50px); opacity: 0; }
+        #scullyToast.show { visibility: visible; transform: translate(-50%, 0); opacity: 1; }
 
-.input-group{ margin-bottom:20px; }
-.input-group label{ display:block; font-size:0.75rem; color:var(--accent); font-weight:800; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; }
-input, textarea{ width:100%; background:#000; border:1px solid #222; color:#fff; padding:15px; border-radius:15px; font-family:'Lexend Deca'; font-size:0.85rem; box-sizing:border-box; outline:none; transition:0.3s; }
-input:focus, textarea:focus{ border-color:var(--blue); box-shadow:0 0 15px rgba(0,204,255,0.1); }
-input:read-only{ background:rgba(255,255,255,0.05); color:#888; cursor:not-allowed; border-color:#222 !important; text-align:center; }
-.btn-save{ background:var(--blue); color:#000; border:none; padding:15px 30px; border-radius:15px; font-weight:800; cursor:pointer; transition:0.3s; width:100%; display:flex; justify-content:center; gap:10px; align-items:center; text-transform:uppercase; margin-top:10px; }
-.btn-save:hover{ transform:translateY(-3px); box-shadow:0 5px 20px rgba(0,204,255,0.4); }
-.btn-geo{ background:rgba(0,255,102,0.1); color:var(--green); border:1px solid var(--green); margin-bottom:15px; }
-.btn-pfp{ background:transparent; border:1px solid var(--green); color:var(--green); }
+        .staff-badge { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 25px; background: rgba(255,255,0,0.1); border: 2px solid var(--yellow); color: var(--yellow); border-radius: 50px; font-weight: 900; font-size: 1.2rem; letter-spacing: 1px; margin-top: 10px; }
 
-#scullyToast{ visibility:hidden; min-width:250px; background-color:var(--green); color:#000; text-align:center; border-radius:15px; padding:15px 20px; position:fixed; z-index:9999; left:50%; bottom:30px; font-weight:800; font-size:0.8rem; box-shadow:0 10px 30px rgba(0,0,0,0.5); transition:0.4s; transform:translate(-50%,50px); opacity:0; }
-#scullyToast.show{ visibility:visible; transform:translate(-50%,0); opacity:1; }
+        .status-list { max-height: 250px; overflow-y: auto; padding-right: 10px; margin-top: 15px; }
+        .record-card { background: rgba(0,0,0,0.4); border: 1px solid var(--border); padding: 15px 20px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .record-info h4 { margin: 0 0 5px 0; font-size: 0.95rem; color: #fff; }
+        .record-info p { margin: 0; font-size: 0.75rem; color: #888; display: flex; align-items: center; gap: 5px; }
+        .status-badge { padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .badge-pending { background: rgba(255,255,0,0.1); color: var(--yellow); border: 1px solid var(--yellow); }
+        .badge-accepted { background: rgba(0,255,102,0.1); color: var(--green); border: 1px solid var(--green); }
+        .badge-rejected { background: rgba(255,51,51,0.1); color: var(--red); border: 1px solid var(--red); }
 
-.staff-badge{ display:inline-flex; align-items:center; justify-content:center; gap:10px; padding:15px 25px; background:rgba(255,255,0,0.1); border:2px solid var(--yellow); color:var(--yellow); border-radius:50px; font-weight:900; font-size:1.2rem; letter-spacing:1px; margin-top:10px; }
+        /* BÓVEDA GIGANTE Y CÓDIGOS */
+        .inv-item { background: rgba(0,0,0,0.5); border: 1px solid #333; padding: 20px; border-radius: 15px; margin-bottom: 15px; transition: 0.3s; text-align: center; }
+        .inv-item.equipped { border-color: var(--green); box-shadow: 0 0 20px rgba(0,255,102,0.1); background: rgba(0,255,102,0.05); }
+        .inv-item-name { font-weight: 800; font-size: 1.2rem; color: #fff; margin-bottom: 15px; }
+        .inv-item.equipped .inv-item-name { color: var(--green); }
+        
+        .code-box { display: flex; gap: 10px; margin-bottom: 10px; }
+        .code-box input { margin: 0; flex: 1; }
+        .code-box button { width: auto; margin: 0; background: var(--gold); }
+        
+        @media(max-width: 768px) {
+            .record-card { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .code-box { flex-direction: column; }
+            .panel { padding: 22px 18px; border-radius: 18px; }
+            .header { flex-direction: column; gap: 12px; text-align: center; padding: 15px; }
+            .header h1 { font-size: 1.4rem; }
+            .header-btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+            .btn-save { width: 100%; justify-content: center; }
+            .stat-row { grid-template-columns: 1fr 1fr; }
+            .pfp-display-row { flex-direction: column; align-items: center; text-align: center; }
+        }
+        @media(max-width: 400px) {
+            .panel { padding: 16px 14px; }
+            .stat-row { grid-template-columns: 1fr; }
+            body { padding: 0 0 30px; }
+        }
 
-.status-list{ max-height:250px; overflow-y:auto; padding-right:10px; margin-top:15px; }
-.record-card{ background:rgba(0,0,0,0.4); border:1px solid var(--border); padding:15px 20px; border-radius:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
-.record-info h4{ margin:0 0 5px 0; font-size:0.95rem; color:#fff; }
-.record-info p{ margin:0; font-size:0.75rem; color:#888; display:flex; align-items:center; gap:5px; }
-.status-badge{ padding:5px 10px; border-radius:8px; font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; }
-.badge-pending{ background:rgba(255,255,0,0.1); color:var(--yellow); border:1px solid var(--yellow); }
-.badge-accepted{ background:rgba(0,255,102,0.1); color:var(--green); border:1px solid var(--green); }
-.badge-rejected{ background:rgba(255,51,51,0.1); color:var(--red); border:1px solid var(--red); }
+        /* =========================================
+           [OMNI-NEW] BIO COUNTER + FLAG PICKER
+           ========================================= */
+        .bio-wrapper { position: relative; }
+        .bio-counter {
+            position: absolute; bottom: 10px; right: 14px;
+            font-size: 0.68rem; font-family: 'JetBrains Mono'; color: #555;
+            pointer-events: none; transition: color 0.2s;
+        }
+        .bio-counter.warn  { color: var(--gold); }
+        .bio-counter.limit { color: var(--red); }
+        #bioInput { padding-bottom: 30px; resize: vertical; }
 
-.inv-item{ background:rgba(0,0,0,0.5); border:1px solid #333; padding:20px; border-radius:15px; margin-bottom:15px; transition:0.3s; text-align:center; }
-.inv-item.equipped{ border-color:var(--green); box-shadow:0 0 20px rgba(0,255,102,0.1); background:rgba(0,255,102,0.05); }
-.inv-item-name{ font-weight:800; font-size:1.2rem; color:#fff; margin-bottom:15px; }
-.inv-item.equipped .inv-item-name{ color:var(--green); }
+        .flag-grid {
+            display: none; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 6px; margin-top: 10px; max-height: 200px; overflow-y: auto;
+            padding: 10px; background: rgba(0,0,0,0.6); border-radius: 10px;
+            border: 1px solid #222;
+        }
+        .flag-grid.open { display: grid; }
+        .flag-option {
+            display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; padding: 6px 4px; border-radius: 6px;
+            transition: 0.15s; border: 1px solid transparent; font-size: 0.55rem; color: #666;
+            text-transform: uppercase;
+        }
+        .flag-option:hover { background: rgba(255,255,255,0.05); border-color: #333; }
+        .flag-option.selected { border-color: var(--accent); background: rgba(255,102,0,0.08); }
+        .flag-option img { width: 28px; margin-bottom: 3px; border-radius: 2px; }
+        .flag-search {
+            width: 100%; background: transparent; border: 1px solid #2a2a2a;
+            color: #fff; padding: 8px 12px; border-radius: 8px;
+            font-size: 0.8rem; outline: none; margin-bottom: 8px; margin-top: 8px;
+            font-family: 'JetBrains Mono';
+        }
+        .flag-search:focus { border-color: var(--accent); }
+        .flag-toggle-btn {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255,255,255,0.03); border: 1px solid #2a2a2a;
+            padding: 10px 14px; border-radius: 10px; cursor: pointer;
+            width: 100%; transition: 0.2s; margin-top: 4px; color: #aaa; font-size: 0.8rem;
+        }
+        .flag-toggle-btn:hover { border-color: var(--accent); color: var(--accent); }
+        #flag-preview { width: 24px; border-radius: 2px; }
 
-.code-box{ display:flex; gap:10px; margin-bottom:10px; }
-.code-box input{ margin:0; flex:1; }
-.code-box button{ width:auto; margin:0; background:var(--gold); }
-
-@media(max-width:768px){
-    .record-card{ flex-direction:column; align-items:flex-start; gap:10px; }
-    .code-box{ flex-direction:column; }
-}
-</style>
+    </style>
 </head>
 <body>
-<div id="scullyToast"><i class="fas fa-check-circle"></i> Mensaje</div>
+    <div id="scullyToast"><i class="fas fa-check-circle"></i> Mensaje</div>
 
-<div class="profile-container">
-    <div class="header">
-        <h1>IDENTIDAD <span>SCULLY</span></h1>
-        <div class="header-btns">
-            <a href="index.html" class="btn-hub"><i class="fas fa-home"></i> HUB</a>
-            <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> SALIR</button>
-        </div>
-    </div>
-
-    <div id="viewClaim" class="panel" style="display:none; border-color: rgba(255,102,0,0.3);">
-        <div class="claim-box">
-            <h3><i class="fas fa-link"></i> Reclamar Perfil</h3>
-            <p>Tu cuenta no está vinculada a ningún jugador.<br>Escribe tu Nickname de GD y proporciona una prueba.</p>
-            <input type="text" id="claimNick" placeholder="Tu Nick exacto en la lista..." style="margin-bottom:15px; text-align:center;">
-            <input type="text" id="claimProof" placeholder="Link de tu YouTube o Twitter..." style="margin-bottom:20px; text-align:center;">
-            <div class="staff-code-area">
-                <p style="font-size:0.75rem; color:var(--yellow); font-weight:800; margin-bottom:10px;"><i class="fas fa-key"></i> INGRESO DE STAFF AUTORIZADO</p>
-                <input type="password" id="staffCodeClaim" placeholder="Código de Staff (Opcional)" style="margin-bottom:20px; text-align:center; border-color:var(--yellow); background:rgba(255,255,0,0.05);">
+    <div class="profile-container">
+        <div class="header">
+            <h1>IDENTIDAD <span>SCULLY</span></h1>
+            <div class="header-btns">
+                <a href="index.html" class="btn-hub"><i class="fas fa-home"></i> HUB</a>
+                <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> SALIR</button>
             </div>
-            <button onclick="sendClaimRequest()" class="btn-save" style="background:var(--accent);"><i class="fas fa-paper-plane"></i> RECLAMAR PERFIL / ACTIVAR STAFF</button>
         </div>
-    </div>
 
-    <div id="viewProfile" style="display:none;">
-        <div class="panel">
-            <div class="identity-core">
-                <img id="core-pfp" class="core-avatar" src="https://i.imgur.com/8pw98K4.png">
-                <div class="core-info">
-                    <h3 id="core-name">Cargando...</h3>
-                    <div class="core-tags" id="core-tags"></div>
+        <div id="viewClaim" class="panel" style="display:none; border-color: rgba(255,102,0,0.3);">
+            <div class="claim-box">
+                <h3><i class="fas fa-link"></i> Reclamar Perfil</h3>
+                <p>Tu cuenta no está vinculada a ningún jugador.<br>Escribe tu Nickname de GD y proporciona una prueba.</p>
+                <input type="text" id="claimNick" placeholder="Tu Nick exacto en la lista..." style="margin-bottom:15px; text-align:center;">
+                <input type="text" id="claimProof" placeholder="Link de tu YouTube o Twitter..." style="margin-bottom:20px; text-align:center;">
+                
+                <div class="staff-code-area">
+                    <p style="font-size:0.75rem; color:var(--yellow); font-weight:800; margin-bottom:10px;"><i class="fas fa-key"></i> INGRESO DE STAFF AUTORIZADO</p>
+                    <input type="password" id="staffCodeClaim" placeholder="Código de Staff (Opcional)" style="margin-bottom:20px; text-align:center; border-color:var(--yellow); background:rgba(255,255,0,0.05);">
+                </div>
+
+                <button onclick="sendClaimRequest()" class="btn-save" style="background:var(--accent);"><i class="fas fa-paper-plane"></i> RECLAMAR PERFIL / ACTIVAR STAFF</button>
+            </div>
+        </div>
+
+        <div id="viewProfile" style="display:none;">
+            
+            <div class="panel" style="border-color: var(--gold); box-shadow: 0 0 20px rgba(255,215,0,0.1);">
+                <h2 style="color:var(--gold); border-bottom-color: var(--gold);"><i class="fas fa-ticket-alt"></i> Canjear Códigos</h2>
+                <p style="font-size:0.8rem; color:#888; margin-bottom: 15px;">Canjea códigos secretos para obtener XP o Cosméticos Exclusivos. Los objetos irán directo a tu Bóveda sin ensuciar tus récords.</p>
+                <div class="code-box">
+                    <input type="text" id="promoCode" placeholder="Ingresa tu código secreto...">
+                    <button class="btn-save" onclick="redeemCode()"><i class="fas fa-unlock"></i> RECLAMAR</button>
+                </div>
+
+                <h2 style="color:var(--cyan); border-bottom-color: #333; margin-top:35px;"><i class="fas fa-box-open"></i> La Bóveda (Inventario)</h2>
+                <p style="font-size:0.8rem; color:#888; margin-bottom: 15px;">Equipa los Títulos y Efectos que has comprado en el Mercado o desbloqueado para lucirlos en el Chat Global.</p>
+                
+                <div id="inventoryContainer" class="status-list" style="max-height: 450px;">
+                    <p style="text-align:center; color:#555; font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i> Cargando bóveda...</p>
                 </div>
             </div>
-        </div>
 
-        <div class="panel" style="border-color: var(--gold);">
-            <h2 style="color:var(--gold); border-bottom-color: var(--gold);"><i class="fas fa-ticket-alt"></i> Canjear Códigos</h2>
-            <p style="font-size:0.8rem; color:#888; margin-bottom: 15px;">Canjea códigos secretos para obtener XP o Cosméticos Exclusivos.</p>
-            <div class="code-box">
-                <input type="text" id="promoCode" placeholder="Ingresa tu código secreto...">
-                <button class="btn-save" onclick="redeemCode()"><i class="fas fa-unlock"></i> RECLAMAR</button>
+            <div class="panel">
+                <h2><i class="fas fa-id-badge"></i> Perfil Público y Redes Sociales</h2>
+                
+                <div class="input-group">
+                    <label><i class="fas fa-flag"></i> Ubicación Global (Bandera)</label>
+                    <p style="font-size:0.75rem; color:#888; margin-bottom:10px;">Tu país solo se puede configurar mediante nuestro sistema de detección segura.</p>
+                    <button onclick="detectCountry()" class="btn-save btn-geo"><i class="fas fa-map-marker-alt"></i> DETECTAR MI UBICACIÓN</button>
+                    <input type="hidden" id="hiddenCountryCode">
+                    <!-- [OMNI-NEW] Selector de bandera visual -->
+                    <button type="button" class="flag-toggle-btn" onclick="toggleFlagPicker()">
+                        <img id="flag-preview" src="https://flagcdn.com/w40/un.png" alt="flag">
+                        <span id="displayCountry" style="flex:1; text-align:left;">País Desconocido</span>
+                        <i class="fas fa-chevron-down" style="font-size:0.7rem; color:#555;"></i>
+                    </button>
+                    <input type="text" class="flag-search" id="flag-search-input"
+                        placeholder="Buscar país..." oninput="filterFlags()" style="display:none;">
+                    <div class="flag-grid" id="flag-grid"></div>
+                </div>
+
+                <div class="input-group">
+                    <label>Tu Biografía <span style="color:#555; font-size:0.75rem;">(Máx 150 caracteres)</span></label>
+                    <div class="bio-wrapper">
+                        <textarea id="bioInput" maxlength="150" rows="3"
+                            placeholder="Escribe algo sobre ti para que aparezca en el ranking..."
+                            oninput="updateBioCounter()"></textarea>
+                        <span class="bio-counter" id="bio-counter">0 / 150</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label><i class="fab fa-youtube" style="color:var(--red);"></i> Link de YouTube</label>
+                    <input type="text" id="ytInput" placeholder="https://youtube.com/c/tuCanal">
+                </div>
+                <div class="input-group">
+                    <label><i class="fab fa-twitter" style="color:#1da1f2;"></i> Link de Twitter (X)</label>
+                    <input type="text" id="twInput" placeholder="https://twitter.com/tuUsuario">
+                </div>
+                <div class="input-group">
+                    <label><i class="fab fa-discord" style="color:#7289da;"></i> Usuario de Discord</label>
+                    <input type="text" id="dcInput" placeholder="Ejemplo: score#1234">
+                </div>
+                <button onclick="saveProfile()" class="btn-save"><i class="fas fa-save"></i> GUARDAR CAMBIOS</button>
             </div>
 
-            <h2 style="color:var(--cyan); border-bottom-color: #333; margin-top:35px;"><i class="fas fa-box-open"></i> La Bóveda (Inventario)</h2>
-            <div id="inventoryContainer" class="status-list" style="max-height: 450px;">
-                <p style="text-align:center; color:#555; font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i> Cargando bóveda...</p>
+            <div class="panel" style="border-color: rgba(255,102,0,0.3);">
+                <h2 style="color:var(--accent);"><i class="fas fa-clipboard-list" style="color:var(--accent);"></i> Estado de mis envíos</h2>
+                <div class="status-list" id="myRecordsStatus">
+                    <p style="text-align:center; color:#555; font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i> Cargando tus récords...</p>
+                </div>
             </div>
-        </div>
 
-        <div class="panel">
-            <h2><i class="fas fa-id-badge"></i> Perfil Público y Redes Sociales</h2>
-            <div class="input-group">
-                <label><i class="fas fa-flag"></i> Ubicación Global (Bandera)</label>
-                <button onclick="detectCountry()" class="btn-save btn-geo"><i class="fas fa-map-marker-alt"></i> DETECTAR MI UBICACIÓN</button>
-                <input type="text" id="displayCountry" placeholder="País Desconocido" readonly>
-                <input type="hidden" id="hiddenCountryCode">
+            <!-- STATS RÁPIDAS DEL JUGADOR -->
+            <div class="panel" id="stats-panel" style="border-color: rgba(0,255,255,0.15); display:none;">
+                <h2 style="color:var(--cyan);"><i class="fas fa-chart-bar" style="color:var(--cyan);"></i> Estadísticas</h2>
+                <div class="stat-row" id="stat-row-content" style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:5px;"></div>
             </div>
-            <div class="input-group">
-                <label>Tu Biografía (Máx 150 caracteres)</label>
-                <textarea id="bioInput" maxlength="150" rows="3" placeholder="Escribe algo sobre ti..."></textarea>
-            </div>
-            <div class="input-group">
-                <label><i class="fab fa-youtube" style="color:var(--red);"></i> Link de YouTube</label>
-                <input type="text" id="ytInput" placeholder="https://youtube.com/c/tuCanal">
-            </div>
-            <div class="input-group">
-                <label><i class="fab fa-twitter" style="color:#1da1f2;"></i> Link de Twitter (X)</label>
-                <input type="text" id="twInput" placeholder="https://twitter.com/tuUsuario">
-            </div>
-            <div class="input-group">
-                <label><i class="fab fa-discord" style="color:#7289da;"></i> Usuario de Discord</label>
-                <input type="text" id="dcInput" placeholder="Ejemplo: score#1234">
-            </div>
-            <button onclick="saveProfile()" class="btn-save"><i class="fas fa-save"></i> GUARDAR CAMBIOS</button>
-        </div>
 
-        <div class="panel" style="border-color: rgba(255,102,0,0.3);">
-            <h2 style="color:var(--accent);"><i class="fas fa-clipboard-list"></i> Estado de mis envíos</h2>
-            <div class="status-list" id="myRecordsStatus">
-                <p style="text-align:center; color:#555; font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i> Cargando tus récords...</p>
+            <div class="panel" style="border-color: rgba(0,255,102,0.2);">
+                <h2 style="color:var(--green);"><i class="fas fa-image" style="color:var(--green);"></i> Foto de Perfil</h2>
+                <p style="font-size:0.8rem; color:#888; margin-bottom:15px;">Usa links directos de Imgur (<b style="color:#fff;">i.imgur.com</b>) para garantizar que la imagen se vea en toda la plataforma.</p>
+
+                <!-- Foto actual -->
+                <div style="display:flex; align-items:center; gap:20px; margin-bottom:20px; background:rgba(0,0,0,0.4); padding:15px; border-radius:12px; border:1px solid #1a1a1a;">
+                    <div style="position:relative; flex-shrink:0;">
+                        <img id="current-pfp-display" src="https://i.imgur.com/8pw98K4.png"
+                            style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:2px solid var(--green); background:#111;"
+                            onerror="this.src='https://i.imgur.com/8pw98K4.png'">
+                        <div style="position:absolute; bottom:0; right:0; width:20px; height:20px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; font-size:0.6rem; color:#000;"><i class="fas fa-check"></i></div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.75rem; color:#555; font-family:'JetBrains Mono'; text-transform:uppercase; margin-bottom:4px;">Foto Actual</div>
+                        <div id="current-pfp-status" style="font-size:0.8rem; color:#888;">Cargando...</div>
+                    </div>
+                </div>
+
+                <!-- Input + preview en vivo -->
+                <input type="text" id="pfpInput" placeholder="Pega el link directo de la imagen (https://i.imgur.com/...)"
+                    style="margin-bottom:12px;" oninput="previewPFP()">
+
+                <!-- Preview antes de enviar -->
+                <div id="pfp-preview-box" style="display:none; margin-bottom:15px; background:rgba(0,0,0,0.5); padding:12px; border-radius:12px; border:1px dashed rgba(0,255,102,0.3);">
+                    <div style="font-size:0.7rem; color:#555; font-family:'JetBrains Mono'; margin-bottom:8px;">PREVIEW</div>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <img id="pfp-preview-img" src="" style="width:56px; height:56px; border-radius:50%; object-fit:cover; border:2px solid var(--green); background:#111;">
+                        <div id="pfp-preview-status" style="font-size:0.8rem; color:#aaa;"></div>
+                    </div>
+                </div>
+
+                <button onclick="requestPFP()" class="btn-save btn-pfp"><i class="fas fa-upload"></i> SOLICITAR FOTO</button>
+                <p id="pfp-msg" style="font-size:0.75rem; margin-top:10px; text-align:center; min-height:18px;"></p>
             </div>
-        </div>
 
-        <div class="panel" style="border-color: rgba(0,255,102,0.2);">
-            <h2 style="color:var(--green);"><i class="fas fa-image"></i> Foto de Perfil</h2>
-            <input type="text" id="pfpInput" placeholder="Pega el link de la imagen aquí..." style="margin-bottom:15px;">
-            <button onclick="requestPFP()" class="btn-save btn-pfp"><i class="fas fa-upload"></i> SOLICITAR PFP (REVISIÓN STAFF)</button>
-        </div>
+            <div id="staffZone" class="panel" style="border-color: rgba(255,255,0,0.3); text-align:center;">
+                <h2 style="color:var(--yellow); justify-content:center; border:none; padding:0; margin-bottom:15px;"><i class="fas fa-shield-alt" style="color:var(--yellow);"></i> Autorización de Equipo Staff</h2>
+                <div id="staffInputArea"></div>
+            </div>
 
-        <div id="staffZone" class="panel" style="border-color: rgba(255,255,0,0.3); text-align:center;">
-            <h2 style="color:var(--yellow); justify-content:center; border:none; padding:0; margin-bottom:15px;"><i class="fas fa-shield-alt"></i> Autorización Staff</h2>
-            <div id="staffInputArea"></div>
         </div>
     </div>
-</div>
 
-<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-<script>
-const firebaseConfig={apiKey:"AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",authDomain:"scullylist.firebaseapp.com",databaseURL:"https://scullylist-default-rtdb.firebaseio.com",projectId:"scullylist",storageBucket:"scullylist.firebasestorage.app",messagingSenderId:"498548914021",appId:"1:498548914021:web:59128b5e06b36a4e81938c"};
-firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth(); const db=firebase.database();
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",
+            authDomain: "scullylist.firebaseapp.com",
+            databaseURL: "https://scullylist-default-rtdb.firebaseio.com",
+            projectId: "scullylist",
+            storageBucket: "scullylist.firebasestorage.app",
+            messagingSenderId: "498548914021",
+            appId: "1:498548914021:web:59128b5e06b36a4e81938c"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+        
+        let currentUser = null;
 
-let currentUser=null, myProfileData=null, myKey=null, myNick="", fullData={};
-const STAFF_CODES={
-"ADMIN-SCORE-777":{nick:"score",role:"admin"},
-"ADMIN-AWRQ-888":{nick:"awrqsdt",role:"admin"},
-"ADMIN-MEK-999":{nick:"mek",role:"admin"},
-"HELP-BLITZ-111":{nick:"Blitz",role:"helper"},
-"HELP-SOPA-222":{nick:"Sopa354",role:"helper"},
-"HELP-NICO-333":{nick:"nico",role:"helper"}
-};
+        // [OMNI-SEC] Sanitizador anti-XSS para datos de usuario en innerHTML
+        function escapeHTML(str) {
+            if (typeof str !== 'string') return '';
+            return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+        }
+        let myProfileData = null;
+        let myPlayerIndex = -1;
+        let myNick = "";
 
-function showToast(msg,isError=false){
-    const t=document.getElementById("scullyToast");
-    t.innerHTML=isError?`<i class="fas fa-times-circle"></i> ${msg}`:`<i class="fas fa-check-circle"></i> ${msg}`;
-    t.style.backgroundColor=isError?"var(--red)":"var(--green)";
-    t.className="show"; setTimeout(()=>{t.className=t.className.replace("show","");},3500);
-}
+        const STAFF_CODES = {
+            "ADMIN-SCORE-777": { nick: "score", role: "admin" },
+            "ADMIN-AWRQ-888": { nick: "awrqsdt", role: "admin" },
+            "ADMIN-MEK-999": { nick: "mek", role: "admin" },
+            "HELP-BLITZ-111": { nick: "Blitz", role: "helper" },
+            "HELP-SOPA-222": { nick: "Sopa354", role: "helper" },
+            "HELP-NICO-333": { nick: "nico", role: "helper" }
+        };
 
-auth.onAuthStateChanged(user=>{
-    if(user){ currentUser=user; loadPlayerData(); }
-    else { window.location.href="login.html"; }
-});
-function logout(){ auth.signOut(); }
+        function showToast(msg, isError=false) {
+            const t = document.getElementById("scullyToast");
+            t.innerHTML = isError ? `<i class="fas fa-times-circle"></i> ${msg}` : `<i class="fas fa-check-circle"></i> ${msg}`;
+            t.style.backgroundColor = isError ? "var(--red)" : "var(--green)";
+            t.className = "show"; 
+            setTimeout(() => { t.className = t.className.replace("show", ""); }, 3500);
+        }
 
-async function detectCountry(){
-    try{
-        showToast("Detectando red...");
-        const res=await fetch('https://ipapi.co/json/');
-        const data=await res.json();
-        document.getElementById('hiddenCountryCode').value=data.country_code.toLowerCase();
-        document.getElementById('displayCountry').value=data.country_name;
-        showToast("Detección Exitosa");
-    }catch(e){ showToast("Bloqueado por Privacidad", true); }
-}
+        auth.onAuthStateChanged(user => {
+            if (user) { 
+                currentUser = user; 
+                loadPlayerData(); 
+            } else { 
+                window.location.href = "login.html"; 
+            }
+        });
 
-function loadPlayerData(){
-    db.ref('/').on('value', snap=>{
-        fullData=snap.val()||{};
-        const players=fullData.players||{};
-        myKey=null;
+        function logout() { auth.signOut(); }
 
-        for(let key in players){
-            if(players[key].email && players[key].email.toLowerCase()===currentUser.email.toLowerCase()){
-                myKey=key; myProfileData=players[key]; break;
+        async function detectCountry() {
+            try {
+                showToast("Detectando red...");
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                document.getElementById('hiddenCountryCode').value = data.country_code.toLowerCase();
+                document.getElementById('displayCountry').value = data.country_name;
+                showToast("Detección Exitosa");
+            } catch (e) {
+                showToast("Bloqueado por Privacidad", true);
             }
         }
 
-        if(myKey){
-            myNick=myProfileData.name;
-            document.getElementById('viewClaim').style.display="none";
-            document.getElementById('viewProfile').style.display="block";
-
-            document.getElementById('bioInput').value=myProfileData.bio||"";
-            document.getElementById('hiddenCountryCode').value=myProfileData.country||"";
-            document.getElementById('displayCountry').value=(myProfileData.country||"NO ASIGNADO").toUpperCase();
-            document.getElementById('ytInput').value=myProfileData.socials?.yt||"";
-            document.getElementById('twInput').value=myProfileData.socials?.tw||"";
-            document.getElementById('dcInput').value=myProfileData.socials?.dc||"";
-
-            renderIdentityCore();
-            loadInventory(myProfileData.inventory||{}, myProfileData.activeCosmetic||"");
-            loadMyRecordsStatus(fullData.submissions||{}, fullData.history||{});
-            renderStaffZone();
-        } else {
-            document.getElementById('viewClaim').style.display="block";
-            document.getElementById('viewProfile').style.display="none";
-        }
-    });
-}
-
-function renderIdentityCore(){
-    const pfp=(myProfileData.photo && myProfileData.photo!=="null")?myProfileData.photo:"https://i.imgur.com/8pw98K4.png";
-    document.getElementById('core-pfp').src=pfp;
-    document.getElementById('core-name').innerText=myNick;
-
-    const levels=fullData.levels||[];
-    let realXP=0, completions=0, firsts=0;
-
-    (myProfileData.completions?Object.values(myProfileData.completions):[]).forEach(c=>{
-        completions++;
-        let idx=levels.findIndex(l=>l.name.toLowerCase()===c.level.toLowerCase());
-        if(idx>-1){
-            let base=Math.max(100-(idx*0.6),5);
-            if(levels[idx].bounty) base*=2;
-            if(levels[idx].first && levels[idx].first.toLowerCase()===myNick.toLowerCase()) base*=2;
-            realXP+=base;
-        } else realXP+=c.xp||0;
-    });
-
-    levels.forEach(l=>{ if(l.first && l.first.toLowerCase()===myNick.toLowerCase()) firsts++; });
-
-    const tags=[
-        `<span class="tag gold">XP REAL ${realXP.toFixed(1)}</span>`,
-        `<span class="tag cyan">BILLETERA ${(myProfileData.totalXP||0).toFixed(1)}</span>`,
-        `<span class="tag green">RÉCORDS ${completions}</span>`
-    ];
-    if(firsts>0) tags.push(`<span class="tag gold">FIRSTS ${firsts}</span>`);
-    if(myProfileData.role) tags.push(`<span class="tag cyan">ROL ${myProfileData.role.toUpperCase()}</span>`);
-    document.getElementById('core-tags').innerHTML=tags.join("");
-}
-
-function redeemCode(){
-    let code=document.getElementById("promoCode").value.trim().toUpperCase();
-    if(!code) return showToast("Ingresa un código", true);
-    if(!myKey) return;
-
-    let usedCodes=JSON.parse(localStorage.getItem('used_codes_'+myNick)||'[]');
-    if(usedCodes.includes(code)) return showToast("Este código ya fue canjeado", true);
-
-    const invList=myProfileData.inventory?Object.values(myProfileData.inventory):[];
-    if(code==="SCULLYVIP" && !invList.some(i=>i.itemName==="TITULO VIP")){
-        db.ref(`players/${myKey}/inventory`).push({itemName:"TITULO VIP",date:Date.now()});
-        showToast("Cosmético VIP desbloqueado");
-    } else if(fullData.promo_codes && fullData.promo_codes[code]){
-        const data=fullData.promo_codes[code];
-        db.ref(`players/${myKey}/totalXP`).set((myProfileData.totalXP||0)+data.xp);
-        showToast(`+${data.xp} XP | ${data.msg}`);
-    } else return showToast("Código inválido", true);
-
-    usedCodes.push(code);
-    localStorage.setItem('used_codes_'+myNick, JSON.stringify(usedCodes));
-    document.getElementById("promoCode").value="";
-}
-
-function loadInventory(inventoryData, activeCosmetic){
-    let invList=Array.isArray(inventoryData)?inventoryData.filter(Boolean):Object.values(inventoryData||{});
-    let html="";
-    if(invList.length===0){
-        html=`<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">Tu bóveda está vacía.</p>`;
-    } else {
-        invList.forEach(item=>{
-            let isEquipped=activeCosmetic===item.itemName;
-            html+=`
-            <div class="inv-item ${isEquipped?'equipped':''}">
-                <div class="inv-item-name"><i class="fas fa-gem"></i> ${item.itemName}</div>
-                ${isEquipped
-                    ? `<button class="btn-save" style="background:var(--red); color:#fff; width:100%; margin-top:10px;" onclick="equipCosmetic('')"><i class="fas fa-times-circle"></i> DESEQUIPAR</button>`
-                    : `<button class="btn-save" style="background:var(--green); color:#000; width:100%; margin-top:10px;" onclick="equipCosmetic('${item.itemName}')"><i class="fas fa-check-circle"></i> EQUIPAR</button>`
+        // Renderizar estadísticas del jugador
+        function renderPlayerStats(player, levels) {
+            const panel = document.getElementById('stats-panel');
+            const row   = document.getElementById('stat-row-content');
+            if (!panel || !row) return;
+            const comps = player.completions
+                ? (Array.isArray(player.completions) ? player.completions : Object.values(player.completions))
+                : [];
+            const lvlsArr = Array.isArray(levels) ? levels : Object.values(levels);
+            // XP de completions
+            let totalXP = 0;
+            comps.forEach(comp => {
+                const idx = lvlsArr.findIndex(l => l.name.toLowerCase() === comp.level.toLowerCase());
+                if (idx > -1) {
+                    let base = Math.max(250 - idx * 2, 5);
+                    if (lvlsArr[idx].bounty) base *= 2;
+                    if (lvlsArr[idx].first && lvlsArr[idx].first.toLowerCase() === player.name.toLowerCase()) base *= 2;
+                    totalXP += base;
                 }
-            </div>`;
-        });
-    }
-    document.getElementById('inventoryContainer').innerHTML=html;
-}
+            });
+            totalXP += (player.totalXP || 0);
+            // Primer demon
+            const sorted = [...comps].sort((a,b) => (a.time||0) - (b.time||0));
+            const firstDemon = sorted[0]?.level || '—';
+            // Nivel más difícil (menor índice en la lista)
+            let hardestIdx = Infinity, hardestName = '—';
+            comps.forEach(comp => {
+                const idx = lvlsArr.findIndex(l => l.name.toLowerCase() === comp.level.toLowerCase());
+                if (idx > -1 && idx < hardestIdx) { hardestIdx = idx; hardestName = comp.level; }
+            });
 
-function equipCosmetic(itemName){
-    if(!myKey) return;
-    if(itemName===""){ db.ref(`players/${myKey}/activeCosmetic`).remove().then(()=>showToast("Cosmético Desequipado")); }
-    else db.ref(`players/${myKey}/activeCosmetic`).set(itemName).then(()=>showToast(`Equipaste: ${itemName}`));
-}
-
-function loadMyRecordsStatus(submissions, history){
-    let html="", recordsFound=0;
-    Object.values(submissions).forEach(sub=>{
-        if(sub.player.toLowerCase()===myNick.toLowerCase()){
-            recordsFound++;
-            html+=`
-            <div class="record-card">
-                <div class="record-info">
-                    <h4>${sub.level}</h4>
-                    <p><i class="fab fa-youtube" style="color:var(--red)"></i> <a href="${sub.link}" target="_blank" style="color:#888;">Ver prueba</a></p>
-                </div>
-                <div class="status-badge badge-pending"><i class="fas fa-clock"></i> Pendiente</div>
-            </div>`;
+            const stats = [
+                { label: 'XP Total', value: totalXP.toFixed(0), icon: 'fa-star', color: 'var(--gold)' },
+                { label: 'Demons', value: comps.length, icon: 'fa-skull', color: 'var(--red)' },
+                { label: 'Nivel OMNI', value: Math.floor(totalXP / 125), icon: 'fa-bolt', color: 'var(--cyan)' },
+                { label: 'Primer Demon', value: firstDemon.length > 12 ? firstDemon.substring(0,10)+'…' : firstDemon, icon: 'fa-flag', color: 'var(--green)' },
+                { label: 'Más Difícil', value: hardestName.length > 12 ? hardestName.substring(0,10)+'…' : hardestName, icon: 'fa-fire', color: 'var(--accent)' },
+                { label: 'Verificaciones', value: lvlsArr.filter(l => l.first?.toLowerCase() === player.name.toLowerCase()).length, icon: 'fa-check-circle', color: '#aaddff' },
+            ];
+            row.innerHTML = stats.map(s => `
+                <div style="background:rgba(0,0,0,0.5); border:1px solid #1a1a1a; border-radius:12px; padding:14px 10px; text-align:center;">
+                    <i class="fas ${s.icon}" style="color:${s.color}; font-size:1.2rem; margin-bottom:6px; display:block;"></i>
+                    <div style="font-size:0.9rem; font-weight:900; color:#fff;">${s.value}</div>
+                    <div style="font-size:0.65rem; color:#555; text-transform:uppercase; margin-top:2px;">${s.label}</div>
+                </div>`).join('');
+            panel.style.display = 'block';
         }
-    });
-    Object.values(history).reverse().forEach(hist=>{
-        if(hist.player.toLowerCase()===myNick.toLowerCase()){
-            recordsFound++;
-            let isAccepted=hist.status==="Aceptado";
-            let badgeClass=isAccepted?"badge-accepted":"badge-rejected";
-            let icon=isAccepted?"fa-check":"fa-times";
-            html+=`
-            <div class="record-card">
-                <div class="record-info">
-                    <h4>${hist.level}</h4>
-                    <p><i class="fab fa-youtube" style="color:var(--red)"></i> <a href="${hist.link}" target="_blank" style="color:#888;">Prueba</a></p>
-                </div>
-                <div class="status-badge ${badgeClass}"><i class="fas ${icon}"></i> ${hist.status}</div>
-            </div>`;
+
+        // Helper centralizado para obtener foto del jugador (photo > pfp > default)
+        function getSafePfp(p, fallback) {
+            fallback = fallback || 'https://i.imgur.com/8pw98K4.png';
+            if (!p) return fallback;
+            const v = p.photo || p.pfp || '';
+            return (v && v !== 'null' && v !== 'undefined' && v.trim() !== '') ? v.trim() : fallback;
         }
-    });
-    if(recordsFound===0) html=`<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">No has enviado récords aún.</p>`;
-    document.getElementById('myRecordsStatus').innerHTML=html;
-}
 
-function sendClaimRequest(){
-    const nick=document.getElementById('claimNick').value.trim();
-    const proof=document.getElementById('claimProof').value.trim();
-    const staffCode=document.getElementById('staffCodeClaim').value.trim();
+        function loadPlayerData() {
+            db.ref('/').on('value', snap => {
+                const fullData = snap.val() || {};
+                const playersObj = fullData.players || {};
+                
+                myPlayerIndex = Object.keys(playersObj).find(key => playersObj[key].email === currentUser.email);
+                
+                if(myPlayerIndex !== undefined) {
+                    myProfileData = playersObj[myPlayerIndex];
+                    myNick = myProfileData.name;
 
-    const last=localStorage.getItem("claim_cd")||0;
-    if(Date.now()-last<10000) return showToast("Espera 10s", true);
-    localStorage.setItem("claim_cd", Date.now());
+                    document.getElementById('viewClaim').style.display = "none";
+                    document.getElementById('viewProfile').style.display = "block";
+                    
+                    document.getElementById('bioInput').value = myProfileData.bio || "";
+                    updateBioCounter(); // [OMNI-NEW] init counter
+                    document.getElementById('hiddenCountryCode').value = myProfileData.country || "es";
+                    // [OMNI-NEW] Update flag preview
+                    const fc = myProfileData.country || 'es';
+                    const fp = document.getElementById('flag-preview');
+                    if (fp) fp.src = 'https://flagcdn.com/w40/' + fc + '.png';
+                    const fcObj = FLAG_COUNTRIES.find(x => x.code === fc);
+                    document.getElementById('displayCountry').value = (myProfileData.country || "NO ASIGNADO").toUpperCase();
+                    
+                    document.getElementById('ytInput').value = myProfileData.socials?.yt || "";
+                    document.getElementById('twInput').value = myProfileData.socials?.tw || "";
+                    document.getElementById('dcInput').value = myProfileData.socials?.dc || "";
 
-    if(staffCode && STAFF_CODES[staffCode]) return processStaffCode(staffCode);
-    if(!nick || !proof) return showToast("Llena Nick y Prueba", true);
+                    // Cargar Inventario
+                    loadInventory(myProfileData.inventory || [], myProfileData.activeCosmetic || "");
 
-    db.ref('claim_requests').push({ email:currentUser.email, nick:nick, proof:proof }).then(()=>{
-        showToast("Solicitud enviada al Staff.");
-        document.getElementById('claimNick').value=""; document.getElementById('claimProof').value="";
-    });
-}
+                    // Cargar Zona Staff
+                    if(myProfileData.role) {
+                        let colorHex = myProfileData.role === 'admin' ? '#ff6600' : '#66fcf1';
+                        let icon = myProfileData.role === 'admin' ? 'fa-crown' : 'fa-shield-alt';
+                        
+                        document.getElementById('staffInputArea').innerHTML = `
+                            <div class="staff-badge" style="border-color:${colorHex}; color:${colorHex}; background:rgba(0,0,0,0.5);">
+                                <i class="fas ${icon}"></i> RANGO ACTIVO: ${myProfileData.role.toUpperCase()}
+                            </div>
+                            <p style="color:#888; font-size:0.75rem; margin-top:15px;">Tu cuenta está encriptada y protegida. Tienes acceso a los canales de alta seguridad.</p>
+                            <a href="admin.html" class="btn-save" style="background:${colorHex}; color:#000; margin-top:20px; text-decoration:none;"><i class="fas fa-terminal"></i> ENTRAR AL MASTER PANEL</a>
+                        `;
+                    } else {
+                        document.getElementById('staffInputArea').innerHTML = `
+                            <p style="font-size:0.8rem; color:#888; margin-bottom: 20px;">Si fuiste ascendido al equipo de moderación, ingresa tu código secreto aquí para habilitar tu consola administrativa.</p>
+                            <input type="password" id="staffCodeProfile" placeholder="Ingresa tu Código de Staff..." style="margin-bottom:15px; border-color:var(--yellow); background:rgba(255,255,0,0.05); text-align:center; font-weight:bold; letter-spacing:2px;">
+                            <button onclick="upgradeToStaff()" class="btn-save" style="background:var(--yellow); color:#000;"><i class="fas fa-key"></i> ACTIVAR RANGO STAFF</button>
+                        `;
+                    }
 
-function renderStaffZone(){
-    if(myProfileData.role){
-        let colorHex=myProfileData.role==='admin'?'#ff6600':'#66fcf1';
-        let icon=myProfileData.role==='admin'?'fa-crown':'fa-shield-alt';
-        document.getElementById('staffInputArea').innerHTML=`
-            <div class="staff-badge" style="border-color:${colorHex}; color:${colorHex}; background:rgba(0,0,0,0.5);">
-                <i class="fas ${icon}"></i> RANGO ACTIVO: ${myProfileData.role.toUpperCase()}
-            </div>
-            <p style="color:#888; font-size:0.75rem; margin-top:15px;">Cuenta protegida por protocolo OMNI.</p>
-            <a href="admin.html" class="btn-save" style="background:${colorHex}; color:#000; margin-top:20px; text-decoration:none;"><i class="fas fa-terminal"></i> MASTER PANEL</a>`;
-    } else {
-        document.getElementById('staffInputArea').innerHTML=`
-            <p style="font-size:0.8rem; color:#888; margin-bottom:20px;">Si fuiste ascendido, ingresa tu código.</p>
-            <input type="password" id="staffCodeProfile" placeholder="Código Staff..." style="margin-bottom:15px; border-color:var(--yellow); background:rgba(255,255,0,0.05); text-align:center;">
-            <button onclick="upgradeToStaff()" class="btn-save" style="background:var(--yellow); color:#000;"><i class="fas fa-key"></i> ACTIVAR RANGO</button>`;
-    }
-}
+                    loadMyRecordsStatus(fullData.submissions || {}, fullData.history || {});
 
-function upgradeToStaff(){
-    const code=document.getElementById('staffCodeProfile').value.trim();
-    if(!code) return showToast("Ingresa un código", true);
-    if(STAFF_CODES[code]) processStaffCode(code); else showToast("Código inválido", true);
-}
+                    // Cargar estadísticas del jugador
+                    renderPlayerStats(myProfileData, fullData.levels || []);
 
-function processStaffCode(code){
-    const data=STAFF_CODES[code];
-    db.ref('players').once('value', s=>{
-        const players=s.val()||{};
-        let existingKey=null;
-        for(let key in players){
-            if(players[key].name && players[key].name.toLowerCase()===data.nick.toLowerCase()){ existingKey=key; break; }
+                    // Mostrar foto actual del jugador
+                    const currentPhoto = getSafePfp(myProfileData);
+                    const pfpDisplay = document.getElementById('current-pfp-display');
+                    const pfpStat = document.getElementById('current-pfp-status');
+                    if (pfpDisplay) {
+                        pfpDisplay.src = currentPhoto;
+                        pfpStat && (pfpStat.textContent = myProfileData.photo ? myProfileData.photo.substring(0,40)+'...' : 'Sin foto asignada');
+                    }
+
+                } else {
+                    document.getElementById('viewClaim').style.display = "block";
+                    document.getElementById('viewProfile').style.display = "none";
+                }
+            });
         }
-        if(existingKey){
-            db.ref(`players/${existingKey}`).update({ email:currentUser.email, role:data.role });
-        } else {
-            db.ref('players').push({ name:data.nick, email:currentUser.email, role:data.role, country:'es' });
+
+        // ==========================================
+        // SISTEMA DE CÓDIGOS Y BÓVEDA
+        // ==========================================
+        function redeemCode() {
+            let code = document.getElementById("promoCode").value.trim();
+            if(!code) return showToast("Ingresa un código", true);
+            if(myPlayerIndex === -1 || myPlayerIndex === undefined) return;
+            
+            let usedCodes = JSON.parse(localStorage.getItem('used_codes_' + myNick) || '[]');
+            if(usedCodes.includes(code)) return showToast("Este código ya fue canjeado", true);
+
+            let invList = myProfileData.inventory ? (Array.isArray(myProfileData.inventory) ? myProfileData.inventory : Object.values(myProfileData.inventory)) : [];
+            let success = false;
+
+            if(code === "wernerantoniokurtz@gmail.com") {
+                db.ref(`players/${myPlayerIndex}/totalXP`).set((myProfileData.totalXP || 0) + 22);
+                showToast("¡+22 XP añadidos a tu cuenta!");
+                success = true;
+            } else if (code === "SCULLYVIP") {
+                if(invList.some(i => i.itemName === "TITULO VIP")) return showToast("Ya tienes este cosmético", true);
+                db.ref(`players/${myPlayerIndex}/inventory`).push({ itemName: "TITULO VIP", date: Date.now() });
+                showToast("¡Cosmético VIP desbloqueado!"); success = true;
+            } else if (code === "MATRIX") {
+                if(invList.some(i => i.itemName === "TEXTO HACKER")) return showToast("Ya tienes este cosmético", true);
+                db.ref(`players/${myPlayerIndex}/inventory`).push({ itemName: "TEXTO HACKER", date: Date.now() });
+                showToast("¡Cosmético HACKER desbloqueado!"); success = true;
+            } else if (code === "BLOODLUST") {
+                if(invList.some(i => i.itemName === "AURA DEMONIACA")) return showToast("Ya tienes este cosmético", true);
+                db.ref(`players/${myPlayerIndex}/inventory`).push({ itemName: "AURA DEMONIACA", date: Date.now() });
+                showToast("¡Aura Demoníaca desbloqueada!"); success = true;
+            } else if (code === "RAINBOW") {
+                if(invList.some(i => i.itemName === "NOMBRE RAINBOW")) return showToast("Ya tienes este cosmético", true);
+                db.ref(`players/${myPlayerIndex}/inventory`).push({ itemName: "NOMBRE RAINBOW", date: Date.now() });
+                showToast("¡Nombre Arcoíris desbloqueado!"); success = true;
+            } else {
+                return showToast("Código inválido", true);
+            }
+
+            if(success) {
+                usedCodes.push(code);
+                localStorage.setItem('used_codes_' + myNick, JSON.stringify(usedCodes));
+                document.getElementById("promoCode").value = "";
+            }
         }
-        showToast(`Autorizado: ${data.nick}`);
-    });
-}
 
-function saveProfile(){
-    if(!myKey) return;
-    db.ref(`players/${myKey}`).update({
-        bio:document.getElementById('bioInput').value,
-        country:document.getElementById('hiddenCountryCode').value
-    });
-    db.ref(`players/${myKey}/socials`).set({
-        yt:document.getElementById('ytInput').value,
-        tw:document.getElementById('twInput').value,
-        dc:document.getElementById('dcInput').value
-    }).then(()=>showToast("Perfil guardado"));
-}
+        function loadInventory(inventoryData, activeCosmetic) {
+            let invList = Array.isArray(inventoryData) ? inventoryData.filter(Boolean) : Object.values(inventoryData || {});
+            let html = "";
+            
+            if (invList.length === 0) {
+                html = `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">Tu bóveda está vacía. Compra objetos en el Mercado o canjea Códigos Secretos.</p>`;
+            } else {
+                invList.forEach(item => {
+                    let isEquipped = activeCosmetic === item.itemName;
+                    let iconClass = "fa-gem";
+                    
+                    if(item.itemName.toUpperCase().includes("VIP") || item.itemName.toUpperCase().includes("DORADO")) iconClass = "fa-crown";
+                    if(item.itemName.toUpperCase().includes("HACKER") || item.itemName.toUpperCase().includes("MATRIX")) iconClass = "fa-terminal";
+                    if(item.itemName.toUpperCase().includes("AURA") || item.itemName.toUpperCase().includes("DEMON")) iconClass = "fa-fire-alt";
+                    if(item.itemName.toUpperCase().includes("NEON")) iconClass = "fa-bolt";
+                    if(item.itemName.toUpperCase().includes("RAINBOW")) iconClass = "fa-rainbow";
 
-function requestPFP(){
-    if(!myKey) return;
-    const url=document.getElementById('pfpInput').value;
-    if(!url) return showToast("Ingresa un link válido", true);
+                    html += `
+                    <div class="inv-item ${isEquipped ? 'equipped' : ''}">
+                        <div class="inv-item-name">
+                            <i class="fas ${iconClass}"></i> ${item.itemName}
+                        </div>
+                        ${isEquipped 
+                            ? `<button class="btn-save" style="background:var(--red); color:#fff; width:100%; margin-top:10px;" onclick="equipCosmetic('')"><i class="fas fa-times-circle"></i> DESEQUIPAR COSMÉTICO</button>` 
+                            : `<button class="btn-save" style="background:var(--green); color:#000; width:100%; margin-top:10px;" onclick="equipCosmetic('${item.itemName}')"><i class="fas fa-check-circle"></i> EQUIPAR ESTE COSMÉTICO</button>`
+                        }
+                    </div>`;
+                });
+            }
+            document.getElementById('inventoryContainer').innerHTML = html;
+        }
 
-    const pending=fullData.pfp_requests || {};
-    const already=Object.values(pending).some(r=>r.player===myNick);
-    if(already) return showToast("Ya tienes una solicitud pendiente", true);
+        function equipCosmetic(itemName) {
+            if(myPlayerIndex === undefined || myPlayerIndex === -1) return;
+            
+            if (itemName === "") {
+                db.ref(`players/${myPlayerIndex}/activeCosmetic`).remove().then(() => {
+                    showToast("Cosmético Desequipado");
+                });
+            } else {
+                db.ref(`players/${myPlayerIndex}/activeCosmetic`).set(itemName).then(() => {
+                    showToast(`¡Equipaste: ${itemName}!`);
+                });
+            }
+        }
 
-    db.ref('pfp_requests').push({ player:myNick, photo_url:url, time:Date.now() }).then(()=>{
-        showToast("Solicitud enviada al Staff");
-        document.getElementById('pfpInput').value="";
-    });
-}
-</script>
+        // ==========================================
+        // MIS RÉCORDS Y FUNCIONES VARIAS
+        // ==========================================
+        function loadMyRecordsStatus(submissions, history) {
+            let html = "";
+            let recordsFound = 0;
+
+            Object.values(submissions).forEach(sub => {
+                if(sub.player.toLowerCase() === myNick.toLowerCase()) {
+                    recordsFound++;
+                    html += `
+                    <div class="record-card">
+                        <div class="record-info">
+                            <h4>${sub.level}</h4>
+                            <p><i class="fab fa-youtube" style="color:var(--red)"></i> <a href="${sub.link}" target="_blank" style="color:#888;">Ver prueba enviada</a></p>
+                        </div>
+                        <div class="status-badge badge-pending"><i class="fas fa-clock"></i> Pendiente</div>
+                    </div>`;
+                }
+            });
+
+            Object.values(history).reverse().forEach(hist => {
+                if(hist.player.toLowerCase() === myNick.toLowerCase()) {
+                    recordsFound++;
+                    let isAccepted = hist.status === "Aceptado";
+                    let badgeClass = isAccepted ? "badge-accepted" : "badge-rejected";
+                    let icon = isAccepted ? "fa-check" : "fa-times";
+                    
+                    html += `
+                    <div class="record-card">
+                        <div class="record-info">
+                            <h4>${hist.level}</h4>
+                            <p><i class="fab fa-youtube" style="color:var(--red)"></i> <a href="${hist.link}" target="_blank" style="color:#888;">Prueba</a></p>
+                        </div>
+                        <div class="status-badge ${badgeClass}"><i class="fas ${icon}"></i> ${hist.status}</div>
+                    </div>`;
+                }
+            });
+
+            if(recordsFound === 0) {
+                html = `<p style="text-align:center; color:#555; font-size:0.8rem; margin-top:20px;">No has enviado ningún récord todavía.</p>`;
+            }
+
+            document.getElementById('myRecordsStatus').innerHTML = html;
+        }
+
+        function sendClaimRequest() {
+            const nick = document.getElementById('claimNick').value.trim();
+            const proof = document.getElementById('claimProof').value.trim();
+            const staffCode = document.getElementById('staffCodeClaim').value.trim();
+
+            if(staffCode && STAFF_CODES[staffCode]) { processStaffCode(staffCode); return; }
+            if(!nick || !proof) return showToast("Llena Nick y Prueba", true);
+            
+            db.ref('claim_requests').push({ email: currentUser.email, nick: nick, proof: proof }).then(() => {
+                showToast("Solicitud enviada al Staff.");
+                document.getElementById('claimNick').value = ""; document.getElementById('claimProof').value = "";
+            });
+        }
+
+        function upgradeToStaff() {
+            const code = document.getElementById('staffCodeProfile').value.trim();
+            if(!code) return showToast("Ingresa un código", true);
+            if(STAFF_CODES[code]) { processStaffCode(code); } else { showToast("Código de Staff Inválido", true); }
+        }
+
+        function processStaffCode(code) {
+            const data = STAFF_CODES[code];
+            // [FIX] Update puntual — no reescribir todo el nodo /players
+            db.ref('players').once('value', s => {
+                const playersObj = s.val() || {};
+                const targetKey = Object.keys(playersObj).find(
+                    k => playersObj[k].name?.toLowerCase() === data.nick.toLowerCase()
+                );
+                if (targetKey) {
+                    db.ref(`players/${targetKey}`).update({ email: currentUser.email, role: data.role })
+                        .then(() => showToast(`¡Autorizado! Bienvenido al Staff, ${data.nick}.`));
+                } else {
+                    // Si no existe, crear con push
+                    db.ref('players').push({ name: data.nick, email: currentUser.email, role: data.role, country: 'es' })
+                        .then(() => showToast(`¡Autorizado! Bienvenido al Staff, ${data.nick}.`));
+                }
+            });
+        }
+
+        function saveProfile() {
+            if(myPlayerIndex === -1) return;
+            const updates = {
+                bio: document.getElementById('bioInput').value,
+                country: document.getElementById('hiddenCountryCode').value
+            };
+            db.ref(`players/${myPlayerIndex}`).update(updates);
+            
+            db.ref(`players/${myPlayerIndex}/socials`).set({ 
+                yt: document.getElementById('ytInput').value, 
+                tw: document.getElementById('twInput').value, 
+                dc: document.getElementById('dcInput').value 
+            }).then(() => { showToast("¡Perfil Guardado Corectamente!"); });
+        }
+
+        function previewPFP() {
+            const url = document.getElementById('pfpInput').value.trim();
+            const box = document.getElementById('pfp-preview-box');
+            const img = document.getElementById('pfp-preview-img');
+            const status = document.getElementById('pfp-preview-status');
+            if (!url) { box.style.display = 'none'; return; }
+            box.style.display = 'flex';
+            status.textContent = 'Cargando imagen...';
+            status.style.color = '#888';
+            img.onload  = () => { status.textContent = '✓ Imagen cargada correctamente'; status.style.color = 'var(--green)'; };
+            img.onerror = () => { status.textContent = '✗ No se pudo cargar. Verifica el link.'; status.style.color = 'var(--red)'; };
+            img.src = url;
+        }
+
+        function requestPFP() {
+            if(myPlayerIndex === -1 || myPlayerIndex === undefined) return;
+            const url = document.getElementById('pfpInput').value.trim();
+            const msg = document.getElementById('pfp-msg');
+            if (!url) { msg.textContent = 'Ingresa un link de imagen.'; msg.style.color = 'var(--red)'; return; }
+
+            // Validación básica de URL
+            try { new URL(url); } catch(_) {
+                msg.textContent = 'URL inválida. Debe empezar con https://'; msg.style.color = 'var(--red)'; return;
+            }
+
+            // Verificar que la imagen carga antes de enviar
+            const testImg = new Image();
+            msg.textContent = 'Verificando imagen...'; msg.style.color = '#888';
+            testImg.onload = () => {
+                // Enviar a /pfp_requests para moderación
+                db.ref('pfp_requests').push({
+                    player: myNick,
+                    playerKey: myPlayerIndex,
+                    photo_url: url,
+                    time: Date.now()
+                }).then(() => {
+                    msg.textContent = '✓ Solicitud enviada. El staff la revisará pronto.';
+                    msg.style.color = 'var(--green)';
+                    document.getElementById('pfpInput').value = '';
+                    document.getElementById('pfp-preview-box').style.display = 'none';
+                });
+            };
+            testImg.onerror = () => {
+                msg.textContent = '✗ La imagen no cargó. Usa un link de Imgur.'; msg.style.color = 'var(--red)';
+            };
+            testImg.src = url;
+        }
+    
+        // =============================================
+        // [OMNI-NEW] CONTADOR DE BIO EN TIEMPO REAL
+        // =============================================
+        function updateBioCounter() {
+            const bio = document.getElementById('bioInput');
+            const counter = document.getElementById('bio-counter');
+            if (!bio || !counter) return;
+            const len = bio.value.length;
+            counter.textContent = len + ' / 150';
+            counter.className = 'bio-counter' + (len >= 140 ? ' limit' : len >= 100 ? ' warn' : '');
+        }
+
+        // =============================================
+        // [OMNI-NEW] SELECTOR DE BANDERA VISUAL
+        // Lista de países más comunes en GD latinoamerica + mundo
+        // =============================================
+        const FLAG_COUNTRIES = [
+            {code:'ar',name:'Argentina'},{code:'bo',name:'Bolivia'},{code:'br',name:'Brasil'},
+            {code:'cl',name:'Chile'},{code:'co',name:'Colombia'},{code:'cr',name:'Costa Rica'},
+            {code:'cu',name:'Cuba'},{code:'do',name:'Rep. Dominicana'},{code:'ec',name:'Ecuador'},
+            {code:'sv',name:'El Salvador'},{code:'gt',name:'Guatemala'},{code:'hn',name:'Honduras'},
+            {code:'mx',name:'México'},{code:'ni',name:'Nicaragua'},{code:'pa',name:'Panamá'},
+            {code:'py',name:'Paraguay'},{code:'pe',name:'Perú'},{code:'pr',name:'Puerto Rico'},
+            {code:'uy',name:'Uruguay'},{code:'ve',name:'Venezuela'},{code:'es',name:'España'},
+            {code:'us',name:'USA'},{code:'ca',name:'Canadá'},{code:'gb',name:'Reino Unido'},
+            {code:'de',name:'Alemania'},{code:'fr',name:'Francia'},{code:'it',name:'Italia'},
+            {code:'pt',name:'Portugal'},{code:'ru',name:'Rusia'},{code:'jp',name:'Japón'},
+            {code:'kr',name:'Corea del Sur'},{code:'cn',name:'China'},{code:'au',name:'Australia'},
+            {code:'pl',name:'Polonia'},{code:'nl',name:'Países Bajos'},{code:'se',name:'Suecia'},
+            {code:'no',name:'Noruega'},{code:'fi',name:'Finlandia'},{code:'dk',name:'Dinamarca'},
+            {code:'tr',name:'Turquía'},{code:'id',name:'Indonesia'},{code:'ph',name:'Filipinas'},
+            {code:'in',name:'India'},{code:'za',name:'Sudáfrica'}
+        ];
+
+        let flagGridBuilt = false;
+        function buildFlagGrid() {
+            if (flagGridBuilt) return;
+            flagGridBuilt = true;
+            renderFlagGrid(FLAG_COUNTRIES);
+        }
+        function renderFlagGrid(list) {
+            const grid = document.getElementById('flag-grid');
+            if (!grid) return;
+            const currentCode = document.getElementById('hiddenCountryCode')?.value || '';
+            grid.innerHTML = list.map(c => `
+                <div class="flag-option ${c.code === currentCode ? 'selected' : ''}"
+                    onclick="selectFlag('${c.code}', '${c.name}')" title="${c.name}">
+                    <img src="https://flagcdn.com/w40/${c.code}.png" alt="${c.code}"
+                        onerror="this.src='https://flagcdn.com/w40/un.png'">
+                    ${c.code.toUpperCase()}
+                </div>`).join('');
+        }
+        function toggleFlagPicker() {
+            buildFlagGrid();
+            const grid = document.getElementById('flag-grid');
+            const searchInput = document.getElementById('flag-search-input');
+            const isOpen = grid.classList.toggle('open');
+            if (searchInput) searchInput.style.display = isOpen ? 'block' : 'none';
+            if (isOpen && searchInput) searchInput.focus();
+        }
+        function filterFlags() {
+            const q = document.getElementById('flag-search-input')?.value.toLowerCase() || '';
+            renderFlagGrid(FLAG_COUNTRIES.filter(c =>
+                c.name.toLowerCase().includes(q) || c.code.includes(q)
+            ));
+        }
+        function selectFlag(code, name) {
+            document.getElementById('hiddenCountryCode').value = code;
+            document.getElementById('displayCountry').textContent = name;
+            const preview = document.getElementById('flag-preview');
+            if (preview) preview.src = `https://flagcdn.com/w40/${code}.png`;
+            // Close picker
+            document.getElementById('flag-grid')?.classList.remove('open');
+            const si = document.getElementById('flag-search-input');
+            if (si) si.style.display = 'none';
+            // Update selected state
+            document.querySelectorAll('.flag-option').forEach(el => el.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+        }
+
+        </script>
 </body>
 </html>
