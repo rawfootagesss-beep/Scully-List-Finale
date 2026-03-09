@@ -1917,25 +1917,35 @@
                 const oldPos = {};
                 lvls.forEach((l, i) => { oldPos[l.name.toLowerCase()] = i + 1; });
 
-                let matched   = [];
-                let unmatched = [];
+                // Separar conocidos y desconocidos GUARDANDO su índice original
+                // Los desconocidos mantendrán su posición relativa en la lista final
+                const knownItems   = [];  // { origIdx, level, aredlPos }
+                const unknownSlots = {};  // origIdx → level
 
-                lvls.forEach(l => {
+                lvls.forEach((l, i) => {
                     const key = l.name.toLowerCase();
                     if (aredlMap[key] !== undefined) {
-                        matched.push({ ...l, tempAredlPos: aredlMap[key] });
+                        knownItems.push({ origIdx: i, level: l, aredlPos: aredlMap[key] });
                     } else {
-                        unmatched.push(l);
+                        unknownSlots[i] = l;  // guardar en su slot original
                     }
                 });
 
-                matched.sort((a, b) => a.tempAredlPos - b.tempAredlPos);
+                // Ordenar los conocidos por su posición en AREDL (más difícil primero)
+                knownItems.sort((a, b) => a.aredlPos - b.aredlPos);
 
-                const newLvls = matched.map(l => {
-                    const copy = { ...l };
-                    delete copy.tempAredlPos;
-                    return copy;
-                }).concat(unmatched);
+                // Reconstruir la lista: los desconocidos ocupan sus slots originales,
+                // los conocidos (ordenados por AREDL) llenan los slots vacíos en orden
+                const result = new Array(lvls.length).fill(null);
+                Object.entries(unknownSlots).forEach(([idx, l]) => { result[parseInt(idx)] = l; });
+
+                const emptySlots = result.map((v, i) => v === null ? i : -1).filter(i => i !== -1);
+                knownItems.forEach(({ level }, si) => {
+                    const copy = { ...level };
+                    result[emptySlots[si]] = copy;
+                });
+
+                const newLvls = result.filter(Boolean);
 
                 // ── Calcular diff ─────────────────────────────────────
                 const moved   = [];   // { name, from, to, delta }
@@ -1969,12 +1979,15 @@
                 const extra = moved.length > MAX_SHOW ? `\n*...y ${moved.length - MAX_SHOW} niveles más.*` : '';
                 const noChange = newLvls.filter((l, i) => oldPos[l.name.toLowerCase()] === i + 1).length;
 
+                const knownCount   = knownItems.length;
+                const unknownCount = Object.keys(unknownSlots).length;
+
                 const discordMsg =
                     `🌐 **REESTRUCTURACIÓN MASIVA AREDL** — por **${sN}**\n` +
-                    `📊 ${matched.length} analizados · **${moved.length} cambiaron de posición** · ${noChange} sin cambios · ${unmatched.length} no encontrados en AREDL` +
+                    `📊 ${knownCount} reordenados por AREDL · **${moved.length} cambiaron de posición** · ${noChange} sin cambios · ${unknownCount} no encontrados (mantienen posición relativa)` +
                     (moved.length > 0 ? `\n\n**Cambios de posición:**${diffLines}${extra}` : '\n\n*No hubo cambios de posición.*');
 
-                log(`Auto-Sync AREDL: ${moved.length} niveles movidos de ${matched.length} analizados.`);
+                log(`Auto-Sync AREDL: ${moved.length} niveles reordenados de ${knownCount} analizados (${unknownCount} conservaron posición relativa).`);
                 api(discordMsg, 'lvls');
                 toast(`✓ Sync completado — ${moved.length} niveles reubicados`);
                 rLv();
