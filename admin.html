@@ -244,6 +244,7 @@
             <span class="n-sec">Comunicaciones</span>
             <button class="n-btn" onclick="sTab('t-chat')" style="color:var(--bl);"><i class="fas fa-comments"></i> Staff Chat</button>
             <button class="n-btn" onclick="sTab('t-log')" style="color:var(--gd);"><i class="fas fa-file-code"></i> Admin Log</button>
+            <button class="n-btn" onclick="sTab('t-bugs')" style="color:var(--rd);"><i class="fas fa-bug"></i> Bug Reports <span id="bug-badge" style="display:none;background:var(--rd);color:#fff;border-radius:50%;padding:1px 6px;font-size:0.6rem;margin-left:4px;font-weight:900;"></span></button>
             
             <span id="ow-t" class="n-sec" style="color:var(--ow);display:none;">Control Dios</span>
             <button class="n-btn" onclick="sTab('t-stf')" id="b-st" style="color:var(--ow);display:none;"><i class="fas fa-chess-king"></i> Jerarquías</button>
@@ -516,6 +517,19 @@
                         <button class="btn br" onclick="fPrg()" title="Purga Caché Global Index"><i class="fas fa-sync-alt"></i> PURGAR RED</button>
                     </div>
                 </div>
+            </div>
+
+            <!-- TAB: BUG REPORTS -->
+            <div id="t-bugs" class="tab">
+                <h2 class="title"><i class="fas fa-bug" style="color:var(--rd);"></i> Bug Reports</h2>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px;">
+                    <button class="btn br" onclick="filterBugs('pending')" id="bf-pend" style="opacity:1;">Pendientes</button>
+                    <button class="btn" onclick="filterBugs('reviewing')" id="bf-rev" style="background:transparent;border:1px solid var(--bl);color:var(--bl);">En Revisión</button>
+                    <button class="btn" onclick="filterBugs('resolved')" id="bf-res" style="background:transparent;border:1px solid var(--gr);color:var(--gr);">Resueltos</button>
+                    <button class="btn" onclick="filterBugs('all')" id="bf-all" style="background:transparent;border:1px solid #333;color:#666;">Todos</button>
+                    <button class="bs br" style="margin-left:auto;" onclick="pList('bug_reports')">PURGAR RESUELTOS</button>
+                </div>
+                <div id="bug-list" class="dl"></div>
             </div>
 
             <div id="t-log" class="tab">
@@ -842,6 +856,7 @@
                     renderEff(fD.staff_logs||{}); 
                     renderAllPlayers(pList); 
                     renderSug(fD.level_suggestions||{});
+                    rBugs(fD.bug_reports||{});
                     
                     if(fD.system_settings) { 
                         if($('cf-w1')) $('cf-w1').value = fD.system_settings.discord?.url || ""; 
@@ -1567,6 +1582,118 @@
             }
         }
         
+        // ── BUG REPORTS ───────────────────────────────────────────
+        let _bugFilter = 'pending';
+        let _bugsData  = {};
+
+        function rBugs(d) {
+            _bugsData = d;
+            // Contar pendientes para el badge
+            const pending = Object.values(d).filter(b => b.status === 'pending').length;
+            const badge = $('bug-badge');
+            if (badge) {
+                badge.style.display = pending > 0 ? 'inline' : 'none';
+                badge.textContent = pending;
+            }
+            filterBugs(_bugFilter);
+        }
+
+        function filterBugs(f) {
+            _bugFilter = f;
+            ['pend','rev','res','all'].forEach(k => {
+                const el = $('bf-'+k);
+                if (el) el.style.opacity = '0.45';
+            });
+            const activeMap = {pending:'pend', reviewing:'rev', resolved:'res', all:'all'};
+            const activeEl = $('bf-' + activeMap[f]);
+            if (activeEl) activeEl.style.opacity = '1';
+            renderBugList(_bugsData, f);
+        }
+
+        function renderBugList(d, filter) {
+            const box = $('bug-list');
+            if (!box) return;
+            const statusColors = { pending: 'var(--rd)', reviewing: 'var(--bl)', resolved: 'var(--gr)' };
+            const statusLabel  = { pending: 'PENDIENTE', reviewing: 'EN REVISIÓN', resolved: 'RESUELTO' };
+
+            let entries = Object.entries(d);
+            if (filter !== 'all') entries = entries.filter(([,b]) => b.status === filter);
+            entries.sort(([,a],[,b]) => b.timestamp - a.timestamp);
+
+            if (!entries.length) {
+                box.innerHTML = '<p style="color:#444;text-align:center;padding:30px;font-size:0.8rem;">Sin reportes en esta categoría.</p>';
+                return;
+            }
+
+            box.innerHTML = entries.map(([id, b]) => `
+                <div class="dc" style="flex-direction:column;align-items:flex-start;gap:10px;border-color:${statusColors[b.status]||'#333'}20;margin-bottom:8px;">
+                    <div style="display:flex;justify-content:space-between;width:100%;flex-wrap:wrap;gap:6px;">
+                        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                            <span style="font-weight:900;color:#fff;font-size:0.9rem;">${b.reporter || 'Anónimo'}</span>
+                            <span style="background:rgba(0,0,0,0.6);color:#888;padding:3px 10px;border-radius:20px;font-size:0.65rem;font-family:'JetBrains Mono';">${b.category || 'Sin categoría'}</span>
+                            <span style="background:${statusColors[b.status]||'#333'}22;color:${statusColors[b.status]||'#aaa'};border:1px solid ${statusColors[b.status]||'#333'};padding:3px 10px;border-radius:20px;font-size:0.6rem;font-weight:900;font-family:'JetBrains Mono';">${statusLabel[b.status]||b.status}</span>
+                        </div>
+                        <span style="font-size:0.65rem;color:#444;font-family:'JetBrains Mono';">${new Date(b.timestamp).toLocaleString('es')}</span>
+                    </div>
+
+                    <div style="width:100%;">
+                        <p style="margin:0 0 4px;font-size:0.7rem;color:#555;text-transform:uppercase;letter-spacing:1px;">Página: <b style="color:#888;">${b.page||'—'}</b></p>
+                        <p style="margin:0;font-size:0.82rem;color:#ccc;line-height:1.5;background:rgba(0,0,0,0.4);padding:10px 12px;border-radius:8px;border-left:3px solid ${statusColors[b.status]||'#333'};">${b.description}</p>
+                    </div>
+
+                    ${b.response ? `
+                    <div style="width:100%;background:rgba(0,255,102,0.04);border:1px solid rgba(0,255,102,0.15);border-radius:8px;padding:10px 12px;">
+                        <p style="margin:0 0 3px;font-size:0.65rem;color:var(--gr);font-family:'JetBrains Mono';text-transform:uppercase;letter-spacing:1px;"><i class="fas fa-reply"></i> Respuesta del Staff</p>
+                        <p style="margin:0;font-size:0.82rem;color:#ccc;">${b.response}</p>
+                    </div>` : ''}
+
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;width:100%;">
+                        <input type="text" placeholder="Escribe una respuesta para el jugador..." id="bug-resp-${id}"
+                            style="flex:1;min-width:180px;background:#0a0a0a;border:1px solid #2a2a2a;color:#fff;padding:8px 12px;border-radius:8px;font-size:0.78rem;outline:none;font-family:'Lexend Deca',sans-serif;">
+                        <button class="bs bb" onclick="respondBug('${id}')" title="Enviar respuesta"><i class="fas fa-reply"></i> Responder</button>
+                        <button class="bs" style="background:rgba(0,153,255,0.15);color:var(--bl);border:1px solid var(--bl);" onclick="setBugStatus('${id}','reviewing')">En Revisión</button>
+                        <button class="bs bg" onclick="setBugStatus('${id}','resolved')"><i class="fas fa-check"></i> Resolver</button>
+                        <button class="bs br" onclick="db.ref('bug_reports/${id}').remove()" title="Eliminar reporte"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`).join('');
+        }
+
+        function respondBug(id) {
+            const input = $('bug-resp-' + id);
+            if (!input) return;
+            const resp = input.value.trim();
+            if (!resp) { toast('Escribe una respuesta primero.', true); return; }
+            db.ref(`bug_reports/${id}`).update({
+                response: resp,
+                status: 'reviewing',
+                respondedBy: sN,
+                respondedAt: Date.now()
+            }).then(() => {
+                // Notificar al jugador vía /history
+                const bug = _bugsData[id];
+                if (bug?.reporter) {
+                    const allKeys = Object.keys(fD.players || {});
+                    const tKey = allKeys.find(k => fD.players[k].name === bug.reporter);
+                    if (tKey) {
+                        db.ref('history').push({
+                            player: bug.reporter,
+                            level: '🐛 Bug Report',
+                            status: 'Respuesta Staff',
+                            link: '',
+                            reason: `[${bug.category}] ${resp}`,
+                            time: Date.now()
+                        });
+                    }
+                }
+                toast('Respuesta enviada y jugador notificado.');
+                input.value = '';
+            });
+        }
+
+        function setBugStatus(id, status) {
+            db.ref(`bug_reports/${id}/status`).set(status).then(() => toast('Estado actualizado.'));
+        }
+
         function renderEff(logs) { 
             let c = {}; Object.values(logs).forEach(x => { 
                 if(x.action.includes('Aprobó') || x.action.includes('Rechazó') || x.action.includes('Modificó Nivel')) { c[x.staff] = (c[x.staff] || 0) + 1; } 
