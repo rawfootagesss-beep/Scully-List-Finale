@@ -1445,7 +1445,7 @@
             if(!currentUserData.key || !_progCurrentLevel) return;
             db.ref(`players/${currentUserData.key}/levelProgress/${_progCurrentLevel.key}`).remove()
                 .then(() => {
-                    omniToast(\`Progreso en \${_progCurrentLevel.name} eliminado.\`, 'info', 2500);
+                    omniToast(`Progreso en ${_progCurrentLevel.name} eliminado.`, 'info', 2500);
                     renderLevels(nexus(fullData.levels));
                 })
                 .catch(() => omniToast('Error al borrar.', 'error'));
