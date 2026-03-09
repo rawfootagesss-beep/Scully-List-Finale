@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OMNI | Black Market</title>
+    <meta name="description" content="Black Market de The Scully List — compra y regala cosméticos con tus XP OMNI.">
+    <link rel="icon" href="https://i.imgur.com/6D2g3wU.png" type="image/png">
     
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -63,6 +65,19 @@
         .terminal::after { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px); background-size: 100% 4px; pointer-events: none; }
         .t-line { margin-bottom: 5px; opacity: 0; animation: typeLine 0.1s forwards; }
         @keyframes typeLine { to { opacity: 1; } }
+        .market-tab {
+            flex: 1; background: transparent; border: none; color: #555; padding: 10px;
+            font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+            font-family: 'JetBrains Mono'; cursor: pointer; transition: 0.2s;
+            letter-spacing: 1px;
+        }
+        .market-tab.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+        .market-tab:hover { color: #fff; }
+        .hist-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 0; border-bottom: 1px solid #111; font-size: 0.72rem;
+        }
+        .hist-item:last-child { border-bottom: none; }
 
         /* PANEL DERECHO (TIENDA) */
         .shop-panel { flex: 2.5; min-width: 300px; }
@@ -86,8 +101,14 @@
         
         .action-buttons { display: flex; gap: 8px; width: 100%; }
         .btn-buy { background: transparent; border: 2px solid var(--color-hover, var(--gold)); color: var(--color-hover, var(--gold)); padding: 12px; flex-grow: 1; cursor: pointer; transition: 0.3s; border-radius: 8px; font-weight: 800; text-transform: uppercase; }
-        .btn-buy:hover:not(:disabled) { background: var(--color-hover, var(--gold)); color: #000; }
+        .btn-buy:hover:not(:disabled), .btn-buy:active:not(:disabled) { background: var(--color-hover, var(--gold)); color: #000; }
         .btn-buy:disabled { opacity: 0.5; cursor: not-allowed; }
+        /* Touch-friendly active state (mobile) */
+        @media (hover: none) {
+            .btn-buy:active:not(:disabled) { background: var(--color-hover, var(--gold)); color: #000; }
+            .btn-gift:active { background: var(--purple); color: #fff; }
+            .item-card:active { transform: scale(0.98); }
+        }
         .btn-gift { background: transparent; border: 2px solid var(--purple); color: var(--purple); padding: 12px 15px; cursor: pointer; transition: 0.3s; border-radius: 8px; font-weight: 800; }
         .btn-gift:hover { background: var(--purple); color: #fff; box-shadow: 0 0 15px rgba(204,0,255,0.4); }
 
@@ -141,7 +162,42 @@
         .loader-bar { width: 100%; height: 4px; background: #222; border-radius: 4px; margin: 20px 0; overflow: hidden; position: relative; }
         .loader-fill { position: absolute; top: 0; left: 0; height: 100%; background: var(--gold); width: 0%; transition: 0.5s ease; }
 
-        @media(max-width: 900px) { .market-layout { flex-direction: column; } .side-panel { position: static; width: 100%; } .back-btn { position: static; display: block; margin-bottom: 15px; } }
+        @media(max-width: 900px) {
+            .market-layout { flex-direction: column; }
+            .side-panel { position: static; width: 100%; }
+            .back-btn { position: static; display: block; margin-bottom: 15px; }
+            .market-grid { grid-template-columns: 1fr; }
+            .action-buttons { flex-direction: row; }
+            header h1 { font-size: 1.8rem; }
+            .container { padding: 15px; }
+        }
+        @media(max-width: 480px) {
+            .item-card { padding: 20px 16px; }
+            .item-icon { font-size: 2.8rem; }
+            .item-title { font-size: 1rem; }
+            .user-wallet h2 { font-size: 2rem; }
+            .modal-content { padding: 22px 18px; }
+            .admin-inputs { flex-direction: column; }
+            .g-input { min-width: unset; width: 100%; }
+        }
+
+        /* TOAST SYSTEM (reemplaza alert()) */
+        #market-toast-container {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+            z-index: 99999; display: flex; flex-direction: column; gap: 10px;
+            align-items: center; pointer-events: none; width: 90%; max-width: 420px;
+        }
+        .m-toast {
+            background: rgba(10,10,10,0.97); border-left: 4px solid var(--gold);
+            color: #fff; padding: 13px 18px; border-radius: 10px;
+            font-size: 0.85rem; font-weight: 600; width: 100%;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+            animation: mToastIn 0.3s ease; pointer-events: all;
+        }
+        .m-toast.error { border-left-color: var(--red); }
+        .m-toast.success { border-left-color: var(--green); }
+        .m-toast.info { border-left-color: var(--cyan); }
+        @keyframes mToastIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 
         /* =========================================
            [OMNI-NEW] VISTA PREVIA DE COSMÉTICO
@@ -204,6 +260,16 @@
                     <h2><i class="fas fa-coins"></i> <span id="wallet-xp">--</span></h2>
                 </div>
                 <div class="terminal" id="term-box"></div>
+
+                <!-- Historial de transacciones -->
+                <div style="background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.06); border-radius:15px; overflow:hidden;">
+                    <div style="display:flex; border-bottom:1px solid #1a1a1a;">
+                        <button id="tab-log" class="market-tab active" onclick="switchTab('log')">Terminal</button>
+                        <button id="tab-hist" class="market-tab" onclick="switchTab('hist')">Historial</button>
+                    </div>
+                    <div id="panel-log" style="padding:12px; font-family:'JetBrains Mono'; font-size:0.7rem; color:var(--cyan); height:150px; overflow-y:auto;" id="term-box-2"></div>
+                    <div id="panel-hist" style="display:none; padding:12px; max-height:200px; overflow-y:auto;"></div>
+                </div>
             </div>
 
             <div class="shop-panel">
@@ -215,6 +281,7 @@
         </div>
     </div>
 
+    <div id="market-toast-container"></div>
     <div id="giftModal" class="modal">
         <div class="modal-content" style="box-shadow: 0 0 30px rgba(204,0,255,0.2);">
             <span class="modal-close" onclick="closeGiftModal()">✕</span>
@@ -270,6 +337,49 @@
         let myIndex = -1;
         let pendingGift = null;
         const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
+
+        // Toast system (reemplaza alert())
+        function mToast(msg, type='info', dur=4000) {
+            const c = document.getElementById('market-toast-container');
+            if (!c) return;
+            const t = document.createElement('div');
+            t.className = 'm-toast ' + type;
+            const icons = {success:'✓', error:'✕', info:'ℹ'};
+            t.innerHTML = `<span style="margin-right:8px;">${icons[type]||'ℹ'}</span>${msg}`;
+            c.appendChild(t);
+            setTimeout(() => t.style.opacity='0', dur - 400);
+            setTimeout(() => t.remove(), dur);
+        }
+
+        // Tab switcher
+        function switchTab(tab) {
+            document.getElementById('tab-log').classList.toggle('active', tab==='log');
+            document.getElementById('tab-hist').classList.toggle('active', tab==='hist');
+            document.getElementById('panel-log').style.display  = tab==='log'  ? 'block' : 'none';
+            document.getElementById('panel-hist').style.display = tab==='hist' ? 'block' : 'none';
+        }
+
+        // Render historial de compras del jugador
+        function renderHistory() {
+            if (!myPlayer) return;
+            const panel = document.getElementById('panel-hist');
+            if (!panel) return;
+            const reqs = nx(fullData.market_requests).filter(r => r.player === myPlayer.name);
+            const inv  = nx(myPlayer.inventory);
+            if (reqs.length === 0 && inv.length === 0) {
+                panel.innerHTML = '<p style="color:#555; font-size:0.72rem; text-align:center; padding:20px;">Sin transacciones aún.</p>';
+                return;
+            }
+            const all = [
+                ...inv.map(i => ({ name: i.itemName, date: i.date || 0, status: 'adquirido', from: i.receivedFrom })),
+                ...reqs.map(r => ({ name: r.itemName, date: r.date || 0, status: 'pendiente', price: r.price }))
+            ].sort((a,b) => b.date - a.date).slice(0, 15);
+            panel.innerHTML = all.map(item => `
+                <div class="hist-item">
+                    <span style="color:#ccc;">${item.name.length > 18 ? item.name.substring(0,16)+'…' : item.name}</span>
+                    <span style="color:${item.status==='adquirido'?'var(--green)':'var(--cyan)'}; font-weight:800; font-size:0.65rem; text-transform:uppercase;">${item.status}</span>
+                </div>`).join('');
+        }
 
         // CATÁLOGO OFICIAL (CON MEMES INCLUIDOS)
         const officialCatalog = [
@@ -360,6 +470,7 @@
             const w = document.getElementById('wallet-xp');
             w.innerText = myPlayer.calcXp.toFixed(1);
             if(!w.dataset.logged) { setTimeout(() => printLog(`Identidad confirmada: ${myPlayer.name}`, "var(--green)"), 1500); w.dataset.logged = "true"; }
+            renderHistory();
         }
 
         function renderGuestWallet() {
@@ -405,9 +516,9 @@
                 } else {
                     let canAfford = myPlayer && myPlayer.calcXp >= item.price;
                     let cursorStyle = canAfford ? '' : 'cursor:not-allowed; opacity:0.3;';
-                    let onclickEvent = canAfford ? `onclick="initPurchase('${item.id}', '${item.name}', ${item.price})"` : `onclick="alert('XP Insuficiente. Sigue completando demons.')"`;
+                    let onclickEvent = canAfford ? `onclick="initPurchase('${item.id}', '${item.name}', ${item.price})"` : `onclick="mToast('XP Insuficiente. Sigue completando demons.','error')"`;
                     
-                    btnHtml = `<button class="btn-buy" style="background:${cos.bgBtn}; border-color:${cos.nC}; color:${cos.nC}; ${cursorStyle}" ${onclickEvent} onmouseover="this.style.background='${cos.hoverC}'; this.style.color='#000';" onmouseout="this.style.background='${cos.bgBtn}'; this.style.color='${cos.nC}';"><i class="fas fa-shopping-cart"></i> FORJAR</button>`;
+                    btnHtml = `<button class="btn-buy" style="background:${cos.bgBtn}; border-color:${cos.nC}; color:${cos.nC}; ${cursorStyle}" ${onclickEvent}><i class="fas fa-shopping-cart"></i> FORJAR</button>`;
                 }
 
                 let badge = item.isDynamic ? `<span style="position:absolute; top:10px; right:10px; background:${item.color}; color:#000; font-size:0.6rem; padding:2px 6px; border-radius:3px; font-weight:bold;">NUEVO</span>` : "";
@@ -548,8 +659,8 @@
 
         // REGALOS
         function openGiftModal(itemId, itemName, price) {
-            if(!myPlayer) return alert("⚠️ Inicia sesión para regalar.");
-            if((myPlayer.calcXp || 0) < price) return alert(`❌ Necesitas ${price} XP para regalar esto.`);
+            if(!myPlayer) { mToast("Inicia sesión para regalar.", "error"); return; }
+            if((myPlayer.calcXp || 0) < price) { mToast(`Necesitas ${price} XP para regalar esto.`, "error"); return; }
             pendingGift = { id: itemId, name: itemName, price: price };
             document.getElementById('gift-item-name').innerText = itemName;
             document.getElementById('giftModal').style.display = 'flex';
@@ -566,8 +677,8 @@
                 let players = snap.val();
                 let receiverKey = null; let realReceiverName = "";
                 for(let k in players) { if(players[k].name.toLowerCase() === receiverName.toLowerCase()) { receiverKey = k; realReceiverName = players[k].name; break; } }
-                if(!receiverKey) return alert("❌ Jugador destino no encontrado.");
-                if(receiverKey === myPlayer.key) return alert("❌ No puedes enviarte un regalo a ti mismo.");
+                if(!receiverKey) { mToast("Jugador destino no encontrado.", "error"); return; }
+                if(receiverKey === myPlayer.key) { mToast("No puedes enviarte un regalo a ti mismo.", "error"); return; }
 
                 // Verificación server-side: precio oficial del catálogo
                 const officialItem = [...officialCatalog, ...Object.values(fullData.market_dynamic_items || {})].find(it => it.name === pendingGift.name);
@@ -576,7 +687,7 @@
                 // XP real del servidor en este momento
                 const serverXP = players[myPlayer.key]?.totalXP || 0;
                 if (serverXP < verifiedPrice) {
-                    return alert(`❌ XP insuficiente en el servidor (${serverXP.toFixed(1)} XP). No se puede procesar el regalo.`);
+                    mToast(`XP insuficiente en el servidor (${serverXP.toFixed(1)} XP).`, "error"); return;
                 }
 
                 let newTotalXP = serverXP - verifiedPrice;
@@ -584,7 +695,7 @@
                 db.ref(`players/${receiverKey}/inventory`).push({ itemName: pendingGift.name, receivedFrom: myPlayer.name, date: Date.now() });
                 db.ref('global_chat').push({ user: "OMNI BOT", text: `🎁 ¡Transacción Pública! [${myPlayer.name}] ha gastado ${verifiedPrice} XP para regalarle [${pendingGift.name}] a [${realReceiverName}].`, time: Date.now() });
 
-                printLog(`Regalo enviado a ${realReceiverName}`, "var(--purple)"); alert(`✅ ¡Regalo enviado a ${realReceiverName}!`); closeGiftModal();
+                printLog(`Regalo enviado a ${realReceiverName}`, "var(--purple)"); mToast(`¡Regalo enviado a ${realReceiverName}!`, 'success'); closeGiftModal();
             });
         }
 
@@ -592,15 +703,17 @@
         function addNewItem() {
             let name = document.getElementById('add-name').value.trim(); let price = parseInt(document.getElementById('add-price').value);
             let icon = document.getElementById('add-icon').value.trim() || "fas fa-star"; let color = document.getElementById('add-color').value;
-            if(!name || isNaN(price)) return alert("Faltan datos.");
+            if(!name || isNaN(price)) { mToast('Faltan datos para publicar el ítem.', 'error'); return; }
             db.ref('market_dynamic_items').push({ name: name, price: price, icon: icon, color: color, createdAt: Date.now() });
             document.getElementById('add-name').value = ""; document.getElementById('add-price').value = "";
         }
         function resetMyXP() {
             if(!myPlayer) return;
-            if(confirm("⚠️ ¿Purgar tu Billetera de XP 'manual' a 0?")) {
-                db.ref(`players/${myPlayer.key}/totalXP`).set(0).then(() => alert("✅ PURGA COMPLETADA."));
-            }
+            mToast('¿Purgar tu XP manual a 0? <span onclick="confirmResetXP()" style="cursor:pointer;color:var(--red);font-weight:900;margin-left:8px;text-decoration:underline;">CONFIRMAR</span>', 'error', 7000);
+        }
+        function confirmResetXP() {
+            if(!myPlayer) return;
+            db.ref(`players/${myPlayer.key}/totalXP`).set(0).then(() => mToast('XP manual purgado a 0.', 'success'));
         }
     </script>
 </body>
