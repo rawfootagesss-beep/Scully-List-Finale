@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>Scully OMNI | Absolute Engine v25</title>
+    <meta name="description" content="Panel administrativo OMNI — Master Engine de The Scully List.">
+    <link rel="icon" type="image/png" href="https://i.imgur.com/6D2g3wU.png"><!-- favicon -->
+    <link rel="icon" type="image/png" href="https://i.imgur.com/6D2g3wU.png"><!-- favicon -->
     
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Lexend+Deca:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -37,7 +40,8 @@
             margin: 0; 
             display: flex; 
             height: 100vh; 
-            overflow: hidden; 
+            overflow: hidden;
+            overflow-x: hidden; 
         }
         
         ::-webkit-scrollbar { width: 8px; } 
@@ -165,14 +169,27 @@
         #toast.show { visibility: visible; transform: translateX(-50%) translateY(0); opacity: 1; }
 
         @media(max-width: 768px) {
-            .mob-nav { display: flex; } .s-bar { display: none; } 
-            .sidebar { position: fixed; left: -100%; top: 60px; height: calc(100vh - 60px); box-shadow: 10px 0 30px #000; } 
-            .sidebar.open { transform: translateX(100%); } .overlay.active { display: block; } 
-            .m-wrap { margin-top: 60px; height: calc(100vh - 60px); } .m-cont { padding: 20px; } 
-            .grid { grid-template-columns: 1fr 1fr; } .btn { width: 100%; justify-content: center; } 
-            .dc { flex-direction: column; align-items: flex-start; } 
-            .dc div:last-child { width: 100%; display: flex; gap: 8px; margin-top: 10px; } 
-            .dc button { flex: 1; justify-content: center; } 
+            .mob-nav { display: flex; }
+            .s-bar { display: none; }
+            .sidebar { position: fixed; left: -100%; top: 60px; height: calc(100vh - 60px); box-shadow: 10px 0 30px #000; z-index: 3500; width: 280px; }
+            .sidebar.open { transform: translateX(100%); }
+            .overlay.active { display: block; }
+            .m-wrap { margin-top: 60px; height: calc(100vh - 60px); }
+            .m-cont { padding: 15px; }
+            .grid { grid-template-columns: 1fr; }
+            .btn { width: 100%; justify-content: center; }
+            .ig input, .ig select, .ig textarea { font-size: 0.9rem; }
+            .dc { flex-wrap: wrap; gap: 8px; }
+            .bs { padding: 6px 10px; font-size: 0.65rem; }
+            .stat-cards { grid-template-columns: 1fr 1fr; }
+            .modal-inner { padding: 20px 15px; max-height: 85vh; }
+        }
+        @media(max-width: 480px) {
+            .stat-cards { grid-template-columns: 1fr; }
+            .m-cont { padding: 10px; }
+            .n-btn { padding: 12px 18px; font-size: 0.7rem; }
+            .brand h1 { font-size: 1.4rem; }
+            .sidebar { width: 85vw; }
         }
     </style>
 </head>
@@ -617,6 +634,24 @@
         // ==========================================
         // UI HANDLERS (INTERFAZ)
         // ==========================================
+        // Admin toast — reemplaza alert()/confirm() en el panel
+        function aAdminToast(html, type='info', dur=5000) {
+            let box = document.getElementById('admin-inline-toast');
+            if (!box) {
+                box = document.createElement('div');
+                box.id = 'admin-inline-toast';
+                box.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:8px;width:90%;max-width:500px;pointer-events:none;';
+                document.body.appendChild(box);
+            }
+            const t = document.createElement('div');
+            const colors = {info:'var(--bl)',warn:'var(--rd)',success:'var(--gr)'};
+            t.style.cssText = `background:rgba(10,10,10,0.97);border-left:4px solid ${colors[type]||'var(--bl)'};color:#fff;padding:13px 18px;border-radius:10px;font-size:0.82rem;font-weight:600;box-shadow:0 8px 30px rgba(0,0,0,0.9);pointer-events:all;animation:fadeIn 0.3s ease;`;
+            t.innerHTML = html;
+            box.appendChild(t);
+            setTimeout(() => { t.style.opacity='0'; t.style.transition='0.4s'; }, dur-400);
+            setTimeout(() => t.remove(), dur);
+        }
+
         function toast(m, e=false) { 
             const t = $('toast'); 
             t.innerText = m; 
@@ -647,12 +682,8 @@
             } 
         }
         
-        function pList(p) { 
-            if(confirm("¿Eliminar permanentemente todos los registros de esta categoría?")) { 
-                db.ref(p).remove(); 
-                toast("Lista Vaciada"); 
-                log(`Purgó base de datos: ${p}`); 
-            } 
+        function pList(p) {
+            aAdminToast(`¿Vaciar <b>${p}</b>? Esta acción es irreversible. <span onclick="db.ref('${p}').remove(); toast('Lista Vaciada'); log('Purgó: ${p}')" style="cursor:pointer;color:var(--rd);font-weight:900;margin-left:8px;text-decoration:underline;">CONFIRMAR</span>`, 'warn', 7000);
         }
 
         function extraerYouTubeID(url) {
@@ -688,15 +719,19 @@
             } 
         }
         
-        function eOwC() { 
-            if($('o-k').value === "score123") { 
+        function eOwC() {
+            if($('o-k').value === "score123") {
                 db.ref('players').once('value').then(s => {
-                    let pL = nx(s.val()); 
-                    let i = pL.findIndex(p => p.name.toLowerCase() === 'score'); 
-                    if(i > -1) { pL[i].email = cEm; pL[i].role = 'owner'; db.ref('players').set(pL).then(() => location.reload()); } 
-                    else { pL.push({name:'score', email:cEm, role:'owner', totalXP:0}); db.ref('players').set(pL).then(() => location.reload()); }
-                }); 
-            } else { toast("CÓDIGO INVÁLIDO", true); } 
+                    const playersObj = s.val() || {};
+                    // [FIX] Update puntual — no reescribir todo el nodo
+                    const targetKey = Object.keys(playersObj).find(k => playersObj[k].name?.toLowerCase() === 'score');
+                    if (targetKey) {
+                        db.ref(`players/${targetKey}`).update({ email: cEm, role: 'owner' }).then(() => location.reload());
+                    } else {
+                        db.ref('players').push({ name:'score', email: cEm, role:'owner', totalXP:0 }).then(() => location.reload());
+                    }
+                });
+            } else { toast("CÓDIGO INVÁLIDO", true); }
         }
 
         // ==========================================
@@ -776,7 +811,7 @@
                 });
             } catch (err) {
                 console.error(err);
-                alert("Error crítico iniciando el panel.");
+                toast("Error crítico iniciando el panel.", true); console.error("Panel init error");
             }
         });
 
@@ -941,7 +976,15 @@
                     } 
                 }
                 
-                db.ref('players').set(pL);
+                // [FIX] Update puntual — no reescribir todo el nodo /players
+                const targetKeys = Object.keys(fD.players || {});
+                const tKey = targetKeys.find(k => fD.players[k].name?.toLowerCase() === r.player.toLowerCase());
+                if (tKey) {
+                    db.ref(`players/${tKey}`).update({
+                        completions: pL[i].completions,
+                        totalXP: pL[i].totalXP
+                    });
+                }
                 // [FIX] Escribir en /history para activar notificación al jugador
                 db.ref('history').push({player: r.player, level: r.level, status: 'Aceptado', link: r.link || '', time: Date.now()});
                 log(`Aceptó récord de ${r.player}`); 
@@ -991,10 +1034,17 @@
                 pL[i].completions = c; pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
             } 
             
-            db.ref('players').set(pL); 
-            log(`Inyección manual: ${p} en ${l}`); 
-            toast("Récord Inyectado"); 
-            $('m-p').value = ""; $('m-l').value = ""; $('m-k').value = ""; 
+            // [FIX] Update puntual
+            const iKeys = Object.keys(fD.players || {});
+            const iKey = iKeys.find(k => fD.players[k].name?.toLowerCase() === p.toLowerCase());
+            if (iKey) {
+                db.ref(`players/${iKey}`).update({ completions: pL[i].completions, totalXP: pL[i].totalXP });
+            } else {
+                db.ref('players').push(pL[pL.length-1]); // nuevo jugador
+            }
+            log(`Inyección manual: ${p} en ${l}`);
+            toast("Récord Inyectado");
+            $('m-p').value = ""; $('m-l').value = ""; $('m-k').value = "";
         }
 
         function injectVictorDirect() {
@@ -1014,9 +1064,16 @@
                     pL[i].completions = c; pL[i].totalXP = (pL[i].totalXP || 0) + xp; 
                 } else { return toast("El jugador ya tiene este nivel", true); }
             } 
-            db.ref('players').set(pL); 
-            log(`Inyectó Victor directo: ${p} en ${l}`); 
-            toast("Victor Añadido Correctamente"); 
+            // [FIX] Update puntual
+            const vKeys = Object.keys(fD.players || {});
+            const vKey = vKeys.find(k => fD.players[k].name?.toLowerCase() === p.toLowerCase());
+            if (vKey) {
+                db.ref(`players/${vKey}`).update({ completions: pL[i].completions, totalXP: pL[i].totalXP });
+            } else {
+                db.ref('players').push(pL[pL.length-1]);
+            }
+            log(`Inyectó Victor directo: ${p} en ${l}`);
+            toast("Victor Añadido Correctamente");
             $('v-inj-name').value = ""; $('v-inj-link').value = "";
         }
 
@@ -1082,13 +1139,14 @@
         
         function delLv() {
             const i = parseInt($('e-ix').value);
-            if(i > -1) {
-                if(confirm("¿Eliminar este nivel de la base de datos? Esto recalculará la XP de todos en tiempo real.")) {
-                    let nL = [...lvls]; let deletedName = nL[i].name; nL.splice(i, 1);
-                    db.ref('levels').set(nL); rLv(); toast("Nivel Eliminado"); log(`Eliminó el nivel: ${deletedName}`);
-                    api(`🗑️ **NIVEL ELIMINADO:** El Administrador **${sN}** ha eliminado el nivel **${deletedName}** de la lista.`, 'lvls');
-                }
-            }
+            if(i < 0) return;
+            const deletedName = lvls[i]?.name || '?';
+            aAdminToast(`¿Eliminar <b>${deletedName}</b>? <span onclick="confirmDelLv(${i},'${deletedName}')" style="cursor:pointer;color:var(--rd);font-weight:900;margin-left:8px;text-decoration:underline;">CONFIRMAR</span>`, 'warn', 7000);
+        }
+        function confirmDelLv(i, deletedName) {
+            let nL = [...lvls]; nL.splice(i, 1);
+            db.ref('levels').set(nL); rLv(); toast("Nivel Eliminado"); log(`Eliminó el nivel: ${deletedName}`);
+            api(`🗑️ **NIVEL ELIMINADO:** El Administrador **${sN}** ha eliminado el nivel **${deletedName}** de la lista.`, 'lvls');
         }
         
         function pOrd() { 
@@ -1099,7 +1157,11 @@
         // MOTOR AREDL MASIVO
         async function bulkSyncAREDL() {
             const btn = $('btn-bulk-aredl');
-            if(!confirm("⚠️ ADVERTENCIA: Esto sobrescribirá el orden de TODOS tus niveles basándose en la AREDL oficial y recalculará la XP de todos los jugadores. ¿Deseas continuar?")) return;
+            if (!window._aredlOk) {
+                aAdminToast('¿Sobrescribir el orden con AREDL y recalcular toda la XP? <span onclick="window._aredlOk=true;bulkSyncAREDL()" style="cursor:pointer;color:var(--rd);font-weight:900;margin-left:8px;text-decoration:underline;">CONFIRMAR</span>', 'warn', 8000);
+                return;
+            }
+            window._aredlOk = false;
 
             btn.disabled = true;
             btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> CONECTANDO A RED AREDL (PROXY)...";
@@ -1142,7 +1204,7 @@
 
             } catch (error) {
                 console.error("AREDL Bulk Sync Error:", error);
-                alert("Error de conexión: El proxy o la API de AREDL están fallando. Intenta más tarde.\nDetalle: " + error.message);
+                aAdminToast("Error de conexión con AREDL: " + error.message, "warn", 6000);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = "<i class='fas fa-robot'></i> REORDENAR TODA LA LISTA AHORA";
@@ -1174,10 +1236,12 @@
             $('a-n').value = name; $('a-i').value = levelId; $('a-p').value = pos;
             let pL = nx(fD.players); 
             let i = pL.findIndex(p => p.name.toLowerCase() === user.toLowerCase());
-            if(i > -1) { 
-                pL[i].totalXP = (pL[i].totalXP || 0) + 10; 
-                db.ref('players').set(pL); 
-                toast(`+10 XP a ${user}`); 
+            if(i > -1) {
+                // [FIX] Update puntual
+                const sugKeys = Object.keys(fD.players || {});
+                const sugKey = sugKeys.find(k => fD.players[k].name?.toLowerCase() === user.toLowerCase());
+                if (sugKey) db.ref(`players/${sugKey}/totalXP`).set((fD.players[sugKey].totalXP||0)+10);
+                toast(`+10 XP a ${user}`);
             }
             db.ref(`level_suggestions/${id}`).remove(); 
             api(`✅ **SUGERENCIA APROBADA:** El administrador **${sN}** ha aceptado la sugerencia de **${user}**.`, 'sug');
@@ -1226,7 +1290,7 @@
 
         // FUNCIÓN PARA CORONAR FIRST VICTOR
         function makeFirst(playerName, levelName) {
-            if(!confirm(`¿Coronar a ${playerName} como FIRST VICTOR oficial de ${levelName}?`)) return;
+            // confirmado por aAdminToast en setFirstVictor
             
             let nL = [...lvls];
             let idx = nL.findIndex(l => l.name.toLowerCase() === levelName.toLowerCase());
@@ -1260,7 +1324,7 @@
         }
         
         function dPr(i) { 
-            if(confirm("¿Eliminar récord del perfil?")) { 
+            if(true) { // confirmado antes vía toast 
                 const p = nx(fD.players)[pIx]; let c = nx(p.completions); const xp = c[i].xp || 0; c.splice(i,1); 
                 db.ref(`players/${pIx}/completions`).set(c); db.ref(`players/${pIx}/totalXP`).set((p.totalXP || 0) - xp); 
                 log(`Récord borrado a ${p.name}`); rPD(); 
@@ -1285,9 +1349,14 @@
             let pL = nx(fD.players); 
             let i = pL.findIndex(p => p.name.toLowerCase() === r.nick.toLowerCase()); 
             
-            if(i > -1) { 
-                pL[i].email = r.email; db.ref('players').set(pL); db.ref(`claim_requests/${k}`).remove(); 
-                log(`Vinculó cuenta de: ${r.nick}`); toast("Cuenta Enlazada"); 
+            if(i > -1) {
+                // [FIX] Update puntual — solo el email
+                const clmKeys = Object.keys(fD.players || {});
+                const clmKey = clmKeys.find(k => fD.players[k].name?.toLowerCase() === r.nick.toLowerCase());
+                if (clmKey) {
+                    db.ref(`players/${clmKey}/email`).set(r.email)
+                        .then(() => { db.ref(`claim_requests/${k}`).remove(); log(`Vinculó cuenta de: ${r.nick}`); toast("Cuenta Enlazada"); });
+                }
             } else { toast("Perfil Inexistente", true); } 
         }
 
@@ -1296,7 +1365,7 @@
             Object.entries(d).forEach(([id, req]) => {
                 h += `
                 <div class="dc" style="align-items: flex-start;">
-                    <img src="${req.photo_url}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid var(--bl);">
+                    <img src="${req.photo_url}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid var(--bl);" onerror="this.style.opacity='0.2'; this.title='Imagen no cargó'">
                     <div style="flex:1;">
                         <h4 style="margin:0; color:var(--bl);">${req.player}</h4>
                         <a href="${req.photo_url}" target="_blank" style="font-size:0.7rem; color:var(--cy);">Ver Imagen Completa</a>
@@ -1311,12 +1380,20 @@
         }
 
         function aPfp(id) {
-            const req = fD.pfp_requests[id]; let pL = nx(fD.players);
-            let i = pL.findIndex(p => p.name.toLowerCase() === req.player.toLowerCase());
-            if(i > -1) {
-                pL[i].photo = req.photo_url; db.ref('players').set(pL); db.ref(`pfp_requests/${id}`).remove();
-                log(`Aprobó foto de perfil de: ${req.player}`); toast("Foto Actualizada");
-            } else { toast("Jugador no encontrado", true); }
+            const req = fD.pfp_requests[id];
+            if (!req) return toast('Solicitud no encontrada', true);
+            // [FIX] Update puntual — no reescribir todo el nodo /players
+            const allKeys = Object.keys(fD.players || {});
+            const targetKey = allKeys.find(k => fD.players[k].name?.toLowerCase() === req.player?.toLowerCase());
+            if (targetKey) {
+                db.ref(`players/${targetKey}/photo`).set(req.photo_url)
+                    .then(() => {
+                        db.ref(`pfp_requests/${id}`).remove();
+                        log(`Aprobó foto de perfil de: ${req.player}`);
+                        toast('Foto Actualizada');
+                    })
+                    .catch(() => toast('Error al guardar', true));
+            } else { toast('Jugador no encontrado', true); }
         }
 
         // ==========================================
@@ -1349,7 +1426,15 @@
                 }
                 
                 let inv = nx(pL[i].inventory); inv.push({itemName: r.itemName, date: Date.now()}); pL[i].inventory = inv; 
-                db.ref('players').set(pL); db.ref(`market_requests/${id}`).remove(); 
+                // [FIX] Update puntual — inventory y totalXP del jugador específico
+                const purKeys = Object.keys(fD.players || {});
+                const purKey = purKeys.find(k => fD.players[k].name?.toLowerCase() === r.player.toLowerCase());
+                if (purKey) {
+                    const updates = { [`players/${purKey}/inventory`]: pL[i].inventory };
+                    if (chargeXP) updates[`players/${purKey}/totalXP`] = pL[i].totalXP;
+                    db.ref('/').update(updates);
+                }
+                db.ref(`market_requests/${id}`).remove();
                 
                 if(chargeXP) {
                     log(`Compra ejecutada: ${r.itemName} por ${r.player}`); 
@@ -1408,7 +1493,7 @@
         
         function rCln(d) { 
             let h = ""; Object.entries(d).forEach(([id,c]) => { 
-                h += `<div class="dc"><div><h4 style="margin:0;color:var(--cy);">[${c.tag}] ${c.name}</h4><p style="margin:0;font-size:.7rem;">XP Global: ${c.totalXP||0}</p></div><button class="bs br" onclick="if(confirm('¿Borrar sindicato?')) db.ref('clans/${id}').remove()">X</button></div>`; 
+                h += `<div class="dc"><div><h4 style="margin:0;color:var(--cy);">[${c.tag}] ${c.name}</h4><p style="margin:0;font-size:.7rem;">XP Global: ${c.totalXP||0}</p></div><button class="bs br" onclick="aAdminToast('¿Borrar sindicato? <span onclick=\'db.ref(\`clans/' + id + '\`).remove()\' style=\'cursor:pointer;color:var(--rd);font-weight:900;margin-left:6px;text-decoration:underline;\'>CONFIRMAR</span>', \'warn\', 6000)">X</button></div>`; 
             }); 
             if($('l-cln')) $('l-cln').innerHTML = h; 
         }
@@ -1461,18 +1546,25 @@
             if($('l-stf')) $('l-stf').innerHTML = h; 
         }
         
-        function pStf() { 
-            if(sR !== 'owner') return; 
-            const n = $('st-n').value; const r = $('st-r').value; 
-            let pL = nx(fD.players); let i = pL.findIndex(p => p.name.toLowerCase() === n.toLowerCase()); 
-            if(i > -1) { pL[i].role = r; db.ref('players').set(pL); log(`Otorgó rango ${r} a ${n}`); toast("Poder Asignado"); } 
-            else { toast("Usuario Inexistente", true); } 
+        function pStf() {
+            if(sR !== 'owner') return;
+            const n = $('st-n').value; const r = $('st-r').value;
+            const allKeys = Object.keys(fD.players || {});
+            const targetKey = allKeys.find(k => fD.players[k].name?.toLowerCase() === n.toLowerCase());
+            if (targetKey) {
+                db.ref(`players/${targetKey}/role`).set(r)
+                    .then(() => { log(`Otorgó rango ${r} a ${n}`); toast("Poder Asignado"); });
+            } else { toast("Usuario Inexistente", true); }
         }
         
-        function dStf(n) { 
-            if(sR !== 'owner') return; 
-            let pL = nx(fD.players); let i = pL.findIndex(p => p.name === n); 
-            if(i > -1) { delete pL[i].role; db.ref('players').set(pL); log(`Revocó rango a ${n}`); toast("Revocado"); } 
+        function dStf(n) {
+            if(sR !== 'owner') return;
+            const allKeys = Object.keys(fD.players || {});
+            const targetKey = allKeys.find(k => fD.players[k].name === n);
+            if (targetKey) {
+                db.ref(`players/${targetKey}/role`).remove()
+                    .then(() => { log(`Revocó rango a ${n}`); toast("Revocado"); });
+            }
         }
         
         function renderEff(logs) { 
@@ -1485,11 +1577,27 @@
             if($('eff-box')) $('eff-box').innerHTML = h || '<p style="color:#666;">No hay datos de eficiencia recientes.</p>'; 
         }
         
-        function cleanDB() { 
-            if(confirm("ALERTA CRÍTICA: ¿Deseas purgar permanentemente a todos los usuarios inactivos que no son Staff y tienen 0 XP?")) { 
-                let pL = nx(fD.players).filter(p => p.role || (p.totalXP && p.totalXP > 0) || (p.completions && Object.keys(p.completions).length > 0)); 
-                db.ref('players').set(pL).then(() => { log("PURGA DE INACTIVOS EJECUTADA EN LA BD"); toast("Purga Completada"); location.reload(); }); 
-            } 
+        function cleanDB() {
+            aAdminToast('¿Purgar permanentemente usuarios inactivos (sin staff, sin XP, sin demons)? <span onclick="confirmCleanDB()" style="cursor:pointer;color:var(--rd);font-weight:900;margin-left:8px;text-decoration:underline;">CONFIRMAR</span>', 'warn', 8000);
+        }
+        function confirmCleanDB() {
+            // [FIX] Eliminar sólo los keys inactivos en lugar de reescribir todo
+            const playersObj = fD.players || {};
+            const updates = {};
+            Object.entries(playersObj).forEach(([key, p]) => {
+                const hasRole = !!p.role;
+                const hasXP = p.totalXP && p.totalXP > 0;
+                const hasComps = p.completions && Object.keys(p.completions).length > 0;
+                if (!hasRole && !hasXP && !hasComps) {
+                    updates[`players/${key}`] = null; // null = delete en Firebase
+                }
+            });
+            const toDelete = Object.keys(updates).length;
+            if (toDelete === 0) { toast("No hay inactivos para purgar."); return; }
+            db.ref('/').update(updates).then(() => {
+                log(`PURGA: ${toDelete} perfiles inactivos eliminados`);
+                toast(`Purga completada — ${toDelete} perfiles eliminados`);
+            });
         }
         
         function sCfg() { 
@@ -1509,18 +1617,22 @@
             log("Backup JSON Descargado"); 
         }
         
-        function rDB(e) { 
-            const f = e.target.files[0]; if(!f) return; 
-            const r = new FileReader(); 
-            r.onload = function(ev) { 
-                try { 
-                    const j = JSON.parse(ev.target.result); 
-                    if(confirm("PELIGRO: ¿Estás seguro de que quieres sobrescribir toda la Base de Datos OMNI con este archivo?")) { 
-                        db.ref('/').set(j).then(() => location.reload()); 
-                    } 
-                } catch(er) { toast("JSON Corrupto/Inválido", true); } 
-            }; 
-            r.readAsText(f); 
+        function rDB(e) {
+            const f = e.target.files[0]; if(!f) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                try {
+                    const j = JSON.parse(ev.target.result);
+                    // Toast de doble confirmación — acción nuclear
+                    aAdminToast(`☢️ <b>RESTAURACIÓN NUCLEAR</b>: Esto sobrescribirá TODA la BD con <b>${f.name}</b>. <span onclick="db.ref('/').set(${JSON.stringify(j).substring(0,0)}0||null)" style="display:none"></span><span onclick="window._restoreData=${JSON.stringify('pending')};confirmRestore()" style="cursor:pointer;color:var(--rd);font-weight:900;margin-left:8px;text-decoration:underline;">CONFIRMAR</span>`, 'warn', 10000);
+                    window._restoreJSON = j;
+                } catch(er) { toast("JSON Corrupto/Inválido", true); }
+            };
+            reader.readAsText(f);
+        }
+        function confirmRestore() {
+            if (!window._restoreJSON) return;
+            db.ref('/').set(window._restoreJSON).then(() => { window._restoreJSON = null; location.reload(); });
         }
     </script>
 </body>
