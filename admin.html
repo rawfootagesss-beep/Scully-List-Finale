@@ -270,49 +270,83 @@
         <div class="m-cont">
             
             <div id="t-dash" class="tab active">
-                <h2 class="title"><i class="fas fa-satellite-dish" style="color:var(--ac);"></i> Monitor Analítico</h2>
-                
-                <div class="grid">
-                    <div class="card"><h3><span id="s-p">0</span></h3><p>Usuarios Rankeados</p></div>
-                    <div class="card"><h3><span id="s-l">0</span></h3><p>Niveles Activos</p></div>
-                    <div class="card"><h3><span id="s-r">0</span></h3><p>Envíos Pendientes</p></div>
-                    <div class="card" style="border-color:var(--cy);"><h3><span id="s-t">42</span></h3><p>Visitas Simuladas</p></div>
+                <h2 class="title"><i class="fas fa-satellite-dish" style="color:var(--ac);"></i> Centro de Control</h2>
+
+                <!-- STATS GRID -->
+                <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); margin-bottom:20px;">
+                    <div class="card" onclick="sTab('t-play')" style="cursor:pointer;border-color:rgba(255,51,51,0.3);" title="Ver jugadores">
+                        <h3 style="color:var(--rd);"><span id="s-p">0</span></h3>
+                        <p><i class="fas fa-users" style="margin-right:4px; color:var(--rd);"></i>Jugadores</p>
+                    </div>
+                    <div class="card" onclick="sTab('t-lvls')" style="cursor:pointer;border-color:rgba(204,0,255,0.3);" title="Ver niveles">
+                        <h3 style="color:var(--pu);"><span id="s-l">0</span></h3>
+                        <p><i class="fas fa-list" style="margin-right:4px; color:var(--pu);"></i>Niveles</p>
+                    </div>
+                    <div class="card" onclick="sTab('t-recs')" style="cursor:pointer;border-color:rgba(0,255,102,0.3);" title="Ver bandeja">
+                        <h3 style="color:var(--gr);"><span id="s-r">0</span></h3>
+                        <p><i class="fas fa-inbox" style="margin-right:4px; color:var(--gr);"></i>Pendientes</p>
+                    </div>
+                    <div class="card" style="border-color:rgba(255,215,0,0.3);">
+                        <h3 style="color:var(--gd);"><span id="s-xp">0</span></h3>
+                        <p><i class="fas fa-bolt" style="margin-right:4px; color:var(--gd);"></i>XP Total</p>
+                    </div>
+                    <div class="card" onclick="sTab('t-bugs')" style="cursor:pointer;border-color:rgba(255,51,51,0.2);">
+                        <h3 style="color:var(--rd); font-size:1.4rem;"><span id="s-bugs">0</span></h3>
+                        <p><i class="fas fa-bug" style="margin-right:4px; color:var(--rd);"></i>Bugs</p>
+                    </div>
+                    <div class="card" style="border-color:rgba(0,204,255,0.2);">
+                        <h3 style="color:var(--bl); font-size:1.4rem;"><span id="s-staff">0</span></h3>
+                        <p><i class="fas fa-shield-alt" style="margin-right:4px; color:var(--bl);"></i>Staff</p>
+                    </div>
                 </div>
 
-                <div class="panel" style="border-color:var(--gd);">
-                    <h3 style="margin:0 0 15px;color:var(--gd);font-size:1rem;"><i class="fas fa-bullhorn"></i> Transmitir Alerta Global al Index</h3>
-                    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
-                        <input type="text" id="b-msg" placeholder="Escribe el mensaje de alerta para todos los visitantes..." style="flex:1; min-width:250px;">
-                        <select id="b-type" style="width:150px;">
-                            <option value="red">PELIGRO (Rojo)</option>
-                            <option value="yellow">AVISO (Dorado)</option>
-                            <option value="blue">INFO (Cyan)</option>
-                        </select>
-                    </div>
-                    <div style="display:flex; gap:10px;">
-                        <button class="btn" style="background:var(--gd);color:#000;flex:1;" onclick="sendBroadcast()"><i class="fas fa-paper-plane"></i> TRANSMITIR</button>
-                        <button class="btn" style="background:transparent;border:1px solid var(--rd);color:var(--rd);flex:1;" onclick="clearBroadcast()"><i class="fas fa-times"></i> APAGAR ALERTA</button>
-                    </div>
-                </div>
-                
-                <h3 style="color:var(--bl); font-size:1rem; margin-top:20px;">Eficiencia Staff (Récords Procesados)</h3>
-                <div class="panel" id="eff-box" style="display:flex; gap:15px; flex-wrap:wrap; border-color:var(--bl); padding:15px;"></div>
-
-                <div class="panel" style="border-color:var(--rd);">
-                    <div class="hlp" onclick="sHlp('Lockdown', 'Muestra una pantalla negra de mantenimiento en el Index público impidiendo el acceso a todos.')">?</div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;">
-                        <div>
-                            <h3 style="margin:0;color:var(--rd);font-size:1rem;"><i class="fas fa-lock"></i> MODO CUARENTENA (LOCKDOWN)</h3>
-                            <p style="margin:5px 0 0;font-size:.7rem;color:#888;">Cierra completamente el index público.</p>
+                <!-- FILA: ALERTA + LOCKDOWN -->
+                <div style="display:grid; grid-template-columns:1fr auto; gap:15px; margin-bottom:20px; align-items:start; flex-wrap:wrap;">
+                    <div class="panel" style="border-color:var(--gd); margin-bottom:0;">
+                        <h3 style="margin:0 0 12px;color:var(--gd);font-size:0.9rem;"><i class="fas fa-bullhorn"></i> Alerta Global al Index</h3>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+                            <input type="text" id="b-msg" placeholder="Mensaje para todos los visitantes..." style="flex:1; min-width:180px; padding:9px 12px; font-size:0.8rem;">
+                            <select id="b-type" style="width:130px; padding:9px; font-size:0.75rem;">
+                                <option value="red">⛔ PELIGRO</option>
+                                <option value="yellow">⚠️ AVISO</option>
+                                <option value="blue">ℹ️ INFO</option>
+                            </select>
                         </div>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn" style="background:var(--gd);color:#000;flex:1;padding:9px;" onclick="sendBroadcast()"><i class="fas fa-paper-plane"></i> TRANSMITIR</button>
+                            <button class="btn" style="background:transparent;border:1px solid var(--rd);color:var(--rd);padding:9px 14px;" onclick="clearBroadcast()"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="panel" style="border-color:var(--rd); margin-bottom:0; min-width:180px;">
+                        <div class="hlp" onclick="sHlp('Lockdown', 'Muestra una pantalla negra de mantenimiento en el Index público impidiendo el acceso a todos.')">?</div>
+                        <p style="font-size:0.65rem; color:var(--rd); font-family:'JetBrains Mono'; font-weight:900; margin:0 0 8px; text-transform:uppercase;"><i class="fas fa-lock"></i> Lockdown</p>
+                        <p style="margin:0 0 12px; font-size:0.7rem; color:#666;">Cierra el index público.</p>
                         <label class="sw">
                             <input type="checkbox" id="c-lk" onchange="tLck(this.checked)">
                             <span class="sl" id="sl-id"></span>
                         </label>
                     </div>
                 </div>
-                
-                <h3 style="color:var(--ac); font-size:0.9rem; text-transform:uppercase; margin-top:30px;"><i class="fas fa-terminal"></i> Terminal de Eventos</h3>
+
+                <!-- ACCIONES RÁPIDAS -->
+                <div class="panel" style="border-color:rgba(255,255,255,0.06); margin-bottom:20px;">
+                    <h3 style="margin:0 0 14px; font-size:0.85rem; color:#888; text-transform:uppercase; letter-spacing:1px; font-family:'JetBrains Mono';"><i class="fas fa-bolt" style="color:var(--ac);margin-right:6px;"></i>Acciones Rápidas</h3>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button class="bs bb" onclick="sTab('t-recs')"><i class="fas fa-inbox"></i> Ver Bandeja</button>
+                        <button class="bs bg" onclick="sTab('t-lvls')"><i class="fas fa-plus-circle"></i> Añadir Nivel</button>
+                        <button class="bs by" onclick="sTab('t-play')"><i class="fas fa-users-cog"></i> Editor Jugadores</button>
+                        <button class="bs" style="background:rgba(204,0,255,0.1);color:var(--pu);border:1px solid var(--pu);" onclick="sTab('t-bugs')"><i class="fas fa-bug"></i> Bug Reports</button>
+                        <button class="bs" style="background:rgba(0,255,255,0.1);color:var(--cy);border:1px solid var(--cy);" onclick="sTab('t-chat')"><i class="fas fa-comments"></i> Staff Chat</button>
+                        <button class="bs" style="background:rgba(56,182,255,0.1);color:#38b6ff;border:1px solid #38b6ff;" onclick="sTab('t-lvls');setTimeout(()=>$('btn-bulk-aredl')?.scrollIntoView({behavior:'smooth'}),200)"><i class="fas fa-robot"></i> Sync AREDL</button>
+                    </div>
+                </div>
+
+                <!-- EFICIENCIA STAFF -->
+                <h3 style="color:var(--bl); font-size:0.85rem; font-family:'JetBrains Mono'; text-transform:uppercase; letter-spacing:1px; margin-top:0;"><i class="fas fa-chart-bar" style="margin-right:6px;"></i>Eficiencia Staff</h3>
+                <div class="panel" id="eff-box" style="display:flex; gap:12px; flex-wrap:wrap; border-color:var(--bl); padding:15px; margin-bottom:20px;"></div>
+
+                <!-- TERMINAL -->
+                <h3 style="color:var(--ac); font-size:0.85rem; font-family:'JetBrains Mono'; text-transform:uppercase; letter-spacing:1px; margin:0 0 8px;"><i class="fas fa-terminal" style="margin-right:6px;"></i>Terminal de Eventos</h3>
                 <div id="term" class="term"></div>
             </div>
 
@@ -367,19 +401,44 @@
                     <button class="btn" style="background:transparent; border:1px solid var(--rd); color:var(--rd); margin-top:15px; width:100%;" onclick="pList('level_suggestions')"><i class="fas fa-trash"></i> VACIAR BANDEJA DE SUGERENCIAS</button>
                 </div>
 
-                <div class="panel">
-                    <div class="hlp" onclick="sHlp('Sistema de Posiciones', 'Escribe el número exacto del ranking donde quieres poner el nivel. El sistema reordenará automáticamente los demás hacia abajo.')">?</div>
+                <div class="panel" style="border-color:var(--pu);">
+                    <div class="hlp" onclick="sHlp('Sistema de Posiciones', 'Escribe el número exacto del ranking donde quieres poner el nivel. El sistema reordenará automáticamente los demás hacia abajo. El botón de satélite consulta AREDL automáticamente y sugiere la posición correcta.')">?</div>
+                    <h3 style="margin:0 0 4px; color:var(--pu); font-size:0.95rem;"><i class="fas fa-plus-circle"></i> <span id="lvl-editor-title">Añadir Nuevo Nivel</span></h3>
+                    <p style="margin:0 0 16px; font-size:0.7rem; color:#555;" id="lvl-editor-sub">Completa los campos. El satélite 📡 sugiere la posición AREDL automáticamente.</p>
                     <input type="hidden" id="e-ix" value="-1">
+
+                    <!-- XP PREVIEW BADGE -->
+                    <div id="lvl-xp-preview" style="display:none; margin-bottom:14px; padding:10px 14px; background:rgba(255,215,0,0.06); border:1px solid rgba(255,215,0,0.2); border-radius:10px; font-size:0.8rem; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                        <i class="fas fa-bolt" style="color:var(--gd);"></i>
+                        <span style="color:#888; font-size:0.7rem;">XP que otorgará este nivel:</span>
+                        <span id="lvl-xp-val" style="color:var(--gd); font-weight:900; font-family:'JetBrains Mono'; font-size:1rem;"></span>
+                        <span id="lvl-xp-bounty-note" style="display:none; font-size:0.65rem; color:var(--gd); background:rgba(255,215,0,0.1); padding:2px 8px; border-radius:10px; font-family:'JetBrains Mono';">⚡ ×2 BOUNTY</span>
+                    </div>
                     
-                    <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-bottom:15px;">
-                        <input type="text" id="a-n" placeholder="Nombre del Nivel">
-                        <input type="number" id="a-p" placeholder="Posición en el Ranking (Ej: 1)">
+                    <div style="display:grid; grid-template-columns:1fr; gap:12px; margin-bottom:15px;">
+                        <input type="text" id="a-n" placeholder="Nombre del Nivel" oninput="lookupAREDLPos(this.value); updateXPPreview()">
+                        <div>
+                            <div style="display:flex; gap:8px; align-items:center;">
+                                <input type="number" id="a-p" placeholder="Posición (Ej: 1)" style="flex:1; box-sizing:border-box;" min="1" oninput="updateXPPreview()">
+                                <button type="button" onclick="lookupAREDLPos($('a-n').value, true)" title="Consultar AREDL"
+                                    style="padding:11px 13px; background:rgba(56,182,255,0.1); border:1px solid rgba(56,182,255,0.35); color:#38b6ff; border-radius:8px; cursor:pointer; font-size:0.8rem; white-space:nowrap; flex-shrink:0; transition:0.2s;"
+                                    onmouseover="this.style.background='rgba(56,182,255,0.25)'" onmouseout="this.style.background='rgba(56,182,255,0.1)'">
+                                    <i class="fas fa-satellite-dish"></i>
+                                </button>
+                            </div>
+                            <!-- Hint AREDL -->
+                            <div id="aredl-pos-hint" style="display:none; margin-top:7px; font-size:0.72rem; padding:9px 12px; border-radius:8px; background:rgba(56,182,255,0.06); border:1px solid rgba(56,182,255,0.2); color:#38b6ff; font-family:'JetBrains Mono'; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                <i class="fas fa-satellite-dish" style="flex-shrink:0;"></i>
+                                <span id="aredl-pos-text" style="flex:1;"></span>
+                                <button id="aredl-pos-btn" onclick="applyAREDLPos()" style="display:none; background:rgba(56,182,255,0.2); border:1px solid #38b6ff; color:#38b6ff; padding:4px 12px; border-radius:6px; font-size:0.65rem; font-weight:900; cursor:pointer; font-family:'JetBrains Mono'; white-space:nowrap;">✓ USAR ESTE</button>
+                            </div>
+                        </div>
                         <input type="text" id="a-i" placeholder="Enlace de YouTube o ID (Se recorta solo)" onblur="this.value = extraerYouTubeID(this.value)">
                         <input type="text" id="a-v" placeholder="Nombre del Verificador (Opcional)">
                     </div>
                     
                     <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px; background:rgba(255,215,0,0.1); padding:10px; border-radius:8px; border:1px solid var(--gd);">
-                        <input type="checkbox" id="a-b" style="width:auto; margin:0;"> 
+                        <input type="checkbox" id="a-b" style="width:auto; margin:0;" onchange="updateXPPreview()"> 
                         <label style="margin:0; color:var(--gd); font-size:0.8rem;">Activar Contrato Bounty (DOBLE XP al verificar)</label>
                     </div>
                     
@@ -734,6 +793,8 @@
         let sN = "Admin"; 
         let sR = "helper"; 
         let cEm = "";
+        let _aredlCache = null;      // { name_lower: position } — cargado una vez
+        let _aredlFetching = false;
 
         // ==========================================
         // UI HANDLERS (INTERFAZ)
@@ -788,6 +849,150 @@
         
         function pList(p) {
             aAdminToast(`¿Vaciar <b>${p}</b>? Esta acción es irreversible. <span onclick="db.ref('${p}').remove(); toast('Lista Vaciada'); log('Purgó: ${p}')" style="cursor:pointer;color:var(--rd);font-weight:900;margin-left:8px;text-decoration:underline;">CONFIRMAR</span>`, 'warn', 7000);
+        }
+
+        // ── AREDL POSITION LOOKUP ─────────────────────────────────
+        let _aredlSugPos = null;   // posición sugerida activa
+
+        async function ensureAREDLCache() {
+            if (_aredlCache) return _aredlCache;
+            if (_aredlFetching) {
+                // Esperar hasta que termine
+                await new Promise(r => { const iv = setInterval(() => { if (!_aredlFetching) { clearInterval(iv); r(); } }, 100); });
+                return _aredlCache;
+            }
+            _aredlFetching = true;
+            try {
+                const url   = 'https://api.aredl.net/api/aredl/levels';
+                const proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+                const res   = await fetch(proxy);
+                if (!res.ok) throw new Error('API caída');
+                const data  = await res.json();
+                _aredlCache = {};
+                data.forEach(l => { _aredlCache[l.name.toLowerCase()] = l.position; });
+            } catch(e) {
+                _aredlCache = null;   // dejar null para reintentar
+            } finally {
+                _aredlFetching = false;
+            }
+            return _aredlCache;
+        }
+
+        let _lookupTimer = null;
+
+        // forceShow = true cuando se presiona el botón satélite manualmente
+        async function lookupAREDLPos(name, forceShow = false) {
+            clearTimeout(_lookupTimer);
+            const hint = document.getElementById('aredl-pos-hint');
+            const text = document.getElementById('aredl-pos-text');
+            const btn  = document.getElementById('aredl-pos-btn');
+            _aredlSugPos = null;
+
+            const trimmed = (name || '').trim();
+            if (trimmed.length < 3 && !forceShow) {
+                if (hint) hint.style.display = 'none';
+                return;
+            }
+
+            // Spinner mientras carga
+            if (hint) {
+                hint.style.display = 'flex';
+                hint.style.borderColor = 'rgba(56,182,255,0.2)';
+                hint.style.color = '#38b6ff';
+                if (text) text.textContent = 'Consultando AREDL...';
+                if (btn) btn.style.display = 'none';
+            }
+
+            const doLookup = async () => {
+                const cache = await ensureAREDLCache();
+                if (!hint) return;
+
+                if (!cache) {
+                    hint.style.display = 'flex';
+                    hint.style.color = 'var(--rd)';
+                    if (text) text.textContent = '⚠ No se pudo conectar a AREDL';
+                    if (btn) btn.style.display = 'none';
+                    return;
+                }
+
+                const key   = trimmed.toLowerCase();
+                const exact = cache[key];
+
+                if (exact !== undefined) {
+                    _aredlSugPos = exact;
+                    hint.style.borderColor = 'rgba(56,182,255,0.25)';
+                    hint.style.color = '#38b6ff';
+                    if (text) text.textContent = 'AREDL: puesto #' + exact;
+                    if (btn) btn.style.display = 'inline-block';
+                    // Auto-aplicar SOLO si el campo de posición está vacío
+                    const posInput = $('a-p');
+                    if (posInput && !posInput.value) {
+                        applyAREDLPos(true); // silencioso
+                    }
+                } else {
+                    // Búsqueda parcial — top 3 matches que contengan el texto
+                    const matches = Object.entries(cache)
+                        .filter(([k]) => k.includes(key))
+                        .sort((a,b) => a[1]-b[1])
+                        .slice(0, 3);
+                    if (matches.length) {
+                        const best = matches[0];
+                        _aredlSugPos = best[1];
+                        hint.style.borderColor = 'rgba(255,215,0,0.25)';
+                        hint.style.color = 'var(--gd)';
+                        const matchList = matches.map(([n,p]) => `"${n.replace(/\b./g,c=>c.toUpperCase())}" #${p}`).join(' · ');
+                        if (text) text.textContent = '¿Similares? ' + matchList;
+                        if (btn) { btn.textContent = '✓ USAR #' + best[1]; btn.style.display = 'inline-block'; }
+                    } else {
+                        hint.style.borderColor = 'rgba(255,255,255,0.06)';
+                        hint.style.color = '#444';
+                        if (text) text.textContent = 'No encontrado en AREDL — posición manual';
+                        if (btn) btn.style.display = 'none';
+                    }
+                }
+            };
+
+            if (forceShow) {
+                await doLookup();
+            } else {
+                _lookupTimer = setTimeout(doLookup, 420);
+            }
+        }
+
+        function applyAREDLPos(silent = false) {
+            if (_aredlSugPos === null) return;
+            const input = $('a-p');
+            if (input) {
+                input.value = _aredlSugPos;
+                input.style.borderColor = '#38b6ff';
+                input.style.boxShadow   = '0 0 0 2px rgba(56,182,255,0.12)';
+                setTimeout(() => { input.style.borderColor = ''; input.style.boxShadow = ''; }, 1800);
+            }
+            updateXPPreview();
+            if (!silent) {
+                const hint = document.getElementById('aredl-pos-hint');
+                const text = document.getElementById('aredl-pos-text');
+                const btn  = document.getElementById('aredl-pos-btn');
+                if (text) text.textContent = '✓ Posición #' + _aredlSugPos + ' aplicada';
+                if (btn) btn.style.display = 'none';
+                hint.style.borderColor = 'rgba(0,255,102,0.2)';
+                hint.style.color = 'var(--gr)';
+                setTimeout(() => { if(hint) { hint.style.display='none'; hint.style.borderColor=''; hint.style.color=''; } }, 2200);
+            }
+        }
+
+        function updateXPPreview() {
+            const pos    = parseInt($('a-p')?.value);
+            const bounty = $('a-b')?.checked;
+            const box    = document.getElementById('lvl-xp-preview');
+            const val    = document.getElementById('lvl-xp-val');
+            const note   = document.getElementById('lvl-xp-bounty-note');
+            if (!box || isNaN(pos) || pos < 1) { if (box) box.style.display = 'none'; return; }
+            let xp = Math.max(250 - (pos-1)*2, 5);
+            if (bounty) xp *= 2;
+            box.style.display = 'flex';
+            if (val)  val.textContent  = xp + ' XP base (×2 si es First Victor)';
+            if (note) note.style.display = bounty ? 'inline' : 'none';
         }
 
         function extraerYouTubeID(url) {
@@ -926,9 +1131,26 @@
                     lvls = nx(fD.levels);
                     const pList = nx(fD.players);
                     
-                    if($('s-p')) $('s-p').innerText = pList.length; 
-                    if($('s-l')) $('s-l').innerText = lvls.length; 
+                    if($('s-p')) $('s-p').innerText = pList.length;
+                    if($('s-l')) $('s-l').innerText = lvls.length;
                     if($('s-r')) $('s-r').innerText = Object.keys(fD.submissions||{}).length;
+                    // Nuevas stats del dashboard
+                    if($('s-xp')) {
+                        const totalXP = pList.reduce((sum, p) => {
+                            const comps = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : [];
+                            return sum + comps.reduce((s2, comp) => {
+                                const idx = lvls.findIndex(l => l.name.toLowerCase() === comp.level.toLowerCase());
+                                if (idx > -1) { let b = Math.max(250 - idx*2, 5); if(lvls[idx].bounty) b*=2; if(lvls[idx].first?.toLowerCase()===p.name?.toLowerCase()) b*=2; return s2+b; }
+                                return s2 + (comp.xp||0);
+                            }, 0) + (p.totalXP||0);
+                        }, 0);
+                        $('s-xp').innerText = totalXP >= 1000 ? (totalXP/1000).toFixed(1)+'K' : totalXP;
+                    }
+                    if($('s-bugs')) $('s-bugs').innerText = Object.values(fD.bug_reports||{}).filter(b => b.status==='pending').length;
+                    if($('s-staff')) {
+                        const staffRoles = ['admin','mod','helper','owner'];
+                        $('s-staff').innerText = pList.filter(p => staffRoles.includes(p.role)).length;
+                    }
                     
                     // Llamadas a TODO EL SISTEMA para evitar carga infinita
                     rRcs(fD.submissions||{}); 
@@ -1564,25 +1786,52 @@
         // ==========================================
         // EDITOR DE NIVELES Y AREDL
         // ==========================================
-        function rLvs(d) { 
-            let h = ""; 
-            d.forEach((l,i) => { 
-                let bS = l.bounty ? 'var(--gd)' : '#222'; 
-                let bIcon = l.bounty ? '<i class="fas fa-fire" style="color:var(--gd)"></i>' : '';
-                h += `
-                <div class="dc" style="background:#000; margin-bottom:5px; border-color:${bS};">
-                    <div><span style="color:var(--ac);font-weight:800;">#${i+1}</span> ${l.name} ${bIcon}</div>
-                    <div><button class="bs bb" onclick="eLv(${i})">EDT</button></div>
-                </div>`; 
-            }); 
-            if($('l-lvl')) $('l-lvl').innerHTML = h; 
+        let _allLvlsRendered = [];
+
+        function rLvs(d) {
+            _allLvlsRendered = d;
+            searchLvls($('lvl-search')?.value || '');
+        }
+
+        function searchLvls(q) {
+            const box = $('l-lvl');
+            if (!box) return;
+            const lower = (q||'').toLowerCase().trim();
+            const filtered = lower
+                ? _allLvlsRendered.map((l,i)=>({l,i})).filter(({l})=>l.name.toLowerCase().includes(lower))
+                : _allLvlsRendered.map((l,i)=>({l,i}));
+            if (!filtered.length) {
+                box.innerHTML = '<p style="color:#444;text-align:center;padding:20px;font-size:0.8rem;">Sin resultados.</p>';
+                return;
+            }
+            box.innerHTML = filtered.map(({l,i}) => {
+                const xp = Math.max(250 - i*2, 5) * (l.bounty ? 2 : 1);
+                const bountyTag = l.bounty ? ' <span style="font-size:0.55rem;color:var(--gd);border:1px solid var(--gd);padding:1px 5px;border-radius:10px;font-family:JetBrains Mono;">⚡BOUNTY</span>' : '';
+                return `<div class="dc" style="gap:8px; background:#000; border-color:${l.bounty?'var(--gd)':'#1a1a1a'};">
+                    <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
+                        <span style="font-size:0.65rem;color:#444;font-family:'JetBrains Mono';min-width:32px;flex-shrink:0;">#${i+1}</span>
+                        <div style="min-width:0;">
+                            <p style="margin:0;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}${bountyTag}</p>
+                            <p style="margin:2px 0 0;font-size:0.68rem;color:#555;">${l.first ? '<i class="fas fa-user" style="margin-right:3px;"></i>'+l.first+' &nbsp;·&nbsp; ':''}<span style="color:var(--gd);">+${xp} XP</span></p>
+                        </div>
+                    </div>
+                    <button class="bs" style="background:rgba(204,0,255,0.1);color:var(--pu);border:1px solid var(--pu);flex-shrink:0;" onclick="eLv(${i})" title="Editar"><i class="fas fa-edit"></i></button>
+                </div>`;
+            }).join('');
         }
         
-        function eLv(i) { 
-            const l = lvls[i]; 
-            $('e-ix').value = i; $('a-n').value = l.name; $('a-p').value = i + 1; 
-            $('a-i').value = l.id; $('a-v').value = l.first || ""; $('a-b').checked = l.bounty || false; 
-            $('edit-action-btns').style.display = 'flex'; $('v-inject-box').style.display = 'block'; 
+        function eLv(i) {
+            const l = lvls[i];
+            $('e-ix').value = i; $('a-n').value = l.name; $('a-p').value = i + 1;
+            $('a-i').value = l.id || ''; $('a-v').value = l.first || ''; $('a-b').checked = !!l.bounty;
+            $('edit-action-btns').style.display = 'flex'; $('v-inject-box').style.display = 'block';
+            const titleEl = document.getElementById('lvl-editor-title');
+            const subEl   = document.getElementById('lvl-editor-sub');
+            if (titleEl) titleEl.textContent = 'Editando: ' + l.name;
+            if (subEl)   subEl.textContent   = 'Posición actual: #' + (i+1) + ' — modifica los campos y guarda.';
+            lookupAREDLPos(l.name);
+            updateXPPreview();
+            document.querySelector('.panel[style*="border-color:var(--pu)"]')?.scrollIntoView({behavior:'smooth', block:'center'});
         }
         
         function sLv() { 
@@ -1615,10 +1864,19 @@
             rLv(); toast("Nivel Guardado"); log(`Modificó Nivel: ${n} (Pos: ${p})`);
         }
 
-        function rLv() { 
-            $('e-ix').value = "-1"; $('a-n').value = ""; $('a-i').value = ""; $('a-p').value = ""; 
-            $('a-v').value = ""; $('a-b').checked = false; 
+        function rLv() {
+            $('e-ix').value = "-1"; $('a-n').value = ""; $('a-i').value = ""; $('a-p').value = "";
+            $('a-v').value = ""; $('a-b').checked = false;
             $('edit-action-btns').style.display = 'none'; $('v-inject-box').style.display = 'none';
+            const hint = document.getElementById('aredl-pos-hint');
+            if (hint) { hint.style.display = 'none'; hint.style.borderColor = ''; hint.style.color = ''; }
+            const xpBox = document.getElementById('lvl-xp-preview');
+            if (xpBox) xpBox.style.display = 'none';
+            const titleEl = document.getElementById('lvl-editor-title');
+            const subEl   = document.getElementById('lvl-editor-sub');
+            if (titleEl) titleEl.textContent = 'Añadir Nuevo Nivel';
+            if (subEl)   subEl.textContent   = 'Completa los campos. El satélite 📡 sugiere la posición AREDL automáticamente.';
+            _aredlSugPos = null;
         }
         
         function delLv() {
@@ -1651,16 +1909,9 @@
             btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> CONECTANDO A RED AREDL (PROXY)...";
 
             try {
-                const targetUrl = 'https://api.aredl.net/api/aredl/levels';
-                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-
-                const response = await fetch(proxyUrl);
-                if (!response.ok) throw new Error("Error en el proxy o API caída.");
-
-                const aredlData = await response.json();
-
-                const aredlMap = {};
-                aredlData.forEach(l => { aredlMap[l.name.toLowerCase()] = l.position; });
+                // Reusar caché si ya fue cargado por el lookup individual
+                const aredlMap = await ensureAREDLCache();
+                if (!aredlMap) throw new Error('No se pudo conectar a AREDL o API caída.');
 
                 // ── Guardar posiciones ANTES ──────────────────────────
                 const oldPos = {};
