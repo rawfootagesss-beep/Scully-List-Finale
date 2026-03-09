@@ -267,6 +267,91 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* =========================================
+           CAMPANA DE NOTIFICACIONES
+           ========================================= */
+        #notif-bell {
+            position: fixed; top: 20px; right: 20px; z-index: 8000;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(10,10,10,0.95); border: 1px solid rgba(255,255,255,0.08);
+            color: #666; font-size: 1.1rem; cursor: pointer;
+            display: none; align-items: center; justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.7); transition: 0.2s; position: fixed;
+        }
+        #notif-bell:hover { color: #fff; border-color: var(--accent); transform: scale(1.1); }
+        #notif-bell.has-new { color: var(--cyan); border-color: rgba(0,255,255,0.4);
+            box-shadow: 0 0 0 3px rgba(0,255,255,0.12), 0 4px 20px rgba(0,0,0,0.7); }
+        #notif-bell.has-new i { animation: bellRing 0.6s ease-in-out 2; }
+        @keyframes bellRing {
+            0%,100% { transform: rotate(0); }
+            20% { transform: rotate(-20deg); }
+            60% { transform: rotate(20deg); }
+        }
+        #notif-badge {
+            position: absolute; top: -4px; right: -4px;
+            background: var(--red); color: #fff; font-size: 0.6rem;
+            font-weight: 900; width: 18px; height: 18px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'JetBrains Mono'; border: 2px solid #030303;
+            pointer-events: none;
+        }
+        #notif-panel {
+            position: fixed; top: 72px; right: 20px; z-index: 8000;
+            width: 320px; background: rgba(8,8,8,0.98);
+            border: 1px solid rgba(255,255,255,0.07); border-radius: 18px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9); backdrop-filter: blur(20px);
+            transform: translateY(-10px) scale(0.97); opacity: 0; pointer-events: none;
+            transition: all 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 460px; display: flex; flex-direction: column;
+        }
+        #notif-panel.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+        .notif-header {
+            padding: 16px 18px 12px; border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+        }
+        .notif-header span { font-family: 'JetBrains Mono'; font-size: 0.7rem;
+            color: #555; text-transform: uppercase; letter-spacing: 2px; }
+        .notif-clear { font-size: 0.65rem; color: #444; cursor: pointer;
+            font-family: 'JetBrains Mono'; transition: 0.2s; }
+        .notif-clear:hover { color: var(--red); }
+        .notif-list { overflow-y: auto; flex: 1; padding: 8px 0; }
+        .notif-list::-webkit-scrollbar { width: 4px; }
+        .notif-list::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
+        .notif-item {
+            padding: 12px 18px 12px 24px; display: flex; gap: 12px; align-items: flex-start;
+            transition: background 0.15s; position: relative;
+        }
+        .notif-item:hover { background: rgba(255,255,255,0.02); }
+        .notif-item.unread::before {
+            content: ''; position: absolute; left: 10px; top: 50%;
+            transform: translateY(-50%); width: 5px; height: 5px;
+            border-radius: 50%; background: var(--cyan);
+        }
+        .notif-icon {
+            width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+        }
+        .notif-icon.accepted { background: rgba(0,255,102,0.12); color: var(--green); }
+        .notif-icon.rejected { background: rgba(255,51,51,0.12); color: var(--red); }
+        .notif-icon.appeal   { background: rgba(255,215,0,0.12); color: var(--gold); }
+        .notif-body { flex: 1; min-width: 0; }
+        .notif-body .n-level { font-weight: 800; font-size: 0.82rem; color: #fff;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .notif-body .n-status { font-size: 0.72rem; margin-top: 2px; }
+        .notif-body .n-status.accepted { color: var(--green); }
+        .notif-body .n-status.rejected { color: var(--red); }
+        .notif-body .n-status.appeal   { color: var(--gold); }
+        .notif-body .n-reason { font-size: 0.68rem; color: #555; margin-top: 3px;
+            font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .notif-body .n-time { font-size: 0.62rem; color: #333;
+            font-family: 'JetBrains Mono'; margin-top: 3px; }
+        .notif-empty { padding: 35px 18px; text-align: center;
+            color: #333; font-size: 0.8rem; font-family: 'JetBrains Mono'; }
+        @media(max-width: 900px) {
+            #notif-bell { top: 15px; right: 70px; }
+            #notif-panel { width: calc(100vw - 30px); right: 15px; top: 68px; }
+        }
+
+        /* =========================================
            [OMNI-NEW] SISTEMA DE TOASTS
            ========================================= */
         #omni-toast-container {
@@ -939,6 +1024,9 @@
             if (me && miLlaveDB) {
                 currentUserData = { name: me.name, key: miLlaveDB, role: me.role || 'player' };
                 
+                // Iniciar sistema de notificaciones ahora que hay sesión
+                initNotifSystem();
+
                 if (navLogin) { navLogin.innerHTML = '<i class="fas fa-user-circle"></i> Mi Perfil'; navLogin.href = "perfil.html"; navLogin.onclick = null; }
                 
                 const btnManage = document.getElementById('btn-manage-account');
@@ -1817,6 +1905,134 @@
             }
         }
 
+        // =============================================
+        // SISTEMA DE NOTIFICACIONES (CAMPANA)
+        // Escucha /history y /submissions en tiempo real.
+        // Muestra aceptado (verde), rechazado (rojo), apelación (oro).
+        // Unread: entradas cuyo timestamp > notifRead guardado en Firebase.
+        // =============================================
+        let _notifPanelOpen = false;
+        let _notifReadTs = 0;      // timestamp del último "marcar todo leído"
+        let _notifItems = [];      // cache local [{id, level, status, reason, time}]
+        let _notifListenerActive = false;
+
+        function initNotifSystem() {
+            const bell = document.getElementById('notif-bell');
+            if(!currentUserData.key || !bell) return;
+            bell.style.display = 'flex';
+
+            // Leer el timestamp de "último leído" del servidor
+            db.ref(`players/${currentUserData.key}/notifRead`).once('value').then(snap => {
+                _notifReadTs = snap.val() || 0;
+            });
+
+            if(_notifListenerActive) return; // evitar listeners duplicados
+            _notifListenerActive = true;
+
+            // Escuchar historial de récords en tiempo real
+            db.ref('history').on('value', snap => {
+                if(!currentUserData.name || !snap.val()) { renderNotifPanel([]); return; }
+                const all = Object.entries(snap.val() || {}).map(([k,v]) => ({id:k,...v}));
+                _notifItems = all
+                    .filter(h => h.player && h.player.toLowerCase() === currentUserData.name.toLowerCase())
+                    .sort((a,b) => (b.time||0) - (a.time||0));
+                renderNotifPanel(_notifItems);
+            });
+
+            // También escuchar submissions pendientes del jugador
+            db.ref('submissions').on('value', snap => {
+                if(!currentUserData.name) return;
+                const pending = Object.entries(snap.val() || {})
+                    .map(([k,v]) => ({id:k,...v}))
+                    .filter(s => s.player && s.player.toLowerCase() === currentUserData.name.toLowerCase())
+                    .map(s => ({...s, status: 'Pendiente', time: s.time || 0}));
+
+                // Mezclar pendientes con el historial ya cargado
+                const combined = [...pending, ..._notifItems].sort((a,b) => (b.time||0) - (a.time||0));
+                renderNotifPanel(combined);
+            });
+        }
+
+        function renderNotifPanel(items) {
+            const list = document.getElementById('notif-list');
+            const bell = document.getElementById('notif-bell');
+            const badge = document.getElementById('notif-badge');
+            if(!list || !bell) return;
+
+            if(!items.length) {
+                list.innerHTML = '<div class="notif-empty"><i class="fas fa-inbox" style="display:block; font-size:1.5rem; margin-bottom:8px; opacity:0.3;"></i>Sin récords enviados</div>';
+                bell.classList.remove('has-new');
+                badge.style.display = 'none';
+                return;
+            }
+
+            // Contar no leídos (solo aceptados/rechazados/apelaciones, no pendientes)
+            const unreadCount = items.filter(it =>
+                it.status !== 'Pendiente' && (it.time || 0) > _notifReadTs
+            ).length;
+
+            if(unreadCount > 0) {
+                bell.classList.add('has-new');
+                badge.style.display = 'flex';
+                badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+            } else {
+                bell.classList.remove('has-new');
+                badge.style.display = 'none';
+            }
+
+            const icons = {
+                'Aceptado':  { cls: 'accepted', icon: 'fa-check', label: '✅ Aceptado' },
+                'Rechazado': { cls: 'rejected', icon: 'fa-times', label: '❌ Rechazado' },
+                'Apelacion': { cls: 'appeal',   icon: 'fa-exclamation', label: '⚠️ En revisión' },
+                'Pendiente': { cls: 'appeal',   icon: 'fa-clock', label: '🕐 Pendiente' },
+            };
+
+            list.innerHTML = items.map(it => {
+                const cfg = icons[it.status] || icons['Pendiente'];
+                const isUnread = it.status !== 'Pendiente' && (it.time||0) > _notifReadTs;
+                const timeStr = it.time ? new Date(it.time).toLocaleDateString('es', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}) : '';
+                const reasonHtml = it.reason ? `<div class="n-reason" title="${escapeHTML(it.reason)}">"${escapeHTML(it.reason)}"</div>` : '';
+
+                return `<div class="notif-item ${isUnread ? 'unread' : ''}">
+                    <div class="notif-icon ${cfg.cls}"><i class="fas ${cfg.icon}"></i></div>
+                    <div class="notif-body">
+                        <div class="n-level">${escapeHTML(it.level || '?')}</div>
+                        <div class="n-status ${cfg.cls}">${cfg.label}</div>
+                        ${reasonHtml}
+                        <div class="n-time">${timeStr}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function toggleNotifPanel() {
+            _notifPanelOpen = !_notifPanelOpen;
+            document.getElementById('notif-panel').classList.toggle('open', _notifPanelOpen);
+        }
+
+        function markAllRead() {
+            if(!currentUserData.key) return;
+            _notifReadTs = Date.now();
+            db.ref(`players/${currentUserData.key}/notifRead`).set(_notifReadTs);
+            // Re-render sin unread dots
+            const bell = document.getElementById('notif-bell');
+            const badge = document.getElementById('notif-badge');
+            bell.classList.remove('has-new');
+            badge.style.display = 'none';
+            // Quitar puntos azules de todos los items
+            document.querySelectorAll('.notif-item.unread').forEach(el => el.classList.remove('unread'));
+        }
+
+        // Cerrar panel al click fuera
+        document.addEventListener('click', e => {
+            if(_notifPanelOpen &&
+               !e.target.closest('#notif-panel') &&
+               !e.target.closest('#notif-bell')) {
+                _notifPanelOpen = false;
+                document.getElementById('notif-panel').classList.remove('open');
+            }
+        });
+
         let isWaveMode = false;
         document.addEventListener('keydown', (e) => { if(e.key === 'Shift' && !isWaveMode) { isWaveMode = true; document.body.classList.add('wave-mode'); } });
         document.addEventListener('keyup', (e) => { if(e.key === 'Shift') { isWaveMode = false; document.body.classList.remove('wave-mode'); } });
@@ -1928,6 +2144,22 @@
         })();
 
     </script>
+
+    <!-- CAMPANA DE NOTIFICACIONES -->
+    <button id="notif-bell" onclick="toggleNotifPanel()" title="Mis récords">
+        <i class="fas fa-bell"></i>
+        <span id="notif-badge" style="display:none;"></span>
+    </button>
+
+    <div id="notif-panel">
+        <div class="notif-header">
+            <span><i class="fas fa-bell" style="margin-right:6px;"></i>Mis Récords</span>
+            <span class="notif-clear" onclick="markAllRead()">Marcar todo leído</span>
+        </div>
+        <div class="notif-list" id="notif-list">
+            <div class="notif-empty">Sin notificaciones</div>
+        </div>
+    </div>
 
     <!-- [OMNI-NEW] Toast container -->
     <div id="omni-toast-container"></div>
