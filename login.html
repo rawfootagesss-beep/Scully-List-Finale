@@ -1,171 +1,413 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>OMNI | Acceso al Sistema</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root{ --bg:#030303; --accent:#ff6600; --cyan:#00ffff; --border:rgba(255,255,255,0.1); --card-bg:rgba(10,10,10,0.85); }
-*{ box-sizing:border-box; outline:none; -webkit-tap-highlight-color:transparent; }
-body{ background:var(--bg); color:#fff; font-family:'Lexend Deca', sans-serif; margin:0; display:flex; justify-content:center; align-items:center; min-height:100vh; position:relative; overflow:hidden; }
-.bg-grid{ position:absolute; inset:0; background-image:linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px); background-size:40px 40px; z-index:0; animation:moveGrid 20s linear infinite;}
-.bg-glow{ position:absolute; width:600px; height:600px; background:radial-gradient(circle, rgba(255,102,0,0.05) 0%, transparent 60%); top:50%; left:50%; transform:translate(-50%, -50%); z-index:0;}
-@keyframes moveGrid{ 0%{transform:translateY(0);} 100%{transform:translateY(40px);} }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OMNI | Acceso al Sistema</title>
+    <meta name="description" content="Accede al Hub OMNI de The Scully List — el ranking oficial de Geometry Dash.">
+    <link rel="icon" href="https://i.imgur.com/6D2g3wU.png" type="image/png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Lexend+Deca:wght@300;400;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root { 
+            --bg: #030303; 
+            --accent: #ff6600; 
+            --cyan: #00ffff; 
+            --border: rgba(255, 255, 255, 0.1); 
+            --card-bg: rgba(10, 10, 10, 0.85);
+        }
+        
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background-color: var(--bg); 
+            color: #fff; 
+            font-family: 'Lexend Deca', sans-serif; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            position: relative;
+            overflow: hidden;
+        }
 
-.back-btn{ position:absolute; top:30px; left:30px; color:#888; text-decoration:none; font-size:1.5rem; transition:0.3s; z-index:10; background:rgba(255,255,255,0.05); width:45px; height:45px; display:flex; justify-content:center; align-items:center; border-radius:50%; border:1px solid var(--border);}
-.back-btn:hover{ color:#fff; border-color:var(--cyan); background:rgba(0,255,255,0.1); transform:scale(1.1); }
+        /* FONDO ANIMADO CIBERNÉTICO */
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 0;
+            animation: moveGrid 20s linear infinite;
+        }
+        .bg-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 102, 0, 0.05) 0%, transparent 60%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
 
-.auth-container{ background:var(--card-bg); border:1px solid var(--border); border-radius:25px; padding:50px 40px; width:90%; max-width:420px; box-shadow:0 20px 60px rgba(0,0,0,0.9); text-align:center; position:relative; z-index:2; backdrop-filter:blur(15px);}
-.auth-container::before{ content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg, transparent, var(--cyan), var(--accent), transparent); border-radius:25px 25px 0 0;}
+        @keyframes moveGrid {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(40px); }
+        }
 
-.brand-logo{ font-size:3rem; color:var(--accent); margin-bottom:10px; text-shadow:0 0 20px rgba(255,102,0,0.5);}
-h1{ font-family:'JetBrains Mono'; margin:0 0 5px; color:#fff; font-size:2.2rem; text-transform:uppercase; letter-spacing:-1px;}
-h1 span{ color:var(--cyan); }
-p.subtitle{ color:#888; font-size:0.85rem; margin-bottom:35px; text-transform:uppercase; letter-spacing:1px; }
+        .back-btn { 
+            position: absolute; 
+            top: 30px; 
+            left: 30px; 
+            color: #888; 
+            text-decoration: none; 
+            font-size: 1.5rem; 
+            transition: 0.3s; 
+            z-index: 10;
+            background: rgba(255,255,255,0.05);
+            width: 45px; height: 45px;
+            display: flex; justify-content: center; align-items: center;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+        }
+        .back-btn:hover { color: #fff; border-color: var(--cyan); background: rgba(0,255,255,0.1); transform: scale(1.1); }
 
-.input-group{ position:relative; margin-bottom:20px; }
-.input-group i{ position:absolute; left:20px; top:50%; transform:translateY(-50%); color:#555; font-size:1.1rem; transition:0.3s; }
-.g-input{ width:100%; background:rgba(0,0,0,0.6); border:1px solid #333; color:#fff; padding:16px 20px 16px 50px; border-radius:12px; font-family:inherit; font-size:0.95rem; transition:0.3s; }
-.g-input:focus{ border-color:var(--cyan); background:rgba(0,255,255,0.02); }
-.g-input:focus + i, .g-input:not(:placeholder-shown)+i{ color:var(--cyan); }
+        /* CONTENEDOR PRINCIPAL */
+        .auth-container { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border); 
+            border-radius: 25px; 
+            padding: 50px 40px; 
+            width: 90%; 
+            max-width: 420px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9), inset 0 0 20px rgba(0,255,255,0.02); 
+            text-align: center; 
+            position: relative; 
+            z-index: 2;
+            backdrop-filter: blur(15px);
+        }
+        
+        .auth-container::before { 
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; 
+            background: linear-gradient(90deg, transparent, var(--cyan), var(--accent), transparent); 
+            border-radius: 25px 25px 0 0;
+        }
 
-.btn{ width:100%; background:var(--accent); color:#000; border:none; padding:16px; border-radius:12px; font-weight:800; font-size:1rem; cursor:pointer; text-transform:uppercase; transition:0.3s; margin-top:10px; display:flex; justify-content:center; align-items:center; gap:10px;}
-.btn:hover{ transform:translateY(-3px); box-shadow:0 8px 25px rgba(255,102,0,0.4);}
-.btn:disabled{ opacity:0.7; cursor:not-allowed; transform:none; box-shadow:none;}
-.btn-cyan{ background:transparent; border:2px solid var(--cyan); color:var(--cyan);}
-.btn-cyan:hover{ background:var(--cyan); color:#000; box-shadow:0 8px 25px rgba(0,255,255,0.4); }
+        .brand-logo { font-size: 3rem; color: var(--accent); margin-bottom: 10px; text-shadow: 0 0 20px rgba(255,102,0,0.5); }
+        h1 { font-family: 'JetBrains Mono'; margin: 0 0 5px; color: #fff; font-size: 2.2rem; text-transform: uppercase; letter-spacing: -1px; }
+        h1 span { color: var(--cyan); }
+        p.subtitle { color: #888; font-size: 0.85rem; margin-bottom: 35px; text-transform: uppercase; letter-spacing: 1px; }
 
-.toggle-text{ margin-top:25px; font-size:0.8rem; color:#888; cursor:pointer; transition:0.3s; display:inline-block; font-weight:bold; text-transform:uppercase;}
-.toggle-text:hover{ color:#fff; }
-.toggle-text i{ margin-right:5px; color:var(--accent); }
+        /* CASILLAS DE INPUT CON ICONOS */
+        .input-group { position: relative; margin-bottom: 20px; }
+        .input-group i { 
+            position: absolute; left: 20px; top: 50%; transform: translateY(-50%); 
+            color: #555; font-size: 1.1rem; transition: 0.3s; 
+        }
+        .g-input { 
+            width: 100%; background: rgba(0,0,0,0.6); border: 1px solid #333; color: #fff; 
+            padding: 16px 20px 16px 50px; border-radius: 12px; font-family: inherit; 
+            font-size: 0.95rem; outline: none; box-sizing: border-box; transition: 0.3s; 
+        }
+        .g-input:focus { border-color: var(--cyan); background: rgba(0,255,255,0.02); }
+        .g-input:focus + i, .g-input:not(:placeholder-shown) + i { color: var(--cyan); }
+        
+        /* BOTONES DE ACCIÓN */
+        .btn { 
+            width: 100%; background: var(--accent); color: #000; border: none; 
+            padding: 16px; border-radius: 12px; font-weight: 800; font-size: 1rem; 
+            cursor: pointer; text-transform: uppercase; transition: 0.3s; 
+            margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255,102,0,0.4); }
+        .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        .btn-cyan { background: transparent; border: 2px solid var(--cyan); color: var(--cyan); }
+        .btn-cyan:hover { background: var(--cyan); color: #000; box-shadow: 0 8px 25px rgba(0,255,255,0.4); }
 
-.form-section{ display:none; animation:fadeIn 0.4s ease-out forwards; }
-.form-section.active{ display:block; }
-@keyframes fadeIn{ from{opacity:0; transform:translateY(15px);} to{opacity:1; transform:translateY(0);} }
+        .toggle-text { 
+            margin-top: 25px; font-size: 0.8rem; color: #888; cursor: pointer; 
+            transition: 0.3s; display: inline-block; font-weight: bold; text-transform: uppercase; 
+        }
+        .toggle-text:hover { color: #fff; }
+        .toggle-text i { margin-right: 5px; color: var(--accent); }
+        
+        /* TRANSICIÓN DE FORMULARIOS */
+        .form-section { display: none; animation: fadeIn 0.4s ease-out forwards; }
+        .form-section.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-.reset-link{ font-size:0.75rem; color:#888; cursor:pointer; margin-top:8px; display:inline-block; }
-.reset-link:hover{ color:var(--cyan); }
-</style>
+        /* SHOW/HIDE PASSWORD */
+        .pass-toggle {
+            position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+            color: #555; cursor: pointer; font-size: 1rem; transition: 0.2s; z-index: 2;
+        }
+        .pass-toggle:hover { color: var(--cyan); }
+
+        /* MENSAJE DE ERROR/ÉXITO INLINE */
+        .auth-msg {
+            padding: 12px 16px; border-radius: 10px; font-size: 0.82rem;
+            font-weight: 600; margin-top: 12px; display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .auth-msg.error { background: rgba(255,51,51,0.12); border: 1px solid rgba(255,51,51,0.4); color: #ff6666; }
+        .auth-msg.success { background: rgba(0,255,102,0.1); border: 1px solid rgba(0,255,102,0.3); color: #00ff66; }
+        .auth-msg.info { background: rgba(0,255,255,0.08); border: 1px solid rgba(0,255,255,0.3); color: var(--cyan); }
+
+        /* FORGOT PASSWORD LINK */
+        .forgot-link {
+            color: #555; font-size: 0.75rem; cursor: pointer; transition: 0.2s;
+            display: inline-block; margin-top: 8px; font-weight: 600; text-transform: uppercase;
+        }
+        .forgot-link:hover { color: var(--cyan); }
+
+        /* PASSWORD STRENGTH */
+        .pass-strength { margin-top: 6px; height: 3px; border-radius: 3px; background: #222; overflow: hidden; display: none; }
+        .pass-strength-fill { height: 100%; width: 0%; transition: 0.3s; border-radius: 3px; }
+
+        /* RESPONSIVE */
+        @media (max-width: 480px) {
+            .auth-container { padding: 35px 22px; border-radius: 18px; }
+            h1 { font-size: 1.8rem; }
+            .g-input { padding: 14px 18px 14px 44px; font-size: 0.9rem; }
+            .btn { padding: 14px; }
+        }
+    </style>
 </head>
 <body>
-<div class="bg-grid"></div>
-<div class="bg-glow"></div>
 
-<a href="index.html" class="back-btn" title="Volver al Hub"><i class="fas fa-arrow-left"></i></a>
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
 
-<div class="auth-container">
-    <i class="fas fa-microchip brand-logo"></i>
-    <h1>SYS.<span>OMNI</span></h1>
+    <a href="index.html" class="back-btn" title="Volver al Hub"><i class="fas fa-arrow-left"></i></a>
 
-    <div id="login-box" class="form-section active">
-        <p class="subtitle">Identificación Requerida</p>
-        <div class="input-group">
-            <input type="email" id="log-email" class="g-input" placeholder="Correo Electrónico">
-            <i class="fas fa-envelope"></i>
+    <div class="auth-container">
+        <i class="fas fa-microchip brand-logo"></i>
+        <h1>SYS.<span>OMNI</span></h1>
+        
+        <div id="login-box" class="form-section active">
+            <p class="subtitle">Identificación Requerida</p>
+            
+            <div class="input-group">
+                <input type="email" id="log-email" class="g-input" placeholder="Correo Electrónico">
+                <i class="fas fa-envelope"></i>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="log-pass" class="g-input" placeholder="Contraseña" onkeypress="if(event.keyCode==13) login()">
+                <i class="fas fa-lock"></i>
+                <span class="pass-toggle" onclick="togglePass('log-pass', this)" title="Mostrar/Ocultar"><i class="fas fa-eye"></i></span>
+            </div>
+            <span class="forgot-link" onclick="forgotPassword()"><i class="fas fa-key" style="margin-right:5px;color:var(--accent);"></i>¿Olvidaste tu contraseña?</span>
+            
+            <div id="login-msg" class="auth-msg"></div>
+            <button class="btn" id="btn-login" onclick="login()" style="margin-top:16px;">INICIAR SESIÓN <i class="fas fa-sign-in-alt"></i></button>
+            <span class="toggle-text" onclick="toggleForms()"><i class="fas fa-user-plus"></i> Forjar nueva identidad Titán</span>
         </div>
-        <div class="input-group">
-            <input type="password" id="log-pass" class="g-input" placeholder="Contraseña" onkeypress="if(event.keyCode==13) login()">
-            <i class="fas fa-lock"></i>
+
+        <div id="reg-box" class="form-section">
+            <p class="subtitle" style="color:var(--cyan);">Creación de Perfil Titán</p>
+            
+            <div class="input-group">
+                <input type="text" id="reg-nick" class="g-input" placeholder="Tu Nick exacto en GD">
+                <i class="fas fa-user"></i>
+            </div>
+
+            <div class="input-group">
+                <input type="email" id="reg-email" class="g-input" placeholder="Correo Electrónico">
+                <i class="fas fa-envelope"></i>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="reg-pass" class="g-input" placeholder="Contraseña (Mín. 6 letras)" oninput="checkPassStrength(this.value)" onkeypress="if(event.keyCode==13) register()">
+                <i class="fas fa-key"></i>
+                <span class="pass-toggle" onclick="togglePass('reg-pass', this)" title="Mostrar/Ocultar"><i class="fas fa-eye"></i></span>
+            </div>
+            <div class="pass-strength" id="pass-strength-bar"><div class="pass-strength-fill" id="pass-strength-fill"></div></div>
+
+            <div id="reg-msg" class="auth-msg"></div>
+            <button class="btn btn-cyan" id="btn-register" onclick="register()" style="margin-top:16px;">CREAR CUENTA <i class="fas fa-bolt"></i></button>
+            <span class="toggle-text" onclick="toggleForms()"><i class="fas fa-undo"></i> Ya tengo acceso al sistema</span>
         </div>
-        <button class="btn" id="btn-login" onclick="login()">INICIAR SESIÓN <i class="fas fa-sign-in-alt"></i></button>
-        <span class="reset-link" onclick="resetPassword()">¿Olvidaste tu contraseña?</span>
-        <span class="toggle-text" onclick="toggleForms()"><i class="fas fa-user-plus"></i> Forjar nueva identidad</span>
     </div>
 
-    <div id="reg-box" class="form-section">
-        <p class="subtitle" style="color:var(--cyan);">Creación de Perfil Titán</p>
-        <div class="input-group">
-            <input type="text" id="reg-nick" class="g-input" placeholder="Tu Nick exacto en GD">
-            <i class="fas fa-user"></i>
-        </div>
-        <div class="input-group">
-            <input type="email" id="reg-email" class="g-input" placeholder="Correo Electrónico">
-            <i class="fas fa-envelope"></i>
-        </div>
-        <div class="input-group">
-            <input type="password" id="reg-pass" class="g-input" placeholder="Contraseña (Mín. 6 letras)" onkeypress="if(event.keyCode==13) register()">
-            <i class="fas fa-key"></i>
-        </div>
-        <button class="btn btn-cyan" id="btn-register" onclick="register()">CREAR CUENTA <i class="fas fa-bolt"></i></button>
-        <span class="toggle-text" onclick="toggleForms()"><i class="fas fa-undo"></i> Ya tengo acceso</span>
-    </div>
-</div>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    
+    <script>
+        // CONFIGURACIÓN FIREBASE OMNI
+        const firebaseConfig = { 
+            apiKey: "AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0", 
+            authDomain: "scullylist.firebaseapp.com", 
+            databaseURL: "https://scullylist-default-rtdb.firebaseio.com", 
+            projectId: "scullylist"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth(); 
+        const db = firebase.database();
 
-<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-<script>
-const firebaseConfig={apiKey:"AIzaSyC2vrauBlplKGMjeLW3mLzZQr05khmH5v0",authDomain:"scullylist.firebaseapp.com",databaseURL:"https://scullylist-default-rtdb.firebaseio.com",projectId:"scullylist"};
-firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth(); const db=firebase.database();
+        // REDIRIGIR SI YA ESTÁ LOGUEADO
+        auth.onAuthStateChanged(user => {
+            if(user) window.location.href = "index.html";
+        });
 
-auth.onAuthStateChanged(user=>{ if(user) window.location.href="index.html"; });
-
-function toggleForms(){
-    const l=document.getElementById('login-box');
-    const r=document.getElementById('reg-box');
-    l.classList.toggle('active'); r.classList.toggle('active');
-}
-
-async function login(){
-    const e=document.getElementById('log-email').value.trim();
-    const p=document.getElementById('log-pass').value;
-    if(!e || !p) return alert("⚠️ Se requieren credenciales completas.");
-
-    const btn=document.getElementById('btn-login');
-    btn.disabled=true; btn.innerHTML="<i class='fas fa-spinner fa-spin'></i> VERIFICANDO...";
-    try{
-        await auth.signInWithEmailAndPassword(e,p);
-        window.location.href="index.html";
-    }catch(err){
-        alert("❌ Acceso Denegado: " + err.message);
-        btn.disabled=false; btn.innerHTML="INICIAR SESIÓN <i class='fas fa-sign-in-alt'></i>";
-    }
-}
-
-async function register(){
-    const nick=document.getElementById('reg-nick').value.trim();
-    const email=document.getElementById('reg-email').value.trim();
-    const pass=document.getElementById('reg-pass').value;
-    if(!nick || !email || !pass) return alert("⚠️ Faltan datos.");
-    if(pass.length < 6) return alert("⚠️ Mínimo 6 caracteres.");
-
-    const btn=document.getElementById('btn-register');
-    btn.disabled=true; btn.innerHTML="<i class='fas fa-spinner fa-spin'></i> FORJANDO...";
-
-    try{
-        await auth.createUserWithEmailAndPassword(email, pass);
-        const snap=await db.ref('players').once('value');
-        const players=snap.val()||{};
-        let existingKey=null;
-        for(let key in players){
-            if(players[key].name && players[key].name.toLowerCase()===nick.toLowerCase()){
-                existingKey=key; break;
+        // ALTERNAR ENTRE PANTALLAS
+        function toggleForms() {
+            const l = document.getElementById('login-box');
+            const r = document.getElementById('reg-box');
+            if(l.classList.contains('active')) { 
+                l.classList.remove('active'); 
+                r.classList.add('active'); 
+            } else { 
+                r.classList.remove('active'); 
+                l.classList.add('active'); 
             }
         }
-        if(existingKey){
-            await db.ref(`players/${existingKey}`).update({ email:email.toLowerCase() });
-            alert("✅ Perfil detectado: reclamado con éxito.");
-        }else{
-            await db.ref('players').push({ name:nick, email:email.toLowerCase(), totalXP:0, role:"player", verified:false, inventory:[], completions:[] });
-            alert("✅ Perfil creado. Bienvenido.");
-        }
-        window.location.href="index.html";
-    }catch(err){
-        alert("❌ Error: " + err.message);
-        btn.disabled=false; btn.innerHTML="CREAR CUENTA <i class='fas fa-bolt'></i>";
-    }
-}
 
-function resetPassword(){
-    const email=document.getElementById('log-email').value.trim();
-    if(!email) return alert("Escribe tu correo en el campo.");
-    auth.sendPasswordResetEmail(email)
-        .then(()=>alert("✅ Email de recuperación enviado."))
-        .catch(err=>alert("❌ Error: " + err.message));
-}
-</script>
+        // ── Helpers UI ──────────────────────────────────────────
+        function showMsg(id, text, type) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = text; el.className = 'auth-msg ' + type;
+            el.style.display = 'block';
+            if (type === 'success') setTimeout(() => el.style.display = 'none', 4000);
+        }
+        function togglePass(inputId, btn) {
+            const inp = document.getElementById(inputId);
+            const isText = inp.type === 'text';
+            inp.type = isText ? 'password' : 'text';
+            btn.querySelector('i').className = isText ? 'fas fa-eye' : 'fas fa-eye-slash';
+        }
+        function checkPassStrength(val) {
+            const bar = document.getElementById('pass-strength-bar');
+            const fill = document.getElementById('pass-strength-fill');
+            if (!bar || !fill) return;
+            bar.style.display = val.length > 0 ? 'block' : 'none';
+            let score = 0;
+            if (val.length >= 6) score++;
+            if (val.length >= 10) score++;
+            if (/[A-Z]/.test(val)) score++;
+            if (/[0-9]/.test(val)) score++;
+            if (/[^A-Za-z0-9]/.test(val)) score++;
+            const colors = ['#ff3333','#ff6600','#ffcc00','#00ff66','#00ccff'];
+            const widths  = ['20%','40%','60%','80%','100%'];
+            fill.style.width = widths[Math.min(score-1, 4)] || '10%';
+            fill.style.background = colors[Math.min(score-1, 4)] || '#ff3333';
+        }
+
+        // ── Forgot password ──────────────────────────────────────
+        async function forgotPassword() {
+            const e = document.getElementById('log-email').value.trim();
+            if (!e || !e.includes('@')) {
+                showMsg('login-msg', 'Escribe tu correo arriba para recuperar la contraseña.', 'error'); return;
+            }
+            try {
+                await auth.sendPasswordResetEmail(e);
+                showMsg('login-msg', `✓ Enviamos un link de recuperación a ${e}`, 'success');
+            } catch(err) {
+                showMsg('login-msg', 'Error: ' + err.message, 'error');
+            }
+        }
+
+        // LÓGICA DE INICIO DE SESIÓN
+        async function login() {
+            const e = document.getElementById('log-email').value.trim();
+            const p = document.getElementById('log-pass').value;
+            if (!e || !p) { showMsg('login-msg', 'Completa el correo y contraseña.', 'error'); return; }
+            if (!e.includes('@')) { showMsg('login-msg', 'Correo inválido.', 'error'); return; }
+            
+            const btn = document.getElementById('btn-login');
+            btn.disabled = true;
+            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> VERIFICANDO...";
+            document.getElementById('login-msg').style.display = 'none';
+            
+            try {
+                await auth.signInWithEmailAndPassword(e, p);
+                window.location.href = "index.html";
+            } catch (err) {
+                const msgs = {
+                    'auth/user-not-found': 'No existe una cuenta con ese correo.',
+                    'auth/wrong-password': 'Contraseña incorrecta.',
+                    'auth/invalid-email': 'Formato de correo inválido.',
+                    'auth/too-many-requests': 'Demasiados intentos. Espera un momento.',
+                };
+                showMsg('login-msg', msgs[err.code] || 'Error: ' + err.message, 'error');
+                btn.disabled = false;
+                btn.innerHTML = "INICIAR SESIÓN <i class='fas fa-sign-in-alt'></i>";
+            }
+        }
+
+        // LÓGICA MAESTRA DE REGISTRO (CON AUTO-RECLAMACIÓN)
+        async function register() {
+            const nick = document.getElementById('reg-nick').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const pass = document.getElementById('reg-pass').value;
+            
+            if (!nick || !email || !pass) { showMsg('reg-msg', 'Completa todos los campos.', 'error'); return; }
+            if (!email.includes('@') || !email.includes('.')) { showMsg('reg-msg', 'Correo inválido.', 'error'); return; }
+            if (pass.length < 6) { showMsg('reg-msg', 'La contraseña debe tener al menos 6 caracteres.', 'error'); return; }
+
+            const btn = document.getElementById('btn-register');
+            btn.disabled = true;
+            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> FORJANDO IDENTIDAD...";
+            document.getElementById('reg-msg').style.display = 'none';
+
+            try {
+                // Verificar si el email ya tiene una cuenta Firebase activa
+                const methods = await auth.fetchSignInMethodsForEmail(email);
+                if (methods && methods.length > 0) {
+                    showMsg('reg-msg', 'Este correo ya está registrado. Usa "Iniciar Sesión".', 'error');
+                    btn.disabled = false; btn.innerHTML = "CREAR CUENTA <i class='fas fa-bolt'></i>"; return;
+                }
+
+                await auth.createUserWithEmailAndPassword(email, pass);
+                
+                const snap = await db.ref('players').once('value');
+                const players = snap.val() || {};
+                
+                let existingKey = null;
+                for (let key in players) {
+                    if (players[key].name && players[key].name.toLowerCase() === nick.toLowerCase()) {
+                        existingKey = key; break;
+                    }
+                }
+
+                if (existingKey) {
+                    await db.ref(`players/${existingKey}`).update({ email: email.toLowerCase() });
+                    showMsg('reg-msg', '✓ ¡Identidad detectada! Redirigiendo...', 'success');
+                } else {
+                    await db.ref('players').push({
+                        name: nick, email: email.toLowerCase(),
+                        totalXP: 0, role: "player", verified: false,
+                        inventory: [], completions: []
+                    });
+                    showMsg('reg-msg', '✓ ¡Bienvenido a la red! Redirigiendo...', 'success');
+                }
+
+                setTimeout(() => window.location.href = "index.html", 1200);
+
+            } catch (err) {
+                const msgs = {
+                    'auth/email-already-in-use': 'Este correo ya está en uso.',
+                    'auth/invalid-email': 'Formato de correo inválido.',
+                    'auth/weak-password': 'Contraseña muy débil.',
+                };
+                showMsg('reg-msg', msgs[err.code] || 'Error: ' + err.message, 'error');
+                btn.disabled = false;
+                btn.innerHTML = "CREAR CUENTA <i class='fas fa-bolt'></i>";
+            }
+        }
+    </script>
 </body>
 </html>
