@@ -608,8 +608,9 @@
                 <i class="fas fa-brain"></i> Scully AI
             </button>
             
-            <button type="button" class="btn-scully" onclick="document.getElementById('aboutModal').style.display='flex'">
+            <button type="button" class="btn-scully btn-about-us" onclick="document.getElementById('aboutModal').style.display='flex'" style="border-color:var(--cyan); color:var(--cyan); background:rgba(0,255,255,0.07); font-weight:900; position:relative; overflow:hidden;">
                 <i class="fas fa-info-circle"></i> Sobre Nosotros
+                <span style="position:absolute;top:2px;right:6px;font-size:0.45rem;font-weight:900;color:var(--cyan);opacity:0.7;font-family:'JetBrains Mono';letter-spacing:1px;text-transform:uppercase;">LEER</span>
             </button>
 
             <a href="login.html" class="btn-scully" id="nav-login"><i class="fas fa-user"></i> Acceso</a>
@@ -809,44 +810,63 @@
     </div>
 
     <div id="aboutModal" class="modal">
-        <div class="modal-content" style="border-color:var(--accent); text-align: left;">
+        <div class="modal-content" style="border-color:var(--accent); text-align:left; max-width:560px;">
             <span style="position:absolute; top:15px; right:20px; color:#888; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('aboutModal').style.display='none'">✕</span>
-            
-            <h2 style="color:var(--accent); margin-top:0; text-transform: uppercase; letter-spacing: 2px;">
+
+            <h2 style="color:var(--accent); margin-top:0; text-transform:uppercase; letter-spacing:2px; font-size:1.3rem;">
                 <i class="fas fa-microchip"></i> El Ecosistema OMNI
             </h2>
-            
-            <p style="color:#eee; line-height:1.6; font-size:0.9rem;">
-                <b>The Scully List</b> es un motor de competición integral para Geometry Dash diseñado para clasificar y premiar las mayores proezas de la comunidad mediante el <b>Absolute Engine</b>.
+
+            <p style="color:#eee; line-height:1.7; font-size:0.88rem; margin-bottom:20px;">
+                <b>The Scully List</b> es un motor de competición integral para Geometry Dash, diseñado para clasificar y premiar las mayores proezas de la comunidad mediante el <b>Absolute Engine</b>.
             </p>
-            
-            <div style="background:rgba(255,102,0,0.05); border-left:3px solid var(--accent); padding:15px; margin:20px 0; border-radius:0 10px 10px 0;">
-                <p style="margin:0; font-size:0.85rem; color:#ccc;">
-                    <b style="color:var(--accent);">NUESTRA VISIÓN:</b> Crear una identidad única para cada jugador, donde el esfuerzo se traduce en estatus, XP y recompensas exclusivas.
+
+            <!-- BLOQUE CLAVE: Cómo funciona la lista -->
+            <div style="background:rgba(0,204,255,0.05); border:1px solid rgba(0,204,255,0.2); border-left:4px solid var(--cyan); padding:18px 20px; border-radius:0 12px 12px 0; margin-bottom:18px;">
+                <h4 style="color:var(--cyan); margin:0 0 10px; text-transform:uppercase; font-size:0.75rem; letter-spacing:2px;">
+                    <i class="fas fa-list-ol" style="margin-right:6px;"></i> ¿Cómo funciona la lista?
+                </h4>
+                <p style="color:#ccc; font-size:0.84rem; margin:0 0 10px; line-height:1.7;">
+                    Esta no es una demonlist convencional. <b style="color:#fff;">Los niveles de la lista son propuestos y completados por los propios miembros de la comunidad OMNI</b>, no están tomados de ningún ranking externo.
+                </p>
+                <p style="color:#ccc; font-size:0.84rem; margin:0; line-height:1.7;">
+                    Un nivel entra a la lista en el momento en que <b style="color:#fff;">alguien de la comunidad lo completa por primera vez</b>. Esa persona queda registrada automáticamente como el <b style="color:var(--gold);">First Victor</b> — el verificador oficial del nivel dentro de OMNI — y recibe un bonus de XP permanente por ello. A partir de ahí, cualquier otro miembro puede completarlo y sumar sus propios puntos.
                 </p>
             </div>
 
-            <h4 style="color:var(--cyan); text-transform:uppercase; font-size:0.8rem; margin-bottom:10px;">Ejes del Proyecto:</h4>
-            <ul style="color:#aaa; font-size:0.8rem; padding-left:20px; line-height:1.8; margin-bottom: 25px;">
-                <li><b style="color:#fff;">Ranking Dinámico:</b> Clasificación basada en la dificultad real de los niveles.</li>
-                <li><b style="color:#fff;">Economía Titán:</b> Un mercado vivo alimentado por tu progreso en el juego.</li>
-                <li><b style="color:#fff;">Sindicatos:</b> La evolución de los clanes para el dominio de la escena.</li>
+            <!-- BLOQUE: Visión -->
+            <div style="background:rgba(255,102,0,0.05); border-left:3px solid var(--accent); padding:14px 18px; margin-bottom:18px; border-radius:0 10px 10px 0;">
+                <p style="margin:0; font-size:0.84rem; color:#ccc; line-height:1.6;">
+                    <b style="color:var(--accent);">NUESTRA VISIÓN:</b> Crear una identidad única para cada jugador, donde el esfuerzo se traduce en estatus real, XP y recompensas exclusivas dentro del ecosistema.
+                </p>
+            </div>
+
+            <!-- EJES -->
+            <h4 style="color:var(--cyan); text-transform:uppercase; font-size:0.75rem; letter-spacing:1px; margin-bottom:10px;">Ejes del Proyecto:</h4>
+            <ul style="color:#aaa; font-size:0.82rem; padding-left:20px; line-height:1.9; margin-bottom:22px;">
+                <li><b style="color:#fff;">Lista Viva:</b> Los niveles se añaden conforme la comunidad los completa, de forma orgánica y progresiva.</li>
+                <li><b style="color:#fff;">Ranking Dinámico:</b> Clasificación basada en la dificultad real de cada nivel y el orden en que fue añadido.</li>
+                <li><b style="color:#fff;">Economía Titán:</b> Un mercado vivo alimentado directamente por tu progreso en el juego.</li>
+                <li><b style="color:#fff;">Sindicatos:</b> La evolución de los clanes para el dominio colectivo de la escena.</li>
             </ul>
 
-            <div style="background:rgba(0,0,0,0.5); border:1px dashed #444; padding:15px; border-radius:15px;">
-                <h5 style="color:var(--red); margin:0 0 8px; text-transform:uppercase; font-size:0.75rem;">
-                    <i class="fas fa-tools"></i> Nota de Desarrollo
+            <!-- NOTA DE DESARROLLO -->
+            <div style="background:rgba(0,0,0,0.5); border:1px dashed #333; padding:14px 18px; border-radius:12px; margin-bottom:20px;">
+                <h5 style="color:var(--red); margin:0 0 8px; text-transform:uppercase; font-size:0.72rem; letter-spacing:1px;">
+                    <i class="fas fa-tools" style="margin-right:5px;"></i> Nota de Desarrollo
                 </h5>
-                <p style="color:#888; font-size:0.75rem; margin:0; line-height:1.5;">
-                    Actualmente nos encontramos en una <b>fase de desarrollo muy temprana</b>. Es posible que experimentes errores técnicos o inconsistencias visuales mientras optimizamos los <b>módulos del sistema</b>. Estamos trabajando duramente día tras día para pulir cada engranaje y construir una experiencia bonita y funcional para toda la comunidad.
+                <p style="color:#777; font-size:0.78rem; margin:0; line-height:1.6;">
+                    Actualmente nos encontramos en una <b style="color:#999;">fase de desarrollo muy temprana</b>. Es posible que experimentes errores técnicos o inconsistencias visuales mientras optimizamos los módulos del sistema. Estamos trabajando día tras día para pulir cada engranaje y construir una experiencia funcional y bonita para toda la comunidad.
                 </p>
             </div>
 
-            <p style="color:#444; font-size:0.65rem; margin-top:25px; text-align:center; font-family:'JetBrains Mono';">
-                SCULLY HUB // CORE VERSION 25.0 // 2026
+            <p style="color:#333; font-size:0.62rem; margin:0 0 15px; text-align:center; font-family:'JetBrains Mono'; letter-spacing:2px;">
+                SCULLY HUB // ABSOLUTE ENGINE v25 // 2026
             </p>
 
-            <button type="button" class="btn-scully" style="background:var(--accent); color:#000; width:100%; justify-content:center; border:none; margin-top:15px; font-weight:800;" onclick="document.getElementById('aboutModal').style.display='none'">ENTENDIDO</button>
+            <button type="button" class="btn-scully" style="background:var(--accent); color:#000; width:100%; justify-content:center; border:none; font-weight:900; padding:14px;" onclick="document.getElementById('aboutModal').style.display='none'">
+                <i class="fas fa-check" style="margin-right:8px;"></i> ENTENDIDO
+            </button>
         </div>
     </div>
     <!-- MODAL: Sistema de Progreso Personal -->
