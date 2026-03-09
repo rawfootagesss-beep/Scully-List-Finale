@@ -318,16 +318,36 @@
 
             <div id="t-recs" class="tab">
                 <h2 class="title"><i class="fas fa-inbox" style="color:var(--gr);"></i> Bandeja de Récords</h2>
-                <button class="bs br" style="margin-bottom:20px;" onclick="pList('submissions')"><i class="fas fa-trash"></i> PURGAR TODA LA BANDEJA</button>
+
+                <!-- FILTROS + STATS ROW -->
+                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:16px;">
+                    <button class="bs bg" id="rf-all" onclick="filterRecs('all')" style="opacity:1;">Todos <span id="rf-cnt-all" style="font-size:0.65rem;margin-left:3px;background:rgba(0,0,0,0.4);padding:1px 6px;border-radius:20px;"></span></button>
+                    <button class="bs" id="rf-new" onclick="filterRecs('new')" style="background:rgba(0,255,255,0.1);border:1px solid var(--cy);color:var(--cy);opacity:0.5;">Nuevos</button>
+                    <button class="bs" id="rf-dup" onclick="filterRecs('dup')" style="background:rgba(255,215,0,0.1);border:1px solid var(--gd);color:var(--gd);opacity:0.5;">Duplicados</button>
+                    <button class="bs" id="rf-unk" onclick="filterRecs('unk')" style="background:rgba(204,0,255,0.1);border:1px solid var(--pu);color:var(--pu);opacity:0.5;">Nivel Desconocido</button>
+                    <button class="bs br" style="margin-left:auto;" onclick="pList('submissions')"><i class="fas fa-trash"></i> Purgar Todo</button>
+                </div>
+
+                <!-- BANDEJA PRINCIPAL -->
                 <div id="l-sub" class="dl" style="margin-bottom:30px;"></div>
-                
+
+                <!-- INYECCIÓN MANUAL -->
                 <div class="panel" style="border-color:var(--ac);">
-                    <div class="hlp" onclick="sHlp('Auto-XP', 'Fuerza la creación de un récord o inyecta niveles manuales con XP personalizada.')">?</div>
-                    <h3 style="margin:0 0 15px;color:var(--ac);font-size:1rem;"><i class="fas fa-bolt"></i> Inyección Manual (Bypass)</h3>
-                    <div class="ig"><input type="text" id="m-p" placeholder="Nick Exacto del Jugador"></div>
-                    <div class="ig"><input type="text" id="m-l" placeholder="Nombre del Nivel"></div>
-                    <div class="ig"><input type="text" id="m-k" placeholder="URL del Video (Opcional)"></div>
-                    <button class="btn" style="width:100%;" onclick="iRec()"><i class="fas fa-syringe"></i> EJECUTAR INYECCIÓN DE RÉCORD</button>
+                    <div class="hlp" onclick="sHlp('Inyección Manual', 'Añade un récord directamente a un jugador sin pasar por la bandeja. Útil para correcciones o migración de datos.')">?</div>
+                    <h3 style="margin:0 0 4px;color:var(--ac);font-size:1rem;"><i class="fas fa-syringe"></i> Inyección Manual (Bypass)</h3>
+                    <p style="margin:0 0 14px;font-size:0.7rem;color:#555;">Añade un récord directamente sin validación de bandeja.</p>
+                    <div class="ig"><input type="text" id="m-p" placeholder="Nick exacto del jugador" oninput="previewInjection()"></div>
+                    <div class="ig"><input type="text" id="m-l" placeholder="Nombre exacto del nivel" oninput="previewInjection()"></div>
+                    <div class="ig"><input type="text" id="m-k" placeholder="URL del video (opcional)"></div>
+                    <div id="inj-preview" style="display:none; background:rgba(0,0,0,0.5); border:1px solid #222; border-radius:10px; padding:12px; margin-bottom:12px; font-size:0.78rem;">
+                        <div style="display:flex; gap:20px; flex-wrap:wrap;">
+                            <span>Jugador: <b id="inj-p-status" style="color:#aaa;">—</b></span>
+                            <span>Nivel: <b id="inj-l-status" style="color:#aaa;">—</b></span>
+                            <span>XP: <b id="inj-xp-preview" style="color:var(--gd);">—</b></span>
+                        </div>
+                        <p id="inj-warn" style="margin:6px 0 0;font-size:0.72rem;color:var(--rd);display:none;"></p>
+                    </div>
+                    <button class="btn" style="width:100%;" onclick="iRec()"><i class="fas fa-bolt"></i> EJECUTAR INYECCIÓN</button>
                 </div>
             </div>
             <div id="t-lvls" class="tab">
@@ -590,18 +610,72 @@
     </div>
 
     <div id="m-rev" class="mod">
-        <div class="mc">
-            <span style="position:absolute; top:15px; right:20px; font-size:1.5rem; color:#888; cursor:pointer;" onclick="cMod('m-rev')">✕</span>
-            <h2 id="r-t" style="margin-top:0; color:var(--ac);">Rev</h2>
-            <div id="r-v" style="margin-bottom:15px;"></div>
-            <div style="background:rgba(255,255,255,.02); padding:15px; border-radius:10px; margin-bottom:20px; font-size:0.8rem; border:1px solid var(--bd);">
-                <p>RAW: <span id="r-rw"></span></p>
-                <p>Nota: <span id="r-cm"></span></p>
+        <div class="mc" style="max-width:560px; border-color:var(--gr);">
+            <span style="position:absolute; top:15px; right:20px; font-size:1.5rem; color:#555; cursor:pointer;" onclick="cMod('m-rev')">✕</span>
+
+            <!-- HEADER -->
+            <div style="margin-bottom:14px;">
+                <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <span id="r-status-badge" style="font-size:0.62rem; font-weight:900; padding:3px 10px; border-radius:20px; font-family:'JetBrains Mono'; text-transform:uppercase; letter-spacing:1px;"></span>
+                    <span id="r-xp-badge" style="font-size:0.7rem; font-weight:900; color:var(--gd); font-family:'JetBrains Mono';"></span>
+                </div>
+                <h2 id="r-t" style="margin:6px 0 0; color:var(--ac); font-size:1.3rem;"></h2>
+                <p id="r-player-line" style="margin:2px 0 0; font-size:0.8rem; color:#888;"></p>
             </div>
-            <div style="display:flex; flex-direction:column; gap:10px;">
-                <button id="b-ac" class="btn bg" style="width:100%;">ACEPTAR (DAR XP)</button>
-                <button id="b-ap" class="btn by" style="width:100%;">APELACIÓN</button>
-                <button id="b-rj" class="btn br" style="width:100%;">RECHAZAR</button>
+
+            <!-- VIDEO -->
+            <div id="r-v" style="margin-bottom:12px; border-radius:10px; overflow:hidden;"></div>
+
+            <!-- CONTEXTO: jugador + nivel en la lista -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+                <!-- Info jugador -->
+                <div id="r-player-ctx" style="background:rgba(0,0,0,0.5); border:1px solid #1e1e1e; border-radius:10px; padding:12px; font-size:0.75rem;">
+                    <p style="margin:0 0 6px; font-size:0.62rem; color:#444; text-transform:uppercase; letter-spacing:1px; font-family:'JetBrains Mono';">Jugador</p>
+                    <p id="r-p-name" style="margin:0 0 4px; font-weight:900; color:#fff; font-size:0.9rem;"></p>
+                    <p id="r-p-xp" style="margin:0 0 2px; color:#888;"></p>
+                    <p id="r-p-demons" style="margin:0 0 2px; color:#888;"></p>
+                    <p id="r-p-has-level" style="margin:4px 0 0; font-size:0.7rem; font-weight:900;"></p>
+                </div>
+                <!-- Info nivel -->
+                <div id="r-level-ctx" style="background:rgba(0,0,0,0.5); border:1px solid #1e1e1e; border-radius:10px; padding:12px; font-size:0.75rem;">
+                    <p style="margin:0 0 6px; font-size:0.62rem; color:#444; text-transform:uppercase; letter-spacing:1px; font-family:'JetBrains Mono';">Nivel en la Lista</p>
+                    <p id="r-l-name" style="margin:0 0 4px; font-weight:900; color:#fff; font-size:0.9rem;"></p>
+                    <p id="r-l-pos" style="margin:0 0 2px; color:#888;"></p>
+                    <p id="r-l-xp" style="margin:0 0 2px; color:var(--gd);"></p>
+                    <p id="r-l-first" style="margin:0 0 2px; color:#888;"></p>
+                    <p id="r-l-completions" style="margin:0; color:#888;"></p>
+                </div>
+            </div>
+
+            <!-- DETALLES DEL SUBMISSION -->
+            <div style="background:rgba(255,255,255,.02); padding:12px 14px; border-radius:10px; margin-bottom:14px; font-size:0.78rem; border:1px solid #1a1a1a; display:flex; gap:20px; flex-wrap:wrap;">
+                <span>Raw: <span id="r-rw" style="color:var(--cy);"></span></span>
+                <span>Enviado: <span id="r-time" style="color:#888;"></span></span>
+            </div>
+            <div id="r-comment-box" style="display:none; background:rgba(255,102,0,0.05); border:1px solid rgba(255,102,0,0.2); border-radius:10px; padding:12px; margin-bottom:14px; font-size:0.8rem;">
+                <p style="margin:0 0 3px; font-size:0.62rem; color:var(--ac); font-family:'JetBrains Mono'; text-transform:uppercase; letter-spacing:1px;">Nota del jugador</p>
+                <p id="r-cm" style="margin:0; color:#ccc; line-height:1.5;"></p>
+            </div>
+
+            <!-- MOTIVO DE RECHAZO / APELACIÓN (inline, no prompt) -->
+            <div id="r-reason-box" style="display:none; margin-bottom:12px;">
+                <input type="text" id="r-reason-input" placeholder="Escribe el motivo..."
+                    style="width:100%; background:#0a0a0a; border:1px solid #333; color:#fff; padding:11px 14px; border-radius:8px; font-size:0.82rem; box-sizing:border-box; outline:none; font-family:'Lexend Deca',sans-serif;">
+            </div>
+
+            <!-- ACCIONES -->
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                <button id="b-ac" class="btn bg" style="width:100%; font-size:0.85rem; padding:13px;">
+                    <i class="fas fa-check" style="margin-right:6px;"></i> ACEPTAR <span id="b-ac-xp" style="opacity:0.8; font-size:0.75rem;"></span>
+                </button>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                    <button id="b-ap" class="btn by" style="width:100%;">
+                        <i class="fas fa-balance-scale" style="margin-right:5px;"></i> APELACIÓN
+                    </button>
+                    <button id="b-rj" class="btn br" style="width:100%;">
+                        <i class="fas fa-times" style="margin-right:5px;"></i> RECHAZAR
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -942,41 +1016,282 @@
         // ==========================================
         // SISTEMA DE RÉCORDS
         // ==========================================
-        function rRcs(d) { 
-            let h = ""; 
-            Object.entries(d).forEach(([id,r]) => { 
-                h += `
-                <div class="dc">
-                    <div>
-                        <h4 style="color:var(--ac);margin:0;">${r.level}</h4>
-                        <p style="margin:0;font-size:.75rem;color:#aaa;">Por: ${r.player}</p>
+        let _recFilter = 'all';
+
+        function classifyRec(r) {
+            // Retorna: 'new' | 'dup' | 'unk'
+            const levelInList = lvls.find(l => l.name.toLowerCase() === r.level.toLowerCase());
+            if (!levelInList) return 'unk';
+            const allPlayers = Object.values(fD.players || {});
+            const player = allPlayers.find(p => p.name.toLowerCase() === r.player.toLowerCase());
+            if (player) {
+                const comps = player.completions
+                    ? (Array.isArray(player.completions) ? player.completions : Object.values(player.completions))
+                    : [];
+                if (comps.some(x => x.level.toLowerCase() === r.level.toLowerCase())) return 'dup';
+            }
+            return 'new';
+        }
+
+        function filterRecs(f) {
+            _recFilter = f;
+            ['all','new','dup','unk'].forEach(k => {
+                const el = $('rf-' + k);
+                if (el) el.style.opacity = k === f ? '1' : '0.45';
+            });
+            renderRecsList(fD.submissions || {});
+        }
+
+        function rRcs(d) {
+            // Actualizar contadores de filtro
+            const entries = Object.entries(d);
+            const counts = { all: entries.length, new: 0, dup: 0, unk: 0 };
+            entries.forEach(([,r]) => { counts[classifyRec(r)]++; });
+            ['all','new','dup','unk'].forEach(k => {
+                const el = $('rf-cnt-' + k);
+                if (el) el.textContent = counts[k] || '';
+            });
+            renderRecsList(d);
+        }
+
+        function renderRecsList(d) {
+            const tagCfg = {
+                new: { label: 'NUEVO',        color: 'var(--cy)', bg: 'rgba(0,255,255,0.08)' },
+                dup: { label: 'DUPLICADO',     color: 'var(--gd)', bg: 'rgba(255,215,0,0.08)' },
+                unk: { label: 'NIVEL DESCONOCIDO', color: 'var(--pu)', bg: 'rgba(204,0,255,0.08)' },
+            };
+            let entries = Object.entries(d);
+            if (_recFilter !== 'all') entries = entries.filter(([,r]) => classifyRec(r) === _recFilter);
+            entries.sort(([,a],[,b]) => (b.time||0) - (a.time||0));
+
+            if (!entries.length) {
+                $('l-sub').innerHTML = '<p style="color:#444; text-align:center; padding:30px; font-size:0.8rem;">Bandeja vacía en esta categoría.</p>';
+                return;
+            }
+
+            const levelInList = (name) => lvls.find(l => l.name.toLowerCase() === name.toLowerCase());
+            const playerHasLevel = (playerName, levelName) => {
+                const p = Object.values(fD.players||{}).find(p => p.name?.toLowerCase() === playerName.toLowerCase());
+                if (!p || !p.completions) return false;
+                const comps = Array.isArray(p.completions) ? p.completions : Object.values(p.completions);
+                return comps.some(x => x.level.toLowerCase() === levelName.toLowerCase());
+            };
+
+            $('l-sub').innerHTML = entries.map(([id, r]) => {
+                const type = classifyRec(r);
+                const tag  = tagCfg[type];
+                const lvl  = levelInList(r.level);
+                const pos  = lvl ? lvls.indexOf(lvl) + 1 : null;
+                const xp   = lvl ? Math.max(250 - (lvls.indexOf(lvl) * 2), 5) * (lvl.bounty ? 2 : 1) : null;
+                const hasLvl = playerHasLevel(r.player, r.level);
+                const timeStr = r.time ? new Date(r.time).toLocaleString('es', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—';
+
+                return `<div class="dc" style="flex-direction:column; align-items:stretch; gap:0; border-color:${tag.color}20; margin-bottom:8px; padding:0; overflow:hidden; border-radius:12px;">
+                    <!-- BARRA SUPERIOR -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:${tag.bg}; border-bottom:1px solid ${tag.color}18; flex-wrap:wrap; gap:6px;">
+                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                            <span style="font-size:0.6rem; font-weight:900; color:${tag.color}; border:1px solid ${tag.color}; padding:2px 8px; border-radius:20px; font-family:\"JetBrains Mono\"; text-transform:uppercase; letter-spacing:1px;">${tag.label}</span>
+                            ${lvl && lvl.bounty ? '<span style="font-size:0.6rem; font-weight:900; color:var(--gd); border:1px solid var(--gd); padding:2px 8px; border-radius:20px; font-family:\"JetBrains Mono\";">⚡ BOUNTY</span>' : ''}
+                            <span style="font-size:0.65rem; color:#444; font-family:\"JetBrains Mono\";">${timeStr}</span>
+                        </div>
+                        <span style="font-size:0.65rem; color:#555; font-family:\"JetBrains Mono\";">#${id.substring(0,6)}</span>
                     </div>
-                    <button class="bs bb" onclick="oRev('${id}')">REVISAR</button>
-                </div>`; 
-            }); 
-            if($('l-sub')) $('l-sub').innerHTML = h || '<p style="color:#666;">Bandeja limpia.</p>'; 
+                    <!-- CONTENIDO -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; flex-wrap:wrap; gap:10px;">
+                        <div style="flex:1; min-width:180px;">
+                            <p style="margin:0 0 2px; font-weight:900; color:#fff; font-size:1rem;">${r.level}</p>
+                            <p style="margin:0; font-size:0.75rem; color:#888;">
+                                <i class="fas fa-user" style="margin-right:4px; color:#444;"></i>${r.player}
+                                ${hasLvl ? '<span style="color:var(--gd); margin-left:6px; font-size:0.65rem; font-weight:900;">✓ ya completado</span>' : ''}
+                            </p>
+                        </div>
+                        <div style="text-align:right; flex-shrink:0;">
+                            ${pos ? `<p style="margin:0 0 1px; font-size:0.72rem; color:var(--cy); font-family:\"JetBrains Mono\";">#${pos} en la lista</p>` : '<p style="margin:0 0 1px; font-size:0.7rem; color:var(--pu); font-family:\"JetBrains Mono\";">No está en la lista</p>'}
+                            ${xp ? `<p style="margin:0; font-size:0.85rem; font-weight:900; color:var(--gd);">+${xp} XP</p>` : ''}
+                        </div>
+                    </div>
+                    <!-- ACCIONES -->
+                    <div style="display:flex; gap:8px; padding:10px 14px; border-top:1px solid #111; flex-wrap:wrap;">
+                        <button class="bs bb" onclick="oRev('${id}')" style="flex:2; min-width:80px;"><i class="fas fa-search" style="margin-right:4px;"></i> Revisar</button>
+                        <button class="bs bg" onclick="quickAccept('${id}')" ${type==='unk'?'disabled title="Nivel no está en la lista"':''} style="flex:1; min-width:70px; ${type==='unk'?'opacity:0.4;cursor:not-allowed;':''}"><i class="fas fa-check"></i> Aceptar</button>
+                        <button class="bs br" onclick="quickReject('${id}')" style="flex:1; min-width:70px;"><i class="fas fa-times"></i> Rechazar</button>
+                    </div>
+                </div>`;
+            }).join('');
         }
         
-        function oRev(id) { 
-            const r = fD.submissions[id]; 
-            $('r-t').innerText = r.level; 
-            const v = r.link.match(/([\w-]{11})/); 
-            
-            $('r-v').innerHTML = v ? `<iframe width="100%" height="220" src="https://www.youtube.com/embed/${v[1]}" frameborder="0" style="border-radius:10px;"></iframe>` : `<a href="${r.link}" target="_blank" style="color:var(--bl);font-weight:800;">VER VIDEO URL</a>`; 
-            $('r-rw').innerHTML = r.raw ? `<a href="${r.raw}" target="_blank" style="color:var(--cy);">Link Raw</a>` : "N/A"; 
-            $('r-cm').innerText = r.comments || "---"; 
-            
-            $('b-ac').onclick = () => pRc(id,'acc'); 
-            $('b-ap').onclick = () => pRc(id,'app'); 
-            $('b-rj').onclick = () => pRc(id,'rej'); 
-            $('m-rev').style.display = 'block'; 
+        function oRev(id) {
+            const r = fD.submissions[id];
+            if (!r) return;
+
+            const type = classifyRec(r);
+            const tagCfg = {
+                new: { label: 'NUEVO', color: 'var(--cy)', bg: 'rgba(0,255,255,0.1)' },
+                dup: { label: 'DUPLICADO', color: 'var(--gd)', bg: 'rgba(255,215,0,0.1)' },
+                unk: { label: 'NIVEL DESCONOCIDO', color: 'var(--pu)', bg: 'rgba(204,0,255,0.1)' },
+            };
+            const tag = tagCfg[type];
+
+            // Badge de estado
+            const badge = $('r-status-badge');
+            badge.textContent = tag.label;
+            badge.style.background = tag.bg;
+            badge.style.color = tag.color;
+            badge.style.border = '1px solid ' + tag.color;
+
+            // Título + jugador
+            $('r-t').textContent = r.level;
+            $('r-player-line').innerHTML = `<i class="fas fa-user" style="margin-right:5px;color:#444;"></i>${r.player}`;
+
+            // XP preview en badge y botón
+            const lvlData = lvls.find(l => l.name.toLowerCase() === r.level.toLowerCase());
+            const lvlIdx  = lvlData ? lvls.indexOf(lvlData) : -1;
+            let xp = 0;
+            if (lvlIdx > -1) {
+                xp = Math.max(250 - lvlIdx * 2, 5);
+                if (lvlData.bounty) xp *= 2;
+                if (lvlData.first?.toLowerCase() === r.player.toLowerCase()) xp *= 2;
+            }
+            $('r-xp-badge').textContent = xp > 0 ? '+' + xp + ' XP' : '';
+            $('b-ac-xp').textContent = xp > 0 ? '(+' + xp + ' XP)' : '';
+
+            // Video
+            const v = (r.link || '').match(/[\w-]{11}/);
+            $('r-v').innerHTML = v
+                ? `<iframe width="100%" height="200" src="https://www.youtube.com/embed/${v[0]}" frameborder="0" allowfullscreen style="border-radius:8px;display:block;"></iframe>`
+                : r.link
+                    ? `<a href="${r.link}" target="_blank" style="color:var(--bl);font-weight:800;font-size:0.85rem;"><i class="fas fa-external-link-alt" style="margin-right:5px;"></i>Ver video externo</a>`
+                    : '<p style="color:#444;font-size:0.8rem;margin:0;">Sin link adjunto.</p>';
+
+            // Raw + tiempo
+            $('r-rw').innerHTML = r.raw ? `<a href="${r.raw}" target="_blank" style="color:var(--cy);">Ver Raw</a>` : '—';
+            $('r-time').textContent = r.time ? new Date(r.time).toLocaleString('es') : '—';
+
+            // Nota del jugador
+            const cmBox = $('r-comment-box');
+            if (r.comments) { $('r-cm').textContent = r.comments; cmBox.style.display = 'block'; }
+            else { cmBox.style.display = 'none'; }
+
+            // ── CONTEXTO JUGADOR ──────────────────────────────────
+            const allPlayers = Object.values(fD.players || {});
+            const player = allPlayers.find(p => p.name?.toLowerCase() === r.player.toLowerCase());
+            if (player) {
+                const comps = player.completions
+                    ? (Array.isArray(player.completions) ? player.completions : Object.values(player.completions))
+                    : [];
+                const totalXP = comps.reduce((s, comp) => {
+                    const i = lvls.findIndex(l => l.name.toLowerCase() === comp.level.toLowerCase());
+                    if (i > -1) {
+                        let b = Math.max(250 - i*2, 5);
+                        if (lvls[i].bounty) b *= 2;
+                        if (lvls[i].first?.toLowerCase() === player.name.toLowerCase()) b *= 2;
+                        return s + b;
+                    }
+                    return s + (comp.xp || 0);
+                }, player.totalXP || 0);
+                const hasLevel = comps.some(x => x.level.toLowerCase() === r.level.toLowerCase());
+
+                $('r-p-name').textContent = player.name + (player.verified ? ' ✓' : '');
+                $('r-p-xp').textContent   = `${totalXP.toFixed(0)} XP total`;
+                $('r-p-demons').textContent = `${comps.length} demon${comps.length !== 1 ? 's' : ''} completados`;
+                const hasEl = $('r-p-has-level');
+                hasEl.textContent = hasLevel ? '⚠ Ya tiene este nivel' : '✓ No tiene este nivel aún';
+                hasEl.style.color = hasLevel ? 'var(--gd)' : 'var(--gr)';
+            } else {
+                $('r-p-name').textContent   = r.player + ' (jugador nuevo)';
+                $('r-p-xp').textContent     = 'Sin historial';
+                $('r-p-demons').textContent = '0 demons completados';
+                $('r-p-has-level').textContent = '✓ No tiene este nivel aún';
+                $('r-p-has-level').style.color = 'var(--gr)';
+            }
+
+            // ── CONTEXTO NIVEL ────────────────────────────────────
+            if (lvlData) {
+                const allComps = Object.values(fD.players || {}).reduce((acc, p) => {
+                    const comps = p.completions
+                        ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions))
+                        : [];
+                    return acc + (comps.some(x => x.level.toLowerCase() === r.level.toLowerCase()) ? 1 : 0);
+                }, 0);
+                $('r-l-name').textContent        = lvlData.name;
+                $('r-l-pos').textContent         = `#${lvlIdx+1} en la lista`;
+                $('r-l-xp').textContent          = `${xp > 0 ? xp : Math.max(250-lvlIdx*2,5)} XP base${lvlData.bounty ? ' (×2 BOUNTY)' : ''}`;
+                $('r-l-first').textContent       = lvlData.first ? `First Victor: ${lvlData.first}` : 'Sin First Victor';
+                $('r-l-completions').textContent = `${allComps} jugador${allComps!==1?'es':''} lo han completado`;
+            } else {
+                $('r-l-name').textContent        = r.level;
+                $('r-l-pos').innerHTML           = '<span style="color:var(--pu);">No está en la lista</span>';
+                $('r-l-xp').textContent          = 'XP no calculable';
+                $('r-l-first').textContent       = '—';
+                $('r-l-completions').textContent = '—';
+            }
+
+            // Resetear reason box
+            const reasonBox = $('r-reason-box');
+            reasonBox.style.display = 'none';
+            if ($('r-reason-input')) $('r-reason-input').value = '';
+
+            // Botones — con reason box inline
+            $('b-ac').onclick = () => {
+                reasonBox.style.display = 'none';
+                pRc(id, 'acc');
+            };
+            $('b-ap').onclick = () => {
+                $('r-reason-input').placeholder = 'Motivo de apelación...';
+                reasonBox.style.display = 'block';
+                $('r-reason-input').focus();
+                $('b-ap').onclick = () => {
+                    const n = $('r-reason-input').value.trim();
+                    if (!n) return toast('Escribe el motivo.', true);
+                    pRcWithReason(id, 'app', n);
+                };
+            };
+            $('b-rj').onclick = () => {
+                $('r-reason-input').placeholder = 'Razón de rechazo...';
+                reasonBox.style.display = 'block';
+                $('r-reason-input').focus();
+                $('b-rj').onclick = () => {
+                    const n = $('r-reason-input').value.trim();
+                    if (!n) return toast('Escribe el motivo.', true);
+                    pRcWithReason(id, 'rej', n);
+                };
+            };
+
+            $('m-rev').style.display = 'block';
+        }
+
+        function quickAccept(id) {
+            pRc(id, 'acc');
+        }
+        function quickReject(id) {
+            const n = window._qrReason || '';
+            // Toast inline con input rápido
+            aAdminToast(`¿Rechazar sin motivo? <span onclick="pRcWithReason('${id}','rej','Sin motivo especificado')" style="cursor:pointer;color:var(--gr);font-weight:900;margin-left:8px;text-decoration:underline;">CONFIRMAR</span> &nbsp; o abre el modal para detallar.`, 'warn', 7000);
+        }
+
+        function pRcWithReason(id, m, reason) {
+            // Wrapper que cierra reason box antes de procesar
+            const reasonBox = $('r-reason-box');
+            if (reasonBox) reasonBox.style.display = 'none';
+            _pRcInternal(id, m, reason);
         }
         
-        function pRc(id,m) {
-            const r = fD.submissions[id]; 
-            if(!r) return;
-            
-            if(m === 'acc') {
+        function pRc(id, m) {
+            // Llamada directa (sin motivo) — para aceptar o desde quickAccept
+            if (m === 'rej' || m === 'app') {
+                const n = prompt(m === 'rej' ? 'Razón de rechazo:' : 'Motivo de apelación:');
+                if (!n) return;
+                _pRcInternal(id, m, n);
+            } else {
+                _pRcInternal(id, m, '');
+            }
+        }
+
+        function _pRcInternal(id, m, reason) {
+            const r = fD.submissions[id];
+            if (!r) return;
+
+            if (m === 'acc') {
                 const xp = getXP(r.level, r.player); 
                 let pL = nx(fD.players); 
                 let i = pL.findIndex(x => x.name.toLowerCase() === r.player.toLowerCase());
@@ -1005,26 +1320,68 @@
                 log(`Aceptó récord de ${r.player}`); 
                 api(`✅ **NUEVO RÉCORD:** **${r.player}** superó **${r.level}** (+${xp.toFixed(1)} XP) \n*Aprobado por:* ${sN}`, 'main');
             
-            } else if(m === 'app') { 
-                const n = prompt("Motivo de Apelación:"); 
-                if(n) { 
-                    db.ref('history').push({player: r.player, level: r.level, status: 'Apelacion', link: r.link || '', reason: n, time: Date.now()}); 
-                    api(`⚠️ **RÉCORD EN APELACIÓN:** **${r.player}** en **${r.level}**\n*Revisado por:* ${sN}\n*Motivo:* ${n}`, 'main'); 
-                } else return; 
-            
-            } else { 
-                const n = prompt("Razón de Rechazo:"); 
-                if(n) {
-                    // [FIX BUG#2] Escribir en /history para que el jugador vea el rechazo
-                    db.ref('history').push({player: r.player, level: r.level, status: 'Rechazado', link: r.link || '', reason: n, time: Date.now()});
-                    log(`Rechazó a ${r.player}`); 
-                    api(`❌ **RÉCORD RECHAZADO:** **${r.player}** en **${r.level}**\n*Revisado por:* ${sN}\n*Motivo:* ${n}`, 'main'); 
-                } else return; 
+            } else if (m === 'app') {
+                db.ref('history').push({player: r.player, level: r.level, status: 'Apelacion', link: r.link || '', reason: reason, time: Date.now()});
+                api(`⚠️ **RÉCORD EN APELACIÓN:** **${r.player}** en **${r.level}**\n*Revisado por:* ${sN}\n*Motivo:* ${reason}`, 'main');
+
+            } else {
+                db.ref('history').push({player: r.player, level: r.level, status: 'Rechazado', link: r.link || '', reason: reason, time: Date.now()});
+                log(`Rechazó a ${r.player}`);
+                api(`❌ **RÉCORD RECHAZADO:** **${r.player}** en **${r.level}**\n*Revisado por:* ${sN}\n*Motivo:* ${reason}`, 'main');
             }
             
             db.ref(`submissions/${id}`).remove(); 
             cMod('m-rev'); 
             toast("Procesado");
+        }
+
+        function previewInjection() {
+            const p = ($('m-p')?.value || '').trim();
+            const l = ($('m-l')?.value || '').trim();
+            const prev = $('inj-preview');
+            if (!prev) return;
+            if (!p && !l) { prev.style.display = 'none'; return; }
+            prev.style.display = 'block';
+
+            // Estado del jugador
+            const pEl    = $('inj-p-status');
+            const player = Object.values(fD.players||{}).find(x => x.name?.toLowerCase() === p.toLowerCase());
+            if (p) {
+                pEl.textContent = player ? '✓ Existe' : '⚠ No existe (se creará)';
+                pEl.style.color = player ? 'var(--gr)' : 'var(--gd)';
+            } else { pEl.textContent = '—'; pEl.style.color = '#aaa'; }
+
+            // Estado del nivel
+            const lEl   = $('inj-l-status');
+            const xpEl  = $('inj-xp-preview');
+            const warnEl = $('inj-warn');
+            const lvlData = lvls.find(x => x.name?.toLowerCase() === l.toLowerCase());
+            if (l) {
+                if (lvlData) {
+                    const idx = lvls.indexOf(lvlData);
+                    let xp = Math.max(250 - idx*2, 5);
+                    if (lvlData.bounty) xp *= 2;
+                    if (lvlData.first?.toLowerCase() === p.toLowerCase()) xp *= 2;
+                    lEl.textContent = `✓ #${idx+1} en la lista`;
+                    lEl.style.color = 'var(--gr)';
+                    xpEl.textContent = '+' + xp + ' XP';
+                    // Advertir si ya lo tiene
+                    if (player) {
+                        const comps = player.completions
+                            ? (Array.isArray(player.completions) ? player.completions : Object.values(player.completions))
+                            : [];
+                        if (comps.some(x => x.level.toLowerCase() === l.toLowerCase())) {
+                            warnEl.textContent = '⚠ Este jugador ya tiene este nivel registrado.';
+                            warnEl.style.display = 'block';
+                        } else { warnEl.style.display = 'none'; }
+                    } else { warnEl.style.display = 'none'; }
+                } else {
+                    lEl.textContent = '⚠ No está en la lista (XP manual)';
+                    lEl.style.color = 'var(--pu)';
+                    xpEl.textContent = '—';
+                    warnEl.style.display = 'none';
+                }
+            } else { lEl.textContent = '—'; lEl.style.color = '#aaa'; xpEl.textContent = '—'; warnEl.style.display = 'none'; }
         }
 
         function iRec() { 
@@ -1630,10 +1987,10 @@
                     <div style="display:flex;justify-content:space-between;width:100%;flex-wrap:wrap;gap:6px;">
                         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
                             <span style="font-weight:900;color:#fff;font-size:0.9rem;">${b.reporter || 'Anónimo'}</span>
-                            <span style="background:rgba(0,0,0,0.6);color:#888;padding:3px 10px;border-radius:20px;font-size:0.65rem;font-family:'JetBrains Mono';">${b.category || 'Sin categoría'}</span>
-                            <span style="background:${statusColors[b.status]||'#333'}22;color:${statusColors[b.status]||'#aaa'};border:1px solid ${statusColors[b.status]||'#333'};padding:3px 10px;border-radius:20px;font-size:0.6rem;font-weight:900;font-family:'JetBrains Mono';">${statusLabel[b.status]||b.status}</span>
+                            <span style="background:rgba(0,0,0,0.6);color:#888;padding:3px 10px;border-radius:20px;font-size:0.65rem;font-family:\"JetBrains Mono\";">${b.category || 'Sin categoría'}</span>
+                            <span style="background:${statusColors[b.status]||'#333'}22;color:${statusColors[b.status]||'#aaa'};border:1px solid ${statusColors[b.status]||'#333'};padding:3px 10px;border-radius:20px;font-size:0.6rem;font-weight:900;font-family:\"JetBrains Mono\";">${statusLabel[b.status]||b.status}</span>
                         </div>
-                        <span style="font-size:0.65rem;color:#444;font-family:'JetBrains Mono';">${new Date(b.timestamp).toLocaleString('es')}</span>
+                        <span style="font-size:0.65rem;color:#444;font-family:\"JetBrains Mono\";">${new Date(b.timestamp).toLocaleString('es')}</span>
                     </div>
 
                     <div style="width:100%;">
@@ -1643,7 +2000,7 @@
 
                     ${b.response ? `
                     <div style="width:100%;background:rgba(0,255,102,0.04);border:1px solid rgba(0,255,102,0.15);border-radius:8px;padding:10px 12px;">
-                        <p style="margin:0 0 3px;font-size:0.65rem;color:var(--gr);font-family:'JetBrains Mono';text-transform:uppercase;letter-spacing:1px;"><i class="fas fa-reply"></i> Respuesta del Staff</p>
+                        <p style="margin:0 0 3px;font-size:0.65rem;color:var(--gr);font-family:\"JetBrains Mono\";text-transform:uppercase;letter-spacing:1px;"><i class="fas fa-reply"></i> Respuesta del Staff</p>
                         <p style="margin:0;font-size:0.82rem;color:#ccc;">${b.response}</p>
                     </div>` : ''}
 
