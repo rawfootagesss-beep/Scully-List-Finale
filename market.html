@@ -432,9 +432,15 @@
                 disabledItems = fullData.market_disabled || {}; // Control de estado (on/off)
 
                 if(user) {
-                    myIndex = players.findIndex(p => p.email && p.email.toLowerCase() === user.email.toLowerCase());
-                    if(myIndex > -1) {
-                        let originalKey = Object.keys(fullData.players)[myIndex];
+                    // [FIX] Buscar la key directamente en el objeto Firebase, no por índice de array.
+                    // nx() filtra nulls y reordena, haciendo que Object.keys()[myIndex] apunte
+                    // al jugador equivocado. Buscar la key por email directamente es O(n) y seguro.
+                    const playersObj = fullData.players || {};
+                    const originalKey = Object.keys(playersObj).find(
+                        k => playersObj[k]?.email?.toLowerCase() === user.email.toLowerCase()
+                    );
+                    myIndex = originalKey ? players.findIndex(p => p.email?.toLowerCase() === user.email.toLowerCase()) : -1;
+                    if(myIndex > -1 && originalKey) {
                         myPlayer = { ...players[myIndex], key: originalKey };
                         currentUser = myPlayer;
 
