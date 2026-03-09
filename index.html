@@ -455,6 +455,62 @@
         }
         #bug-fab:hover .bug-tooltip { opacity: 1; }
 
+        /* REC LEVEL PICKER */
+        .rec-lvl-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid #1a1a1a;
+            border-radius: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: 0.18s;
+            text-align: left;
+            user-select: none;
+        }
+        .rec-lvl-card:hover {
+            border-color: rgba(0,204,255,0.4);
+            background: rgba(0,204,255,0.05);
+            transform: translateY(-1px);
+        }
+        .rec-lvl-card.selected {
+            border-color: var(--blue);
+            background: rgba(0,204,255,0.1);
+            box-shadow: 0 0 0 1px rgba(0,204,255,0.2);
+        }
+        .rec-lvl-card .rlc-pos {
+            font-size: 0.58rem;
+            color: #444;
+            font-family: 'JetBrains Mono';
+            font-weight: 900;
+            margin-bottom: 3px;
+        }
+        .rec-lvl-card.selected .rlc-pos { color: var(--blue); }
+        .rec-lvl-card .rlc-name {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: #ccc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .rec-lvl-card.selected .rlc-name { color: #fff; }
+        .rec-lvl-card .rlc-xp {
+            font-size: 0.62rem;
+            color: #555;
+            font-family: 'JetBrains Mono';
+            margin-top: 3px;
+        }
+        .rec-lvl-card.selected .rlc-xp { color: rgba(0,204,255,0.7); }
+        .rec-lvl-card .rlc-bounty {
+            font-size: 0.55rem;
+            color: var(--gold);
+            font-weight: 900;
+            font-family: 'JetBrains Mono';
+        }
+        #rec-level-grid::-webkit-scrollbar { width: 5px; }
+        #rec-level-grid::-webkit-scrollbar-track { background: transparent; }
+        #rec-level-grid::-webkit-scrollbar-thumb { background: #1e1e1e; border-radius: 5px; }
+        #rec-lvl-search:focus { border-color: rgba(0,204,255,0.4) !important; }
+
         /* BUG MODAL */
         #bugModal .modal-content {
             border-color: var(--red); max-width: 480px; text-align: left;
@@ -823,24 +879,67 @@
         </div>
     </footer>
 
-    <div id="recModal" class="modal">
-        <div class="modal-content" style="border-color:var(--blue);">
-            <span style="position:absolute; top:15px; right:20px; color:#888; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('recModal').style.display='none'">✕</span>
-            <h2 style="color:var(--blue); margin-top:0;"><i class="fas fa-upload"></i> Subir Victoria</h2>
-            <p style="font-size:0.8rem; color:#aaa; margin-bottom:20px;">Estás a punto de enviar un récord bajo el nombre de <b id="rec-username" style="color:#fff;">Tu Usuario</b>.</p>
-            
-            <input type="text" id="rec-lvl" class="g-input" placeholder="Nombre exacto del Nivel (Ej: Bloodbath)">
-            <input type="text" id="rec-link" class="g-input" placeholder="Link del Video de YouTube (Obligatorio)" oninput="previewRecThumb()">
-            
-            <div id="rec-thumb-box" style="display:none; margin-bottom: 20px; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 15px; border: 1px dashed var(--blue);">
-                <p style="margin: 0 0 10px; font-size: 0.75rem; color: #aaa; text-transform: uppercase;">Vista Previa de la Prueba</p>
-                <img id="rec-thumb-img" src="" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; border: 1px solid #333;">
+    <div id="recModal" class="modal" style="align-items:flex-start; padding-top:4vh;">
+        <div class="modal-content" style="border-color:var(--blue); max-width:620px; padding:30px; text-align:left;">
+            <span style="position:absolute; top:15px; right:20px; color:#555; cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('recModal').style.display='none'">✕</span>
+
+            <!-- HEADER -->
+            <div style="margin-bottom:22px;">
+                <h2 style="color:var(--blue); margin:0 0 4px; font-size:1.2rem; text-transform:uppercase; font-family:'JetBrains Mono';"><i class="fas fa-upload" style="margin-right:10px;"></i>Subir Victoria</h2>
+                <p style="font-size:0.75rem; color:#555; margin:0;">Enviando como <b id="rec-username" style="color:#aaa;">Tu Usuario</b></p>
             </div>
 
-            <input type="text" id="rec-raw" class="g-input" placeholder="Link del RAW (Opcional pero recomendado)">
-            <textarea id="rec-com" class="g-input" rows="3" placeholder="Comentarios adicionales para el moderador (Opcional)"></textarea>
-            
-            <button type="button" id="btn-enviar-rec" class="btn-scully" style="background:var(--blue); color:#000; width:100%; justify-content:center; border:none; font-weight:800;" onclick="submitRecord(event)">ENVIAR PARA VERIFICACIÓN</button>
+            <!-- PASO 1: SELECTOR DE NIVEL -->
+            <div style="margin-bottom:20px;">
+                <p style="font-size:0.65rem; font-weight:900; color:var(--blue); text-transform:uppercase; letter-spacing:1px; font-family:'JetBrains Mono'; margin:0 0 10px;"><span style="background:var(--blue); color:#000; border-radius:50%; width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; margin-right:6px; font-size:0.6rem;">1</span>Elige el nivel</p>
+
+                <!-- Buscador -->
+                <div style="position:relative; margin-bottom:10px;">
+                    <input type="text" id="rec-lvl-search" placeholder="Buscar nivel..." oninput="filterRecLevels(this.value)"
+                        style="width:100%; background:#000; border:1px solid #1e1e1e; color:#fff; padding:11px 14px 11px 38px; border-radius:12px; font-size:0.85rem; outline:none; box-sizing:border-box; transition:0.3s; font-family:'Lexend Deca',sans-serif;">
+                    <i class="fas fa-search" style="position:absolute; left:13px; top:50%; transform:translateY(-50%); color:#333; font-size:0.8rem; pointer-events:none;"></i>
+                </div>
+
+                <!-- Grid de niveles -->
+                <div id="rec-level-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(165px, 1fr)); gap:7px; max-height:240px; overflow-y:auto; padding-right:4px;">
+                    <div style="color:#444; font-size:0.8rem; text-align:center; padding:20px; grid-column:1/-1;">Cargando lista...</div>
+                </div>
+
+                <!-- Nivel seleccionado (confirmación visual) -->
+                <div id="rec-selected-display" style="display:none; margin-top:10px; background:rgba(0,204,255,0.06); border:1px solid rgba(0,204,255,0.25); border-radius:12px; padding:10px 14px; display:flex; align-items:center; gap:10px;">
+                    <i class="fas fa-check-circle" style="color:var(--blue); font-size:1rem; flex-shrink:0;"></i>
+                    <div>
+                        <p style="margin:0; font-weight:900; color:#fff; font-size:0.88rem;" id="rec-sel-name">—</p>
+                        <p style="margin:0; font-size:0.65rem; color:#555;" id="rec-sel-pos">—</p>
+                    </div>
+                    <button onclick="clearRecSelection()" style="margin-left:auto; background:transparent; border:none; color:#444; cursor:pointer; font-size:0.9rem;" title="Cambiar nivel"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+
+            <!-- DIVISOR -->
+            <div style="height:1px; background:linear-gradient(90deg, transparent, #1e1e1e, transparent); margin-bottom:20px;"></div>
+
+            <!-- PASO 2: PRUEBA -->
+            <div style="margin-bottom:18px;">
+                <p style="font-size:0.65rem; font-weight:900; color:var(--blue); text-transform:uppercase; letter-spacing:1px; font-family:'JetBrains Mono'; margin:0 0 10px;"><span style="background:var(--blue); color:#000; border-radius:50%; width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; margin-right:6px; font-size:0.6rem;">2</span>Link de prueba</p>
+                <input type="text" id="rec-link" class="g-input" placeholder="URL de YouTube (Obligatorio)" oninput="previewRecThumb()" style="margin-bottom:10px;">
+                <div id="rec-thumb-box" style="display:none; background:rgba(0,0,0,0.5); padding:10px; border-radius:12px; border:1px dashed rgba(0,204,255,0.25); margin-bottom:0;">
+                    <p style="margin:0 0 8px; font-size:0.65rem; color:#555; text-transform:uppercase; letter-spacing:1px;">Vista previa</p>
+                    <img id="rec-thumb-img" src="" style="width:100%; max-height:160px; object-fit:cover; border-radius:8px; border:1px solid #1e1e1e; display:block;">
+                </div>
+            </div>
+
+            <!-- PASO 3: EXTRAS -->
+            <div style="margin-bottom:20px;">
+                <p style="font-size:0.65rem; font-weight:900; color:#444; text-transform:uppercase; letter-spacing:1px; font-family:'JetBrains Mono'; margin:0 0 10px;"><span style="background:#222; color:#888; border-radius:50%; width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; margin-right:6px; font-size:0.6rem;">3</span>Extras (opcional)</p>
+                <input type="text" id="rec-raw" class="g-input" placeholder="Link RAW del video" style="margin-bottom:10px;">
+                <textarea id="rec-com" class="g-input" rows="2" placeholder="Nota para el moderador..." style="margin-bottom:0; resize:none;"></textarea>
+            </div>
+
+            <!-- SUBMIT -->
+            <button type="button" id="btn-enviar-rec" class="btn-scully" style="background:var(--blue); color:#000; width:100%; justify-content:center; border:none; font-weight:900; padding:15px; font-size:0.9rem;" onclick="submitRecord(event)">
+                <i class="fas fa-paper-plane" style="margin-right:8px;"></i>ENVIAR PARA VERIFICACIÓN
+            </button>
         </div>
     </div>
 
@@ -1368,6 +1467,8 @@
             document.getElementById('link-nick-input').value = '';
         }
 
+        let _recSelectedLevel = null;  // { name, pos, xp, bounty }
+
         function openRecordModal() {
             if (!currentUserData.key) {
                 omniToast('Vincula tu cuenta antes de enviar récords.', 'error', 4000);
@@ -1375,6 +1476,77 @@
             }
             document.getElementById('rec-username').innerText = currentUserData.name;
             document.getElementById('recModal').style.display = 'flex';
+            // Resetear selección
+            _recSelectedLevel = null;
+            const searchEl = document.getElementById('rec-lvl-search');
+            if (searchEl) searchEl.value = '';
+            document.getElementById('rec-selected-display').style.display = 'none';
+            // Poblar la grid con los niveles de la lista
+            renderRecLevelGrid(nexus(fullData.levels));
+        }
+
+        function renderRecLevelGrid(levels) {
+            const grid = document.getElementById('rec-level-grid');
+            if (!grid) return;
+            if (!levels || !levels.length) {
+                grid.innerHTML = '<p style="color:#444; text-align:center; padding:20px; grid-column:1/-1; font-size:0.8rem;">Sin niveles cargados.</p>';
+                return;
+            }
+            grid.innerHTML = levels.map((l, i) => {
+                const xp = Math.max(250 - i * 2, 5) * (l.bounty ? 2 : 1);
+                const isSelected = _recSelectedLevel && _recSelectedLevel.name === l.name;
+                return `<div class="rec-lvl-card${isSelected ? ' selected' : ''}" onclick="selectRecLevel(${i}, '${l.name.replace(/'/g,"\'")}', ${xp}, ${!!l.bounty})">
+                    <p class="rlc-pos">#${i + 1}${l.bounty ? ' &nbsp;<span class="rlc-bounty">⚡BOUNTY</span>' : ''}</p>
+                    <p class="rlc-name">${l.name}</p>
+                    <p class="rlc-xp">+${xp} XP</p>
+                </div>`;
+            }).join('');
+        }
+
+        function filterRecLevels(q) {
+            const levels = nexus(fullData.levels);
+            const lower  = q.toLowerCase().trim();
+            const filtered = lower ? levels.filter(l => l.name.toLowerCase().includes(lower)) : levels;
+            // Necesitamos los índices originales para la XP correcta
+            const withIdx  = filtered.map(l => ({ l, i: levels.indexOf(l) }));
+            const grid = document.getElementById('rec-level-grid');
+            if (!grid) return;
+            if (!withIdx.length) {
+                grid.innerHTML = '<p style="color:#444; text-align:center; padding:20px; grid-column:1/-1; font-size:0.8rem;">Sin resultados.</p>';
+                return;
+            }
+            grid.innerHTML = withIdx.map(({ l, i }) => {
+                const xp = Math.max(250 - i * 2, 5) * (l.bounty ? 2 : 1);
+                const isSelected = _recSelectedLevel && _recSelectedLevel.name === l.name;
+                return `<div class="rec-lvl-card${isSelected ? ' selected' : ''}" onclick="selectRecLevel(${i}, '${l.name.replace(/'/g,"\'")}', ${xp}, ${!!l.bounty})">
+                    <p class="rlc-pos">#${i + 1}${l.bounty ? ' &nbsp;<span class="rlc-bounty">⚡BOUNTY</span>' : ''}</p>
+                    <p class="rlc-name">${l.name}</p>
+                    <p class="rlc-xp">+${xp} XP</p>
+                </div>`;
+            }).join('');
+        }
+
+        function selectRecLevel(idx, name, xp, bounty) {
+            _recSelectedLevel = { name, pos: idx + 1, xp, bounty };
+            // Actualizar todas las cards — deseleccionar las demás
+            document.querySelectorAll('.rec-lvl-card').forEach(el => el.classList.remove('selected'));
+            event?.currentTarget?.classList?.add('selected');
+            // Mostrar banner de selección
+            const display = document.getElementById('rec-selected-display');
+            const nameEl  = document.getElementById('rec-sel-name');
+            const posEl   = document.getElementById('rec-sel-pos');
+            if (display && nameEl && posEl) {
+                nameEl.textContent = name;
+                posEl.textContent  = `#${idx + 1} en la lista · +${xp} XP${bounty ? ' · ⚡ BOUNTY (doble XP)' : ''}`;
+                display.style.display = 'flex';
+            }
+        }
+
+        function clearRecSelection() {
+            _recSelectedLevel = null;
+            document.querySelectorAll('.rec-lvl-card').forEach(el => el.classList.remove('selected'));
+            const display = document.getElementById('rec-selected-display');
+            if (display) display.style.display = 'none';
         }
 
         function previewRecThumb(){ 
@@ -1389,20 +1561,27 @@
         }
 
         async function submitRecord(event) {
-            if(event) event.preventDefault(); 
+            if(event) event.preventDefault();
 
             if (!currentUserData.key) {
                 omniToast('Error de sesión. Recarga o vincula tu cuenta.', 'error', 4000);
                 return;
             }
 
-            const lvl = document.getElementById('rec-lvl').value.trim();
-            const link = document.getElementById('rec-link').value.trim();
-            const raw = document.getElementById('rec-raw').value.trim();
-            const com = document.getElementById('rec-com').value.trim();
+            if (!_recSelectedLevel) {
+                omniToast('Elige un nivel de la lista antes de continuar.', 'error', 4000);
+                // Scroll hacia la grid
+                document.getElementById('rec-level-grid')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
 
-            if (!lvl || !link) {
-                omniToast('El nombre del nivel y el link de YouTube son obligatorios.', 'error', 4000);
+            const lvl  = _recSelectedLevel.name;
+            const link = document.getElementById('rec-link').value.trim();
+            const raw  = document.getElementById('rec-raw').value.trim();
+            const com  = document.getElementById('rec-com').value.trim();
+
+            if (!link) {
+                omniToast('El link de YouTube es obligatorio.', 'error', 4000);
                 return;
             }
 
@@ -1425,9 +1604,13 @@
                 omniToast('¡Récord enviado! Un moderador lo revisará pronto.', 'success', 5000);
                 
                 document.getElementById('recModal').style.display = 'none';
-                document.getElementById('rec-lvl').value = ""; document.getElementById('rec-link').value = "";
-                document.getElementById('rec-raw').value = ""; document.getElementById('rec-com').value = "";
-                document.getElementById('rec-thumb-box').style.display='none';
+                _recSelectedLevel = null;
+                document.getElementById('rec-lvl-search').value = '';
+                document.getElementById('rec-selected-display').style.display = 'none';
+                document.getElementById('rec-link').value = '';
+                document.getElementById('rec-raw').value = '';
+                document.getElementById('rec-com').value = '';
+                document.getElementById('rec-thumb-box').style.display = 'none';
 
             } catch (error) {
                 omniToast('Error de conexión: ' + error.message, 'error', 5000);
