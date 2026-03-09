@@ -194,6 +194,48 @@
             align-items: center; gap: 10px; cursor: pointer; position: relative; justify-content: center; 
         }
         .btn-scully:hover { background: var(--accent); color: #000; transform: translateY(-3px); box-shadow: var(--glow); border-color: var(--accent); }
+        .btn-discord-official:hover { background: linear-gradient(135deg,#4752C4,#3c45a5) !important; color: #fff !important; border-color: #4752C4 !important; box-shadow: 0 6px 25px rgba(88,101,242,0.55) !important; transform: translateY(-3px); }
+
+        /* DISCORD FIXED BUTTON */
+        #discord-fab {
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #5865F2, #4752C4);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 18px 10px 14px;
+            font-family: 'Lexend Deca', sans-serif;
+            font-weight: 900;
+            font-size: 0.78rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 20px rgba(88,101,242,0.45), 0 0 0 1px rgba(88,101,242,0.3);
+            transition: 0.25s cubic-bezier(0.175,0.885,0.32,1.275);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        #discord-fab i { font-size: 1.1rem; }
+        #discord-fab:hover {
+            background: linear-gradient(135deg, #4752C4, #3c45a5);
+            box-shadow: 0 8px 30px rgba(88,101,242,0.65), 0 0 0 2px rgba(88,101,242,0.4);
+            transform: translateY(-2px) scale(1.04);
+            color: #fff;
+        }
+        #discord-fab:active { transform: scale(0.97); }
+
+        /* Mobile: solo icono */
+        @media (max-width: 480px) {
+            #discord-fab { padding: 10px 13px; border-radius: 50%; }
+            #discord-fab .disc-label { display: none; }
+            #discord-fab i { font-size: 1.2rem; }
+        }
         .btn-scully.active { border-color: var(--accent); color: var(--accent); }
         
         .btn-ai { border-color: var(--cyan); color: var(--cyan); } 
@@ -576,6 +618,12 @@
         <h1 style="color: var(--red); font-family: 'JetBrains Mono'; text-transform: uppercase;">ACCESO DENEGADO</h1>
         <p style="color: #888; max-width: 400px; line-height: 1.6;">Mantenimiento de red en progreso dictado por el Owner.</p>
     </div>
+
+    <!-- DISCORD FIXED BUTTON -->
+    <a id="discord-fab" href="https://discord.gg/HDGzCVazwT" target="_blank" rel="noopener">
+        <i class="fab fa-discord"></i>
+        <span class="disc-label">Discord</span>
+    </a>
 
     <div id="globalAlert">ALERTA DE SISTEMA</div>
     
