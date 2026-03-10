@@ -391,7 +391,7 @@
             messagingSenderId: "498548914021", 
             appId: "1:498548914021:web:59128b5e06b36a4e81938c" 
         };
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const auth = firebase.auth(); 
         const db = firebase.database();
         
@@ -460,12 +460,13 @@
             { id: "nyan", name: "Nyan Cat Trail", price: 777, icon: "fas fa-cat", color: "#ff00ff", desc: "¡Efecto Arcoíris animado súper legendario! Deja una estela multicolor a tu paso.", extraClass: "card-nyan" }
         ];
 
-        // TERMINAL LOG
-        const term = document.getElementById('term-box');
+        // TERMINAL LOG — lazy ref para evitar null si el DOM no cargó aún
         function printLog(msg, color="var(--cyan)") {
+            const termEl = document.getElementById('term-box');
+            if (!termEl) return;
             const l = document.createElement('div'); l.className = 't-line';
             l.innerHTML = `> <span style="color:${color}">${msg}</span>`;
-            term.appendChild(l); term.scrollTop = term.scrollHeight;
+            termEl.appendChild(l); termEl.scrollTop = termEl.scrollHeight;
         }
         setTimeout(() => printLog("Iniciando Handshake..."), 500);
 
@@ -490,6 +491,13 @@
 
         // CARGA DE DATOS — el listener de DB es independiente del auth
         // Así la tienda carga siempre, aunque el usuario no esté logueado
+        // ── RENDER INMEDIATO DEL CATÁLOGO ESTÁTICO ───────────────────────
+        // Se ejecuta sin esperar Firebase — elimina la pantalla de carga infinita
+        // si Firebase tarda o falla. Los botones quedan activos una vez que carga el usuario.
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStore({});
+        });
+
         // ── CARGA DE DATOS ───────────────────────────────────────────────
         // Lógica compartida: poblar myPlayer y renderizar
         function _processData(user) {
