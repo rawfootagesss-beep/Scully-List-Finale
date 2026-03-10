@@ -32,7 +32,15 @@
         h1 { color: var(--gold); text-transform: uppercase; font-size: clamp(1.8rem, 5vw, 3rem); margin: 0; text-shadow: 0 0 20px rgba(255,215,0,0.3); font-family: 'JetBrains Mono'; }
         
         /* PANEL DE ADMIN OCULTO Y SWITCHES */
-        #admin-panel { display: none; background: rgba(255,51,51,0.05); border: 1px dashed var(--red); padding: 20px; border-radius: 10px; margin-bottom: 30px; }
+        #admin-panel { display: none; background: rgba(255,51,51,0.03); border: 1px solid rgba(255,51,51,0.2); padding: 22px; border-radius: 14px; margin-bottom: 30px; }
+        .staff-tab { background: transparent; border: none; border-bottom: 2px solid transparent; color: #444; padding: 8px 16px; cursor: pointer; font-family: 'JetBrains Mono'; font-size: 0.72rem; font-weight: 900; text-transform: uppercase; transition: 0.2s; margin-bottom: -1px; }
+        .staff-tab:hover { color: #888; }
+        .staff-tab.active { color: var(--red); border-bottom-color: var(--red); }
+        .toggle-item { display: flex; justify-content: space-between; align-items: center; background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 10px; padding: 10px 14px; transition: 0.2s; }
+        .toggle-item:hover { border-color: #2a2a2a; }
+        .toggle-item.is-off { opacity: 0.5; }
+        .toggle-item-name { font-size: 0.78rem; font-weight: 700; color: #ccc; }
+        .toggle-item-price { font-size: 0.65rem; color: #444; font-family: 'JetBrains Mono'; margin-top: 2px; }
         .admin-title { color: var(--red); margin-top: 0; font-family: 'JetBrains Mono'; text-transform: uppercase; font-size: 1rem; }
         .admin-inputs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
         .g-input { flex: 1; min-width: 150px; background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 5px; font-family: inherit; }
@@ -237,20 +245,71 @@
         </header>
 
         <div id="admin-panel">
-            <h3 class="admin-title"><i class="fas fa-terminal"></i> Inyector de Ítems Dinámicos (Admin)</h3>
-            <p style="color:#888; font-size:0.8rem; margin-bottom:15px;">Añade cosméticos temporales a la base de datos o limpia tu XP de las pruebas.</p>
-            <div class="admin-inputs">
-                <input type="text" id="add-name" class="g-input" placeholder="Nombre (Ej: Halo de Tormenta)">
-                <input type="number" id="add-price" class="g-input" placeholder="Precio en XP">
-                <input type="text" id="add-icon" class="g-input" placeholder="Icono (Ej: fas fa-bolt)">
-                <input type="color" id="add-color" class="g-input" style="padding: 5px; max-width: 80px;" value="#00ffff" title="Color del Ítem">
-                <button class="btn-admin" onclick="addNewItem()"><i class="fas fa-upload"></i> PUBLICAR</button>
-                <button class="btn-debug" onclick="resetMyXP()"><i class="fas fa-sync"></i> PURGAR MI XP</button>
-            </div>
-            
-            <h4 style="color:#fff; margin:0 0 10px; font-size:0.9rem; border-top:1px solid #333; padding-top:15px;"><i class="fas fa-power-off"></i> Gestor de Catálogo Activo</h4>
-            <div class="toggles-grid" id="admin-toggles">
+            <!-- Header del panel -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+                <div>
+                    <h3 class="admin-title" style="margin:0 0 3px;"><i class="fas fa-shield-alt"></i> Panel de Administración — Tienda</h3>
+                    <p style="margin:0; font-size:0.68rem; color:#555; font-family:'JetBrains Mono';">Visible solo para staff · Los cambios son inmediatos y globales</p>
                 </div>
+                <span id="staff-role-badge" style="font-size:0.65rem; padding:4px 12px; border-radius:20px; font-weight:900; font-family:'JetBrains Mono'; text-transform:uppercase; background:rgba(255,51,51,0.1); border:1px solid var(--red); color:var(--red);"></span>
+            </div>
+
+            <!-- Tabs del panel -->
+            <div style="display:flex; gap:4px; margin-bottom:18px; border-bottom:1px solid #1a1a1a; padding-bottom:0;">
+                <button class="staff-tab active" id="stab-visibility" onclick="switchStaffTab('visibility')"><i class="fas fa-eye"></i> Visibilidad</button>
+                <button class="staff-tab" id="stab-publish" onclick="switchStaffTab('publish')"><i class="fas fa-plus-circle"></i> Publicar Ítem</button>
+                <button class="staff-tab" id="stab-dynamic" onclick="switchStaffTab('dynamic')"><i class="fas fa-database"></i> Ítems DB</button>
+            </div>
+
+            <!-- TAB: Visibilidad del catálogo -->
+            <div id="staff-tab-visibility">
+                <p style="color:#555; font-size:0.72rem; margin:0 0 14px; font-family:'JetBrains Mono';">Activa o desactiva la visibilidad de cada ítem en la tienda. Los ítems ocultos no se pueden comprar.</p>
+                <div id="admin-toggles" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:8px;"></div>
+            </div>
+
+            <!-- TAB: Publicar ítem dinámico -->
+            <div id="staff-tab-publish" style="display:none;">
+                <p style="color:#555; font-size:0.72rem; margin:0 0 14px; font-family:'JetBrains Mono';">Crea un cosmético temporal que aparecerá en la tienda. Se guarda en Firebase hasta que lo elimines.</p>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                    <div>
+                        <label style="font-size:0.65rem; color:#555; font-family:'JetBrains Mono'; text-transform:uppercase; display:block; margin-bottom:4px;">Nombre del ítem</label>
+                        <input type="text" id="add-name" class="g-input" placeholder="Ej: Aura de Tormenta" style="width:100%;" oninput="updateItemPreview()">
+                    </div>
+                    <div>
+                        <label style="font-size:0.65rem; color:#555; font-family:'JetBrains Mono'; text-transform:uppercase; display:block; margin-bottom:4px;">Precio (XP de tienda)</label>
+                        <input type="number" id="add-price" class="g-input" placeholder="Ej: 350" style="width:100%;">
+                    </div>
+                    <div>
+                        <label style="font-size:0.65rem; color:#555; font-family:'JetBrains Mono'; text-transform:uppercase; display:block; margin-bottom:4px;">Descripción</label>
+                        <input type="text" id="add-desc" class="g-input" placeholder="Descripción breve del cosmético" style="width:100%;">
+                    </div>
+                    <div>
+                        <label style="font-size:0.65rem; color:#555; font-family:'JetBrains Mono'; text-transform:uppercase; display:block; margin-bottom:4px;">Icono FontAwesome</label>
+                        <input type="text" id="add-icon" class="g-input" placeholder="fas fa-bolt" style="width:100%;">
+                    </div>
+                    <div>
+                        <label style="font-size:0.65rem; color:#555; font-family:'JetBrains Mono'; text-transform:uppercase; display:block; margin-bottom:4px;">Color (hex)</label>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <input type="color" id="add-color" value="#00ffff" style="width:48px; height:38px; padding:2px; background:#000; border:1px solid #333; border-radius:6px; cursor:pointer;" oninput="updateItemPreview()">
+                            <span id="add-color-preview" style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#aaa;">#00ffff</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:flex-end;">
+                        <div style="width:100%;">
+                            <label style="font-size:0.65rem; color:#555; font-family:'JetBrains Mono'; text-transform:uppercase; display:block; margin-bottom:4px;">Vista previa</label>
+                            <div id="new-item-preview" style="background:#000; border:1px solid #222; border-radius:8px; padding:8px 12px; font-size:0.8rem; font-weight:900;">—</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-admin" onclick="addNewItem()" style="width:100%; padding:12px;"><i class="fas fa-upload"></i> PUBLICAR EN TIENDA</button>
+            </div>
+
+            <!-- TAB: Gestionar ítems dinámicos de la DB -->
+            <div id="staff-tab-dynamic" style="display:none;">
+                <p style="color:#555; font-size:0.72rem; margin:0 0 14px; font-family:'JetBrains Mono';">Aquí puedes editar precio o eliminar los ítems que creaste. Los ítems del catálogo oficial no aparecen aquí.</p>
+                <div id="dynamic-items-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+                <p id="dynamic-empty" style="color:#333; font-size:0.75rem; text-align:center; padding:20px; display:none; font-family:'JetBrains Mono';">No hay ítems dinámicos publicados.</p>
+            </div>
         </div>
 
         <div class="market-layout">
@@ -526,9 +585,13 @@
                     myPlayer.shopXP = myPlayer.totalXP || 0;
                     renderWallet();
                     const role = myPlayer.role || '';
-                    if (role === 'admin' || myPlayer.name.toLowerCase() === 'score') {
+                    const isStaff = ['admin','mod','helper','owner'].includes(role) || myPlayer.name.toLowerCase() === 'score';
+                    if (isStaff) {
                         document.getElementById('admin-panel').style.display = 'block';
+                        const badge = document.getElementById('staff-role-badge');
+                        if (badge) badge.textContent = myPlayer.name.toLowerCase() === 'score' ? 'owner' : role;
                         renderAdminToggles(fullData.market_dynamic_items || {});
+                        renderDynamicItemsList(fullData.market_dynamic_items || {});
                     }
                 } else {
                     renderGuestWallet();
@@ -633,31 +696,132 @@
         }
 
         // RENDER DE PANEL ADMIN (Gestor de Interruptores)
+        // ── PANEL DE STAFF ───────────────────────────────────────────────
+        function switchStaffTab(tab) {
+            ['visibility','publish','dynamic'].forEach(t => {
+                document.getElementById(`stab-${t}`).classList.toggle('active', t === tab);
+                document.getElementById(`staff-tab-${t}`).style.display = t === tab ? 'block' : 'none';
+            });
+        }
+
         function renderAdminToggles(dynamicItems) {
             const box = document.getElementById('admin-toggles');
-            let html = "";
-            let allItems = [...officialCatalog];
-            if(dynamicItems) { for(let key in dynamicItems) { allItems.push({id: key, name: dynamicItems[key].name}); } }
+            if (!box) return;
+            const allItems = [...officialCatalog];
+            if (dynamicItems) { for (let key in dynamicItems) { allItems.push({ id: key, name: dynamicItems[key].name, price: dynamicItems[key].price, isDynamic: true }); } }
 
-            allItems.forEach(item => {
-                let isOff = disabledItems[item.id] === true;
-                html += `
-                <div class="toggle-item">
-                    <span>${item.name}</span>
-                    <label class="switch">
-                        <input type="checkbox" ${isOff ? '' : 'checked'} onchange="toggleMarketItem('${item.id}', this.checked)">
+            box.innerHTML = allItems.map(item => {
+                const isOff = disabledItems[item.id] === true;
+                return `<div class="toggle-item ${isOff ? 'is-off' : ''}" id="toggle-row-${item.id}">
+                    <div>
+                        <div class="toggle-item-name">${item.name}</div>
+                        <div class="toggle-item-price">${item.price} XP${item.isDynamic ? ' · dinámico' : ''}</div>
+                    </div>
+                    <label class="switch" title="${isOff ? 'Oculto — click para mostrar' : 'Visible — click para ocultar'}">
+                        <input type="checkbox" ${isOff ? '' : 'checked'} onchange="toggleMarketItem('${item.id}', this.checked, '${item.name}')">
                         <span class="slider"></span>
                     </label>
                 </div>`;
-            });
-            box.innerHTML = html;
+            }).join('');
         }
 
-        function toggleMarketItem(id, isChecked) {
-            // Si está checkeado = NO disabled (removemos de la lista negra)
-            if(isChecked) { db.ref(`market_disabled/${id}`).remove(); } 
-            else { db.ref(`market_disabled/${id}`).set(true); }
+        function toggleMarketItem(id, isChecked, name) {
+            if (isChecked) {
+                db.ref(`market_disabled/${id}`).remove();
+                mToast(`✓ "${name}" ahora es visible en la tienda.`, 'success', 3000);
+            } else {
+                db.ref(`market_disabled/${id}`).set(true);
+                mToast(`"${name}" ocultado de la tienda.`, 'info', 3000);
+            }
+            const row = document.getElementById(`toggle-row-${id}`);
+            if (row) row.classList.toggle('is-off', !isChecked);
         }
+
+        function renderDynamicItemsList(dynamicItems) {
+            const list  = document.getElementById('dynamic-items-list');
+            const empty = document.getElementById('dynamic-empty');
+            if (!list) return;
+            const keys = Object.keys(dynamicItems || {});
+            if (!keys.length) {
+                list.innerHTML = '';
+                if (empty) empty.style.display = 'block';
+                return;
+            }
+            if (empty) empty.style.display = 'none';
+            list.innerHTML = keys.map(key => {
+                const it = dynamicItems[key];
+                return `<div style="display:flex; align-items:center; gap:10px; background:#0a0a0a; border:1px solid #1a1a1a; border-radius:10px; padding:12px 14px; flex-wrap:wrap;">
+                    <i class="${it.icon || 'fas fa-star'}" style="color:${it.color || '#aaa'}; font-size:1.1rem; width:20px; text-align:center;"></i>
+                    <div style="flex:1; min-width:120px;">
+                        <div style="font-size:0.82rem; font-weight:900; color:#fff;">${it.name}</div>
+                        <div style="font-size:0.65rem; color:#444; font-family:'JetBrains Mono';">ID: ${key.substring(0,8)}…</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <input type="number" id="price-edit-${key}" value="${it.price}" min="1"
+                            style="width:80px; background:#000; border:1px solid #222; color:#ffd700; padding:6px 8px; border-radius:6px; font-family:'JetBrains Mono'; font-size:0.78rem; font-weight:900;"
+                            title="Precio en XP">
+                        <button onclick="saveItemPrice('${key}', '${it.name}')" 
+                            style="background:rgba(0,255,102,0.1); border:1px solid var(--green); color:var(--green); padding:6px 10px; border-radius:6px; cursor:pointer; font-size:0.7rem; font-weight:900; font-family:'JetBrains Mono';" title="Guardar precio">
+                            <i class="fas fa-save"></i>
+                        </button>
+                        <button onclick="deleteItem('${key}', '${it.name}')"
+                            style="background:rgba(255,51,51,0.1); border:1px solid var(--red); color:var(--red); padding:6px 10px; border-radius:6px; cursor:pointer; font-size:0.7rem; font-weight:900; font-family:'JetBrains Mono';" title="Eliminar ítem">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function saveItemPrice(key, name) {
+            const input = document.getElementById(`price-edit-${key}`);
+            const newPrice = parseInt(input?.value);
+            if (isNaN(newPrice) || newPrice < 1) { mToast('Precio inválido.', 'error'); return; }
+            db.ref(`market_dynamic_items/${key}/price`).set(newPrice)
+                .then(() => mToast(`Precio de "${name}" actualizado a ${newPrice} XP.`, 'success', 3000))
+                .catch(() => mToast('Error al guardar precio.', 'error'));
+        }
+
+        function deleteItem(key, name) {
+            mToast(`¿Eliminar "${name}" permanentemente? <span onclick="confirmDeleteItem('${key}','${name}')" style="cursor:pointer;color:var(--red);font-weight:900;margin-left:8px;text-decoration:underline;">CONFIRMAR</span>`, 'error', 7000);
+        }
+        function confirmDeleteItem(key, name) {
+            db.ref(`market_dynamic_items/${key}`).remove()
+                .then(() => mToast(`"${name}" eliminado de la tienda.`, 'success', 3000))
+                .catch(() => mToast('Error al eliminar.', 'error'));
+        }
+
+        function addNewItem() {
+            const name  = document.getElementById('add-name').value.trim();
+            const price = parseInt(document.getElementById('add-price').value);
+            const desc  = document.getElementById('add-desc')?.value.trim() || 'Ítem especial de temporada.';
+            const icon  = document.getElementById('add-icon').value.trim() || 'fas fa-star';
+            const color = document.getElementById('add-color').value || '#00ffff';
+            if (!name)        { mToast('Escribe un nombre para el ítem.', 'error'); return; }
+            if (isNaN(price) || price < 1) { mToast('Precio inválido.', 'error'); return; }
+            db.ref('market_dynamic_items').push({ name, price, desc, icon, color, createdAt: Date.now(), createdBy: myPlayer?.name || '?' })
+                .then(() => {
+                    mToast(`"${name}" publicado en la tienda.`, 'success', 3500);
+                    document.getElementById('add-name').value  = '';
+                    document.getElementById('add-price').value = '';
+                    document.getElementById('add-desc').value  = '';
+                    document.getElementById('add-icon').value  = '';
+                    document.getElementById('new-item-preview').textContent = '—';
+                    document.getElementById('new-item-preview').style.color = '#aaa';
+                    switchStaffTab('dynamic');
+                });
+        }
+
+        // Preview en tiempo real del nuevo ítem
+        function updateItemPreview() {
+            const name  = document.getElementById('add-name')?.value.trim() || '—';
+            const color = document.getElementById('add-color')?.value || '#00ffff';
+            const prev  = document.getElementById('new-item-preview');
+            const label = document.getElementById('add-color-preview');
+            if (prev)  { prev.textContent = name; prev.style.color = color; prev.style.borderColor = color; }
+            if (label) label.textContent = color;
+        }
+        // ─────────────────────────────────────────────────────────────────
 
         // PROTOCOLO DE COMPRA
 
@@ -875,13 +1039,6 @@
         }
 
         // ADMIN TOOLS
-        function addNewItem() {
-            let name = document.getElementById('add-name').value.trim(); let price = parseInt(document.getElementById('add-price').value);
-            let icon = document.getElementById('add-icon').value.trim() || "fas fa-star"; let color = document.getElementById('add-color').value;
-            if(!name || isNaN(price)) { mToast('Faltan datos para publicar el ítem.', 'error'); return; }
-            db.ref('market_dynamic_items').push({ name: name, price: price, icon: icon, color: color, createdAt: Date.now() });
-            document.getElementById('add-name').value = ""; document.getElementById('add-price').value = "";
-        }
         function resetMyXP() {
             if(!myPlayer) return;
             mToast('¿Purgar tu XP manual a 0? <span onclick="confirmResetXP()" style="cursor:pointer;color:var(--red);font-weight:900;margin-left:8px;text-decoration:underline;">CONFIRMAR</span>', 'error', 7000);
