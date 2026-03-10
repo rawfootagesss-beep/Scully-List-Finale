@@ -2004,281 +2004,410 @@
         }
 
         function generateTitanCard() {
-            let nick = document.getElementById('tc-nick').value.trim();
+            const nick = document.getElementById('tc-nick').value.trim();
             if (!nick) { omniToast('Ingresa un nick para generar la tarjeta.', 'error'); return; }
 
-            let pL = nexus(fullData.players);
             const lvls = nexus(fullData.levels);
+            let pL     = nexus(fullData.players);
 
-            // Calcular XP real para todos (curva OMNI + First Victor como hardest)
+            // ── 1. Calcular puntos OMNI correctamente para TODOS (ranking preciso) ──
             pL.forEach(p => {
-                const pName = p.name.toLowerCase();
+                const pName   = p.name.toLowerCase();
+                // Incluir First Victor aunque no esté en completions[]
                 const allNames = new Set(nexus(p.completions).map(c => c.level.toLowerCase()));
                 lvls.forEach(l => { if (l.first?.toLowerCase() === pName) allNames.add(l.name.toLowerCase()); });
-                let realXp = 0;
+
+                let rankPts = 0;
                 allNames.forEach(n => {
-                    const lIdx = lvls.findIndex(x => x.name.toLowerCase() === n);
-                    if (lIdx > -1) {
-                        const isFV = lvls[lIdx].first?.toLowerCase() === pName;
-                        const pts  = omniPts(lIdx, !!lvls[lIdx].bounty, isFV);
-                        const orig = nexus(p.completions).find(cp => cp.level.toLowerCase() === n);
-                        if (orig) orig.realXp = pts;
-                        realXp += pts;
+                    const idx = lvls.findIndex(x => x.name.toLowerCase() === n);
+                    if (idx > -1) {
+                        const isFV = lvls[idx].first?.toLowerCase() === pName;
+                        rankPts += omniPts(idx, !!lvls[idx].bounty, isFV);
                     }
                 });
-                p.calcXp = realXp + (p.totalXP || 0);
+                p._rankPts = rankPts;   // puntos de ranking (curva OMNI)
+                // shopXP = totalXP (wallet de tienda, separado)
             });
 
-            pL.sort((a, b) => b.calcXp - a.calcXp);
-            let pIndex = pL.findIndex(x => x.name.toLowerCase() === nick.toLowerCase());
-            if (pIndex === -1) {
-                omniToast('Perfil no encontrado en el ranking.', 'error', 3000);
-                return;
-            }
+            // ── 2. Ordenar por rankPts para rank global ──
+            pL.sort((a, b) => b._rankPts - a._rankPts);
+            const pIndex = pL.findIndex(x => x.name.toLowerCase() === nick.toLowerCase());
+            if (pIndex === -1) { omniToast('Perfil no encontrado en el ranking.', 'error', 3000); return; }
 
-            const p = pL[pIndex];
+            const p     = pL[pIndex];
+            const pName = p.name.toLowerCase();
+
+            // ── 3. Calcular stats del jugador ──
+            const allCompNames = new Set(nexus(p.completions).map(c => c.level.toLowerCase()));
+            lvls.forEach(l => { if (l.first?.toLowerCase() === pName) allCompNames.add(l.name.toLowerCase()); });
+
+            // Victorias con XP individual (para top victorias)
+            const victories = [];
+            allCompNames.forEach(n => {
+                const idx = lvls.findIndex(x => x.name.toLowerCase() === n);
+                if (idx === -1) return;
+                const isFV  = lvls[idx].first?.toLowerCase() === pName;
+                const pts   = omniPts(idx, !!lvls[idx].bounty, isFV);
+                const comp  = nexus(p.completions).find(c => c.level.toLowerCase() === n);
+                victories.push({
+                    name:    lvls[idx].name,
+                    pts,
+                    listPos: idx + 1,
+                    isFV,
+                    isBounty: !!lvls[idx].bounty,
+                    link:   comp?.link || null,
+                    time:   comp?.time || null,
+                });
+            });
+            victories.sort((a, b) => b.pts - a.pts);
+
+            // Hardest = victoria con más pts (posición más alta en la lista)
+            const hardest    = victories[0] || null;
+            // First Victors
+            const fvList     = victories.filter(v => v.isFV);
+            const totalVics  = victories.length;
+            const rankPts    = p._rankPts;
+            const shopXP     = p.totalXP || 0;
+
+            // ── 4. País → emoji de bandera ──
+            function countryToEmoji(code) {
+                if (!code || code.length < 2) return '🌐';
+                const clean = code.toLowerCase().substring(0, 2);
+                // Regional indicator symbols: A=0x1F1E6
+                return String.fromCodePoint(
+                    clean.charCodeAt(0) - 97 + 0x1F1E6,
+                    clean.charCodeAt(1) - 97 + 0x1F1E6
+                );
+            }
+            const flagEmoji  = countryToEmoji(p.country);
+            const countryName = p.country ? p.country.toUpperCase() : 'UNKNOWN';
+
             const btn = document.getElementById('btn-forge');
             btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> FORJANDO...";
             btn.disabled = true;
 
-            // ── Canvas: 1000×560, diseño cyberpunk completo ──────────────────
-            const W = 1000, H = 560;
+            // ── 5. Canvas setup ──────────────────────────────────────────────
+            const W = 1080, H = 600;
             const canvas = document.createElement('canvas');
             canvas.width = W; canvas.height = H;
             const ctx = canvas.getContext('2d');
 
-            // Determinar color de acento del jugador
-            const cos = getCosmetic(p.activeCosmetic);
-            // accentHex: extraer valor real desde CSS var o usar raw
-            const accentRaw = cos.nC.startsWith('var(') 
-                ? getComputedStyle(document.documentElement).getPropertyValue(cos.nC.slice(4,-1).trim()).trim() || '#ff6600'
+            const cos       = getCosmetic(p.activeCosmetic);
+            const accentRaw = cos.nC.startsWith('var(')
+                ? (getComputedStyle(document.documentElement).getPropertyValue(cos.nC.slice(4,-1).trim()).trim() || '#ff6600')
                 : cos.nC;
-            const accent = accentRaw || '#ff6600';
-            const isVerified = !!p.verified;
+            const accent    = accentRaw || '#ff6600';
 
             function hexToRgb(hex) {
-                const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.replace(/^#([a-f\d])([a-f\d])([a-f\d])$/i,'#$1$1$2$2$3$3'));
+                const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(
+                    hex.replace(/^#([a-f\d])([a-f\d])([a-f\d])$/i,'#$1$1$2$2$3$3')
+                );
                 return r ? `${parseInt(r[1],16)},${parseInt(r[2],16)},${parseInt(r[3],16)}` : '255,102,0';
             }
-            const accentRGB = hexToRgb(accent);
+            const rgb = hexToRgb(accent);
+
+            function roundRect(cx, x, y, w, h, r) {
+                cx.beginPath();
+                cx.moveTo(x+r, y);
+                cx.lineTo(x+w-r, y); cx.arcTo(x+w, y, x+w, y+r, r);
+                cx.lineTo(x+w, y+h-r); cx.arcTo(x+w, y+h, x+w-r, y+h, r);
+                cx.lineTo(x+r, y+h); cx.arcTo(x, y+h, x, y+h-r, r);
+                cx.lineTo(x, y+r); cx.arcTo(x, y, x+r, y, r);
+                cx.closePath();
+            }
 
             function drawCard(pfpImg) {
-                // ── Fondo ────────────────────────────────────────────────────
-                ctx.fillStyle = '#060608';
+                // ── BG ──────────────────────────────────────────────────────
+                ctx.fillStyle = '#050507';
                 ctx.fillRect(0, 0, W, H);
 
-                // Grilla sutil
-                ctx.strokeStyle = 'rgba(255,255,255,0.025)';
+                // Grilla de fondo
+                ctx.strokeStyle = 'rgba(255,255,255,0.022)';
                 ctx.lineWidth = 1;
-                for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
-                for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+                for (let x = 0; x <= W; x += 45) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+                for (let y = 0; y <= H; y += 45) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
 
-                // Glow lateral izquierdo
-                const glowL = ctx.createLinearGradient(0, 0, 320, 0);
-                glowL.addColorStop(0, `rgba(${accentRGB},0.18)`);
-                glowL.addColorStop(1, 'rgba(0,0,0,0)');
-                ctx.fillStyle = glowL;
-                ctx.fillRect(0, 0, 320, H);
+                // Glow radial en esquina TL
+                const glowBg = ctx.createRadialGradient(0, 0, 0, 0, 0, 500);
+                glowBg.addColorStop(0, `rgba(${rgb},0.14)`);
+                glowBg.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = glowBg;
+                ctx.fillRect(0, 0, W, H);
 
-                // Franja izquierda de color
+                // Borde exterior
+                ctx.strokeStyle = `rgba(${rgb},0.4)`;
+                ctx.lineWidth = 2;
+                roundRect(ctx, 6, 6, W-12, H-12, 14);
+                ctx.stroke();
+
+                // Franja lateral izquierda
                 ctx.fillStyle = accent;
-                ctx.fillRect(0, 0, 5, H);
+                ctx.fillRect(6, 6, 5, H-12);
 
-                // Borde exterior sutil
-                ctx.strokeStyle = `rgba(${accentRGB},0.35)`;
-                ctx.lineWidth = 1.5;
-                ctx.strokeRect(8, 8, W-16, H-16);
+                // ── PFP ─────────────────────────────────────────────────────
+                const pfpR = 68, pfpCX = 80 + pfpR, pfpCY = 56 + pfpR;
 
-                // ── Foto de perfil (izquierda) ───────────────────────────────
-                const pfpX = 55, pfpY = 60, pfpR = 72;
-
-                // Sombra de la foto
-                ctx.shadowColor = accent;
-                ctx.shadowBlur = 20;
-                ctx.beginPath(); ctx.arc(pfpX + pfpR, pfpY + pfpR, pfpR, 0, Math.PI*2);
+                ctx.save();
+                ctx.shadowColor = accent; ctx.shadowBlur = 22;
+                roundRect(ctx, pfpCX - pfpR - 2, pfpCY - pfpR - 2, (pfpR+2)*2, (pfpR+2)*2, pfpR+2);
                 ctx.fillStyle = '#111'; ctx.fill();
                 ctx.shadowBlur = 0;
+                ctx.restore();
 
-                // Clip circular para la foto
+                // Clip circular
                 ctx.save();
-                ctx.beginPath(); ctx.arc(pfpX + pfpR, pfpY + pfpR, pfpR, 0, Math.PI*2);
-                ctx.clip();
+                ctx.beginPath(); ctx.arc(pfpCX, pfpCY, pfpR, 0, Math.PI*2); ctx.clip();
                 if (pfpImg) {
-                    ctx.drawImage(pfpImg, pfpX, pfpY, pfpR*2, pfpR*2);
+                    ctx.drawImage(pfpImg, pfpCX-pfpR, pfpCY-pfpR, pfpR*2, pfpR*2);
                 } else {
-                    ctx.fillStyle = '#1a1a1a'; ctx.fillRect(pfpX, pfpY, pfpR*2, pfpR*2);
-                    ctx.fillStyle = '#333'; ctx.font = 'bold 48px Arial';
+                    ctx.fillStyle = '#1a1a2a'; ctx.fillRect(pfpCX-pfpR, pfpCY-pfpR, pfpR*2, pfpR*2);
+                    ctx.fillStyle = accent;
+                    ctx.font = `900 ${pfpR}px "Courier New"`;
                     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                    ctx.fillText(nick.charAt(0).toUpperCase(), pfpX+pfpR, pfpY+pfpR);
-                    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+                    ctx.fillText(p.name.charAt(0).toUpperCase(), pfpCX, pfpCY);
                 }
                 ctx.restore();
 
-                // Anillo de la foto
-                ctx.beginPath(); ctx.arc(pfpX + pfpR, pfpY + pfpR, pfpR + 3, 0, Math.PI*2);
+                // Anillo
+                ctx.beginPath(); ctx.arc(pfpCX, pfpCY, pfpR+3, 0, Math.PI*2);
                 ctx.strokeStyle = accent; ctx.lineWidth = 3; ctx.stroke();
 
                 // Badge verificado
-                if (isVerified) {
-                    const bx = pfpX + pfpR*2 - 20, by = pfpY + pfpR*2 - 20;
-                    ctx.beginPath(); ctx.arc(bx, by, 14, 0, Math.PI*2);
+                if (p.verified) {
+                    ctx.save();
+                    ctx.beginPath(); ctx.arc(pfpCX+pfpR-14, pfpCY+pfpR-14, 14, 0, Math.PI*2);
                     ctx.fillStyle = '#00ccff'; ctx.fill();
-                    ctx.fillStyle = '#000'; ctx.font = 'bold 14px Arial';
+                    ctx.fillStyle = '#000'; ctx.font = 'bold 13px Arial';
                     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                    ctx.fillText('✓', bx, by);
-                    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+                    ctx.fillText('✓', pfpCX+pfpR-14, pfpCY+pfpR-14);
+                    ctx.restore();
                 }
 
-                // ── Nombre y rol ─────────────────────────────────────────────
-                const textX = pfpX + pfpR*2 + 30;
+                // ── NOMBRE + ROL + PAÍS ──────────────────────────────────────
+                const nX = pfpCX + pfpR + 28;
+                const isVerified = !!p.verified;
 
-                // Label sistema
-                ctx.fillStyle = `rgba(${accentRGB},0.6)`;
-                ctx.font = '700 11px "Courier New"';
-                ctx.fillText('// THE SCULLY LIST · TITAN CARD v3.0', textX, 72);
+                // Watermark sistema
+                ctx.fillStyle = `rgba(${rgb},0.5)`;
+                ctx.font = '600 10px "Courier New"';
+                ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+                ctx.fillText('// THE SCULLY LIST · TITAN CARD', nX, 72);
 
-                // Nombre
+                // Nombre del jugador
+                const nameSize = Math.min(50, Math.max(26, 50 - Math.max(0, p.name.length - 10) * 2));
                 ctx.fillStyle = accent;
-                ctx.font = `900 ${Math.min(52, Math.max(30, 52 - Math.max(0, p.name.length - 10) * 2))}px "Courier New"`;
-                ctx.fillText(p.name.toUpperCase(), textX, 124);
+                ctx.font = `900 ${nameSize}px "Courier New"`;
+                ctx.fillText(p.name.toUpperCase(), nX, 72 + nameSize + 4);
 
-                // Rol
-                const roleLabel = p.role ? p.role.toUpperCase() : 'TITAN';
-                const roleColors = { OWNER:'#ffd700', ADMIN:'#00ccff', MOD:'#cc00ff', HELPER:'#00ff66', TITAN:'#888' };
-                ctx.fillStyle = roleColors[roleLabel] || '#888';
-                ctx.font = '700 15px "Courier New"';
-                ctx.fillText('[ ' + roleLabel + ' ]', textX, 152);
+                // Rol + país + bandera
+                const role        = (p.role || 'titan').toUpperCase();
+                const roleColors  = { OWNER:'#ffd700', ADMIN:'#00ccff', MOD:'#cc00ff', HELPER:'#00ff66', TITAN:'#888' };
+                const roleColor   = roleColors[role] || '#888';
+                const nameBottom  = 72 + nameSize + 4;
 
-                // ── Línea divisoria ───────────────────────────────────────────
-                const divY = 210;
-                const grad = ctx.createLinearGradient(20, divY, W-20, divY);
-                grad.addColorStop(0, `rgba(${accentRGB},0.8)`);
-                grad.addColorStop(0.5, `rgba(${accentRGB},0.2)`);
-                grad.addColorStop(1, 'rgba(0,0,0,0)');
-                ctx.strokeStyle = grad; ctx.lineWidth = 1;
+                ctx.font = '700 13px "Courier New"';
+                ctx.fillStyle = roleColor;
+                ctx.fillText(`[ ${role} ]`, nX, nameBottom + 22);
+
+                // Bandera + país
+                ctx.font = '18px Arial'; // emoji rendering
+                ctx.fillStyle = '#fff';
+                ctx.fillText(flagEmoji, nX, nameBottom + 46);
+                ctx.font = '700 12px "Courier New"';
+                ctx.fillStyle = '#666';
+                ctx.fillText(countryName, nX + 26, nameBottom + 46);
+
+                // ── DIVISOR ─────────────────────────────────────────────────
+                const divY = 230;
+                const dGrad = ctx.createLinearGradient(20, divY, W-20, divY);
+                dGrad.addColorStop(0, `rgba(${rgb},0.9)`);
+                dGrad.addColorStop(0.4, `rgba(${rgb},0.25)`);
+                dGrad.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.strokeStyle = dGrad; ctx.lineWidth = 1;
                 ctx.beginPath(); ctx.moveTo(20, divY); ctx.lineTo(W-20, divY); ctx.stroke();
 
-                // ── Stats (fila de 3) ─────────────────────────────────────────
-                const stats = [
-                    { label: 'RANK GLOBAL', value: `#${pIndex + 1}` },
-                    { label: 'PUNTOS TITÁN', value: p.calcXp.toFixed(0) + ' XP' },
-                    { label: 'VICTORIAS',   value: String(nexus(p.completions).length) },
+                // ── STAT BOXES (fila de 4) ───────────────────────────────────
+                const statBoxes = [
+                    { label: 'RANK GLOBAL',    value: `#${pIndex + 1}`,           sub: `de ${pL.length}`,      highlight: true },
+                    { label: 'PUNTOS OMNI',    value: rankPts.toFixed(1),          sub: 'pts ranking'                           },
+                    { label: 'XP DE TIENDA',   value: shopXP.toFixed(0),           sub: 'pts gastables'                         },
+                    { label: 'VICTORIAS',      value: String(totalVics),            sub: `${fvList.length} first victor`          },
                 ];
-                const colW = (W - 40) / 3;
-                stats.forEach((s, i) => {
-                    const sx = 20 + i * colW + colW/2;
+                const bW = (W - 60) / 4, bH = 82, bY = 246, bGap = 12;
+                statBoxes.forEach((s, i) => {
+                    const bX = 30 + i * (bW + bGap/4);
+                    // Fondo del box
+                    roundRect(ctx, bX, bY, bW - bGap, bH, 10);
+                    ctx.fillStyle = s.highlight ? `rgba(${rgb},0.12)` : 'rgba(255,255,255,0.03)';
+                    ctx.fill();
+                    ctx.strokeStyle = s.highlight ? `rgba(${rgb},0.4)` : 'rgba(255,255,255,0.07)';
+                    ctx.lineWidth = 1; ctx.stroke();
+
+                    const cx = bX + (bW - bGap) / 2;
                     ctx.textAlign = 'center';
-                    ctx.fillStyle = `rgba(${accentRGB},0.55)`;
-                    ctx.font = '700 11px "Courier New"';
-                    ctx.fillText(s.label, sx, 240);
-                    ctx.fillStyle = i === 0 ? accent : '#fff';
-                    ctx.font = `900 ${i === 0 ? 38 : 28}px "Courier New"`;
-                    ctx.fillText(s.value, sx, 282);
+                    // Label
+                    ctx.fillStyle = s.highlight ? `rgba(${rgb},0.8)` : 'rgba(255,255,255,0.3)';
+                    ctx.font = '600 9px "Courier New"';
+                    ctx.fillText(s.label, cx, bY + 16);
+                    // Valor
+                    ctx.fillStyle = s.highlight ? accent : '#fff';
+                    ctx.font = `900 ${s.value.length > 6 ? 22 : 28}px "Courier New"`;
+                    ctx.fillText(s.value, cx, bY + 52);
+                    // Sub
+                    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+                    ctx.font = '500 9px "Courier New"';
+                    ctx.fillText(s.sub, cx, bY + 70);
+                    ctx.textAlign = 'left';
                 });
-                ctx.textAlign = 'left';
 
-                // ── Top Victorias ─────────────────────────────────────────────
-                const comps = nexus(p.completions).sort((a, b) => (b.realXp||0) - (a.realXp||0));
-                const colLeft = 30, colRight = W/2 + 20;
-                const secY = 320;
+                // ── TOP VICTORIAS (columna izquierda) ───────────────────────
+                const secY = 348, colW = W / 2 - 30;
+                const topVics = victories.slice(0, 6);
 
-                // Título izquierda
-                ctx.fillStyle = `rgba(${accentRGB},0.7)`;
-                ctx.font = '700 11px "Courier New"';
-                ctx.fillText('// TOP VICTORIAS', colLeft, secY);
+                ctx.fillStyle = `rgba(${rgb},0.7)`;
+                ctx.font = '700 10px "Courier New"';
+                ctx.fillText('// TOP VICTORIAS', 28, secY);
 
-                ctx.fillStyle = '#fff';
-                ctx.font = '14px "Courier New"';
-                const toShow = comps.slice(0, 5);
-                if (toShow.length === 0) {
-                    ctx.fillStyle = '#333'; ctx.fillText('> Sin victorias registradas', colLeft, secY + 24);
+                if (topVics.length === 0) {
+                    ctx.fillStyle = '#333'; ctx.font = '13px "Courier New"';
+                    ctx.fillText('> Sin victorias registradas', 28, secY + 24);
                 } else {
-                    toShow.forEach((comp, i) => {
-                        const lvlName = comp.level.length > 22 ? comp.level.substring(0,20)+'…' : comp.level;
-                        const xpStr = '+' + (comp.realXp||0).toFixed(0) + ' XP';
-                        const rowY = secY + 22 + i * 28;
-                        // Fila alterna
-                        if (i % 2 === 0) {
-                            ctx.fillStyle = `rgba(${accentRGB},0.05)`;
-                            ctx.fillRect(colLeft - 4, rowY - 16, W/2 - 40, 24);
+                    topVics.forEach((v, i) => {
+                        const rowY = secY + 18 + i * 36;
+                        const name = v.name.length > 24 ? v.name.substring(0,22)+'…' : v.name;
+
+                        // Fondo fila
+                        roundRect(ctx, 24, rowY - 14, colW - 10, 30, 5);
+                        ctx.fillStyle = i === 0
+                            ? `rgba(${rgb},0.1)`
+                            : 'rgba(255,255,255,0.02)';
+                        ctx.fill();
+
+                        // Número
+                        ctx.textAlign = 'left';
+                        ctx.fillStyle = i === 0 ? accent : '#444';
+                        ctx.font = `700 11px "Courier New"`;
+                        ctx.fillText(`#${v.listPos}`, 30, rowY + 7);
+
+                        // Nombre
+                        ctx.fillStyle = i === 0 ? '#fff' : '#aaa';
+                        ctx.font = `${i === 0 ? '700' : '400'} 13px "Courier New"`;
+                        ctx.fillText(name, 68, rowY + 7);
+
+                        // Badges
+                        let badgeX = 68 + ctx.measureText(name).width + 8;
+                        if (v.isFV) {
+                            roundRect(ctx, badgeX, rowY - 8, 24, 18, 4);
+                            ctx.fillStyle = '#ffd70033'; ctx.fill();
+                            ctx.fillStyle = '#ffd700'; ctx.font = '600 9px "Courier New"';
+                            ctx.textAlign = 'center';
+                            ctx.fillText('★', badgeX + 12, rowY + 5);
+                            badgeX += 28;
                         }
-                        ctx.fillStyle = i === 0 ? accent : '#ccc';
-                        ctx.font = `${i === 0 ? '700' : '400'} 14px "Courier New"`;
-                        ctx.fillText(`${i+1}. ${lvlName}`, colLeft + 4, rowY);
-                        ctx.fillStyle = i === 0 ? accent : '#555';
-                        ctx.font = '700 12px "Courier New"';
+                        if (v.isBounty) {
+                            roundRect(ctx, badgeX, rowY - 8, 32, 18, 4);
+                            ctx.fillStyle = 'rgba(255,51,51,0.2)'; ctx.fill();
+                            ctx.fillStyle = '#ff3333'; ctx.font = '600 9px "Courier New"';
+                            ctx.textAlign = 'center';
+                            ctx.fillText('$$$', badgeX + 16, rowY + 5);
+                        }
+                        ctx.textAlign = 'left';
+
+                        // Pts
                         ctx.textAlign = 'right';
-                        ctx.fillText(xpStr, W/2 - 25, rowY);
+                        ctx.fillStyle = i === 0 ? accent : '#555';
+                        ctx.font = `700 11px "Courier New"`;
+                        ctx.fillText(`+${v.pts.toFixed(1)} pts`, colW + 16, rowY + 7);
                         ctx.textAlign = 'left';
                     });
                 }
 
-                // Título derecha — Bio o sindicato
-                ctx.fillStyle = `rgba(${accentRGB},0.7)`;
-                ctx.font = '700 11px "Courier New"';
-                ctx.fillText('// IDENTIDAD', colRight, secY);
+                // ── FIRST VICTORS + HARDEST (columna derecha) ───────────────
+                const rX = W / 2 + 20;
 
-                ctx.fillStyle = '#888'; ctx.font = '13px "Courier New"';
-                const clan = (p.clanId && fullData.clans?.[p.clanId]) ? fullData.clans[p.clanId].name : 'Lobo Solitario';
-                ctx.fillStyle = '#aaa'; ctx.fillText('Sindicato: ' + clan.toUpperCase(), colRight, secY + 24);
+                // HARDEST LEVEL
+                ctx.fillStyle = `rgba(${rgb},0.7)`;
+                ctx.font = '700 10px "Courier New"';
+                ctx.fillText('// NIVEL MÁS DIFÍCIL COMPLETADO', rX, secY);
 
-                const country = p.country || 'Desconocido';
-                ctx.fillStyle = '#aaa'; ctx.fillText('País: ' + country, colRight, secY + 48);
+                if (hardest) {
+                    const hName = hardest.name.length > 26 ? hardest.name.substring(0,24)+'…' : hardest.name;
+                    roundRect(ctx, rX - 4, secY + 6, W - rX - 26, 52, 8);
+                    ctx.fillStyle = `rgba(${rgb},0.08)`; ctx.fill();
+                    ctx.strokeStyle = `rgba(${rgb},0.3)`; ctx.lineWidth = 1; ctx.stroke();
 
-                if (p.bio) {
-                    ctx.fillStyle = '#555'; ctx.font = 'italic 12px "Courier New"';
-                    const bioTxt = p.bio.length > 45 ? p.bio.substring(0,43)+'…' : p.bio;
-                    ctx.fillText('"' + bioTxt + '"', colRight, secY + 74);
+                    ctx.fillStyle = accent; ctx.font = '900 18px "Courier New"';
+                    ctx.fillText(hName, rX + 10, secY + 30);
+                    ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.font = '600 10px "Courier New"';
+                    ctx.fillText(`POSICIÓN #${hardest.listPos}  ·  +${hardest.pts.toFixed(1)} pts${hardest.isFV ? '  ·  ★ FIRST VICTOR' : ''}${hardest.isBounty ? '  ·  BOUNTY' : ''}`, rX + 10, secY + 48);
+                } else {
+                    ctx.fillStyle = '#333'; ctx.font = '13px "Courier New"'; ctx.fillText('—', rX, secY + 30);
                 }
 
-                // ── Footer ────────────────────────────────────────────────────
-                const footY = H - 28;
-                ctx.fillStyle = `rgba(${accentRGB},0.08)`;
-                ctx.fillRect(0, footY - 20, W, H);
-                ctx.fillStyle = `rgba(${accentRGB},0.4)`;
+                // FIRST VICTORS
+                ctx.fillStyle = `rgba(${rgb},0.7)`;
                 ctx.font = '700 10px "Courier New"';
-                ctx.fillText(`SYS.OMNI // THE SCULLY LIST // ${new Date().getFullYear()} // ID: ${(pIndex+1).toString().padStart(4,'0')}`, 20, footY);
+                ctx.fillText(`// FIRST VICTORS (${fvList.length})`, rX, secY + 76);
+
+                if (fvList.length === 0) {
+                    ctx.fillStyle = '#333'; ctx.font = '13px "Courier New"';
+                    ctx.fillText('> Ninguno todavía', rX, secY + 96);
+                } else {
+                    fvList.slice(0, 5).forEach((v, i) => {
+                        const rowY = secY + 90 + i * 32;
+                        const name = v.name.length > 26 ? v.name.substring(0,24)+'…' : v.name;
+                        roundRect(ctx, rX - 4, rowY - 14, W - rX - 26, 26, 5);
+                        ctx.fillStyle = 'rgba(255,215,0,0.06)'; ctx.fill();
+                        ctx.fillStyle = '#ffd700'; ctx.font = '700 11px "Courier New"';
+                        ctx.fillText('★', rX + 6, rowY + 4);
+                        ctx.fillStyle = '#fff'; ctx.font = '13px "Courier New"';
+                        ctx.fillText(name, rX + 24, rowY + 4);
+                        ctx.textAlign = 'right';
+                        ctx.fillStyle = '#555'; ctx.font = '600 10px "Courier New"';
+                        ctx.fillText(`#${v.listPos}`, W - 30, rowY + 4);
+                        ctx.textAlign = 'left';
+                    });
+                    if (fvList.length > 5) {
+                        ctx.fillStyle = '#444'; ctx.font = '600 10px "Courier New"';
+                        ctx.fillText(`+ ${fvList.length - 5} más...`, rX + 6, secY + 90 + 5 * 32);
+                    }
+                }
+
+                // ── FOOTER ───────────────────────────────────────────────────
+                const fY = H - 22;
+                ctx.fillStyle = `rgba(${rgb},0.06)`;
+                ctx.fillRect(0, fY - 18, W, H);
+                const dateFmt = new Date().toLocaleDateString('es', {day:'2-digit', month:'2-digit', year:'numeric'});
+                ctx.fillStyle = `rgba(${rgb},0.45)`;
+                ctx.font = '600 9px "Courier New"';
+                ctx.textAlign = 'left';
+                ctx.fillText(`SYS.OMNI // THE SCULLY LIST // GENERADO ${dateFmt} // ID:${String(pIndex+1).padStart(4,'0')}`, 20, fY);
                 ctx.textAlign = 'right';
-                ctx.fillStyle = '#333';
-                ctx.fillText('CODED BY SCORE ENGINEERING', W-20, footY);
+                ctx.fillStyle = '#2a2a2a';
+                ctx.fillText('POWERED BY SCORE ENGINEERING', W - 20, fY);
                 ctx.textAlign = 'left';
 
-                // ── Descarga ──────────────────────────────────────────────────
+                // ── Descarga ─────────────────────────────────────────────────
                 const link = document.createElement('a');
-                link.download = `TITAN_CARD_${p.name.toUpperCase()}.png`;
+                link.download = `TITAN_${p.name.toUpperCase()}_${pIndex+1}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
 
                 document.getElementById('tc-modal').style.display = 'none';
                 document.getElementById('tc-nick').value = '';
-                btn.innerHTML = "<i class='fas fa-download'></i> FORJAR TITAN CARD 3.0";
+                btn.innerHTML = "<i class='fas fa-download'></i> PROCESAR Y DESCARGAR IMAGEN";
                 btn.disabled = false;
             }
 
-            // Cargar foto del jugador con manejo robusto de CORS
+            // Cargar PFP con fallback CORS
             const safePfp = getSafePfp(p, null);
-
             if (safePfp) {
                 const img = new Image();
                 img.crossOrigin = 'Anonymous';
-                img.onload = () => drawCard(img);
+                img.onload  = () => drawCard(img);
                 img.onerror = () => {
-                    // Si CORS falla, intentar sin el header crossOrigin
-                    // (la imagen se verá pero no podrá exportarse a canvas — usamos inicial)
                     const img2 = new Image();
-                    img2.onload = () => {
-                        // Dibujamos en un canvas temporal para extraer los datos
-                        try {
-                            const tmp = document.createElement('canvas');
-                            tmp.width = img2.naturalWidth || 120;
-                            tmp.height = img2.naturalHeight || 120;
-                            tmp.getContext('2d').drawImage(img2, 0, 0);
-                            tmp.toDataURL(); // lanzará si hay CORS
-                            drawCard(img2);
-                        } catch (_) {
-                            drawCard(null); // CORS duro — usar inicial de nombre
-                        }
-                    };
+                    img2.onload  = () => { try { const t = document.createElement('canvas'); t.width=img2.naturalWidth||1; t.height=img2.naturalHeight||1; t.getContext('2d').drawImage(img2,0,0); t.toDataURL(); drawCard(img2); } catch(_){ drawCard(null); } };
                     img2.onerror = () => drawCard(null);
                     img2.src = safePfp + (safePfp.includes('?') ? '&' : '?') + '_cb=' + Date.now();
                 };
@@ -2287,6 +2416,7 @@
                 drawCard(null);
             }
         }
+
 
         function runScullyAI() {
             document.getElementById('aiModal').style.display = 'flex';
