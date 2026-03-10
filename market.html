@@ -455,12 +455,25 @@
         const db = firebase.database();
         
         let fullData = {};
-        let disabledItems = {}; // Para el control de admin
+        let disabledItems = {};
         let myPlayer = null;
+
+        const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
+
+        // ── SISTEMA DE PUNTOS OMNI (igual que index/leaderboards) ─────────
+        const OMNI_LIST_SIZE = 125;
+        function omniPts(listIndex, bounty, isFirstVictor) {
+            const pos = listIndex + 1;
+            const pct = OMNI_LIST_SIZE > 1 ? (OMNI_LIST_SIZE - pos) / (OMNI_LIST_SIZE - 1) : 1;
+            let pts   = 300 * Math.pow(Math.max(pct, 0), 1.7);
+            if (bounty)        pts *= 2;
+            if (isFirstVictor) pts *= 1.5;
+            return parseFloat(pts.toFixed(2));
+        }
+
         let currentUser = null;
         let myIndex = -1;
         let pendingGift = null;
-        const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
 
         // Toast system (reemplaza alert())
         function mToast(msg, type='info', dur=4000) {
