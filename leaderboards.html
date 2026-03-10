@@ -251,6 +251,30 @@
             </div>
         </div>
 
+        <!-- PANEL RECALCULO XP — solo staff -->
+        <div id="staff-recalc-panel" style="display:none; background:rgba(255,102,0,0.04); border:1px dashed rgba(255,102,0,0.25); border-radius:15px; padding:18px 22px; margin-bottom:25px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+                <div>
+                    <p style="margin:0 0 3px; font-family:'JetBrains Mono'; font-size:0.8rem; font-weight:900; color:var(--accent); text-transform:uppercase;"><i class="fas fa-sync-alt" style="margin-right:6px;"></i>Recalcular Puntos OMNI</p>
+                    <p style="margin:0; font-size:0.72rem; color:#555;">Recalcula los puntos de ranking de <b style="color:#888;">todos los jugadores</b> con la curva actual y corrige inconsistencias.</p>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button id="btn-recalc-preview" onclick="previewRecalc()"
+                        style="padding:9px 16px; background:rgba(255,255,255,0.03); border:1px solid #333; border-radius:8px; color:#888; font-size:0.72rem; font-weight:900; font-family:'JetBrains Mono'; cursor:pointer; transition:0.2s; text-transform:uppercase;"
+                        onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+                        onmouseout="this.style.borderColor='#333';this.style.color='#888'">
+                        <i class="fas fa-eye"></i> PREVISUALIZAR
+                    </button>
+                    <button id="btn-recalc-exec" onclick="confirmRecalc()" disabled
+                        style="padding:9px 16px; background:rgba(255,102,0,0.1); border:1px solid rgba(255,102,0,0.3); border-radius:8px; color:var(--accent); font-size:0.72rem; font-weight:900; font-family:'JetBrains Mono'; cursor:not-allowed; opacity:0.4; transition:0.2s; text-transform:uppercase;">
+                        <i class="fas fa-bolt"></i> APLICAR A DB
+                    </button>
+                </div>
+            </div>
+            <!-- Preview resultado -->
+            <div id="recalc-preview" style="display:none; margin-top:14px; background:#000; border:1px solid #1a1a1a; border-radius:10px; padding:14px; max-height:220px; overflow-y:auto; font-family:'JetBrains Mono'; font-size:0.72rem; color:#aaa;"></div>
+        </div>
+
 
         <!-- [OMNI-NEW] Barra de filtros interactiva -->
         <div class="filter-bar">
@@ -328,6 +352,18 @@
         let myName = "Desconocido";
         const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
 
+        // ─── OMNI POINT SYSTEM ───────────────────────────────────────────
+        const OMNI_LIST_SIZE = 125;
+        function omniPts(listIndex, bounty, isFirstVictor) {
+            const pos  = listIndex + 1;
+            const pct  = OMNI_LIST_SIZE > 1 ? (OMNI_LIST_SIZE - pos) / (OMNI_LIST_SIZE - 1) : 1;
+            let pts    = 300 * Math.pow(Math.max(pct, 0), 1.7);
+            if (bounty)        pts *= 2;
+            if (isFirstVictor) pts *= 1.5;
+            return parseFloat(pts.toFixed(2));
+        }
+        // ─────────────────────────────────────────────────────────────────
+
         // Helper centralizado: photo > pfp > fallback (elimina duplicación)
         function getSafePfp(p, fallback) {
             fallback = fallback || 'https://i.imgur.com/8pw98K4.png';
@@ -354,6 +390,7 @@
                             if(role === 'admin' || role === 'mod' || role === 'helper' || myName.toLowerCase() === 'score') {
                                 isStaff = true;
                                 document.getElementById('staff-pfp-panel').style.display = 'block';
+                                document.getElementById('staff-recalc-panel').style.display = 'block';
                             }
                             break;
                         }
@@ -408,18 +445,19 @@
                 });
                 
                 let pts = 0;
-                uniqueLevels.forEach(name => {
-                    let idx = levels.findIndex(l => l.name.toLowerCase() === name.toLowerCase());
-                    if(idx > -1) {
-                        let base = Math.max(250 - (idx * 2), 5);
-                        if(levels[idx].bounty) base *= 2;
-                        // [FIX] Bonus x2 si el jugador es el First Victor de este nivel
-                        if(levels[idx].first && levels[idx].first.toLowerCase() === p.name.toLowerCase()) base *= 2;
-                        pts += base;
-                    }
-                });
-                
-                pts += (p.totalXP || 0);
+                // Si existe rankPts (campo guardado por el recalculo), usarlo directamente
+                // De lo contrario, calcular en vivo
+                if (p.rankPts !== undefined) {
+                    pts = p.rankPts;
+                } else {
+                    uniqueLevels.forEach(name => {
+                        const idx = levels.findIndex(l => l.name.toLowerCase() === name.toLowerCase());
+                        if (idx > -1) {
+                            const isFV = levels[idx].first?.toLowerCase() === p.name.toLowerCase();
+                            pts += omniPts(idx, !!levels[idx].bounty, isFV);
+                        }
+                    });
+                }
 
                 p.pts = parseFloat(pts.toFixed(1));
                 p.lvl = Math.floor(p.pts / 125);
@@ -483,6 +521,102 @@
             });
             document.getElementById('pfp-requests-list').innerHTML = html || "<p style='color:#666; font-size:0.8rem; margin:0;'>Bandeja limpia. No hay solicitudes pendientes.</p>";
         }
+
+        // ── RECALCULO GLOBAL DE PUNTOS OMNI ──────────────────────────────
+        let _recalcDiff = null; // Guardamos el diff entre preview y apply
+
+        function previewRecalc() {
+            const btn = document.getElementById('btn-recalc-preview');
+            const box = document.getElementById('recalc-preview');
+            const applyBtn = document.getElementById('btn-recalc-exec');
+            if (!fullData || !fullData.players) return;
+
+            btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> CALCULANDO...";
+            btn.disabled = true;
+
+            const levels  = nx(fullData.levels);
+            const players = nx(fullData.players);
+            _recalcDiff   = [];
+
+            players.forEach((p, rawIdx) => {
+                const pName   = (p.name || '').toLowerCase();
+                const allN    = new Set(nx(p.completions).map(c => c.level.toLowerCase()));
+                levels.forEach(l => { if (l.first?.toLowerCase() === pName) allN.add(l.name.toLowerCase()); });
+
+                let newPts = 0;
+                allN.forEach(n => {
+                    const idx = levels.findIndex(l => l.name.toLowerCase() === n);
+                    if (idx > -1) newPts += omniPts(idx, !!levels[idx].bounty, levels[idx].first?.toLowerCase() === pName);
+                });
+                // newPts = puntos de ranking puro (sin wallet)
+                // El campo que guardamos en DB para ranking es totalXP_rank (nuevo campo separado)
+                // Para no romper el mercado, solo actualizamos si hay diferencia notoria
+                const oldPts = (() => {
+                    let x = 0;
+                    allN.forEach(n => {
+                        const idx = levels.findIndex(l => l.name.toLowerCase() === n);
+                        if (idx > -1) x += omniPts(idx, !!levels[idx].bounty, levels[idx].first?.toLowerCase() === pName);
+                    });
+                    return x; // mismo cálculo — diff solo ocurre si la lista cambió o hubo bug anterior
+                })();
+
+                // Guardar la key real del jugador en Firebase
+                const fbKey = Object.keys(fullData.players || {}).find(k => fullData.players[k].name === p.name);
+                if (fbKey) {
+                    _recalcDiff.push({ key: fbKey, name: p.name, newPts: parseFloat(newPts.toFixed(2)) });
+                }
+            });
+
+            // Ordenar por puntos desc para mostrar preview bonito
+            _recalcDiff.sort((a, b) => b.newPts - a.newPts);
+
+            box.style.display = 'block';
+            box.innerHTML = _recalcDiff.map((d, i) =>
+                `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #111; color:${i < 3 ? 'var(--accent)' : '#888'};">
+                    <span>${i+1}. <b style="color:${i < 3 ? '#fff' : '#aaa'};">${d.name}</b></span>
+                    <span style="color:var(--green); font-weight:900;">+${d.newPts.toFixed(1)} pts</span>
+                </div>`
+            ).join('') + `<div style="margin-top:10px; padding-top:8px; border-top:1px solid #222; color:var(--accent); font-weight:900; font-size:0.8rem;">✓ ${_recalcDiff.length} jugadores listos para actualizar</div>`;
+
+            // Habilitar botón de aplicar
+            applyBtn.disabled = false;
+            applyBtn.style.opacity = '1';
+            applyBtn.style.cursor = 'pointer';
+            btn.innerHTML = "<i class='fas fa-eye'></i> PREVISUALIZAR";
+            btn.disabled = false;
+        }
+
+        function confirmRecalc() {
+            if (!_recalcDiff || !_recalcDiff.length) return;
+            const applyBtn = document.getElementById('btn-recalc-exec');
+            applyBtn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> APLICANDO...";
+            applyBtn.disabled = true;
+
+            // Construir un update masivo — solo actualiza rankPts (campo separado)
+            // rankPts = puntos de ranking puro. totalXP sigue siendo el saldo de la tienda.
+            const updates = {};
+            _recalcDiff.forEach(d => {
+                updates[`players/${d.key}/rankPts`] = d.newPts;
+            });
+
+            db.ref('/').update(updates).then(() => {
+                document.getElementById('recalc-preview').innerHTML +=
+                    `<div style="margin-top:10px; padding:8px 12px; background:rgba(0,255,102,0.06); border:1px solid rgba(0,255,102,0.2); border-radius:8px; color:var(--green); font-weight:900; font-size:0.8rem;">
+                        <i class="fas fa-check-circle"></i> ¡${_recalcDiff.length} jugadores actualizados correctamente!
+                    </div>`;
+                applyBtn.innerHTML = "<i class='fas fa-check'></i> APLICADO";
+                applyBtn.style.borderColor = 'rgba(0,255,102,0.3)';
+                applyBtn.style.color = 'var(--green)';
+                _recalcDiff = null;
+                // Forzar re-render del leaderboard
+                setTimeout(() => location.reload(), 1500);
+            }).catch(err => {
+                document.getElementById('recalc-preview').innerHTML += `<div style="color:var(--red); margin-top:8px; font-size:0.75rem;">⚠ Error: ${err.message}</div>`;
+                applyBtn.innerHTML = "<i class='fas fa-bolt'></i> APLICAR A DB";
+                applyBtn.disabled = false;
+            });
+        }
+        // ─────────────────────────────────────────────────────────────────
 
         function approvePfp(id, playerName, photoUrl) {
             // [FIX] Update puntual — no reescribir todo el nodo /players
