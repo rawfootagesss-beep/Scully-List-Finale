@@ -490,84 +490,61 @@
 
         // CARGA DE DATOS — el listener de DB es independiente del auth
         // Así la tienda carga siempre, aunque el usuario no esté logueado
+        // ── CARGA DE DATOS ───────────────────────────────────────────────
+        // Lógica compartida: poblar myPlayer y renderizar
+        function _processData(user) {
+            const lvls       = nx(fullData.levels);
+            const players    = nx(fullData.players);
+            const playersObj = fullData.players || {};
+            disabledItems    = fullData.market_disabled || {};
+
+            if (user) {
+                const originalKey = Object.keys(playersObj).find(
+                    k => playersObj[k]?.email?.toLowerCase() === user.email.toLowerCase()
+                );
+                myIndex = originalKey ? players.findIndex(p => p.email?.toLowerCase() === user.email.toLowerCase()) : -1;
+                if (myIndex > -1 && originalKey) {
+                    myPlayer    = { ...players[myIndex], key: originalKey };
+                    currentUser = myPlayer;
+                    let realXp  = 0;
+                    const pName = myPlayer.name.toLowerCase();
+                    const allN  = new Set(nx(myPlayer.completions).map(c => c.level.toLowerCase()));
+                    lvls.forEach(l => { if (l.first?.toLowerCase() === pName) allN.add(l.name.toLowerCase()); });
+                    allN.forEach(n => {
+                        const idx = lvls.findIndex(x => x.name.toLowerCase() === n);
+                        if (idx > -1) realXp += omniPts(idx, !!lvls[idx].bounty, lvls[idx].first?.toLowerCase() === pName);
+                    });
+                    myPlayer.calcXp = realXp;
+                    myPlayer.shopXP = myPlayer.totalXP || 0;
+                    renderWallet();
+                    const role = myPlayer.role || '';
+                    if (role === 'admin' || myPlayer.name.toLowerCase() === 'score') {
+                        document.getElementById('admin-panel').style.display = 'block';
+                        renderAdminToggles(fullData.market_dynamic_items || {});
+                    }
+                } else {
+                    renderGuestWallet();
+                }
+            } else {
+                renderGuestWallet();
+            }
+            renderStore(fullData.market_dynamic_items || {});
+        }
+
         let _authUser = null;
 
-        auth.onAuthStateChanged(user => {
-            _authUser = user;
-            // Re-renderizar cuando el estado de auth llega (puede ser después del primer snap de DB)
-            if (Object.keys(fullData).length > 0) {
-                const lvls    = nx(fullData.levels);
-                const players = nx(fullData.players);
-                disabledItems = fullData.market_disabled || {};
-                if (user) {
-                    const playersObj = fullData.players || {};
-                    const originalKey = Object.keys(playersObj).find(k => playersObj[k]?.email?.toLowerCase() === user.email.toLowerCase());
-                    myIndex = originalKey ? players.findIndex(p => p.email?.toLowerCase() === user.email.toLowerCase()) : -1;
-                    if (myIndex > -1 && originalKey) {
-                        myPlayer = { ...players[myIndex], key: originalKey };
-                        currentUser = myPlayer;
-                        let realXp = 0;
-                        const pName = myPlayer.name.toLowerCase();
-                        const allN  = new Set(nx(myPlayer.completions).map(c => c.level.toLowerCase()));
-                        lvls.forEach(l => { if (l.first?.toLowerCase() === pName) allN.add(l.name.toLowerCase()); });
-                        allN.forEach(n => { const idx = lvls.findIndex(x => x.name.toLowerCase() === n); if (idx > -1) realXp += omniPts(idx, !!lvls[idx].bounty, lvls[idx].first?.toLowerCase() === pName); });
-                        myPlayer.calcXp = realXp;
-                        myPlayer.shopXP = myPlayer.totalXP || 0;
-                        renderWallet();
-                        const role = myPlayer.role || '';
-                        if (role === 'admin' || myPlayer.name.toLowerCase() === 'score') {
-                            document.getElementById('admin-panel').style.display = 'block';
-                            renderAdminToggles(fullData.market_dynamic_items || {});
-                        }
-                    } else { renderGuestWallet(); }
-                } else { renderGuestWallet(); }
-                renderStore(fullData.market_dynamic_items || {});
-            }
-        });
-
+        // DB listener — dispara siempre, independientemente del auth
         db.ref('/').on('value', snap => {
             fullData = snap.val() || {};
-            const lvls = nx(fullData.levels);
-            let players = nx(fullData.players);
-            disabledItems = fullData.market_disabled || {};
-            const user = _authUser;
+            _processData(_authUser);
+        });
 
-            if(user) {
-                    // [FIX] Buscar la key directamente en el objeto Firebase, no por índice de array.
-                    // nx() filtra nulls y reordena, haciendo que Object.keys()[myIndex] apunte
-                    // al jugador equivocado. Buscar la key por email directamente es O(n) y seguro.
-                    const playersObj = fullData.players || {};
-                    const originalKey = Object.keys(playersObj).find(
-                        k => playersObj[k]?.email?.toLowerCase() === user.email.toLowerCase()
-                    );
-                    myIndex = originalKey ? players.findIndex(p => p.email?.toLowerCase() === user.email.toLowerCase()) : -1;
-                    if(myIndex > -1 && originalKey) {
-                        myPlayer = { ...players[myIndex], key: originalKey };
-                        currentUser = myPlayer;
-
-                        let realXp = 0;
-                        const pName = myPlayer.name.toLowerCase();
-                        const allN  = new Set(nx(myPlayer.completions).map(c => c.level.toLowerCase()));
-                        lvls.forEach(l => { if (l.first?.toLowerCase() === pName) allN.add(l.name.toLowerCase()); });
-                        allN.forEach(n => {
-                            const idx = lvls.findIndex(x => x.name.toLowerCase() === n);
-                            if (idx > -1) realXp += omniPts(idx, !!lvls[idx].bounty, lvls[idx].first?.toLowerCase() === pName);
-                        });
-                        // calcXp = puntos reales (de récords). totalXP = saldo de la tienda (separado)
-                        myPlayer.calcXp  = realXp;
-                        myPlayer.shopXP  = myPlayer.totalXP || 0;  // saldo comprable en el mercado
-                        
-                        renderWallet();
-                        
-                        let role = myPlayer.role || '';
-                        if(role === 'admin' || myPlayer.name.toLowerCase() === 'score') {
-                            document.getElementById('admin-panel').style.display = 'block';
-                            renderAdminToggles(fullData.market_dynamic_items || {});
-                        }
-                    } else { renderGuestWallet(); }
-                } else { renderGuestWallet(); }
-
-                renderStore(fullData.market_dynamic_items || {});
+        // Auth listener — cuando llega, re-procesa con el usuario correcto
+        auth.onAuthStateChanged(user => {
+            _authUser = user;
+            if (Object.keys(fullData).length > 0) {
+                _processData(user);
+            }
         });
 
         function renderWallet() {
