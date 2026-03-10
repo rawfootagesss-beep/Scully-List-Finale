@@ -256,8 +256,9 @@
         <div class="market-layout">
             <div class="side-panel">
                 <div class="user-wallet">
-                    <p>Billetera XP Disponible</p>
+                    <p>Saldo de Tienda</p>
                     <h2><i class="fas fa-coins"></i> <span id="wallet-xp">--</span></h2>
+                    <p id="wallet-earned" style="font-size:0.7rem; color:#555; margin-top:6px;">-- pts en ranking</p>
                 </div>
                 <div class="terminal" id="term-box"></div>
 
@@ -292,18 +293,82 @@
         </div>
     </div>
 
-    <div id="purchaseModal" class="modal">
-        <div class="modal-content">
-            <i class="fas fa-microchip m-icon" id="pm-icon"></i>
-            <h2 id="pm-title" style="margin:0 0 10px; text-transform:uppercase; color:var(--gold); font-family:'JetBrains Mono';">PROTOCOLO INICIADO</h2>
-            <p id="pm-desc" style="color:#aaa; font-size:0.85rem; margin:0;">Verificando fondos encriptados...</p>
-            <div class="loader-bar"><div class="loader-fill" id="pm-bar"></div></div>
-            <p id="pm-log" style="font-family:'JetBrains Mono'; font-size:0.65rem; color:var(--cyan); margin:0; text-align:left;"></p>
-            <div class="cosmetic-preview-box" id="cosmetic-preview">
-                <div class="preview-label"><i class="fas fa-eye" style="margin-right:5px;"></i>Así se verá tu nombre</div>
-                <div class="preview-name-demo" id="preview-name-demo">TuNick</div>
-                <div class="preview-stats" id="preview-stats"></div>
+    <!-- MODAL DE CONFIRMACIÓN DE COMPRA -->
+    <div id="purchaseModal" class="modal" style="align-items:center;">
+        <div class="modal-content" style="padding:0; max-width:460px; overflow:hidden; border-color:var(--gold); box-shadow:0 0 60px rgba(255,215,0,0.12);">
+
+            <!-- PANTALLA 1: CONFIRMACIÓN -->
+            <div id="pm-screen-confirm">
+                <!-- Header con gradiente gold -->
+                <div style="background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(255,215,0,0.04)); border-bottom:1px solid rgba(255,215,0,0.15); padding:22px 28px 18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <p style="margin:0 0 4px; font-size:0.65rem; color:#666; text-transform:uppercase; letter-spacing:2px; font-family:'JetBrains Mono';">Mercado OMNI · Transacción</p>
+                            <h3 id="pm-title" style="margin:0; font-family:'JetBrains Mono'; font-size:1.1rem; color:#fff; text-transform:uppercase; letter-spacing:1px;"></h3>
+                        </div>
+                        <span onclick="closePurchaseModal()" style="font-size:1.2rem;color:#444;cursor:pointer;line-height:1;margin-top:2px;transition:0.2s;" onmouseover="this.style.color='#aaa'" onmouseout="this.style.color='#444'">✕</span>
+                    </div>
+                </div>
+
+                <div style="padding:22px 28px;">
+                    <!-- Preview nombre con cosmético -->
+                    <div id="cosmetic-preview" style="background:rgba(0,0,0,0.6); border:1px solid #1a1a1a; border-radius:12px; padding:16px; margin-bottom:20px; text-align:center;">
+                        <p style="margin:0 0 10px; font-size:0.6rem; color:#444; text-transform:uppercase; letter-spacing:2px; font-family:'JetBrains Mono';"><i class="fas fa-eye" style="margin-right:5px;"></i>Así quedará tu nombre</p>
+                        <div class="preview-name-demo" id="preview-name-demo" style="font-size:1.3rem; font-weight:900; padding:8px 16px; display:inline-block;">TuNick</div>
+                        <div id="preview-stats" style="margin-top:10px; display:flex; justify-content:center; gap:8px; flex-wrap:wrap;"></div>
+                    </div>
+
+                    <!-- Desglose económico -->
+                    <div style="background:#000; border:1px solid #111; border-radius:12px; overflow:hidden; margin-bottom:22px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:11px 16px; border-bottom:1px solid #111;">
+                            <span style="font-size:0.75rem; color:#555; font-family:'JetBrains Mono';">SALDO ACTUAL</span>
+                            <span id="pm-bal-before" style="font-size:0.85rem; color:#888; font-family:'JetBrains Mono'; font-weight:900;"></span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:11px 16px; border-bottom:1px solid #111; background:rgba(255,215,0,0.03);">
+                            <span style="font-size:0.75rem; color:#555; font-family:'JetBrains Mono';">COSTE</span>
+                            <span id="pm-cost" style="font-size:0.95rem; color:var(--gold); font-family:'JetBrains Mono'; font-weight:900;"></span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:13px 16px;">
+                            <span style="font-size:0.75rem; color:#888; font-family:'JetBrains Mono'; font-weight:900;">SALDO TRAS COMPRA</span>
+                            <span id="pm-bal-after" style="font-size:1rem; color:var(--green); font-family:'JetBrains Mono'; font-weight:900;"></span>
+                        </div>
+                    </div>
+
+                    <!-- Aviso: acción irreversible -->
+                    <p style="margin:0 0 18px; font-size:0.68rem; color:#444; font-family:'JetBrains Mono'; text-align:center;">
+                        <i class="fas fa-exclamation-triangle" style="color:#333; margin-right:5px;"></i>Esta transacción es <b style="color:#555;">inmediata e irreversible</b>. Asegúrate antes de confirmar.
+                    </p>
+
+                    <!-- Botones -->
+                    <div style="display:flex; gap:10px;">
+                        <button onclick="closePurchaseModal()"
+                            style="flex:1; padding:13px; background:transparent; border:1px solid #1e1e1e; border-radius:10px; color:#444; font-weight:900; font-size:0.75rem; cursor:pointer; transition:0.2s; text-transform:uppercase; font-family:'JetBrains Mono'; letter-spacing:1px;"
+                            onmouseover="this.style.borderColor='#555';this.style.color='#888'"
+                            onmouseout="this.style.borderColor='#1e1e1e';this.style.color='#444'">
+                            <i class="fas fa-times" style="margin-right:6px;"></i>CANCELAR
+                        </button>
+                        <button id="pm-confirm-btn" onclick="confirmPurchase()"
+                            style="flex:2; padding:13px; background:linear-gradient(135deg,#ffd700,#ffaa00); border:none; border-radius:10px; color:#000; font-weight:900; font-size:0.8rem; cursor:pointer; transition:0.2s; text-transform:uppercase; font-family:'JetBrains Mono'; letter-spacing:1px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 20px rgba(255,215,0,0.25);"
+                            onmouseover="this.style.boxShadow='0 4px 30px rgba(255,215,0,0.45)';this.style.transform='translateY(-1px)'"
+                            onmouseout="this.style.boxShadow='0 4px 20px rgba(255,215,0,0.25)';this.style.transform='translateY(0)'">
+                            <i class="fas fa-bolt"></i>SÍ, CONFIRMAR COMPRA
+                        </button>
+                    </div>
+                </div>
             </div>
+
+            <!-- PANTALLA 2: PROCESANDO / ÉXITO / ERROR -->
+            <div id="pm-screen-result" style="display:none; padding:50px 28px; text-align:center;">
+                <!-- Spinner de carga -->
+                <div id="pm-spinner" style="margin-bottom:20px;">
+                    <div style="display:inline-block; width:48px; height:48px; border:3px solid rgba(255,215,0,0.1); border-top-color:var(--gold); border-radius:50%; animation:spin 0.7s linear infinite;"></div>
+                </div>
+                <!-- Ícono de resultado (oculto inicialmente) -->
+                <div id="pm-result-icon" style="display:none; font-size:3rem; margin-bottom:16px;"></div>
+                <p id="pm-processing-txt" style="margin:0 0 6px; font-family:'JetBrains Mono'; font-size:0.85rem; color:var(--gold); font-weight:900; text-transform:uppercase; letter-spacing:1px;"></p>
+                <p id="pm-result-sub" style="display:none; margin:0; font-size:0.72rem; color:#555;"></p>
+            </div>
+
         </div>
     </div>
     <script type="text/javascript">
@@ -445,17 +510,16 @@
                         currentUser = myPlayer;
 
                         let realXp = 0;
-                        nx(myPlayer.completions).forEach(c => {
-                            let idx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase());
-                            if(idx > -1) {
-                                let base = Math.max(250 - (idx * 2), 5);
-                                if(lvls[idx].bounty) base *= 2;
-                                // [FIX] Bonus x2 si el jugador es First Victor del nivel
-                                if(lvls[idx].first && lvls[idx].first.toLowerCase() === myPlayer.name.toLowerCase()) base *= 2;
-                                realXp += base;
-                            } else { realXp += c.xp || 0; }
+                        const pName = myPlayer.name.toLowerCase();
+                        const allN  = new Set(nx(myPlayer.completions).map(c => c.level.toLowerCase()));
+                        lvls.forEach(l => { if (l.first?.toLowerCase() === pName) allN.add(l.name.toLowerCase()); });
+                        allN.forEach(n => {
+                            const idx = lvls.findIndex(x => x.name.toLowerCase() === n);
+                            if (idx > -1) realXp += omniPts(idx, !!lvls[idx].bounty, lvls[idx].first?.toLowerCase() === pName);
                         });
-                        myPlayer.calcXp = realXp + (myPlayer.totalXP || 0);
+                        // calcXp = puntos reales (de récords). totalXP = saldo de la tienda (separado)
+                        myPlayer.calcXp  = realXp;
+                        myPlayer.shopXP  = myPlayer.totalXP || 0;  // saldo comprable en el mercado
                         
                         renderWallet();
                         
@@ -474,8 +538,13 @@
         function renderWallet() {
             if(!myPlayer) return;
             const w = document.getElementById('wallet-xp');
-            w.innerText = myPlayer.calcXp.toFixed(1);
-            if(!w.dataset.logged) { setTimeout(() => printLog(`Identidad confirmada: ${myPlayer.name}`, "var(--green)"), 1500); w.dataset.logged = "true"; }
+            // Saldo de tienda = totalXP (XP manual que se puede gastar)
+            const shopBal = myPlayer.shopXP || 0;
+            w.innerHTML = `${shopBal.toFixed(1)} <span style="font-size:0.5em; color:#555; display:block; margin-top:2px; font-family:'Lexend Deca';">puntos gastables</span>`;
+            // Mostrar puntos competitivos aparte
+            const earnedEl = document.getElementById('wallet-earned');
+            if (earnedEl) earnedEl.textContent = myPlayer.calcXp.toFixed(1) + ' pts en ranking';
+            if(!w.dataset.logged) { setTimeout(() => printLog(`Identidad confirmada: ${myPlayer.name} — ${shopBal.toFixed(1)} XP en tienda / ${myPlayer.calcXp.toFixed(1)} pts en ranking`, "var(--green)"), 1500); w.dataset.logged = "true"; }
             renderHistory();
         }
 
@@ -501,30 +570,25 @@
             combined.sort((a,b) => b.price - a.price);
 
             let myInv = myPlayer ? nx(myPlayer.inventory).map(i => i.itemName.toLowerCase()) : [];
-            let myReqs = myPlayer ? nx(fullData.market_requests).filter(r => r.player === myPlayer.name).map(r => r.itemName.toLowerCase()) : [];
-
             combined.forEach(item => {
                 // Si el item está deshabilitado en Firebase, NO SE RENDERIZA
                 if(disabledItems[item.id]) return;
 
-                let cos = getCosmetic(item.name); 
+                let cos = getCosmetic(item.name);
                 let isOwned = myInv.includes(item.name.toLowerCase());
-                let isPending = myReqs.includes(item.name.toLowerCase());
-                
-                let btnHtml = ""; let cardStyle = `border: ${cos.bS};`;
-                
+
+                let btnHtml = ''; let cardStyle = `border: ${cos.bS};`;
+
                 if(isOwned) {
                     btnHtml = `<button class="btn-buy" disabled style="color:var(--green); border-color:var(--green); background:rgba(0,255,102,0.05);"><i class="fas fa-check"></i> ADQUIRIDO</button>`;
                     cardStyle = `border: 1px solid var(--green); opacity: 0.6;`;
-                } else if(isPending) {
-                    btnHtml = `<button class="btn-buy" disabled style="color:var(--cyan); border-color:var(--cyan); background:rgba(0,255,255,0.05);"><i class="fas fa-clock"></i> EN PROCESO</button>`;
-                    cardStyle = `border: 1px solid var(--cyan); opacity: 0.8;`;
                 } else {
-                    let canAfford = myPlayer && myPlayer.calcXp >= item.price;
-                    let cursorStyle = canAfford ? '' : 'cursor:not-allowed; opacity:0.3;';
-                    let onclickEvent = canAfford ? `onclick="initPurchase('${item.id}', '${item.name}', ${item.price})"` : `onclick="mToast('XP Insuficiente. Sigue completando demons.','error')"`;
-                    
-                    btnHtml = `<button class="btn-buy" style="background:${cos.bgBtn}; border-color:${cos.nC}; color:${cos.nC}; ${cursorStyle}" ${onclickEvent}><i class="fas fa-shopping-cart"></i> FORJAR</button>`;
+                    let canAfford = myPlayer && (myPlayer.shopXP || 0) >= item.price;
+                    let cursorStyle = canAfford ? '' : 'cursor:not-allowed; opacity:0.35;';
+                    let onclickAttr = canAfford
+                        ? `onclick="initPurchase('${item.id}', '${item.name}', ${item.price})"`
+                        : `onclick="mToast('Saldo insuficiente. Consigue XP de tienda con códigos o gifts del staff.','error')"`;
+                    btnHtml = `<button class="btn-buy" style="background:${cos.bgBtn}; border-color:${cos.nC}; color:${cos.nC}; ${cursorStyle}" ${onclickAttr}><i class="fas fa-shopping-cart"></i> ADQUIRIR</button>`;
                 }
 
                 let badge = item.isDynamic ? `<span style="position:absolute; top:10px; right:10px; background:${item.color}; color:#000; font-size:0.6rem; padding:2px 6px; border-radius:3px; font-weight:bold;">NUEVO</span>` : "";
@@ -610,63 +674,148 @@
             box.classList.add('visible');
         }
 
-        function initPurchase(id, name, price) {
-            if(!myPlayer) return;
-            const modal = document.getElementById('purchaseModal');
-            const icon = document.getElementById('pm-icon');
-            const title = document.getElementById('pm-title');
-            const desc = document.getElementById('pm-desc');
-            const bar = document.getElementById('pm-bar');
-            const logT = document.getElementById('pm-log');
+        // ── FLUJO DE COMPRA DIRECTA ───────────────────────────────────────
+        let _pendingPurchase = null;
 
-            modal.style.display = 'flex';
-            showCosmeticPreview(name); // [OMNI-NEW] preview
-            icon.className = "fas fa-microchip m-icon"; icon.style.color = "var(--gold)"; icon.style.animation = "pulse 2s infinite";
-            title.innerText = "PROTOCOLO INICIADO"; title.style.color = "var(--gold)"; desc.innerText = `Autorizando contrato por: ${name}`;
-            bar.style.width = "0%"; bar.style.background = "var(--gold)"; logT.innerHTML = "> Verificando identidad...<br>";
-
-            setTimeout(() => {
-                bar.style.width = "30%"; logT.innerHTML += "> Aceptada.<br>> Analizando Billetera XP...<br>";
-                setTimeout(() => {
-                    bar.style.width = "70%"; logT.innerHTML += "> Encriptando paquete...<br>";
-                    
-                    // [OMNI-SEC] Anti-spam: verificamos en Firebase si ya existe
-                    // una solicitud pendiente de este jugador para este ítem
-                    // antes de crear una nueva, evitando duplicados por spam.
-                    db.ref('market_requests').orderByChild('player').equalTo(myPlayer.name).once('value').then(existingSnap => {
-                        let alreadyPending = false;
-                        existingSnap.forEach(child => {
-                            if(child.val().itemName === name) alreadyPending = true;
-                        });
-                        if(alreadyPending) {
-                            bar.style.width = "100%"; bar.style.background = "var(--cyan)";
-                            icon.className = "fas fa-clock m-icon"; icon.style.color = "var(--cyan)"; icon.style.animation = "none";
-                            title.innerText = "SOLICITUD DUPLICADA"; title.style.color = "var(--cyan)";
-                            desc.innerText = `Ya tienes una solicitud de [${name}] en proceso. El Staff la revisará pronto.`;
-                            logT.innerHTML += "> <span style='color:var(--cyan)'>Solicitud ya registrada. Sin duplicar.</span>";
-                            setTimeout(() => { modal.style.display = 'none'; }, 3500);
-                            return;
-                        }
-                        db.ref('market_requests').push({ player: myPlayer.name, itemName: name, price: price, date: Date.now() }).then(() => {
-                            setTimeout(() => {
-                                bar.style.width = "100%"; bar.style.background = "var(--green)";
-                                icon.className = "fas fa-check-circle m-icon"; icon.style.color = "var(--green)"; icon.style.animation = "none";
-                                title.innerText = "CONTRATO ENVIADO"; title.style.color = "var(--green)";
-                                desc.innerText = `El Staff validará el cobro de ${price} XP pronto.`;
-                                logT.innerHTML += "> <span style='color:var(--green)'>Petición enviada a los Altos Mandos.</span>";
-                                printLog(`Transacción solicitada: [${name}]`, "var(--gold)");
-                                setTimeout(() => { modal.style.display = 'none'; }, 3500);
-                            }, 1000);
-                        });
-                    });
-                }, 1500);
-            }, 1000);
+        function _pmShowConfirm() {
+            document.getElementById('pm-screen-confirm').style.display = 'block';
+            document.getElementById('pm-screen-result').style.display  = 'none';
         }
+        function _pmShowResult(text, state) {
+            // state: 'loading' | 'success' | 'error'
+            document.getElementById('pm-screen-confirm').style.display = 'none';
+            document.getElementById('pm-screen-result').style.display  = 'block';
+            const spinner  = document.getElementById('pm-spinner');
+            const icon     = document.getElementById('pm-result-icon');
+            const txt      = document.getElementById('pm-processing-txt');
+            const sub      = document.getElementById('pm-result-sub');
+            if (state === 'loading') {
+                spinner.style.display = 'block'; icon.style.display = 'none'; sub.style.display = 'none';
+                txt.style.color = 'var(--gold)'; txt.textContent = text;
+            } else if (state === 'success') {
+                spinner.style.display = 'none';
+                icon.style.display = 'block'; icon.innerHTML = '✓';
+                icon.style.color = 'var(--green)';
+                txt.style.color = 'var(--green)'; txt.textContent = text;
+                sub.style.display = 'block'; sub.textContent = 'El ítem ha sido añadido a tu inventario automáticamente.';
+            } else {
+                spinner.style.display = 'none';
+                icon.style.display = 'block'; icon.innerHTML = '✕';
+                icon.style.color = 'var(--red)';
+                txt.style.color = 'var(--red)'; txt.textContent = text;
+                sub.style.display = 'block'; sub.textContent = 'Ningún XP fue descontado. Intenta de nuevo.';
+            }
+        }
+
+        function initPurchase(id, name, price) {
+            if (!myPlayer) return;
+            // Leer XP actualizado desde Firebase antes de abrir el modal
+            db.ref(`players/${myPlayer.key}/totalXP`).once('value').then(snap => {
+                const realXP = snap.val() || 0;
+                if (realXP < price) {
+                    mToast(`Fondos insuficientes. Necesitas ${price} XP pero tienes ${realXP}.`, 'error', 5000);
+                    return;
+                }
+                _pendingPurchase = { id, name, price, realXP };
+
+                // Poblar pantalla de confirmación
+                showCosmeticPreview(name);
+                document.getElementById('pm-title').textContent     = name;
+                document.getElementById('pm-bal-before').textContent = realXP + ' XP';
+                document.getElementById('pm-cost').textContent       = '− ' + price + ' XP';
+                document.getElementById('pm-bal-after').textContent  = (realXP - price) + ' XP';
+                document.getElementById('pm-confirm-btn').disabled = false;
+
+                _pmShowConfirm();
+                document.getElementById('purchaseModal').style.display = 'flex';
+            });
+        }
+
+        function closePurchaseModal() {
+            document.getElementById('purchaseModal').style.display = 'none';
+            _pendingPurchase = null;
+            // Resetear pantallas para la próxima apertura
+            setTimeout(_pmShowConfirm, 300);
+        }
+
+        async function confirmPurchase() {
+            if (!_pendingPurchase || !myPlayer) return;
+            const { id, name, price } = _pendingPurchase;
+
+            document.getElementById('pm-confirm-btn').disabled = true;
+            _pmShowResult('VERIFICANDO FONDOS...', 'loading');
+
+            try {
+                // Re-leer XP del servidor (anti-exploit)
+                const snap      = await db.ref(`players/${myPlayer.key}/totalXP`).once('value');
+                const serverXP  = snap.val() || 0;
+
+                // Verificar precio oficial del catálogo (anti-exploit precio)
+                const officialItem   = [...officialCatalog, ...Object.values(fullData.market_dynamic_items || {})].find(it => it.name === name);
+                const verifiedPrice  = officialItem ? officialItem.price : price;
+
+                if (serverXP < verifiedPrice) {
+                    _pmShowResult('FONDOS INSUFICIENTES', 'error');
+                    setTimeout(closePurchaseModal, 2500);
+                    return;
+                }
+
+                // Verificar que no tenga ya el ítem
+                const invSnap    = await db.ref(`players/${myPlayer.key}/inventory`).once('value');
+                const currentInv = invSnap.val() ? (Array.isArray(invSnap.val()) ? invSnap.val() : Object.values(invSnap.val())) : [];
+                if (currentInv.some(it => it.itemName === name)) {
+                    _pmShowResult('YA TIENES ESTE ÍTEM', 'error');
+                    setTimeout(closePurchaseModal, 2500);
+                    return;
+                }
+
+                _pmShowResult('EJECUTANDO TRANSACCIÓN...', 'loading');
+
+                // Update atómico: descontar XP + añadir inventario
+                const newInv = [...currentInv, { itemName: name, date: Date.now() }];
+                await db.ref('/').update({
+                    [`players/${myPlayer.key}/totalXP`]:   serverXP - verifiedPrice,
+                    [`players/${myPlayer.key}/inventory`]: newInv
+                });
+
+                // Registrar en historial
+                await db.ref('market_requests').push({
+                    player: myPlayer.name, itemName: name, price: verifiedPrice,
+                    date: Date.now(), status: 'completed', autoApproved: true
+                });
+
+                // Webhook Discord (no bloqueante)
+                const wh = fullData.system_settings?.discord?.url;
+                if (wh) fetch(wh, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: `🛒 **COMPRA:** **${myPlayer.name}** adquirió **${name}** (−${verifiedPrice} XP).`, username: 'SCULLY MARKET' })
+                }).catch(() => {});
+
+                // Éxito
+                _pmShowResult('¡TRANSACCIÓN COMPLETADA!', 'success');
+                printLog(`Compra: [${name}] — ${verifiedPrice} XP deducidos`, 'var(--green)');
+
+                // Actualizar saldo local sin recargar
+                myPlayer.totalXP = serverXP - verifiedPrice;
+                myPlayer.shopXP  = myPlayer.totalXP;
+                const wx = document.getElementById('wallet-xp');
+                if (wx) wx.innerHTML = `${myPlayer.totalXP} <span style="font-size:0.5em;color:#555;display:block;margin-top:2px;font-family:'Lexend Deca';">puntos gastables</span>`;
+
+                setTimeout(closePurchaseModal, 2200);
+
+            } catch (err) {
+                _pmShowResult('ERROR DE RED', 'error');
+                document.getElementById('pm-result-sub').textContent = err.message;
+                setTimeout(() => { _pmShowConfirm(); document.getElementById('pm-confirm-btn').disabled = false; }, 2500);
+            }
+            _pendingPurchase = null;
+        }
+        // ─────────────────────────────────────────────────────────────────
 
         // REGALOS
         function openGiftModal(itemId, itemName, price) {
             if(!myPlayer) { mToast("Inicia sesión para regalar.", "error"); return; }
-            if((myPlayer.calcXp || 0) < price) { mToast(`Necesitas ${price} XP para regalar esto.`, "error"); return; }
+            if((myPlayer.shopXP || 0) < price) { mToast(`Necesitas ${price} XP de tienda para regalar esto.`, "error"); return; }
             pendingGift = { id: itemId, name: itemName, price: price };
             document.getElementById('gift-item-name').innerText = itemName;
             document.getElementById('giftModal').style.display = 'flex';
