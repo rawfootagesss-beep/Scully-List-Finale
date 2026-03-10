@@ -367,44 +367,65 @@
             }
         }
 
+        // ─── OMNI POINT SYSTEM ───────────────────────────────────────────
+        const OMNI_LIST_SIZE = 125;
+        function omniPts(listIndex, bounty, isFirstVictor) {
+            const pos  = listIndex + 1;
+            const pct  = OMNI_LIST_SIZE > 1 ? (OMNI_LIST_SIZE - pos) / (OMNI_LIST_SIZE - 1) : 1;
+            let pts    = 300 * Math.pow(Math.max(pct, 0), 1.7);
+            if (bounty)        pts *= 2;
+            if (isFirstVictor) pts *= 1.5;
+            return parseFloat(pts.toFixed(2));
+        }
+        // ─────────────────────────────────────────────────────────────────
+
         // Renderizar estadísticas del jugador
         function renderPlayerStats(player, levels) {
             const panel = document.getElementById('stats-panel');
             const row   = document.getElementById('stat-row-content');
             if (!panel || !row) return;
-            const comps = player.completions
+            const comps   = player.completions
                 ? (Array.isArray(player.completions) ? player.completions : Object.values(player.completions))
                 : [];
             const lvlsArr = Array.isArray(levels) ? levels : Object.values(levels);
-            // XP de completions
+            const pName   = player.name.toLowerCase();
+
+            // Unir completions + niveles donde es First Victor (igual que en el resto del sistema)
+            const allNames = new Set(comps.map(c => c.level.toLowerCase()));
+            lvlsArr.forEach(l => { if (l.first?.toLowerCase() === pName) allNames.add(l.name.toLowerCase()); });
+
+            // XP total con curva OMNI
             let totalXP = 0;
-            comps.forEach(comp => {
-                const idx = lvlsArr.findIndex(l => l.name.toLowerCase() === comp.level.toLowerCase());
-                if (idx > -1) {
-                    let base = Math.max(250 - idx * 2, 5);
-                    if (lvlsArr[idx].bounty) base *= 2;
-                    if (lvlsArr[idx].first && lvlsArr[idx].first.toLowerCase() === player.name.toLowerCase()) base *= 2;
-                    totalXP += base;
-                }
+            allNames.forEach(n => {
+                const idx = lvlsArr.findIndex(l => l.name.toLowerCase() === n);
+                if (idx > -1) totalXP += omniPts(idx, !!lvlsArr[idx].bounty, lvlsArr[idx].first?.toLowerCase() === pName);
             });
             totalXP += (player.totalXP || 0);
-            // Primer demon
+
+            // Primer demon (por timestamp)
             const sorted = [...comps].sort((a,b) => (a.time||0) - (b.time||0));
             const firstDemon = sorted[0]?.level || '—';
-            // Nivel más difícil (menor índice en la lista)
+
+            // Hardest: menor índice entre completions + verificaciones (FV cuentan)
             let hardestIdx = Infinity, hardestName = '—';
-            comps.forEach(comp => {
-                const idx = lvlsArr.findIndex(l => l.name.toLowerCase() === comp.level.toLowerCase());
-                if (idx > -1 && idx < hardestIdx) { hardestIdx = idx; hardestName = comp.level; }
+            allNames.forEach(n => {
+                const idx = lvlsArr.findIndex(l => l.name.toLowerCase() === n);
+                if (idx > -1 && idx < hardestIdx) { hardestIdx = idx; hardestName = lvlsArr[idx].name; }
             });
+            // Badge FV en hardest si aplica
+            const hardestIsFV = hardestIdx < Infinity && lvlsArr[hardestIdx]?.first?.toLowerCase() === pName;
+            const hardestDisplay = hardestName.length > 12 ? hardestName.substring(0,10)+'…' : hardestName;
+            const hardestLabel = hardestIsFV ? hardestDisplay + ' <i class="fas fa-crown" style="color:var(--gold);font-size:0.7rem;" title="First Victor"></i>' : hardestDisplay;
+
+            const verifs = lvlsArr.filter(l => l.first?.toLowerCase() === pName).length;
 
             const stats = [
-                { label: 'XP Total', value: totalXP.toFixed(0), icon: 'fa-star', color: 'var(--gold)' },
-                { label: 'Demons', value: comps.length, icon: 'fa-skull', color: 'var(--red)' },
+                { label: 'Puntos OMNI', value: totalXP.toFixed(1), icon: 'fa-star', color: 'var(--gold)' },
+                { label: 'Demons', value: comps.length + (verifs > 0 ? ` <span style="font-size:0.65rem;color:var(--cyan);">(+${verifs} FV)</span>` : ''), icon: 'fa-skull', color: 'var(--red)' },
                 { label: 'Nivel OMNI', value: Math.floor(totalXP / 125), icon: 'fa-bolt', color: 'var(--cyan)' },
                 { label: 'Primer Demon', value: firstDemon.length > 12 ? firstDemon.substring(0,10)+'…' : firstDemon, icon: 'fa-flag', color: 'var(--green)' },
-                { label: 'Más Difícil', value: hardestName.length > 12 ? hardestName.substring(0,10)+'…' : hardestName, icon: 'fa-fire', color: 'var(--accent)' },
-                { label: 'Verificaciones', value: lvlsArr.filter(l => l.first?.toLowerCase() === player.name.toLowerCase()).length, icon: 'fa-check-circle', color: '#aaddff' },
+                { label: 'Más Difícil', value: hardestLabel, icon: 'fa-fire', color: 'var(--accent)' },
+                { label: 'Verificaciones', value: verifs, icon: 'fa-check-circle', color: '#aaddff' },
             ];
             row.innerHTML = stats.map(s => `
                 <div style="background:rgba(0,0,0,0.5); border:1px solid #1a1a1a; border-radius:12px; padding:14px 10px; text-align:center;">
