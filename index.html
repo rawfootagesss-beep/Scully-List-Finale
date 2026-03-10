@@ -1163,6 +1163,21 @@
         let currentUserData = { name: null, key: null }; 
         const nexus = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
 
+        // ─── OMNI POINT SYSTEM ──────────────────────────────────────────
+        // Curva no-lineal tipo Demonlist: #1=300pts, decrece con potencia 1.7
+        // Modificadores: Bounty ×2, First Victor ×1.5 (acumulables)
+        const OMNI_LIST_SIZE = 125;
+        function omniPts(listIndex, bounty, isFirstVictor) {
+            const pos   = listIndex + 1;
+            const total = OMNI_LIST_SIZE;
+            const pct   = total > 1 ? (total - pos) / (total - 1) : 1;
+            let pts     = 300 * Math.pow(Math.max(pct, 0), 1.7);
+            if (bounty)        pts *= 2;
+            if (isFirstVictor) pts *= 1.5;
+            return parseFloat(pts.toFixed(2));
+        }
+        // ─────────────────────────────────────────────────────────────────
+
         // Helper centralizado de foto de perfil (photo > pfp > fallback)
         function getSafePfp(p, fallback) {
             fallback = fallback || 'https://i.imgur.com/8pw98K4.png';
@@ -1493,12 +1508,12 @@
                 return;
             }
             grid.innerHTML = levels.map((l, i) => {
-                const xp = Math.max(250 - i * 2, 5) * (l.bounty ? 2 : 1);
+                const xp = omniPts(i, !!l.bounty, false);
                 const isSelected = _recSelectedLevel && _recSelectedLevel.name === l.name;
                 return `<div class="rec-lvl-card${isSelected ? ' selected' : ''}" onclick="selectRecLevel(${i}, '${l.name.replace(/'/g,"\'")}', ${xp}, ${!!l.bounty})">
                     <p class="rlc-pos">#${i + 1}${l.bounty ? ' &nbsp;<span class="rlc-bounty">⚡BOUNTY</span>' : ''}</p>
                     <p class="rlc-name">${l.name}</p>
-                    <p class="rlc-xp">+${xp} XP</p>
+                    <p class="rlc-xp">+${xp.toFixed(1)} pts</p>
                 </div>`;
             }).join('');
         }
@@ -1516,12 +1531,12 @@
                 return;
             }
             grid.innerHTML = withIdx.map(({ l, i }) => {
-                const xp = Math.max(250 - i * 2, 5) * (l.bounty ? 2 : 1);
+                const xp = omniPts(i, !!l.bounty, false);
                 const isSelected = _recSelectedLevel && _recSelectedLevel.name === l.name;
                 return `<div class="rec-lvl-card${isSelected ? ' selected' : ''}" onclick="selectRecLevel(${i}, '${l.name.replace(/'/g,"\'")}', ${xp}, ${!!l.bounty})">
                     <p class="rlc-pos">#${i + 1}${l.bounty ? ' &nbsp;<span class="rlc-bounty">⚡BOUNTY</span>' : ''}</p>
                     <p class="rlc-name">${l.name}</p>
-                    <p class="rlc-xp">+${xp} XP</p>
+                    <p class="rlc-xp">+${xp.toFixed(1)} pts</p>
                 </div>`;
             }).join('');
         }
@@ -1631,19 +1646,17 @@
             let pL = nexus(fullData.players); 
             const lvls = nexus(fullData.levels);
             
-            pL.forEach(p => { 
-                let realXp = 0; 
-                nexus(p.completions).forEach(c => { 
-                    let idx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase()); 
-                    if(idx > -1) {
-                        let base = Math.max(250 - (idx * 2), 5);
-                        if(lvls[idx].bounty) base *= 2;
-                        // [FIX] Bonus x2 si es First Victor del nivel
-                        if(lvls[idx].first && lvls[idx].first.toLowerCase() === p.name.toLowerCase()) base *= 2;
-                        realXp += base;
-                    } else { realXp += c.xp || 0; } 
-                }); 
-                p.calcXp = realXp + (p.totalXP || 0); 
+            pL.forEach(p => {
+                // FV cuentan como completions (para hardest y XP)
+                const pName = p.name.toLowerCase();
+                const allNames = new Set(nexus(p.completions).map(c => c.level.toLowerCase()));
+                lvls.forEach(l => { if (l.first?.toLowerCase() === pName) allNames.add(l.name.toLowerCase()); });
+                let realXp = 0;
+                allNames.forEach(n => {
+                    const idx = lvls.findIndex(x => x.name.toLowerCase() === n);
+                    if (idx > -1) realXp += omniPts(idx, !!lvls[idx].bounty, lvls[idx].first?.toLowerCase() === pName);
+                });
+                p.calcXp = realXp + (p.totalXP || 0);
             });
             
             pL.sort((a,b) => b.calcXp - a.calcXp); 
@@ -1997,20 +2010,21 @@
             let pL = nexus(fullData.players);
             const lvls = nexus(fullData.levels);
 
-            // Calcular XP real para todos
+            // Calcular XP real para todos (curva OMNI + First Victor como hardest)
             pL.forEach(p => {
+                const pName = p.name.toLowerCase();
+                const allNames = new Set(nexus(p.completions).map(c => c.level.toLowerCase()));
+                lvls.forEach(l => { if (l.first?.toLowerCase() === pName) allNames.add(l.name.toLowerCase()); });
                 let realXp = 0;
-                nexus(p.completions).forEach(comp => {
-                    let lIdx = lvls.findIndex(x => x.name.toLowerCase() === comp.level.toLowerCase());
+                allNames.forEach(n => {
+                    const lIdx = lvls.findIndex(x => x.name.toLowerCase() === n);
                     if (lIdx > -1) {
-                        let base = Math.max(250 - (lIdx * 2), 5);
-                        if (lvls[lIdx].bounty) base *= 2;
-                        if (lvls[lIdx].first && lvls[lIdx].first.toLowerCase() === p.name.toLowerCase()) base *= 2;
-                        comp.realXp = base;
-                    } else {
-                        comp.realXp = comp.xp || 0;
+                        const isFV = lvls[lIdx].first?.toLowerCase() === pName;
+                        const pts  = omniPts(lIdx, !!lvls[lIdx].bounty, isFV);
+                        const orig = nexus(p.completions).find(cp => cp.level.toLowerCase() === n);
+                        if (orig) orig.realXp = pts;
+                        realXp += pts;
                     }
-                    realXp += comp.realXp;
                 });
                 p.calcXp = realXp + (p.totalXP || 0);
             });
@@ -2313,15 +2327,13 @@
 
                 // ---- Calcular XP de todos para ranking ----
                 let rankedPlayers = allPlayers.map(p => {
+                    const pName = p.name.toLowerCase();
+                    const allNames = new Set(nexus(p.completions).map(c => c.level.toLowerCase()));
+                    lvls.forEach(l => { if (l.first?.toLowerCase() === pName) allNames.add(l.name.toLowerCase()); });
                     let xp = 0;
-                    nexus(p.completions).forEach(c => {
-                        let idx = lvls.findIndex(x => x.name.toLowerCase() === c.level.toLowerCase());
-                        if(idx > -1) {
-                            let base = Math.max(250 - (idx * 2), 5);
-                            if(lvls[idx].bounty) base *= 2;
-                            if(lvls[idx].first && lvls[idx].first.toLowerCase() === p.name.toLowerCase()) base *= 2;
-                            xp += base;
-                        } else { xp += c.xp || 0; }
+                    allNames.forEach(n => {
+                        const idx = lvls.findIndex(x => x.name.toLowerCase() === n);
+                        if (idx > -1) xp += omniPts(idx, !!lvls[idx].bounty, lvls[idx].first?.toLowerCase() === pName);
                     });
                     return { name: p.name, totalXP: xp + (p.totalXP || 0) };
                 }).sort((a,b) => b.totalXP - a.totalXP);
@@ -2334,8 +2346,7 @@
                 let myCompletedNames = myData ? nexus(myData.completions).map(c => c.level.toLowerCase()) : [];
                 let pending = lvls
                     .map((l, idx) => {
-                        let base = Math.max(250 - (idx * 2), 5);
-                        if(l.bounty) base *= 2;
+                        const base = omniPts(idx, !!l.bounty, false); // sin FV (el jugador no sabe si será FV)
                         return { name: l.name, xp: base, idx, bounty: l.bounty || false };
                     })
                     .filter(l => !myCompletedNames.includes(l.name.toLowerCase()))
