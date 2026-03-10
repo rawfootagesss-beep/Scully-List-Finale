@@ -786,6 +786,18 @@
         
         const $ = id => document.getElementById(id);
         const nx = o => o ? (Array.isArray(o) ? o.filter(Boolean) : Object.values(o)) : [];
+
+        // ─── OMNI POINT SYSTEM ───────────────────────────────────────────
+        const OMNI_LIST_SIZE = 125;
+        function omniPts(listIndex, bounty, isFirstVictor) {
+            const pos  = listIndex + 1;
+            const pct  = OMNI_LIST_SIZE > 1 ? (OMNI_LIST_SIZE - pos) / (OMNI_LIST_SIZE - 1) : 1;
+            let pts    = 300 * Math.pow(Math.max(pct, 0), 1.7);
+            if (bounty)        pts *= 2;
+            if (isFirstVictor) pts *= 1.5;
+            return parseFloat(pts.toFixed(2));
+        }
+        // ─────────────────────────────────────────────────────────────────
         
         let fD = {}; 
         let lvls = []; 
@@ -988,10 +1000,10 @@
             const val    = document.getElementById('lvl-xp-val');
             const note   = document.getElementById('lvl-xp-bounty-note');
             if (!box || isNaN(pos) || pos < 1) { if (box) box.style.display = 'none'; return; }
-            let xp = Math.max(250 - (pos-1)*2, 5);
-            if (bounty) xp *= 2;
+            const pts   = omniPts(pos - 1, !!bounty, false);
+            const ptsFV = omniPts(pos - 1, !!bounty, true);
             box.style.display = 'flex';
-            if (val)  val.textContent  = xp + ' XP base (×2 si es First Victor)';
+            if (val)  val.textContent  = pts.toFixed(1) + ' pts  (×1.5 si es First Victor = ' + ptsFV.toFixed(1) + ' pts)';
             if (note) note.style.display = bounty ? 'inline' : 'none';
         }
 
@@ -1137,12 +1149,12 @@
                     // Nuevas stats del dashboard
                     if($('s-xp')) {
                         const totalXP = pList.reduce((sum, p) => {
-                            const comps = p.completions ? (Array.isArray(p.completions) ? p.completions : Object.values(p.completions)) : [];
-                            return sum + comps.reduce((s2, comp) => {
-                                const idx = lvls.findIndex(l => l.name.toLowerCase() === comp.level.toLowerCase());
-                                if (idx > -1) { let b = Math.max(250 - idx*2, 5); if(lvls[idx].bounty) b*=2; if(lvls[idx].first?.toLowerCase()===p.name?.toLowerCase()) b*=2; return s2+b; }
-                                return s2 + (comp.xp||0);
-                            }, 0) + (p.totalXP||0);
+                            const pn = (p.name||'').toLowerCase();
+                            const an = new Set((p.completions ? (Array.isArray(p.completions)?p.completions:Object.values(p.completions)) : []).map(c=>c.level.toLowerCase()));
+                            lvls.forEach(l => { if(l.first?.toLowerCase()===pn) an.add(l.name.toLowerCase()); });
+                            let xp2 = 0;
+                            an.forEach(n => { const i=lvls.findIndex(l=>l.name.toLowerCase()===n); if(i>-1) xp2+=omniPts(i,!!lvls[i].bounty,lvls[i].first?.toLowerCase()===pn); });
+                            return sum + xp2 + (p.totalXP||0);
                         }, 0);
                         $('s-xp').innerText = totalXP >= 1000 ? (totalXP/1000).toFixed(1)+'K' : totalXP;
                     }
@@ -1211,13 +1223,10 @@
             db.ref('system_settings/global_alert').set(false); toast("Alerta Apagada"); log("Borró Alerta Global"); 
         }
 
-        const getXP = (l, playerName) => { 
-            const i = lvls.findIndex(x => x.name.toLowerCase() === l.toLowerCase()); 
-            if(i === -1) return 0; 
-            let base = Math.max(250 - (i * 2), 5); 
-            if(lvls[i].bounty) base = base * 2; 
-            if(playerName && lvls[i].first?.toLowerCase() === playerName.toLowerCase()) base = base * 2;
-            return base; 
+        const getXP = (l, playerName) => {
+            const i = lvls.findIndex(x => x.name.toLowerCase() === l.toLowerCase());
+            if (i === -1) return 0;
+            return omniPts(i, !!lvls[i].bounty, !!(playerName && lvls[i].first?.toLowerCase() === playerName.toLowerCase()));
         };
 
         function renderAllPlayers(pList) {
@@ -1320,7 +1329,7 @@
                 const tag  = tagCfg[type];
                 const lvl  = levelInList(r.level);
                 const pos  = lvl ? lvls.indexOf(lvl) + 1 : null;
-                const xp   = lvl ? Math.max(250 - (lvls.indexOf(lvl) * 2), 5) * (lvl.bounty ? 2 : 1) : null;
+                const xp   = lvl ? omniPts(lvls.indexOf(lvl), !!lvl.bounty, lvl.first?.toLowerCase() === (r.player||'').toLowerCase()) : null;
                 const hasLvl = playerHasLevel(r.player, r.level);
                 const timeStr = r.time ? new Date(r.time).toLocaleString('es', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—';
 
@@ -1389,12 +1398,11 @@
             const lvlIdx  = lvlData ? lvls.indexOf(lvlData) : -1;
             let xp = 0;
             if (lvlIdx > -1) {
-                xp = Math.max(250 - lvlIdx * 2, 5);
-                if (lvlData.bounty) xp *= 2;
-                if (lvlData.first?.toLowerCase() === r.player.toLowerCase()) xp *= 2;
+                const isFVprev = lvlData.first?.toLowerCase() === r.player.toLowerCase();
+                xp = omniPts(lvlIdx, !!lvlData.bounty, isFVprev);
             }
-            $('r-xp-badge').textContent = xp > 0 ? '+' + xp + ' XP' : '';
-            $('b-ac-xp').textContent = xp > 0 ? '(+' + xp + ' XP)' : '';
+            $('r-xp-badge').textContent = xp > 0 ? '+' + xp.toFixed(1) + ' pts' : '';
+            $('b-ac-xp').textContent = xp > 0 ? '(+' + xp.toFixed(1) + ' pts)' : '';
 
             // Video
             const v = (r.link || '').match(/[\w-]{11}/);
@@ -1420,16 +1428,14 @@
                 const comps = player.completions
                     ? (Array.isArray(player.completions) ? player.completions : Object.values(player.completions))
                     : [];
-                const totalXP = comps.reduce((s, comp) => {
-                    const i = lvls.findIndex(l => l.name.toLowerCase() === comp.level.toLowerCase());
-                    if (i > -1) {
-                        let b = Math.max(250 - i*2, 5);
-                        if (lvls[i].bounty) b *= 2;
-                        if (lvls[i].first?.toLowerCase() === player.name.toLowerCase()) b *= 2;
-                        return s + b;
-                    }
-                    return s + (comp.xp || 0);
-                }, player.totalXP || 0);
+                const totalXP = (() => {
+                    const pn2 = player.name.toLowerCase();
+                    const an2 = new Set(comps.map(c => c.level.toLowerCase()));
+                    lvls.forEach(l => { if (l.first?.toLowerCase() === pn2) an2.add(l.name.toLowerCase()); });
+                    let s2 = 0;
+                    an2.forEach(n => { const i = lvls.findIndex(l => l.name.toLowerCase() === n); if (i > -1) s2 += omniPts(i, !!lvls[i].bounty, lvls[i].first?.toLowerCase() === pn2); });
+                    return s2 + (player.totalXP || 0);
+                })();
                 const hasLevel = comps.some(x => x.level.toLowerCase() === r.level.toLowerCase());
 
                 $('r-p-name').textContent = player.name + (player.verified ? ' ✓' : '');
@@ -1456,7 +1462,7 @@
                 }, 0);
                 $('r-l-name').textContent        = lvlData.name;
                 $('r-l-pos').textContent         = `#${lvlIdx+1} en la lista`;
-                $('r-l-xp').textContent          = `${xp > 0 ? xp : Math.max(250-lvlIdx*2,5)} XP base${lvlData.bounty ? ' (×2 BOUNTY)' : ''}`;
+                $('r-l-xp').textContent          = `${xp > 0 ? xp.toFixed(1) : omniPts(lvlIdx,!!lvlData.bounty,false).toFixed(1)} pts base${lvlData.bounty ? ' (×2 BOUNTY)' : ''}${xp > 0 && lvlData.first?.toLowerCase()===(r?.player||'').toLowerCase() ? ' (×1.5 FV aplicado)' : ''}`;
                 $('r-l-first').textContent       = lvlData.first ? `First Victor: ${lvlData.first}` : 'Sin First Victor';
                 $('r-l-completions').textContent = `${allComps} jugador${allComps!==1?'es':''} lo han completado`;
             } else {
@@ -1629,7 +1635,7 @@
 
             // 2. Aceptar el récord automáticamente ahora que el nivel existe en la lista
             //    Calcular XP con la nueva posición
-            const xp = Math.max(250 - targetIndex * 2, 5) * (bounty ? 2 : 1) * 2; // ×2 por First Victor
+            const xp = omniPts(targetIndex, !!bounty, true); // First Victor garantizado al promover
             const playerKeys = Object.keys(fD.players || {});
             const pKey = playerKeys.find(k => fD.players[k].name?.toLowerCase() === r.player.toLowerCase());
 
@@ -1693,12 +1699,10 @@
             if (l) {
                 if (lvlData) {
                     const idx = lvls.indexOf(lvlData);
-                    let xp = Math.max(250 - idx*2, 5);
-                    if (lvlData.bounty) xp *= 2;
-                    if (lvlData.first?.toLowerCase() === p.toLowerCase()) xp *= 2;
+                    const xp = omniPts(idx, !!lvlData.bounty, lvlData.first?.toLowerCase() === p.toLowerCase());
                     lEl.textContent = `✓ #${idx+1} en la lista`;
                     lEl.style.color = 'var(--gr)';
-                    xpEl.textContent = '+' + xp + ' XP';
+                    xpEl.textContent = '+' + xp.toFixed(1) + ' pts';
                     // Advertir si ya lo tiene
                     if (player) {
                         const comps = player.completions
@@ -1805,14 +1809,14 @@
                 return;
             }
             box.innerHTML = filtered.map(({l,i}) => {
-                const xp = Math.max(250 - i*2, 5) * (l.bounty ? 2 : 1);
+                const xp = omniPts(i, !!l.bounty, false);
                 const bountyTag = l.bounty ? ' <span style="font-size:0.55rem;color:var(--gd);border:1px solid var(--gd);padding:1px 5px;border-radius:10px;font-family:JetBrains Mono;">⚡BOUNTY</span>' : '';
                 return `<div class="dc" style="gap:8px; background:#000; border-color:${l.bounty?'var(--gd)':'#1a1a1a'};">
                     <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
                         <span style="font-size:0.65rem;color:#444;font-family:'JetBrains Mono';min-width:32px;flex-shrink:0;">#${i+1}</span>
                         <div style="min-width:0;">
                             <p style="margin:0;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.name}${bountyTag}</p>
-                            <p style="margin:2px 0 0;font-size:0.68rem;color:#555;">${l.first ? '<i class="fas fa-user" style="margin-right:3px;"></i>'+l.first+' &nbsp;·&nbsp; ':''}<span style="color:var(--gd);">+${xp} XP</span></p>
+                            <p style="margin:2px 0 0;font-size:0.68rem;color:#555;">${l.first ? '<i class="fas fa-user" style="margin-right:3px;"></i>'+l.first+' &nbsp;·&nbsp; ':''}<span style="color:var(--gd);">+${xp.toFixed(1)} pts</span></p>
                         </div>
                     </div>
                     <button class="bs" style="background:rgba(204,0,255,0.1);color:var(--pu);border:1px solid var(--pu);flex-shrink:0;" onclick="eLv(${i})" title="Editar"><i class="fas fa-edit"></i></button>
