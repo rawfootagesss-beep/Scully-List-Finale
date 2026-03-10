@@ -488,15 +488,51 @@
             return {nC, tG, bS, eC, bgBtn, hoverC};
         }
 
-        // CARGA DE DATOS
-        auth.onAuthStateChanged(user => {
-            db.ref('/').on('value', snap => {
-                fullData = snap.val() || {};
-                const lvls = nx(fullData.levels);
-                let players = nx(fullData.players);
-                disabledItems = fullData.market_disabled || {}; // Control de estado (on/off)
+        // CARGA DE DATOS — el listener de DB es independiente del auth
+        // Así la tienda carga siempre, aunque el usuario no esté logueado
+        let _authUser = null;
 
-                if(user) {
+        auth.onAuthStateChanged(user => {
+            _authUser = user;
+            // Re-renderizar cuando el estado de auth llega (puede ser después del primer snap de DB)
+            if (Object.keys(fullData).length > 0) {
+                const lvls    = nx(fullData.levels);
+                const players = nx(fullData.players);
+                disabledItems = fullData.market_disabled || {};
+                if (user) {
+                    const playersObj = fullData.players || {};
+                    const originalKey = Object.keys(playersObj).find(k => playersObj[k]?.email?.toLowerCase() === user.email.toLowerCase());
+                    myIndex = originalKey ? players.findIndex(p => p.email?.toLowerCase() === user.email.toLowerCase()) : -1;
+                    if (myIndex > -1 && originalKey) {
+                        myPlayer = { ...players[myIndex], key: originalKey };
+                        currentUser = myPlayer;
+                        let realXp = 0;
+                        const pName = myPlayer.name.toLowerCase();
+                        const allN  = new Set(nx(myPlayer.completions).map(c => c.level.toLowerCase()));
+                        lvls.forEach(l => { if (l.first?.toLowerCase() === pName) allN.add(l.name.toLowerCase()); });
+                        allN.forEach(n => { const idx = lvls.findIndex(x => x.name.toLowerCase() === n); if (idx > -1) realXp += omniPts(idx, !!lvls[idx].bounty, lvls[idx].first?.toLowerCase() === pName); });
+                        myPlayer.calcXp = realXp;
+                        myPlayer.shopXP = myPlayer.totalXP || 0;
+                        renderWallet();
+                        const role = myPlayer.role || '';
+                        if (role === 'admin' || myPlayer.name.toLowerCase() === 'score') {
+                            document.getElementById('admin-panel').style.display = 'block';
+                            renderAdminToggles(fullData.market_dynamic_items || {});
+                        }
+                    } else { renderGuestWallet(); }
+                } else { renderGuestWallet(); }
+                renderStore(fullData.market_dynamic_items || {});
+            }
+        });
+
+        db.ref('/').on('value', snap => {
+            fullData = snap.val() || {};
+            const lvls = nx(fullData.levels);
+            let players = nx(fullData.players);
+            disabledItems = fullData.market_disabled || {};
+            const user = _authUser;
+
+            if(user) {
                     // [FIX] Buscar la key directamente en el objeto Firebase, no por índice de array.
                     // nx() filtra nulls y reordena, haciendo que Object.keys()[myIndex] apunte
                     // al jugador equivocado. Buscar la key por email directamente es O(n) y seguro.
@@ -532,7 +568,6 @@
                 } else { renderGuestWallet(); }
 
                 renderStore(fullData.market_dynamic_items || {});
-            });
         });
 
         function renderWallet() {
