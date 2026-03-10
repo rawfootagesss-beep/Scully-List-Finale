@@ -560,8 +560,29 @@
                     </div>
                 </div>
 
-                <h3 style="color:var(--gd);font-size:1rem; border-top:1px solid #333; padding-top:20px;">Peticiones de Compra de Usuarios</h3>
-                <div id="l-mrq" class="dl"></div>
+                <!-- REGALO STAFF -->
+                <div class="panel" style="border-color:var(--cy); margin-top:10px; margin-bottom:0;">
+                    <h3 style="color:var(--cy);font-size:0.9rem;margin:0 0 12px;"><i class="fas fa-gift"></i> Regalar Ítem a Jugador (sin cobro de XP)</h3>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <input type="text" id="gift-player" placeholder="Nick del jugador..." style="flex:1; min-width:150px; padding:9px 12px; font-size:0.8rem;">
+                        <input type="text" id="gift-item"   placeholder="Nombre exacto del ítem..." style="flex:1; min-width:150px; padding:9px 12px; font-size:0.8rem;">
+                        <button class="btn" style="background:var(--cy);color:#000;padding:9px 16px;" onclick="aPur($('gift-player').value.trim(), $('gift-item').value.trim())">
+                            <i class="fas fa-paper-plane"></i> REGALAR
+                        </button>
+                    </div>
+                </div>
+
+                <!-- HISTORIAL AUTOMÁTICO DE COMPRAS -->
+                <div style="border-top:1px solid #1a1a1a; padding-top:20px; margin-top:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+                        <h3 style="color:var(--gd);font-size:1rem; margin:0;"><i class="fas fa-receipt"></i> Historial de Transacciones</h3>
+                        <div style="display:flex; gap:8px;">
+                            <button class="bs by" onclick="exportTransactions()" title="Exportar CSV"><i class="fas fa-download"></i> CSV</button>
+                            <button class="bs br" onclick="aAdminToast('¿Purgar todo el historial de transacciones? Esta acción es irreversible.<br><br><span onclick=\'db.ref(\"market_requests\").remove().then(()=>{ aAdminToast(\"Historial purgado.\",\"success\"); })\' style=\'cursor:pointer;color:#fff;background:var(--red);padding:6px 14px;border-radius:6px;font-weight:900;font-size:0.75rem;\'>CONFIRMAR PURGA</span>','error',10000)" title="Purgar historial"><i class="fas fa-trash"></i> PURGAR</button>
+                        </div>
+                    </div>
+                    <div id="l-mrq" class="dl" style="max-height:500px;"></div>
+                </div>
             </div>
 
             <div id="t-cln" class="tab">
@@ -2193,51 +2214,47 @@
         // ==========================================
         // MERCADO Y ECONOMÍA
         // ==========================================
-        function rMReq(reqs) { 
-            let h = ""; 
-            Object.entries(reqs).forEach(([id, r]) => { 
-                h += `
-                <div class="dc" style="border-left:3px solid var(--gd);">
-                    <div><h4 style="color:var(--gd);margin:0;">${r.itemName}</h4><p style="margin:0;font-size:.8rem;">Para: ${r.player} | ${r.price}XP</p></div>
-                    <div style="display:flex;flex-direction:column;gap:5px;">
-                        <button class="bs bg" onclick="aPur('${id}', true)">APROBAR (COBRAR)</button>
-                        <button class="bs bb" onclick="aPur('${id}', false)">REGALAR (SIN COBRO)</button>
-                        <button class="bs br" onclick="db.ref('market_requests/${id}').remove()">DENEGAR</button>
+        // Las compras ahora son automáticas — market_requests guarda historial (status: 'completed')
+        // Solo mostramos el historial de transacciones + herramienta de regalo staff
+        function rMReq(reqs) {
+            if (!$('l-mrq')) return;
+            const entries = Object.entries(reqs || {});
+            if (!entries.length) {
+                $('l-mrq').innerHTML = '<p style="color:#555; font-size:0.8rem; text-align:center; padding:10px;">Sin transacciones registradas.</p>';
+                return;
+            }
+            // Ordenar por fecha desc
+            entries.sort(([,a],[,b]) => (b.date||0) - (a.date||0));
+            $('l-mrq').innerHTML = entries.slice(0, 50).map(([id, r]) => {
+                const isAuto = r.autoApproved || r.status === 'completed';
+                const dateStr = r.date ? new Date(r.date).toLocaleString('es', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—';
+                return `<div class="dc" style="border-left:3px solid ${isAuto ? 'var(--gr)' : 'var(--cy)'}; gap:8px; padding:10px 14px;">
+                    <div style="flex:1; min-width:0;">
+                        <h4 style="color:${isAuto ? 'var(--gr)' : 'var(--cy)'};margin:0;font-size:0.85rem;">${r.itemName}</h4>
+                        <p style="margin:2px 0 0;font-size:0.72rem;color:#555;">${r.player} · ${r.price} pts · ${dateStr}</p>
+                        <p style="margin:2px 0 0;font-size:0.65rem;color:#333;">${isAuto ? '✓ Auto-procesado' : '🎁 Regalo Staff'}</p>
                     </div>
-                </div>`; 
-            }); 
-            if($('l-mrq')) $('l-mrq').innerHTML = h || '<p style="color:#666;">Sin peticiones de compra.</p>'; 
+                    <button class="bs br" onclick="db.ref('market_requests/${id}').remove()" title="Borrar del historial" style="padding:5px 9px;">✕</button>
+                </div>`;
+            }).join('');
         }
-        
-        function aPur(id, chargeXP) { 
-            const r = fD.market_requests[id]; let pL = nx(fD.players); 
-            let i = pL.findIndex(p => p.name.toLowerCase() === r.player.toLowerCase()); 
-            
-            if(i > -1) { 
-                const cxp = pL[i].totalXP || 0; 
-                if(chargeXP) {
-                    if(cxp >= r.price) { pL[i].totalXP = cxp - r.price; } else { return toast("XP Insuficiente", true); }
-                }
-                
-                let inv = nx(pL[i].inventory); inv.push({itemName: r.itemName, date: Date.now()}); pL[i].inventory = inv; 
-                // [FIX] Update puntual — inventory y totalXP del jugador específico
-                const purKeys = Object.keys(fD.players || {});
-                const purKey = purKeys.find(k => fD.players[k].name?.toLowerCase() === r.player.toLowerCase());
-                if (purKey) {
-                    const updates = { [`players/${purKey}/inventory`]: pL[i].inventory };
-                    if (chargeXP) updates[`players/${purKey}/totalXP`] = pL[i].totalXP;
-                    db.ref('/').update(updates);
-                }
-                db.ref(`market_requests/${id}`).remove();
-                
-                if(chargeXP) {
-                    log(`Compra ejecutada: ${r.itemName} por ${r.player}`); 
-                    api(`🛒 **MERCADO:** El administrador **${sN}** ha procesado la compra de **${r.itemName}** para el jugador **${r.player}**.`, 'main'); toast("Cobro Realizado"); 
-                } else {
-                    log(`Regalo concedido: ${r.itemName} a ${r.player}`); 
-                    api(`🎁 **REGALO STAFF:** El administrador **${sN}** ha regalado el ítem **${r.itemName}** al jugador **${r.player}**.`, 'main'); toast("Ítem Regalado"); 
-                }
-            } else { toast("Jugador no encontrado", true); }
+
+        // Regalo directo del staff a un jugador (sin cobrar XP)
+        function aPur(playerName, itemName) {
+            if (!playerName || !itemName) return;
+            const purKeys = Object.keys(fD.players || {});
+            const purKey  = purKeys.find(k => fD.players[k].name?.toLowerCase() === playerName.toLowerCase());
+            if (!purKey) return toast('Jugador no encontrado', true);
+            const player  = fD.players[purKey];
+            const inv     = player.inventory ? (Array.isArray(player.inventory) ? [...player.inventory] : Object.values(player.inventory)) : [];
+            if (inv.some(it => it.itemName === itemName)) return toast('El jugador ya tiene ese ítem', true);
+            inv.push({ itemName, date: Date.now(), giftedBy: sN });
+            db.ref('/').update({ [`players/${purKey}/inventory`]: inv }).then(() => {
+                db.ref('market_requests').push({ player: playerName, itemName, price: 0, date: Date.now(), status: 'gift', autoApproved: false, giftedBy: sN });
+                log(`Regalo: ${itemName} → ${playerName}`);
+                api(`🎁 **REGALO STAFF:** **${sN}** ha regalado **${itemName}** a **${playerName}**.`, 'main');
+                toast('Ítem regalado');
+            });
         }
 
         function aItm() { 
